@@ -1,0 +1,25 @@
+section(layout='row' flex)
+
+	md-sidenav.md-sidenav-left(md-component-id='left-menu' md-disable-backdrop md-whiteframe='4')
+
+		md-toolbar.md-theme-indigo
+			h1.md-toolbar-tools Disabled Backdrop
+
+		md-content(layout-margin)
+			p
+				| This sidenav is not showing any backdrop, where users can click on it, to close the sidenav.
+
+				md-button.md-accent(ng-click='toggleLeft()')
+					| Close this Sidenav
+
+	md-content(flex layout-padding)
+
+		div(layout='column' layout-align='top center')
+			p
+				| Developers can also disable the backdrop of the sidenav.
+				br
+				| This will disable the functionality to click outside to close the sidenav.
+
+			div
+				md-button.md-raised(ng-click='toggleLeft()')
+					| Toggle Sidenav

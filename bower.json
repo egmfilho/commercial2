@@ -1,0 +1,43 @@
+{
+  "name": "commercial2",
+  "description": "",
+  "main": "app.js",
+  "authors": [
+    "@egmfilho"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "angular": "^1.6.2",
+    "angular-route": "^1.6.2",
+    "angular-animate": "^1.6.2",
+    "angular-sanitize": "^1.6.2",
+    "angular-i18n": "^1.6.2",
+    "angular-messages": "^1.6.4",
+    "font-awesome": "^4.7.0",
+    "angular-material": "^1.1.4"
+  },
+  "overrides": {
+    "angular-i18n": {
+      "main": [
+        "angular-locale_pt-br.js"
+      ]
+    },
+    "font-awesome": {
+      "main": [
+        "css/font-awesome.css"
+      ]
+    }
+  },
+  "devDependencies": {
+    "compass-sass-mixins": "*"
+  }
+}

@@ -1,0 +1,35 @@
+.order-card {
+	max-width: 1024px;
+	margin: 10px auto;
+
+	md-card-header {
+		margin-bottom: 15px;
+	}
+
+	md-card-content {
+		padding: 0 16px;
+	}
+
+	md-input-container {
+		margin: 8px 0;		
+	}	
+
+	md-autocomplete md-progress-linear.md-inline {
+		bottom: 30px;
+	}
+}
+
+.order-toolbar {
+	box-shadow: 0 2px 2px rgba(#000, .2);
+}
+
+main {
+	overflow-y: auto
+}
+
+footer {
+	md-toolbar {
+		min-height: 24px;
+		font-size: .8em;
+	}
+}
