@@ -15,10 +15,10 @@ angular.module('commercial2', [
 	.config(['$mdThemingProvider', function($mdThemingProvider) {
 		$mdThemingProvider.theme('default')
 			.primaryPalette('blue')
-			.accentPalette('blue')
-			.backgroundPalette('grey', {
-				'default': '200'
-			});
+			.accentPalette('blue');
+			// .backgroundPalette('grey', {
+			// 	'default': '200'
+			// });
 	}])
 	.config(['$routeProvider', function($routeProvider) {
 
@@ -33,6 +33,11 @@ angular.module('commercial2', [
 				controller: 'OrderCtrl',
 				controllerAs: 'order'
 			})
+			.when('/order-tab', {
+				templateUrl: 'views/order-tab.html',
+				controller: 'OrderCtrl',
+				controllerAs: 'order'
+			})
 			.when('/about', {
 				templateUrl: 'views/about.html',
 				controller: 'AboutCtrl',
@@ -42,4 +47,11 @@ angular.module('commercial2', [
 				redirectTo: '/'
 			});
 
+	}])
+	.run(['$rootScope', function($rootScope) {
+
+		$rootScope.getNumber = function(num) {
+			return new Array(Math.max(0, Math.ceil(num)));
+		};
+		
 	}]);

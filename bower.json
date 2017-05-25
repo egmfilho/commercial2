@@ -35,6 +35,11 @@
       "main": [
         "css/font-awesome.css"
       ]
+    },
+    "angular-material": {
+      "main": [
+        "angular-material.js"
+      ]
     }
   },
   "devDependencies": {

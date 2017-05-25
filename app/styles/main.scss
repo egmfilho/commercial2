@@ -1,30 +1,30 @@
-.order-card {
-	max-width: 1024px;
-	margin: 10px auto;
+@import "../../bower_components/angular-material/angular-material.scss";
 
-	md-card-header {
-		margin-bottom: 15px;
-	}
-
-	md-card-content {
-		padding: 0 16px;
-	}
-
-	md-input-container {
-		margin: 8px 0;		
-	}	
-
-	md-autocomplete md-progress-linear.md-inline {
-		bottom: 30px;
-	}
+.groupX {
+	font-size: 16px;
+	margin: 20px 0;
+	padding: 3px 15px 3px 15px;
+	color: rgb(49, 46, 46);
+	background-color: rgba(224, 224, 224, 0.96);
+	text-transform: none;
+	font-weight: 400;
+	min-width:100px;
 }
 
-.order-toolbar {
-	box-shadow: 0 2px 2px rgba(#000, .2);
-}
+.md-button {
+	&.left {
+		border-radius: 10px 0 0 10px;
+	}
 
-main {
-	overflow-y: auto
+	&.middle {
+		border-radius: 0;
+		border-left: 1px solid rgba(230, 230, 230, 0.96);
+		border-right: 1px solid rgba(230, 230, 230, 0.96);
+	}
+
+	&.right {
+		border-radius: 0 10px 10px 0;
+	}
 }
 
 footer {
@@ -33,3 +33,6 @@ footer {
 		font-size: .8em;
 	}
 }
+
+@import "order";
+@import "order-tab";
