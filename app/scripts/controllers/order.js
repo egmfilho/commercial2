@@ -17,6 +17,8 @@ function OrderCtrl($scope, $timeout, $q, $mdToast) {
 
 	self.toast         = toast;
 
+	self.editItemMenu  = editItemMenu;
+
 	// ******************************
 	// Internal methods
 	// ******************************
@@ -72,5 +74,9 @@ function OrderCtrl($scope, $timeout, $q, $mdToast) {
 				.position('bottom right')
 				.hideDelay(3000)
 		);
+	}
+
+	function editItemMenu($mdMenu, event) {
+		$mdMenu.open(event);
 	}
 }

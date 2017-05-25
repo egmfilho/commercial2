@@ -162,9 +162,20 @@ md-content(flex layout-padding style='background-color: #d9d9d9')
 										td R$ 135,00 &nbsp;
 										td
 											//- a(href='' ng-click='')
-											//- 	i.fa.fa-ellipsis-v
-											md-button.md-icon-button
-												md-icon.fa(md-font-icon='fa-ellipsis-v')
+											//- 	i.fa.fa-ellipsis-v											
+											md-menu
+												md-button.md-icon-button(ng-click='order.editItemMenu($mdMenu, $event)')
+													md-icon.fa(md-font-icon='fa-ellipsis-v')
+												md-menu-content(width='3')
+													md-menu-item
+														md-button(ng-click='')
+															md-icon.fa(md-font-icon='fa-pencil-square-o' md-menu-align-target) 
+															|  Editar
+													md-menu-divider
+													md-menu-item
+														md-button(ng-click='')
+															md-icon.fa(md-font-icon='fa-trash-o' md-menu-align-target) 
+															|  Excluir
 
 		//- Cliente
 		section

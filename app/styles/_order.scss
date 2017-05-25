@@ -32,7 +32,7 @@
 		}	
 
 		md-autocomplete md-progress-linear.md-inline {
-			bottom: 30px;
+			bottom: 6px;
 		}
 
 		md-input-container {
@@ -104,6 +104,8 @@
 
 	tbody {
 		tr {
+			transition: background-color .5s ease;
+
 			&:hover {
 				background-color: #e7e7e7;
 			}
