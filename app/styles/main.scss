@@ -1,29 +1,15 @@
 @import "../../bower_components/angular-material/angular-material.scss";
 
-.groupX {
-	font-size: 16px;
-	margin: 20px 0;
-	padding: 3px 15px 3px 15px;
-	color: rgb(49, 46, 46);
-	background-color: rgba(224, 224, 224, 0.96);
-	text-transform: none;
-	font-weight: 400;
-	min-width:100px;
-}
+header {
+	md-toolbar {
+		min-height: 32px;
+		height: 32px;
 
-.md-button {
-	&.left {
-		border-radius: 10px 0 0 10px;
-	}
-
-	&.middle {
-		border-radius: 0;
-		border-left: 1px solid rgba(230, 230, 230, 0.96);
-		border-right: 1px solid rgba(230, 230, 230, 0.96);
-	}
-
-	&.right {
-		border-radius: 0 10px 10px 0;
+		.md-toolbar-tools {
+			h2 {
+				font-size: 16px;
+			}
+		}
 	}
 }
 

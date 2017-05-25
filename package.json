@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron ./index.js"
   },
   "author": "@egmfilho",
   "license": "ISC",
@@ -21,5 +21,8 @@
     "gulp-uglify": "^2.0.1",
     "gulp-util": "^3.0.8",
     "main-bower-files": "^2.13.1"
+  },
+  "dependencies": {
+    "electron": "^1.6.8"
   }
 }

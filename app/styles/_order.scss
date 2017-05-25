@@ -1,3 +1,15 @@
+.order-toolbar {
+	.md-toolbar-tools {
+		height: 40px;
+	}
+
+	.order-menu-bar {
+		button {
+			height: 32px;
+		}
+	}
+}
+
 .order-container {
 	max-width: 1024px;
 	margin: 0 auto;
@@ -13,10 +25,6 @@
 
 		md-card-content {
 			padding: 8px 16px 16px 16px;
-
-			> div {
-				// max-height: auto;
-			}
 		}
 
 		md-input-container {
@@ -37,35 +45,75 @@
 	}
 }
 
-.order-toolbar {
-	box-shadow: 0 2px 2px rgba(#000, .2);
-
-	.md-toolbar-tools {
-		height: 40px;
-	}
+.container-table {
+	height: 200px;
+	overflow-y: auto;
+	border: 1px solid rgba(#000, .12);
 }
 
 .products-table {
 	width: 100%;
+	border-collapse: collapse;
+
+	tr {
+		display: table-row;
+
+		th, td {
+			display: table-cell;
+
+			&:nth-child(1) {
+				width: 42%;
+			}
+
+			&:nth-child(2), &:nth-child(3) {
+				width: 5%;
+			}
+
+			&:nth-child(4), &:nth-child(5), &:nth-child(6) {
+				width: 10%;
+			}
+
+			&:nth-child(7) {
+				width: auto;
+			}
+
+			&:nth-child(8) {
+				width: 40px;
+				padding: 0;
+
+				button {
+					margin: 0;
+				}
+			}
+		}
+	}
 
 	thead {
 		tr {
-			border: 1px solid rgba(#000, .12);
+			// border-bottom: 1px solid rgba(#000, .12);
 
 			th {
 				text-align: left;
-				font-weight: 400;
-				color: #333; //rgba(#000, .38);
-				font-size: 15px;
+				color: rgba(#000, .4); //rgba(#000, .38);
+				font-size: 12px;
+				font-weight: bold;
+				padding-bottom: 12px;
 			}
 		}
 	}
 
 	tbody {
-		td {
-			color: rgba(#000, .7);
-			padding: 0 5px;
-			font-size: 14px;
-		}
+		tr {
+			&:hover {
+				background-color: #e7e7e7;
+			}
+
+			td {
+				color: rgba(#000, .6);
+				padding: 0 5px;
+				font-size: 12px;
+				vertical-align: middle;
+			}
+		}		
 	}
 }
