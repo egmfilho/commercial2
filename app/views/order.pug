@@ -1,7 +1,7 @@
 md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 	div(layout='row')
 		md-toolbar-filler(layout layout-align='center center' style='background-color: #f38221')
-			md-icon.fa.fa-2x(md-font-icon='fa-file' aria-label='Menu')
+			md-icon(md-font-icon='fa fa-2x fa-file' aria-label='Menu')
 
 		div
 			.md-toolbar-tools
@@ -74,7 +74,7 @@ md-content(flex layout-padding style='background-color: #d9d9d9')
 					div(layout-gt-xs='row')
 						md-input-container
 							label Código
-							input(ng-model='codigo')
+							input(ng-model='codigo' keys-shortcuts enter='order.toast("Kaleb")')
 						md-autocomplete(flex required 
 										md-input-name='autocompleteField'
 										md-input-minlength='2'
@@ -120,8 +120,10 @@ md-content(flex layout-padding style='background-color: #d9d9d9')
 									| Código: 
 									| {{item.code}}
 						md-input-container(flex='25')
-							label Valor unitário
-							input(ng-model='valor' tabindex='-1' readonly disabled)
+							label 
+								i.fa.fa-lock &nbsp;
+								| Valor unitário
+							input(ng-model='valor' tabindex='-1' readonly)
 					div(layout='row')
 						md-input-container(flex='25')
 							label Quantidade
@@ -133,26 +135,28 @@ md-content(flex layout-padding style='background-color: #d9d9d9')
 							label Desconto R$
 							input(ng-model='descontoVl')
 						md-input-container(flex='25')
-							label Total
-							input(ng-model='total' tabindex='-1' readonly disabled)
-
+							label 
+								i.fa.fa-lock &nbsp;
+								| Total
+							input(ng-model='total' tabindex='-1' readonly)
 
 					div(layout='column' style='margin-top: 45px')
-						table.products-table
-							thead
-								tr
-									th Produto
-									th Un
-									th Qtd
-									th Vl unit
-									th Desc %
-									th Desc R$
-									th Total
-									th &nbsp;
+						div(style='padding-right: 10px')
+							table.products-table
+								thead
+									tr
+										th Produto
+										th Un
+										th Qtd
+										th Vl unit
+										th Desc %
+										th Desc R$
+										th Total
+										th &nbsp;
 						.container-table
 							table.products-table
 								tbody
-									tr(ng-repeat='n in getNumber(10) track by $index' layout='row')
+									tr(ng-repeat='n in getNumber(1) track by $index' layout='row')
 										td 00000{{$index + 1}} Silicone bolado sinistramente qualificado
 										td UN
 										td 10
@@ -161,35 +165,47 @@ md-content(flex layout-padding style='background-color: #d9d9d9')
 										td R$ 15,00
 										td R$ 135,00 &nbsp;
 										td
-											//- a(href='' ng-click='')
-											//- 	i.fa.fa-ellipsis-v											
 											md-menu
 												md-button.md-icon-button(ng-click='order.editItemMenu($mdMenu, $event)')
-													md-icon.fa(md-font-icon='fa-ellipsis-v')
-												md-menu-content(width='3')
+													md-icon(md-font-icon='fa fa-ellipsis-v')
+												md-menu-content(width='2')
 													md-menu-item
 														md-button(ng-click='')
-															md-icon.fa(md-font-icon='fa-pencil-square-o' md-menu-align-target) 
+															md-icon(md-font-icon='fa fa-pencil-square-o' md-menu-align-target) 
 															|  Editar
 													md-menu-divider
 													md-menu-item
 														md-button(ng-click='')
-															md-icon.fa(md-font-icon='fa-trash-o' md-menu-align-target) 
+															md-icon(md-font-icon='fa fa-trash-o' md-menu-align-target) 
 															|  Excluir
 
+					div(layout='row' style='margin-top: 30px')
+						div(flex)
+						md-input-container.large-input(flex='15')
+							label Desconto %
+							input(tabindex='-1' readonly value='0,00%')
+						md-input-container.large-input(flex='15')
+							label Desconto R$
+							input(tabindex='-1' readonly value='R$ 0,00')
+						md-input-container.large-input(flex='15')
+							label Total
+							input(tabindex='-1' readonly value='R$ 0,00')
+
 		//- Cliente
-		section
+		section.customer
 			md-card(layout-align='center')
 				md-card-header
 					md-card-header-text
 						span.md-title Cliente
 						//- span.md-subhead Informe o cliente
+				
 				md-card-content
-					div(layout-gt-xs='row')
-						md-input-container
+					div(layout-gt-xs='row' layout-wrap)
+						md-input-container(flex='25')
 							label Código
 							input(ng-model='codigo')
-						md-autocomplete(flex required 
+						
+						md-autocomplete(flex='75' required 
 										md-input-name='autocompleteField'
 										md-input-minlength='2'
 										md-input-maxlength='18'
@@ -205,6 +221,60 @@ md-content(flex layout-padding style='background-color: #d9d9d9')
 								div(style='font-size: 11px;line-height: 1')
 									| Código: 
 									| {{item.code}}
+						
+						md-input-container.md-icon-float(flex='25')
+							label
+								span
+									i.fa.fa-lock &nbsp;
+									span Tipo
+							input(ng-readonly='true' ng-if='true')
+							md-select(ng-model='tipo' ng-if='false')
+								md-option(value='F') Pessoa Física
+								md-option(value='J') Pessoa Jurídica
+						
+						md-input-container(flex='25')
+							label 
+								i.fa.fa-lock &nbsp;
+								| CPF
+							input(ng-readonly='true')
+
+						md-input-container(flex='25')
+							label 
+								i.fa.fa-lock &nbsp;
+								| CNPJ
+							input(ng-readonly='true')
+
+						md-input-container(flex='25')
+							label 
+								i.fa.fa-lock &nbsp;
+								| Inscrição Estadual
+							input(ng-readonly='true')
+
+					div(layout='row' style='margin-top: 30px')
+						md-tabs(md-selected='selectedTabIndex' md-border-bottom flex)
+							md-tab(label='Endereço de entrega')
+								md-content(layout='row' layout-wrap style='padding: 0' layout-fill)
+									div(layout='column' layout-align='center center' flex ng-if='true')
+										h1.teste Nenhum endereço cadastrado.
+										md-button.md-raised.md-primary(ng-click='order.toast("hola")') Cadastrar
+									div(flex='33' ng-repeat='n in getNumber(5) track by $index' ng-if='false')
+										md-card(ng-class='{"active": $index == 0}')
+											md-card-content
+												p 
+													i.fa(ng-class='{"fa-star-o": $index == 0}') &nbsp;
+													b Endereço {{$index == 0 ? 'Principal' : $index}}
+												p
+													| Cód: 00000{{$index}}
+													br
+													| Rua Preto e Branca 777 - Bairro Doido 
+													br
+													| Cidade Doida Estado Doido
+												md-button.md-icon-button.md-raised.md-primary
+													md-icon(md-font-icon='fa fa-check')
+
+							md-tab(label='Novo endereço')
+								md-content(layout-padding)
+									h2 Novo Endereço
 		//- Observações
 		section
 			md-card(layout-align='center')

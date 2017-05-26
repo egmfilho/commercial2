@@ -7,6 +7,7 @@ angular.module('commercial2', [
 		'ngRoute',
 		'ngSanitize',
 		'ngMaterial',
+		'egmfilho.keys',
 		'commercial2.controllers'
 	])
 	.config(['$locationProvider', function($locationProvider) {

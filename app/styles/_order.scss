@@ -27,19 +27,59 @@
 			padding: 8px 16px 16px 16px;
 		}
 
-		md-input-container {
-			margin: 8px 0;		
-		}	
-
 		md-autocomplete md-progress-linear.md-inline {
 			bottom: 6px;
 		}
 
 		md-input-container {
 			// line-height: 10px;
+			margin: 8px 0;
 
 			.md-errors-spacer {
 				min-height: 0;
+			}
+
+			&.large-input {
+				font-size: 1.3em;
+				margin-left: 5px;
+
+				input {
+					text-align: center;
+					color: #2196f3;
+				}
+			}
+		}
+	}
+
+	.customer {
+		md-tabs {		
+			border: 1px solid #e1e1e1;
+			border-radius: 0;
+			background-color: #f5f5f5;	
+
+			md-content { 
+				background-color: transparent !important;
+				padding: 10px 15px;
+			}
+
+			md-tab-content {
+				background-color: #f5f5f5;
+			}
+
+			md-tabs-wrapper {
+				background-color: white;
+			}
+
+			md-card {
+				border: 3px solid white;
+
+				button { 
+					float: right;
+				}
+
+				&.active {
+					border-color: $main-color;
+				}
 			}
 		}
 	}
@@ -47,7 +87,7 @@
 
 .container-table {
 	height: 200px;
-	overflow-y: auto;
+	overflow-y: scroll;
 	border: 1px solid rgba(#000, .12);
 }
 
@@ -88,16 +128,16 @@
 		}
 	}
 
-	thead {
+	thead {		
 		tr {
-			// border-bottom: 1px solid rgba(#000, .12);
+			// border-bottom: 1px solid rgba(#000, .12);			
 
 			th {
 				text-align: left;
 				color: rgba(#000, .4); //rgba(#000, .38);
 				font-size: 12px;
 				font-weight: bold;
-				padding-bottom: 12px;
+				padding: 1px 1px 12px 1px;
 			}
 		}
 	}
@@ -117,5 +157,38 @@
 				vertical-align: middle;
 			}
 		}		
+	}
+}
+
+.teste {
+	text-shadow: -1px -1px 1px rgba(0,0,0,0.3);
+	color: #e1e1e1;
+	font-size: 32px;
+	font-weight: 500;
+}
+
+md-menu-content {
+	$height: 30px;
+
+	md-menu-item {
+		min-height: $height;
+		height: $height;
+
+		button {
+			min-height: $height !important;
+			height: $height !important;
+			font-size: 13px !important;
+
+			md-icon {
+				font-size: 16px !important;
+				margin-right: 8px !important;
+				line-height: 20px !important;
+			}
+
+			div {
+				min-height: $height;
+				height: $height;				
+			}
+		}
 	}
 }

@@ -23,7 +23,8 @@
     "angular-i18n": "^1.6.2",
     "angular-messages": "^1.6.4",
     "font-awesome": "^4.7.0",
-    "angular-material": "^1.1.4"
+    "angular-material": "^1.1.4",
+    "egmfilho-keys-shortcuts": "https://github.com/egmfilho/keys-shortcuts.git"
   },
   "overrides": {
     "angular-i18n": {

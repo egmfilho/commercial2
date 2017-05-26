@@ -1,5 +1,7 @@
 @import "../../bower_components/angular-material/angular-material.scss";
 
+$main-color: #2196f3;
+
 header {
 	md-toolbar {
 		min-height: 32px;
@@ -20,5 +22,7 @@ footer {
 	}
 }
 
+@import "scrollbar";
+@import "prevent-highlight";
 @import "order";
 @import "order-tab";
