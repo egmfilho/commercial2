@@ -1,0 +1,32 @@
+md-content.login(flex)
+	//- .background
+	.cover
+	.picture
+
+	.md-block(layout='row' layout-align='center center' layout-fill)
+		div(layout='column' flex flex-gt-sm='33' flex-gt-md='25')
+			h1 Commercial
+			md-card(flex)
+				md-card-content
+					form(name='LoginForm' layout='column' ng-submit='login.submitForm()')
+						md-input-container
+							label Nome de Usuário
+							input(type='text' name='user' ng-model='login.user' required)
+							div(ng-messages='LoginForm.user.$error' role='alert' multiple)
+								div(ng-message='required') Informe o nome de usuário.
+						md-input-container
+							label Senha
+							input(type='password' name='pass' ng-model='login.pass' md-maxlength='16' required)
+							div(ng-messages='LoginForm.pass.$error' role='alert' multiple)
+								div(ng-message='required') Informe a senha.
+								div(ng-message='md-maxlength') Senha muito longa.
+						md-button.md-raised.md-primary(ng-disabled='!LoginForm.$valid' type='submit')
+							| &nbsp; Login &nbsp;
+			.lost-pass
+				a(href='#/login') Esqueci a senha
+
+	.ver 
+		span Versão 2.0
+
+	.sign 
+		a(href='') Futura Agência - 2017

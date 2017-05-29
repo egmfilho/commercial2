@@ -1,13 +1,36 @@
+/*
+* @Author: egmfilho
+* @Date:   2017-05-25 17:59:28
+* @Last Modified by:   egmfilho
+* @Last Modified time: 2017-05-29 13:59:22
+*/
 'use strict';
 
 angular.module('commercial2.controllers')
 	.controller('OrderCtrl', OrderCtrl);
 
-OrderCtrl.$inject = [ '$scope', '$timeout', '$q', '$mdToast' ];
+OrderCtrl.$inject = [ '$scope', '$timeout', '$q', '$mdToast', 'Constants', 'ProviderPerson', 'Person' ];
 
-function OrderCtrl($scope, $timeout, $q, $mdToast) {
+function OrderCtrl($scope, $timeout, $q, $mdToast, constants, providerPerson, Person) {
 
 	var self = this;
+
+	self.getPersonByCode = getPersonByCode;
+
+	// ******************************
+	// Methods declaration
+	// ******************************
+
+	function getPersonByCode(code) {
+		if (!code) return;
+
+		providerPerson.getByCode(code, 'Cliente').then(function(success) {
+			console.log(new Person(success.data));
+		}, function(error) {			
+			if (constants.debug) console.log(error);
+		});
+	}
+
 
 	// list of `state` value/display objects
 	self.states        = loadAll();

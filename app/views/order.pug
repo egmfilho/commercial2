@@ -74,7 +74,7 @@ md-content(flex layout-padding style='background-color: #d9d9d9')
 					div(layout-gt-xs='row')
 						md-input-container
 							label Código
-							input(ng-model='codigo' keys-shortcuts enter='order.toast("Kaleb")')
+							input(keys-shortcuts enter='order.getPersonByCode($event.target.value)')
 						md-autocomplete(flex required 
 										md-input-name='autocompleteField'
 										md-input-minlength='2'
@@ -227,7 +227,7 @@ md-content(flex layout-padding style='background-color: #d9d9d9')
 								span
 									i.fa.fa-lock &nbsp;
 									span Tipo
-							input(ng-readonly='true' ng-if='true')
+							input(readonly ng-if='true')
 							md-select(ng-model='tipo' ng-if='false')
 								md-option(value='F') Pessoa Física
 								md-option(value='J') Pessoa Jurídica
@@ -236,19 +236,19 @@ md-content(flex layout-padding style='background-color: #d9d9d9')
 							label 
 								i.fa.fa-lock &nbsp;
 								| CPF
-							input(ng-readonly='true')
+							input(readonly)
 
 						md-input-container(flex='25')
 							label 
 								i.fa.fa-lock &nbsp;
 								| CNPJ
-							input(ng-readonly='true')
+							input(readonly)
 
 						md-input-container(flex='25')
 							label 
 								i.fa.fa-lock &nbsp;
 								| Inscrição Estadual
-							input(ng-readonly='true')
+							input(readonly)
 
 					div(layout='row' style='margin-top: 30px')
 						md-tabs(md-selected='selectedTabIndex' md-border-bottom flex)

@@ -3,7 +3,7 @@ doctype html
 html
 	head
 		block title
-			title Commercial 2
+			title Commercial
 
 		meta(name='format-detection' content='telephone=no')
 		meta(name='viewport' content='width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0')
@@ -17,7 +17,7 @@ html
 	body(ng-app='commercial2' ng-cloak)
 
 		div(layout='column' layout-fill)
-			header
+			header(ng-if='currentPath !== "/login"')
 				md-toolbar
 					.md-toolbar-tools
 						md-button.md-icon-button
@@ -29,7 +29,7 @@ html
 
 			block page
 
-			footer
+			footer(ng-if='currentPath !== "/login"')
 				md-toolbar
 					div(layout='row' layout-align='center center' flex)
 						| Futura Agência - 2017

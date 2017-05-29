@@ -1,16 +1,30 @@
+/*
+* @Author: egmfilho
+* @Date:   2017-05-26 10:21:29
+* @Last Modified by:   egmfilho
+* @Last Modified time: 2017-05-29 16:35:49
+*/
 'use strict';
 
+angular.module('commercial2.constants', [ ]);
 angular.module('commercial2.controllers', [ ]);
+angular.module('commercial2.services', [ ]);
 
 angular.module('commercial2', [
 		'ngAnimate',
 		'ngRoute',
 		'ngSanitize',
+		'ngResource',
+		'ngCookies',
+		'ngMessages',
 		'ngMaterial',
 		'egmfilho.keys',
-		'commercial2.controllers'
+		'commercial2.constants',
+		'commercial2.controllers',
+		'commercial2.services'
 	])
-	.config(['$locationProvider', function($locationProvider) {
+	.config(['$httpProvider', '$locationProvider', function($httpProvider, $locationProvider) {
+		$httpProvider.interceptors.push('Interceptor');
 		$locationProvider.hashPrefix('');
 	}])
 	.config(['$mdThemingProvider', function($mdThemingProvider) {
@@ -24,6 +38,11 @@ angular.module('commercial2', [
 	.config(['$routeProvider', function($routeProvider) {
 
 		$routeProvider
+			.when('/login', {
+				templateUrl: 'views/login.html',
+				controller: 'LoginCtrl',
+				controllerAs: 'login'
+			})
 			.when('/', {
 				templateUrl: 'views/home.html',
 				controller: 'HomeCtrl',
@@ -49,7 +68,13 @@ angular.module('commercial2', [
 			});
 
 	}])
-	.run(['$rootScope', function($rootScope) {
+	.run(['$rootScope', '$location', function($rootScope, $location) {
+
+		$rootScope.$on('$routeChangeStart', function(event, next, current) {
+
+			$rootScope.currentPath = $location.path();
+
+		});
 
 		$rootScope.getNumber = function(num) {
 			return new Array(Math.max(0, Math.ceil(num)));

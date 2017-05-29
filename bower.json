@@ -24,7 +24,9 @@
     "angular-messages": "^1.6.4",
     "font-awesome": "^4.7.0",
     "angular-material": "^1.1.4",
-    "egmfilho-keys-shortcuts": "https://github.com/egmfilho/keys-shortcuts.git"
+    "egmfilho-keys-shortcuts": "https://github.com/egmfilho/keys-shortcuts.git",
+    "angular-resource": "^1.6.4",
+    "angular-cookies": "^1.6.4"
   },
   "overrides": {
     "angular-i18n": {

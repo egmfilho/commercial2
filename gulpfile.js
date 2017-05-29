@@ -17,7 +17,7 @@ var dest   = './www/';
 
 function error_handler(error) {
 	// Output an error message
-	gutil.log(gutil.colors.red('Error (' + error.plugin + '): ' + error.message));
+	gutil.log(gutil.colors.red('Error (' + error.plugin + '): ' + error));
 	// emit the end event, to properly end the task
 	this.emit('end');
 }
