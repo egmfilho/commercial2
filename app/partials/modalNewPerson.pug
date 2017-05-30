@@ -1,0 +1,12 @@
+div(role='dialog' layout='column' layout-align='center center')
+	md-toolbar
+		.md-toolbar-tools
+			h2 Surprise!
+	.body(flex)
+		.dialog-content(layout='column')
+			p
+				| conteudo do modal vai aqui
+	.footer(flex)
+		.dialog-footer(layout='row')
+			md-button.md-raised.md-primary(ng-click='ctrl.closeDialog()') &nbsp; Salvar &nbsp;
+			md-button.md-raised.md-primary(md-autofocus ng-click='ctrl.closeDialog()') &nbsp; Fechar &nbsp;

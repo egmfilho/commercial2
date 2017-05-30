@@ -2,26 +2,28 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-29 13:59:22
+* @Last Modified time: 2017-05-30 17:46:41
 */
 'use strict';
 
 angular.module('commercial2.controllers')
 	.controller('OrderCtrl', OrderCtrl);
 
-OrderCtrl.$inject = [ '$scope', '$timeout', '$q', '$mdToast', 'Constants', 'ProviderPerson', 'Person' ];
+OrderCtrl.$inject = [ '$rootScope', '$scope', '$timeout', '$q', '$mdPanel', 'Constants', 'ProviderPerson', 'Person' ];
 
-function OrderCtrl($scope, $timeout, $q, $mdToast, constants, providerPerson, Person) {
+function OrderCtrl($rootScope, $scope, $timeout, $q, $mdPanel, constants, providerPerson, Person) {
 
 	var self = this;
 
 	self.getPersonByCode = getPersonByCode;
+	self.getPersonByName = getPersonByName;
+	self.showDialog      = showDialog;
 
 	// ******************************
 	// Methods declaration
 	// ******************************
 
-	function getPersonByCode(code) {
+	function getPersonByCode(code, type) {
 		if (!code) return;
 
 		providerPerson.getByCode(code, 'Cliente').then(function(success) {
@@ -31,6 +33,51 @@ function OrderCtrl($scope, $timeout, $q, $mdToast, constants, providerPerson, Pe
 		});
 	}
 
+	function getPersonByName(name, type) {
+		if (!name || !type) return;
+
+		var deferred = $q.defer();
+		providerPerson.getByName(name, type, 10).then(function(success) {
+			var array = [ ];
+			angular.forEach(success.data, function(item) {
+				array.push(new Person(item));
+			});
+			deferred.resolve(array);
+		}, function(error) {
+			if (constants.debug) console.log(error);
+			deferred.reject();
+		});
+
+		return deferred.promise;
+	}
+
+	function showDialog() {
+		var position = $mdPanel.newPanelPosition().absolute().center(),
+			config = {
+				attatchTo: angular.element(document.body),
+				controller: ['mdPanelRef', function(mdPanelRef) {
+					this.closeDialog = function() {
+						if (mdPanelRef) mdPanelRef.close();
+					}
+				}],
+				controllerAs: 'ctrl',
+				templateUrl: './partials/modalNewPerson.html',
+				panelClass: 'custom-dialog',
+				hasBackdrop: true,
+				position: position,
+				trapFocus: true,
+				zIndex: 150,
+				clickOutsideToClose: true,
+				escapeToClose: true,
+				focusOnOpen: true
+			};
+
+		$mdPanel.open(config).then(function(result) {
+			console.log(result);
+		});
+	}
+
+/****************************************************************************************/
 
 	// list of `state` value/display objects
 	self.states        = loadAll();
@@ -38,7 +85,7 @@ function OrderCtrl($scope, $timeout, $q, $mdToast, constants, providerPerson, Pe
 	self.searchText    = null;
 	self.querySearch   = querySearch;
 
-	self.toast         = toast;
+	self.toast         = $rootScope.toast;
 
 	self.editItemMenu  = editItemMenu;
 
@@ -88,15 +135,6 @@ function OrderCtrl($scope, $timeout, $q, $mdToast, constants, providerPerson, Pe
 			return (state.value.indexOf(lowercaseQuery) === 0);
 		};
 
-	}
-
-	function toast(message) {
-		$mdToast.show(
-			$mdToast.simple()
-				.textContent(message)
-				.position('bottom right')
-				.hideDelay(3000)
-		);
 	}
 
 	function editItemMenu($mdMenu, event) {

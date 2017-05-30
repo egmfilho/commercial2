@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 14:03:46
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-29 17:39:33
+* @Last Modified time: 2017-05-30 10:56:43
 */
 
 (function() {
@@ -10,7 +10,7 @@
 	'use strict';
 
 	angular.module('commercial2.controllers')
-		.controller('LoginCtrl', ['$mdToast', 'Authentication', function($mdToast, authentication) {
+		.controller('LoginCtrl', ['$rootScope', '$location', 'Authentication', function($rootScope, $location, authentication) {
 
 			var self = this;
 
@@ -20,27 +20,18 @@
 				authentication.login(self.user, self.pass, function(res) {
 					switch (res.status.code) {
 						case 401: 
-							toast('Aviso! Usuário não autorizado.');
+							$rootScope.toast('Usuário não autorizado.', 'error');
 							break;
 						case 404: 
-							toast('Aviso! Usuário ou senha inválidos.');
+							$rootScope.toast('Usuário ou senha inválidos.', 'error');
 							break;
 						case 200: 
-							toast('Login efetuado.');
+							$location.path('home');
 							break;
 						default:
 							break;
 					}
 				});
-			}
-
-			function toast(message) {
-				$mdToast.show(
-					$mdToast.simple()
-						.textContent(message)
-						.position('bottom right')
-						.hideDelay(3000)
-				);
 			}
 
 		}]);

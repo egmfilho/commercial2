@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 09:39:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-29 10:31:57
+* @Last Modified time: 2017-05-30 12:21:14
 */
 
 (function() {
@@ -11,20 +11,22 @@
 	angular.module('commercial2.services')
 		.factory('Address', [function() {
 
-			function Endereco(endereco) {
-				angular.extend(this, {
-					IdCep: '',
-					CdCep: '',
-					Logradouro: '',
-					Bairro: '',
-					Cidade: '',
-					DDD: '',
-					UF: '',
-					Numero: ''
-				}, endereco);
+			var _address = {
+				IdCep: '',
+				CdCep: '',
+				Logradouro: '',
+				Bairro: '',
+				Cidade: '',
+				DDD: '',
+				UF: '',
+				Numero: ''
+			};
+
+			function Address(address) {
+				angular.extend(this, _address, address);
 			}
 
-			return Endereco;
+			return Address;
 
 		}]);
 		

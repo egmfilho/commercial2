@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:03:59
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-29 18:01:40
+* @Last Modified time: 2017-05-30 11:08:21
 */
 
 (function() {
@@ -17,6 +17,15 @@
 	function Authentication($rootScope, $http, $cookies, User, constants) {
 
 		function login(username, password, callback) {
+			if (constants['bypass-login']) {
+				var res = JSON.parse(constants['login-fake-response']), 
+					user = new User(res.data.data);
+				$cookies.put(constants.cookie, window.btoa(JSON.stringify(user)), {});
+				console.log('login bypassed');
+				callback(res);
+				return;
+			}
+
 			$http({
 				method: 'POST',
 				url: constants.api + 'login.php',
@@ -24,7 +33,7 @@
 			}).then(function(res) {
 				if (res.status == 200) {
 					var user = new User(res.data.data);
-					console.log(user);
+					if (constants.debug) console.log(user);
 					$cookies.put(constants.cookie, window.btoa(JSON.stringify(user)), {});
 				}
 				callback(res.data);

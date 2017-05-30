@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 10:46:07
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-29 13:45:56
+* @Last Modified time: 2017-05-30 15:59:54
 */
 
 (function() {
@@ -54,9 +54,9 @@
 
 				function getByName(name, type, limit, page) {
 					return provider.query({
-						action: 'get'
+						action: 'getList'
 					}, {
-						NmPessoa: id,
+						NmPessoa: name,
 						TpPessoa: type,
 						Limite: limit,
 						page: page

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:10:12
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-29 17:50:48
+* @Last Modified time: 2017-05-30 12:11:36
 */
 
 (function() {
@@ -13,12 +13,11 @@
 		.factory('UserPermissions', [function() {
 
 			function UserPermissions(userPermissions) {
-				angular.extend(this, {
-
-				}, convertPermissions(userPermissions));
+				angular.extend(this, convertPermissions(userPermissions));
 			}
 
 			function convertPermissions(p) {
+				console.log(p);
 				var modules = { }, module = { }, permissions = { }, permission = { };
 
 				angular.forEach(p, function(_module, _keyModule) {
@@ -41,14 +40,14 @@
 									permission.value  = parseFloat(_permission.value);
 									break;
 							}
-
 							permissions[_keyPermission] = permission;
 						}
-						module[_keyModule] = permissions;
-					});
-
-					return modules;
+						module.permissions = permissions;
+					});					
+					modules[_keyModule] = module;
 				});
+				
+				return modules;
 			}
 
 			return UserPermissions;

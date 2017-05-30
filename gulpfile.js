@@ -44,6 +44,13 @@ gulp.task('compile-views', function() {
 		.pipe(connect.reload());
 });
 
+gulp.task('compile-partials', function() {
+	return gulp.src(source + 'partials/**/*.pug')
+		.pipe(pug({ }).on('error', error_handler))
+		.pipe(gulp.dest(dest + 'partials'))
+		.pipe(connect.reload());
+});
+
 gulp.task('compile-sass', function() {
 	return gulp.src(source + 'styles/*.scss')
 		.pipe(sass().on('error', error_handler))
@@ -112,8 +119,9 @@ gulp.task('copy-videos', function() {
 
 gulp.task('watch', function() {
 	gulp.watch([source + '*.pug'], ['index']);
-	gulp.watch([source + 'views/*.pug'], ['compile-views']);
+	gulp.watch([source + 'views/*.pug'], ['compile-views']);	
 	gulp.watch([source + 'templates/*.pug'], ['index', 'compile-views']);
+	gulp.watch([source + 'partials/**/*.pug'], ['compile-partials']);
 	gulp.watch([source + 'styles/*.scss'], ['compile-sass']);
 	gulp.watch([source + 'scripts/**/*.js'], ['app-bundle']);
 	gulp.watch(bowerFiles({ filter: '**/*.css' }), ['css']);
@@ -126,5 +134,5 @@ gulp.task('watch', function() {
 
 gulp.task('default', ['connect', 'watch']);
 
-gulp.task('build', ['index', 'compile-views', 'compile-sass', 'app-bundle', 'copy-images', 'vendor-bundle', 'css', 'copy-fonts', 'copy-videos']);
+gulp.task('build', ['index', 'compile-views', 'compile-partials', 'compile-sass', 'app-bundle', 'copy-images', 'vendor-bundle', 'css', 'copy-fonts', 'copy-videos']);
 
