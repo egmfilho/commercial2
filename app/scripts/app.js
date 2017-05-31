@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-30 15:37:48
+* @Last Modified time: 2017-05-31 09:41:09
 */
 'use strict';
 
@@ -31,24 +31,6 @@ angular.module('commercial2', [
 
 		// https://angular-md-color.com/#/
 
-		$mdThemingProvider.definePalette('customPrimary', {
-			'50': '#b2d2f3',
-			'100': '#9cc5ef',
-			'200': '#86b8ec',
-			'300': '#70abe8',
-			'400': '#5a9ee5',
-			'500': '#4491e1',
-			'600': '#2e84dd',
-			'700': '#2177d1',
-			'800': '#1e6bbb',
-			'900': '#1a5ea5',
-			'A100': '#c8dff6',
-			'A200': '#deebfa',
-			'A400': '#f4f8fd',
-			'A700': '#17528f',
-			'contrastDefaultColor': 'light'
-		});
-
 		$mdThemingProvider.definePalette('customAccent', {
 			'50': '#b15206',
 			'100': '#c95d07',
@@ -68,11 +50,8 @@ angular.module('commercial2', [
 		});
 
 		$mdThemingProvider.theme('default')
-			.primaryPalette('customPrimary')
+			.primaryPalette('blue-grey')
 			.accentPalette('customAccent');
-			// .backgroundPalette('grey', {
-			// 	'default': '200'
-			// });
 	}])
 	.config(['$routeProvider', function($routeProvider) {
 
@@ -107,7 +86,7 @@ angular.module('commercial2', [
 			});
 
 	}])
-	.run(['$rootScope', '$location', '$mdToast', function($rootScope, $location, $mdToast) {
+	.run(['$rootScope', '$location', '$mdToast', 'CustomDialog', function($rootScope, $location, $mdToast, customDialog) {
 
 		$rootScope.$on('$routeChangeStart', function(event, next, current) {
 
@@ -127,6 +106,10 @@ angular.module('commercial2', [
 					.position('top left right')
 					.hideDelay(3000)
 			);
-		}
+		};
+
+		$rootScope.customDialog = function() {
+			return new customDialog();
+		};
 		
 	}]);

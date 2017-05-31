@@ -1,12 +1,22 @@
-div(role='dialog' layout='column' layout-align='center center')
-	md-toolbar
-		.md-toolbar-tools
-			h2 Surprise!
-	.body(flex)
-		.dialog-content(layout='column')
-			p
-				| conteudo do modal vai aqui
-	.footer(flex)
-		.dialog-footer(layout='row')
-			md-button.md-raised.md-primary(ng-click='ctrl.closeDialog()') &nbsp; Salvar &nbsp;
-			md-button.md-raised.md-primary(md-autofocus ng-click='ctrl.closeDialog()') &nbsp; Fechar &nbsp;
+md-input-container(flex='66')
+	label Nome
+	input(ng-model='nome')
+
+md-input-container.md-icon-float(flex='33')
+	label
+		span Tipo
+	md-select(ng-model='tipo')
+		md-option(value='F') Pessoa Física
+		md-option(value='J') Pessoa Jurídica
+
+md-input-container(flex='33')
+	label CPF
+	input()
+
+md-input-container(flex='33')
+	label CNPJ
+	input()
+
+md-input-container(flex='33')
+	label Inscrição Estadual
+	input()

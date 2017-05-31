@@ -2,19 +2,22 @@
 * @Author: egmfilho
 * @Date:   2017-05-24 17:37:37
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-29 09:41:44
+* @Last Modified time: 2017-05-31 16:20:49
 */
-'use strict';
 
-angular.module('commercial2.controllers')
-	.controller('HomeCtrl', HomeCtrl);
+(function() {
+	'use strict';
 
-HomeCtrl.$inject = [ '$scope', '$timeout', '$mdSidenav' ];
+	angular.module('commercial2.controllers')
+		.controller('HomeCtrl', HomeCtrl);
 
-function HomeCtrl($scope, $timeout, $mdSidenav) {
+	HomeCtrl.$inject = [ '$scope', '$timeout', '$mdSidenav' ];
 
-	$scope.toggleLeft = function() {
-		$mdSidenav('left-menu').toggle();
-	};
+	function HomeCtrl($scope, $timeout, $mdSidenav) {
 
-}
+		$scope.toggleLeft = function() {
+			$mdSidenav('left-menu').toggle();
+		};
+
+	}
+}());
