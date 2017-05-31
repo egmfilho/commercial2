@@ -60,22 +60,24 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 							md-button(ng-click='order.toast("Tooooastyyyy bolado!")')
 								| Sobre
 
-md-content(flex layout-padding style='background-color: #d9d9d9')
+md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
 	.order-container
 		//- Vendedor
-		section
+		section(name='seller')
 			md-card
 				md-card-header
 					md-card-header-text
 						span.md-title Vendedor
-						//- span.md-subhead Informe o vendedor
+						span.md-subhead Informe o vendedor
 				md-card-content
 					div(layout-gt-xs='row')
 						md-input-container
 							label Código
-							input(keys-shortcuts enter='order.getPersonByCode($event.target.value)')
-						md-autocomplete(flex required 
+							input(keys-shortcuts 
+								  enter='order.getPersonByCode($event.target.value)' 
+								  shift-enter='order.scrollTo("section[name=\'customer\']")')
+						md-autocomplete(flex 
 										md-input-name='autocompleteField'
 										md-input-minlength='2'
 										md-input-maxlength='18'
@@ -94,12 +96,12 @@ md-content(flex layout-padding style='background-color: #d9d9d9')
 					pre
 						| {{order.selectedItem2 | json}}
 		//- Produtos					
-		section
+		section(name='products')
 			md-card
 				md-card-header
 					md-card-header-text
 						span.md-title Produtos
-						//- span.md-subhead Adicione ou remova produtos
+						span.md-subhead Adicione ou remova produtos
 				md-card-content
 					div(layout-gt-xs='row')
 						md-input-container(flex='25')
@@ -194,12 +196,12 @@ md-content(flex layout-padding style='background-color: #d9d9d9')
 							input(tabindex='-1' readonly value='R$ 0,00')
 
 		//- Cliente
-		section.customer
+		section(name='customer')
 			md-card(layout-align='center')
 				md-card-header
 					md-card-header-text
 						span.md-title Cliente
-						//- span.md-subhead Informe o cliente
+						span.md-subhead Informe o cliente e seu endereço de entrega
 				
 				md-card-content
 					div(layout-gt-xs='row' layout-wrap)
@@ -207,7 +209,7 @@ md-content(flex layout-padding style='background-color: #d9d9d9')
 							label Código
 							input(ng-model='codigo')
 						
-						md-autocomplete(flex='75' required 
+						md-autocomplete(flex='75' 
 										md-input-name='autocompleteField'
 										md-input-minlength='2'
 										md-input-maxlength='18'
@@ -278,12 +280,12 @@ md-content(flex layout-padding style='background-color: #d9d9d9')
 								md-content(layout-padding)
 									h2 Novo Endereço
 		//- Observações
-		section
+		section(name='notes')
 			md-card(layout-align='center')
 				md-card-header
 					md-card-header-text
 						span.md-title Observações
-						//- span.md-subhead Aqui você pode inserir informações adicionais sobre o pedido
+						span.md-subhead Aqui você pode inserir informações adicionais sobre o pedido
 				md-card-content
 					div(layout-gt-xs='row')
 						md-input-container(flex)

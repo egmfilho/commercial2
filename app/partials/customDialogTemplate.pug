@@ -7,7 +7,7 @@ div(role='dialog' layout='column' layout-align='center center')
 				md-icon(md-font-icon='fa fa-times' ng-click='ctrl._closeDialog()')
 	.body(flex)
 		.dialog-content(layout='column')
-			div(layout='row' layout-wrap ng-if='ctrl._templateUrl' ng-include='ctrl._templateUrl')
+			div(layout='column' ng-if='ctrl._templateUrl' ng-include='ctrl._templateUrl')
 			div(ng-if='!ctrl._templateUrl')
 				p {{ctrl._message}}
 	.footer(flex)

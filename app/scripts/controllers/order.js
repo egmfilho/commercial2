@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-31 16:20:18
+* @Last Modified time: 2017-05-31 17:20:46
 */
 (function() {
 	'use strict';
@@ -20,6 +20,7 @@
 		self.getPersonByName = getPersonByName;	
 		self.editItemMenu    = editItemMenu;
 		self.showDialog      = showDialog;
+		self.scrollTo        = scrollTo;
 
 		// ******************************
 		// Methods declaration
@@ -83,6 +84,19 @@
 					}
 				};
 			}]);
+		}
+
+		/**
+		* Pesquisa pessoa pelo nome.
+		* @param {(string|element)} selector - O elemento para qual o scroll vai rolar.
+		*/
+		function scrollTo(selector) {
+			var container = jQuery('#order'),
+				target    = jQuery(selector)[0].offsetTop;
+
+			container.animate({
+				scrollTop: target - 5
+			});
 		}
 	}
 }());

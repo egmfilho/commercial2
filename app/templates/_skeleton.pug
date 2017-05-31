@@ -34,5 +34,13 @@ html
 					div(layout='row' layout-align='center center' flex)
 						| Futura Agência - 2017
 
+		//- Inicio do truque para evitar erro de nao carregar jQuery e outros plugins no electron
+		script
+			| if (typeof module === 'object') {window.module = module; module = undefined;}
+
 		script(src='scripts/vendors.min.js')
 		script(src='scripts/app.min.js')
+
+		//- Fim do truque
+		script
+			| if (window.module) module = window.module;

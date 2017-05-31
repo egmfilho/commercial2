@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 13:43:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-31 13:47:40
+* @Last Modified time: 2017-05-31 16:29:22
 */
 
 .custom-dialog {
@@ -18,6 +18,8 @@
 		md-toolbar {
 			min-height: 32px;
 			height: 32px;
+			border-top-left-radius: 3px;
+			border-top-right-radius: 3px;
 
 			.md-toolbar-tools {
 				h2 {
