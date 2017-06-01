@@ -1,7 +1,7 @@
 md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 	div(layout='row')
 		md-toolbar-filler(layout layout-align='center center')
-			md-icon(md-font-icon='fa fa-2x fa-file' aria-label='Menu')
+			md-icon(md-font-set='material-icons') description
 
 		div
 			.md-toolbar-tools
@@ -12,34 +12,34 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					md-menu-content
 						md-menu-item
 							md-button(ng-click='order.showDialog()')
-								i.fa.fa-file-o
+								md-icon(md-font-set='material-icons') insert_drive_file
 								|  Novo
 						md-menu-item
 							md-button(ng-click='')
-								i.fa.fa-folder-open-o
-								|  Abrir
+								md-icon(md-font-set='material-icons') restore_page
+								|  Recuperar
 						md-menu-divider
 						md-menu-item
 							md-button(ng-click='')
-								i.fa.fa-floppy-o
+								md-icon(md-font-set='material-icons') save
 								|  Salvar
 						md-menu-item
 							md-button(ng-click='' disabled)
-								i.fa.fa-share-square-o
+								md-icon(md-font-set='material-icons') cloud_upload
 								|  Exportar
 						md-menu-divider
 						md-menu-item
 							md-button(ng-click='' disabled)
-								i.fa.fa-print
+								md-icon(md-font-set='material-icons') print
 								|  Imprimir
 						md-menu-item
 							md-button(ng-click='' disabled)
-								i.fa.fa-envelope-o
+								md-icon(md-font-set='material-icons') mail
 								|  Enviar por email
 						md-menu-divider
 						md-menu-item
 							md-button(ng-click='' disabled)
-								i.fa.fa-trash-o
+								md-icon(md-font-set='material-icons') delete_forever
 								|  Excluir
 				md-menu
 					button(ng-click='$mdMenu.open()') Editar
@@ -134,10 +134,10 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							input(ng-model='quantidade')
 						md-input-container(flex='25')
 							label Desconto %
-							input(ng-model='descontoAl')
+							input(ng-model='descontoAl' ng-model-options="{ updateOn: 'default blur' }")
 						md-input-container(flex='25')
 							label Desconto R$
-							input(ng-model='descontoVl')
+							input(ng-model='descontoVl' ng-model-options="{ updateOn: 'default blur' }")
 						md-input-container(flex='25')
 							label 
 								i.fa.fa-lock &nbsp;
@@ -170,17 +170,17 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										td R$ 135,00 &nbsp;
 										td
 											md-menu
-												md-button.md-icon-button(ng-click='order.editItemMenu($mdMenu, $event)')
+												md-button.md-icon-button(tabindex='-1' ng-click='order.editItemMenu($mdMenu, $event)')
 													md-icon(md-font-icon='fa fa-ellipsis-v')
 												md-menu-content(width='2')
 													md-menu-item
-														md-button(ng-click='')
-															md-icon(md-font-icon='fa fa-pencil-square-o' md-menu-align-target) 
+														md-button(ng-click='') 
+															md-icon(md-font-set='material-icons' md-menu-align-target) create
 															|  Editar
 													md-menu-divider
 													md-menu-item
 														md-button(ng-click='')
-															md-icon(md-font-icon='fa fa-trash-o' md-menu-align-target) 
+															md-icon(md-font-set='material-icons' md-menu-align-target) delete_forever
 															|  Excluir
 
 					div(layout='row' style='margin-top: 30px')

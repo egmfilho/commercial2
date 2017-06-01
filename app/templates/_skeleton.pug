@@ -17,15 +17,8 @@ html
 	body(ng-app='commercial2' ng-cloak)
 
 		div(layout='column' layout-fill)
-			header(ng-if='currentPath !== "/login"')
-				md-toolbar
-					.md-toolbar-tools
-						md-button.md-icon-button
-							md-icon(md-font-icon='fa fa-bars' aria-label='Menu')
-						h2 Commercial
-						span.flex
-						md-button.md-icon-button
-							md-icon(md-font-icon='fa fa-gear' aria-label='Ajustes')
+
+			block header
 
 			block page
 

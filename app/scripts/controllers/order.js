@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-31 17:20:46
+* @Last Modified time: 2017-06-01 09:29:33
 */
 (function() {
 	'use strict';
@@ -73,6 +73,8 @@
 			var dialog = $rootScope.customDialog();
 
 			dialog.showTemplate('Template', './partials/modalNewPerson.html', ['Person', 'mdPanelRef', function(Person, mdPanelRef) {
+				this.customer = new Person();
+
 				this.teste = function() {
 					alert('Tell me your secrets...');
 				};

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-31 17:42:34
+* @Last Modified time: 2017-06-01 17:04:42
 */
 'use strict';
 
@@ -19,6 +19,9 @@ angular.module('commercial2', [
 		'ngMessages',
 		'ngMaterial',
 		'egmfilho.keys',
+		'egmfilho.inputFilters',
+		'ui.mask',
+		'ngStorage',
 		'commercial2.constants',
 		'commercial2.controllers',
 		'commercial2.services'
@@ -26,6 +29,11 @@ angular.module('commercial2', [
 	.config(['$httpProvider', '$locationProvider', function($httpProvider, $locationProvider) {
 		$httpProvider.interceptors.push('Interceptor');
 		$locationProvider.hashPrefix('');
+	}])
+	.config(['uiMask.ConfigProvider', function(uiMaskConfigProvider) {
+		// Esconde a mascara quando o input nao esta focado para evitar
+		// provlemas com os labels do Angularjs Material
+		uiMaskConfigProvider.addDefaultPlaceholder(false);
 	}])
 	.config(['$mdThemingProvider', function($mdThemingProvider) {
 
@@ -86,18 +94,35 @@ angular.module('commercial2', [
 			});
 
 	}])
-	.run(['$rootScope', '$location', '$mdToast', 'CustomDialog', function($rootScope, $location, $mdToast, customDialog) {
+	.run(['$rootScope', '$location', '$sessionStorage', 'Constants', function($rootScope, $location, $sessionStorage, constants) {
 
+		// Aqui verifica se o usuario esta logado. 
+		// Caso contrario redireciona para tela de login.
 		$rootScope.$on('$routeChangeStart', function(event, next, current) {
-
 			$rootScope.currentPath = $location.path();
 
+			if (!$sessionStorage[constants.cookie]) {
+				if (next && next.templateUrl) {
+					// Redireciona para tela de login apenas se a url nao for a de impressao
+					//  ou a propria tela de login
+					if (next.templateUrl !== 'views/login.html' && next.templateUrl.indextOf('printOrder.html') < 0) {
+						$location.path('/login');
+					}
+					return;
+				}
+			}
 		});
 
+	}])
+	.run(['$rootScope', '$mdToast', 'MainMenu', 'CustomDialog', function($rootScope, $mdToast, mainMenu, customDialog) {
+
+		// Retorna um array vazio com o length especificado.
+		// Para ser usado no ng-repeat.
 		$rootScope.getNumber = function(num) {
 			return new Array(Math.max(0, Math.ceil(num)));
 		};
 
+		// Funcao generica para chamar o Toast na tela.
 		$rootScope.toast = function(message, class) {
 			$mdToast.show(
 				$mdToast.simple()
@@ -108,6 +133,12 @@ angular.module('commercial2', [
 			);
 		};
 
+		// Exibe o menu principal
+		$rootScope.showMainMenu = function() {
+			return new mainMenu().show();
+		};
+
+		// Retorna uma nova instancia da janela de modal.
 		$rootScope.customDialog = function() {
 			return new customDialog();
 		};

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:06:00
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-30 12:04:01
+* @Last Modified time: 2017-06-01 09:55:38
 */
 
 (function() {
@@ -13,21 +13,22 @@
 		.factory('User', ['UserProfile', 'Person', function(UserProfile, Person) {
 
 			var _user = {
-				user_id: '',
-				user_profile_id: '',
-				user_shop_id: '',
+				user_id: null,
+				user_profile_id: null,
 				user_seller_id: '',
-				user_shop: '',
-				user_price_id: '',
-				user_price: '',
-				user_current_session_id: '',
-				user_active: '',
-				user_unlock_device: '',
+				user_active: true,
 				user_name: '',
-				user_user: '',
 				user_mail: '',
-				user_login: '',
-				user_max_discount: '',
+				user_max_discount: 0,
+				user_unlock_device: false,
+				user_session_expires: true,
+				user_login: null,
+				user_update: null,
+				user_date: null,
+				user_current_session: { },
+				user_shop: [ ],
+				user_price: [ ],
+				user_last_session: { },
 				user_profile: new UserProfile(),
 				user_seller: new Person()
 			};

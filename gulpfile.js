@@ -102,12 +102,8 @@ gulp.task('copy-images', function() {
 });
 
 gulp.task('copy-fonts', function() {	
-	return gulp.src([
-			'./bower_components/bootstrap-sass/assets/fonts/**/*.*',
-			'./bower_components/font-awesome/fonts/**/*.*',
-			source + 'fonts/**/*.*'
-		])
-		.pipe(gulp.dest(dest + 'fonts'))
+	return gulp.src('./bower_components/material-design-icons/iconfont/*.{eot,ijmap,svg,ttf,woff,woff2}')
+		.pipe(gulp.dest(dest + 'styles'))
 		.pipe(connect.reload());
 });
 

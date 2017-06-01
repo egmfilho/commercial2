@@ -2,3 +2,20 @@ extends ./templates/_skeleton.pug
 
 block page
 	div(ng-view='' autoscroll layout='column' flex)
+
+block header
+	header(ng-if='currentPath !== "/login"')
+		md-toolbar
+			.md-toolbar-tools
+				md-button.md-icon-button(ng-click='showMainMenu()')
+					md-icon(md-font-icon='fa fa-bars' aria-label='Menu')
+				h1 Commercial - Gestor de vendas
+				span.flex
+				md-menu
+					md-button.md-icon-button(ng-click='$mdMenu.open($event)')
+						md-icon(md-font-icon='fa fa-gear' aria-label='Ajustes')
+					md-menu-content
+						md-menu-item
+							md-button(ng-click='' style='text-align: center') 
+								md-icon(md-font-set='material-icons' md-menu-align-target) account_circle
+								|  Redefinir senha de usuário

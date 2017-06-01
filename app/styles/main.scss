@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-31 13:44:07
+* @Last Modified time: 2017-06-01 16:47:50
 */
 
 @import "../../bower_components/angular-material/angular-material.scss";
@@ -15,14 +15,30 @@ $main-color-lighter: lighten($main-color, 15%);
 
 $secondary-color: #F99F57;
 
+.material-icons {
+	font-size: 1em;
+	width: auto;
+	height: auto;
+}
+
 header {
 	md-toolbar {
 		min-height: 32px;
 		height: 32px;
 
 		.md-toolbar-tools {
-			h2 {
+			h1 {
 				font-size: 16px;
+			}
+
+			md-menu {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				height: 32px;
+				max-height: 32px;
+				margin: 0;
+				padding: 0;
 			}
 		}
 	}
@@ -51,8 +67,14 @@ md-toast {
 	}
 }
 
+.hint {
+	color: rgba(#000, .6);
+	font-weight: 200;
+}
+
 @import "scrollbar";
 @import "prevent-highlight";
+@import "mainMenu";
 @import "customDialog";
 @import "login";
 @import "order";
