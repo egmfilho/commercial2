@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-31 16:19:06
+* @Last Modified time: 2017-06-01 17:47:38
 */
 
 (function() {
@@ -26,8 +26,8 @@
 
 			_animation = $mdPanel.newPanelAnimation()
 				.duration(200)
-				.openFrom(_animationPosition)
-				.closeTo(_animationPosition)
+				// .openFrom(_animationPosition)
+				// .closeTo(_animationPosition)
 				.withAnimation($mdPanel.animation.SCALE);
 		}
 
@@ -96,7 +96,7 @@
 				panelClass: 'custom-dialog',
 				animation: _animation,
 				fullscreen: false,
-				hasBackdrop: true,
+				hasBackdrop: false,
 				position: $mdPanel.newPanelPosition().absolute().center(),
 				trapFocus: true,
 				zIndex: 80, // nao aumentar para nao ficar na frente do menu do select
