@@ -4,7 +4,7 @@ block page
 	div(ng-view='' autoscroll layout='column' flex)
 
 block header
-	header(ng-if='currentPath !== "/login"')
+	header(ng-if='currentPath !== "/login" && currentPath !== "/logout"')
 		md-toolbar
 			.md-toolbar-tools
 				md-button.md-icon-button(ng-click='showMainMenu()')
@@ -19,3 +19,9 @@ block header
 							md-button(ng-click='' style='text-align: center') 
 								md-icon(md-font-set='material-icons' md-menu-align-target) account_circle
 								|  Redefinir senha de usuário
+
+block footer
+	footer(ng-if='currentPath !== "/login" && currentPath !== "/logout"')
+		md-toolbar
+			div(layout='row' layout-align='center center' flex)
+				| Futura Agência - 2017

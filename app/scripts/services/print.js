@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-02 12:07:18
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-02 13:35:07
+* @Last Modified time: 2017-06-02 18:08:50
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('Print', Print);
 
-	Print.$inject = [ 'Constants' ];
+	Print.$inject = [ '$sessionStorage', 'Constants' ];
 
-	function Print(constants) {
+	function Print($sessionStorage, constants) {
 
 		// ******************************************
 		// Check if it's running on Electron
@@ -23,7 +23,7 @@
 		var _isElectron = window && window.process && window.process.versions['electron'];
 
 		if (!_isElectron) {
-			function oops() { alert('Disponível apenas na versão desktop.'); }
+			var oops = function() { alert('Disponível apenas na versão desktop.'); };
 			return { 
 				print: oops,
 				savePDF: oops
@@ -61,7 +61,21 @@
 		* Instancia uma nova janela no Electron
 		*/
 		function createWindow() {
-			return new _BrowserWindow({ width: 800, height: 600, show: false });
+			var win = new _BrowserWindow({ 
+				devTools: constants.debug,
+				width: 800, 
+				height: 600, 
+				show: false,
+				title: 'Orçamento',
+				parent: _electron.remote.getCurrentWindow(),
+  				modal: false,
+  				contextIsolation: false,
+  				session: _electron.remote.getCurrentWindow().webContents.session
+			});
+
+			// win[constants['cookie']] = $sessionStorage[constants['cookie']];
+
+			return win;
 		}
 
 		/**
@@ -72,6 +86,7 @@
 			if (!url) return;
 
 			var newWindow = createWindow();
+			newWindow.teste = 'teste';
 			newWindow.loadURL(url);
 			newWindow.show();
 
@@ -88,6 +103,7 @@
 			if (!url) return;
 
 			var newWindow = createWindow();
+			newWindow.teste = 'teste';
 			newWindow.loadURL(url);
 			newWindow.show();
 

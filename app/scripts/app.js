@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-02 11:13:52
+* @Last Modified time: 2017-06-02 18:10:05
 */
 'use strict';
 
@@ -100,6 +100,20 @@ angular.module('commercial2', [
 
 	}])
 	.run(['$rootScope', '$location', '$sessionStorage', 'Constants', function($rootScope, $location, $sessionStorage, constants) {
+
+		if (constants.isEletron && !$sessionStorage[constants['cookie']] || true) {
+			console.log('esta usando electron e nao tem sessao');
+			var electron = require('electron'),
+				session;
+
+			session = electron.remote.getCurrentWindow();
+			console.log('sessao', session.teste);
+
+			// if (session) {
+			// 	console.log('recebeu uma sessao', session);
+			// 	$sessionStorage[constants['cookie']] = session;
+			// }
+		}
 
 		// Aqui verifica se o usuario esta logado. 
 		// Caso contrario redireciona para tela de login.

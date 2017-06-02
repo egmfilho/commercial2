@@ -1,0 +1,28 @@
+/*
+* @Author: egmfilho
+* @Date:   2017-06-02 13:48:45
+* @Last Modified by:   egmfilho
+* @Last Modified time: 2017-06-02 13:50:02
+*/
+
+.logout {
+	.cover {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		background-color: $main-color;
+		z-index: 1;
+		opacity: .5;
+	}
+
+	.picture {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		background-image: url('../images/login-background.jpg');
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		z-index: 0;
+	}
+}
