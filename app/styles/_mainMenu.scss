@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-01 16:48:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-01 17:37:49
+* @Last Modified time: 2017-06-02 09:28:24
 */
 
 .main-menu {
@@ -32,13 +32,15 @@
 
 	.modules {
 		.module {
-			a {
+			button {
 				text-decoration: none;
 				text-align: center;
+				text-transform: none;				
 				display: block;
 				padding: 8px;
 				margin: 8px;
 				border-radius: 4px;
+				min-width: 150px;
 
 				div {
 					display: block;
@@ -67,25 +69,23 @@
 					&.settings-module {
 						md-icon {
 							background: #009688;
-						}	
+						}
 					}
 
 					&.logout-module {
 						md-icon {
 							background: #F44336;
-						}	
+						}
 					}
 				}
 
 				p {
 					color: $main-color;
 					font-size: 14px;
-					letter-spacing: 0.5px;
+					font-weight: 400;
+					letter-spacing: 0.8px;
 					margin-bottom: 0;
-				}
-
-				&:hover {
-					background-color: #e7e7e7;
+					cursor: pointer !important;
 				}
 			}
 		}

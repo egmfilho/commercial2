@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-01 09:29:33
+* @Last Modified time: 2017-06-02 13:09:00
 */
 (function() {
 	'use strict';
@@ -10,9 +10,9 @@
 	angular.module('commercial2.controllers')
 		.controller('OrderCtrl', OrderCtrl);
 
-	OrderCtrl.$inject = [ '$rootScope', '$scope', '$timeout', '$q', '$mdPanel', 'Constants', 'ProviderPerson', 'Person' ];
+	OrderCtrl.$inject = [ '$rootScope', '$scope', '$timeout', '$q', '$mdPanel', 'Constants', 'ProviderPerson', 'Person', 'Print' ];
 
-	function OrderCtrl($rootScope, $scope, $timeout, $q, $mdPanel, constants, providerPerson, Person) {
+	function OrderCtrl($rootScope, $scope, $timeout, $q, $mdPanel, constants, providerPerson, Person, Print) {
 
 		var self = this;
 
@@ -21,6 +21,7 @@
 		self.editItemMenu    = editItemMenu;
 		self.showDialog      = showDialog;
 		self.scrollTo        = scrollTo;
+		self.savePDF 		 = Print.savePDF;
 
 		// ******************************
 		// Methods declaration

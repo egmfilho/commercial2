@@ -2,16 +2,39 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:13:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-29 16:51:21
+* @Last Modified time: 2017-06-02 10:06:10
 */
 
-:not(input):not(textarea):not(md-icon):not(button),
-:not(input):not(textarea):not(md-icon):not(button)::after,
-:not(input):not(textarea):not(md-icon):not(button)::before {
-	-webkit-user-select: none;
-	user-select: none;
-	cursor: default;
+:not(input):not(textarea) {
+	&, &::after, &::before {
+		-webkit-user-select: none;
+		user-select: none;
+		cursor: default;
+	}
 }
-input, button, textarea, :focus {
+
+button, a {
+	cursor: pointer !important;
+
+	* {
+		&, &::before, &::after {
+			cursor: pointer !important;
+		}
+	}
+}
+
+input, button, textarea, a, :focus {
 	outline: none; // You should add some other style for :focus to help UX/a11y
+}
+
+a:not([draggable=true]), img:not([draggable=true]) {
+    -webkit-user-drag: none;
+    user-drag: none; /* Technically not supported in Electron yet */
+}
+
+a[href^="http://"],
+a[href^="https://"],
+a[href^="ftp://"] {
+    -webkit-user-drag: auto;
+    user-drag: auto; /* Technically not supported in Electron yet */
 }

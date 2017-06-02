@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-01 17:47:38
+* @Last Modified time: 2017-06-02 11:56:42
 */
 
 (function() {
@@ -16,24 +16,25 @@
 
 	function CustomDialog($mdPanel) {
 
-		var _animation, _animationPosition, _config;
+		var _dialog, _animation, _animationPosition, _config, _unclosable;
 
 		function Dialog() {
-			_animationPosition = {
-				top: 0,
-				left: document.documentElement.clientWidth / 2 - 250
-			};
+			_unclosable = false;
+
+			_animationPosition = $mdPanel.newPanelPosition().absolute().center();
 
 			_animation = $mdPanel.newPanelAnimation()
-				.duration(200)
-				// .openFrom(_animationPosition)
-				// .closeTo(_animationPosition)
-				.withAnimation($mdPanel.animation.SCALE);
+				.duration(100)
+				.openFrom(_animationPosition)
+				.closeTo(_animationPosition)
+				.withAnimation($mdPanel.animation.FADE);
 		}
 
 		Dialog.prototype = {
 			showMessage: showMessage,
-			showTemplate: showTemplate
+			showTemplate: showTemplate,
+			unclosable: unclosable,
+			close: close
 		};
 
 		return Dialog;
@@ -62,6 +63,22 @@
 		}
 
 		/**
+		 * Remove os botoes e o footer da janela.
+		 * A janela so poderá ser fechada via código.
+		 */
+		function unclosable() {
+			_unclosable = true;
+			return this;
+		}
+
+		/**
+		 * Fecha a janela.
+		 */
+		function close() {
+			_dialog.close();
+		}
+
+		/**
 		 * Configura e cria a janela.
 		 * @param {string} title - O titulo da janela.
 		 * @param {string} message - Mensagem a ser exibida no corpo da janela.
@@ -81,7 +98,7 @@
 				this._title 	  = title;
 				this._message 	  = message;
 				this._templateUrl = templateUrl;
-
+				this._unclosable  = _unclosable;
 				this._closeDialog = function() {
 					if (mdPanelRef) mdPanelRef.close();
 				};
@@ -96,16 +113,18 @@
 				panelClass: 'custom-dialog',
 				animation: _animation,
 				fullscreen: false,
-				hasBackdrop: false,
+				hasBackdrop: _unclosable,
 				position: $mdPanel.newPanelPosition().absolute().center(),
 				trapFocus: true,
 				zIndex: 80, // nao aumentar para nao ficar na frente do menu do select
-				clickOutsideToClose: true,
-				escapeToClose: true,
+				clickOutsideToClose: !_unclosable,
+				escapeToClose: !_unclosable,
 				focusOnOpen: true
 			};
 
-			return $mdPanel.open(_config);	
+			_dialog = $mdPanel.create(_config);
+
+			return 	_dialog.open();
 		}
 	}
 

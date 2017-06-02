@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-01 17:04:42
+* @Last Modified time: 2017-06-02 11:13:52
 */
 'use strict';
 
@@ -69,6 +69,11 @@ angular.module('commercial2', [
 				controller: 'LoginCtrl',
 				controllerAs: 'login'
 			})
+			.when('/logout', {
+				templateUrl: 'views/logout.html',
+				controller: 'LogoutCtrl',
+				controllerAs: 'logout'
+			})
 			.when('/', {
 				templateUrl: 'views/home.html',
 				controller: 'HomeCtrl',
@@ -105,7 +110,7 @@ angular.module('commercial2', [
 				if (next && next.templateUrl) {
 					// Redireciona para tela de login apenas se a url nao for a de impressao
 					//  ou a propria tela de login
-					if (next.templateUrl !== 'views/login.html' && next.templateUrl.indextOf('printOrder.html') < 0) {
+					if (next.templateUrl !== 'views/login.html' && next.templateUrl.indexOf('printOrder.html') < 0) {
 						$location.path('/login');
 					}
 					return;

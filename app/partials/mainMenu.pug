@@ -10,25 +10,25 @@ md-content(layout='column')
 
 	.modules(layout='row' layout-wrap)
 		.module(flex='50' layout-align='center')
-			a(href='#/' ng-click='ctrl._close()')
+			md-button(ng-click='ctrl._goTo("/")')
 				.home-module
 					md-icon(md-font-set='material-icons') home
 				p Início
 
 		.module(flex='50' layout-align='center')
-			a(href='#/order' ng-click='ctrl._close()')
+			md-button(ng-click='ctrl._goTo("/order")')
 				.order-module
 					md-icon(md-font-set='material-icons') description
 				p Orçamento
 	.modules(layout='row' layout-wrap)
 		.module(flex='50' layout-align='center')
-			a(href='' ng-click='ctrl._close()')
+			md-button(ng-click='ctrl._goTo()')
 				.settings-module
 					md-icon(md-font-set='material-icons') build
 				p Ajustes
 
 		.module(flex='50' layout-align='center')
-			a(href='' ng-click='ctrl._close()')
+			md-button(ng-click='ctrl._goTo("/logout")')
 				.logout-module
 					md-icon(md-font-set='material-icons') exit_to_app
 				p Logout

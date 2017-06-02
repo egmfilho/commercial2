@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-01 15:57:25
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-01 17:32:52
+* @Last Modified time: 2017-06-02 09:18:08
 */
 
 (function() {
@@ -30,12 +30,13 @@
 				.closeTo(animationPosition)
 				.withAnimation($mdPanel.animation.SCALE);
 
-			var controller = function(mdPanelRef) {
-				this._close = function() {
+			var controller = function($location, mdPanelRef) {
+				this._goTo = function(path) {
+					if (path) $location.path(path);
 					if (mdPanelRef) mdPanelRef.close();
 				};
 			};
-			controller.$inject = [ 'mdPanelRef' ];
+			controller.$inject = [ '$location', 'mdPanelRef' ];
 
 			var config = {
 				attatchTo: angular.element(document.body),
