@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:03:59
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-02 16:29:10
+* @Last Modified time: 2017-06-05 10:32:28
 */
 
 (function() {
@@ -12,15 +12,18 @@
 	angular.module('commercial2.services')
 		.factory('Authentication', Authentication);
 
-	Authentication.$inject = [ '$rootScope', '$http', '$sessionStorage', 'User', 'Constants' ];
+	Authentication.$inject = [ '$rootScope', '$http', 'Cookies', 'User', 'Constants' ];
 
-	function Authentication($rootScope, $http, $sessionStorage, User, constants) {
+	function Authentication($rootScope, $http, cookies, User, constants) {
 
 		function login(username, password, callback) {
 			if (constants['bypass-login']) {
 				var res = JSON.parse(constants['login-fake-response']), 
 					user = new User(res.data.data);
-				$sessionStorage[constants.cookie] = window.btoa(JSON.stringify(user));
+				cookies.set({ 
+					name: constants['cookie'], 
+					value: window.btoa(JSON.stringify(user)) 
+				});
 				console.log('login bypassed');
 				callback(res);
 				return;
@@ -34,7 +37,10 @@
 				if (res.status == 200) {
 					var user = new User(res.data.data);
 					if (constants.debug) console.log(user);
-					$sessionStorage[constants.cookie] = window.btoa(JSON.stringify(user));
+					cookies.set({ 
+						name: constants['cookie'], 
+						value: window.btoa(JSON.stringify(user)) 
+					});
 				}
 				callback(res.data);
 			}, function(res) {
@@ -48,7 +54,7 @@
 				method: 'POST',
 				url: constants.api + 'logout.php'
 			}).then(function(res) {
-				$sessionStorage.$reset();
+				cookies.clear();
 				callback(res);
 			}, function(res) {
 				if (cosntants.debug) console.log(res);

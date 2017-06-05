@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 11:04:49
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-29 13:51:32
+* @Last Modified time: 2017-06-05 13:36:44
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('Interceptor', Interceptor);
 
-	Interceptor.$inject = [ '$q', '$location', '$cookies', '$httpParamSerializerJQLike', 'Constants' ];
+	Interceptor.$inject = ['$location', 'Cookies', '$httpParamSerializerJQLike', 'Constants' ];
 
-	function Interceptor($q, $location, $cookies, $httpParamSerializerJQLike, constants) {
+	function Interceptor($location, Cookies, $httpParamSerializerJQLike, constants) {
 
 		return {
 			'request': 		 request,
@@ -27,7 +27,7 @@
 
 		function request(req) {
 			if (constants['bypass-login']) {
-				console.log('bypassing login');
+				console.log('bypassing login with private token');
 				req.headers['x-session-token'] = 'lucilei';
 			}
 
@@ -38,8 +38,8 @@
 
 		function responseError(rejection) {
 			if (rejection.status == 401) {
-				if ($cookies.get('currentUser')) {
-					$cookies.remove('currentUser');
+				if (Cookies.get(constants['cookie'])) {
+					Cookies.remove(constants['cookie']);
 				}
 
 				$location.path('/login');

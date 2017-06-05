@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-02 14:24:44
+* @Last Modified time: 2017-06-05 14:32:17
 */
 (function() {
 	'use strict';
@@ -38,7 +38,7 @@
 			providerPerson.getByCode(code, 'Cliente').then(function(success) {
 				console.log(new Person(success.data));
 			}, function(error) {			
-				if (constants.debug) console.log(error);
+				constants.debug && console.log(error);
 			});
 		}
 
@@ -58,7 +58,7 @@
 				});
 				deferred.resolve(array);
 			}, function(error) {
-				if (constants.debug) console.log(error);
+				constants.debug && console.log(error);
 				deferred.reject();
 			});
 
@@ -103,7 +103,7 @@
 		}
 
 		function savePDF() {
-			Print.savePDF($location.$$absUrl);
+			Print.print(window.location.href.split('#')[0] + '#/order/print/1');
 		}
 	}
 }());

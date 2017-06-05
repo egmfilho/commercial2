@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-02 18:10:05
+* @Last Modified time: 2017-06-05 14:14:15
 */
 'use strict';
 
@@ -21,7 +21,6 @@ angular.module('commercial2', [
 		'egmfilho.keys',
 		'egmfilho.inputFilters',
 		'ui.mask',
-		'ngStorage',
 		'commercial2.constants',
 		'commercial2.controllers',
 		'commercial2.services'
@@ -31,13 +30,13 @@ angular.module('commercial2', [
 		$locationProvider.hashPrefix('');
 	}])
 	.config(['uiMask.ConfigProvider', function(uiMaskConfigProvider) {
-		// Esconde a mascara quando o input nao esta focado para evitar
-		// provlemas com os labels do Angularjs Material
+		/* Esconde a mascara quando o input nao esta focado para evitar */
+		/* provlemas com os labels do Angularjs Material */
 		uiMaskConfigProvider.addDefaultPlaceholder(false);
 	}])
 	.config(['$mdThemingProvider', function($mdThemingProvider) {
 
-		// https://angular-md-color.com/#/
+		/* https://angular-md-color.com/#/ */
 
 		$mdThemingProvider.definePalette('customAccent', {
 			'50': '#b15206',
@@ -84,6 +83,9 @@ angular.module('commercial2', [
 				controller: 'OrderCtrl',
 				controllerAs: 'order'
 			})
+			.when('/order/print/:code', {
+				templateUrl: 'views/print-order.html'
+			})
 			.when('/order-tab', {
 				templateUrl: 'views/order-tab.html',
 				controller: 'OrderCtrl',
@@ -99,49 +101,38 @@ angular.module('commercial2', [
 			});
 
 	}])
-	.run(['$rootScope', '$location', '$sessionStorage', 'Constants', function($rootScope, $location, $sessionStorage, constants) {
-
-		if (constants.isEletron && !$sessionStorage[constants['cookie']] || true) {
-			console.log('esta usando electron e nao tem sessao');
-			var electron = require('electron'),
-				session;
-
-			session = electron.remote.getCurrentWindow();
-			console.log('sessao', session.teste);
-
-			// if (session) {
-			// 	console.log('recebeu uma sessao', session);
-			// 	$sessionStorage[constants['cookie']] = session;
-			// }
-		}
-
-		// Aqui verifica se o usuario esta logado. 
-		// Caso contrario redireciona para tela de login.
+	.run(['$rootScope', '$location', 'Cookies', 'Constants', function($rootScope, $location, Cookies, constants) {
+		/* Aqui verifica se o usuario esta logado. */
+		/* Caso contrario redireciona para tela de login. */
 		$rootScope.$on('$routeChangeStart', function(event, next, current) {
+			/* Armazena a localizacao atual para usar nas condicionais das views */
 			$rootScope.currentPath = $location.path();
 
-			if (!$sessionStorage[constants.cookie]) {
-				if (next && next.templateUrl) {
-					// Redireciona para tela de login apenas se a url nao for a de impressao
-					//  ou a propria tela de login
-					if (next.templateUrl !== 'views/login.html' && next.templateUrl.indexOf('printOrder.html') < 0) {
-						$location.path('/login');
-					}
-					return;
+			Cookies.get(constants['cookie']).then(function(success) {
+				if (!$rootScope[constants['cookie']]) {
+					$rootScope[constants['cookie']] = JSON.parse(window.atob(success));
+					constants.debug && console.log($rootScope[constants['cookie']]);
 				}
-			}
+			}, function(error) {
+				constants.debug && console.log('cookie de sessao nao encontrado!');
+				/* Redireciona para tela de login apenas se a url nao for a de impressao */
+				/*  ou a propria tela de login */
+				if (next.templateUrl && next.templateUrl !== 'views/login.html' && next.templateUrl.indexOf('print-order.html') < 0) {
+					$location.path('/login');
+				}
+			});
 		});
 
 	}])
 	.run(['$rootScope', '$mdToast', 'MainMenu', 'CustomDialog', function($rootScope, $mdToast, mainMenu, customDialog) {
 
-		// Retorna um array vazio com o length especificado.
-		// Para ser usado no ng-repeat.
+		/* Retorna um array vazio com o length especificado. */
+		/* Para ser usado no ng-repeat. */
 		$rootScope.getNumber = function(num) {
 			return new Array(Math.max(0, Math.ceil(num)));
 		};
 
-		// Funcao generica para chamar o Toast na tela.
+		/* Funcao generica para chamar o Toast na tela. */
 		$rootScope.toast = function(message, class) {
 			$mdToast.show(
 				$mdToast.simple()
@@ -152,12 +143,12 @@ angular.module('commercial2', [
 			);
 		};
 
-		// Exibe o menu principal
+		/* Exibe o menu principal */
 		$rootScope.showMainMenu = function() {
 			return new mainMenu().show();
 		};
 
-		// Retorna uma nova instancia da janela de modal.
+		/* Retorna uma nova instancia da janela de modal. */
 		$rootScope.customDialog = function() {
 			return new customDialog();
 		};

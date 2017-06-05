@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-02 12:07:18
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-02 18:08:50
+* @Last Modified time: 2017-06-05 14:33:16
 */
 
 (function() {
@@ -12,17 +12,15 @@
 	angular.module('commercial2.services')
 		.factory('Print', Print);
 
-	Print.$inject = [ '$sessionStorage', 'Constants' ];
+	Print.$inject = [ 'Cookies', 'Constants' ];
 
-	function Print($sessionStorage, constants) {
+	function Print(Cookies, constants) {
 
 		// ******************************************
 		// Check if it's running on Electron
 		// to avoid crash on browser
 		// ******************************************
-		var _isElectron = window && window.process && window.process.versions['electron'];
-
-		if (!_isElectron) {
+		if (!constants.isElectron) {
 			var oops = function() { alert('Disponível apenas na versão desktop.'); };
 			return { 
 				print: oops,
@@ -31,7 +29,7 @@
 		}
 
 		// ******************************
-		// Is running on Electron?
+		// Running on Electron
 		// ******************************
 		var _electron, _dialog, _BrowserWindow, _fs;
 
@@ -73,8 +71,6 @@
   				session: _electron.remote.getCurrentWindow().webContents.session
 			});
 
-			// win[constants['cookie']] = $sessionStorage[constants['cookie']];
-
 			return win;
 		}
 
@@ -90,7 +86,7 @@
 			newWindow.loadURL(url);
 			newWindow.show();
 
-			newWindow.webContents.on('did-finish-load', function() {
+			newWindow.webContents.on('dom-ready', function() {
 				newWindow.webContents.print();
 			});
 		}
