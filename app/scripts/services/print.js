@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-02 12:07:18
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-05 14:33:16
+* @Last Modified time: 2017-06-05 18:11:18
 */
 
 (function() {
@@ -67,8 +67,7 @@
 				title: 'Orçamento',
 				parent: _electron.remote.getCurrentWindow(),
   				modal: false,
-  				contextIsolation: false,
-  				session: _electron.remote.getCurrentWindow().webContents.session
+  				contextIsolation: false
 			});
 
 			return win;
@@ -82,13 +81,14 @@
 			if (!url) return;
 
 			var newWindow = createWindow();
-			newWindow.teste = 'teste';
+
+			newWindow.webContents.on('can-print', function() {
+				console.log('can print');
+				// newWindow.webContents.print();
+			});
+
 			newWindow.loadURL(url);
 			newWindow.show();
-
-			newWindow.webContents.on('dom-ready', function() {
-				newWindow.webContents.print();
-			});
 		}
 
 		/**

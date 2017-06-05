@@ -1,5 +1,10 @@
 const electron = require('electron');
-const {app, BrowserWindow} = electron;
+const {app, BrowserWindow, ipcMain} = electron;
+
+ipcMain.on('document-ready-to-print', function(e, a) {
+	console.log('readyToPrint', a);
+	e.sender.send('can-print', '');
+});
 
 app.on('ready', function() {
 	var mainWindow = new BrowserWindow({
