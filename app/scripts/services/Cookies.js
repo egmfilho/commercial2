@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-05 09:24:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-05 13:32:34
+* @Last Modified time: 2017-06-06 14:31:57
 */
 
 (function() {
@@ -32,6 +32,15 @@
 				clear: clear
 			};
 
+			// ******************************
+			// Methods declaration
+			// ******************************
+
+			/**
+			* Adiciona um cookie.
+			* @param {object} data - O valores do cookie a ser armazenado.
+			* @returns {object} Uma promise com o resultado.
+			*/
 			function set(data) {
 				var deferred = $q.defer();
 
@@ -51,6 +60,11 @@
 				return deferred.promise;
 			}
 
+			/**
+			* Recupera um cookie.
+			* @param {string} name - O nome do cookie a ser recuperado.
+			* @returns {object} Uma promise com o resultado.
+			*/
 			function get(name) {
 				var deferred = $q.defer();
 
@@ -66,6 +80,11 @@
 				return deferred.promise;
 			}
 
+			/**
+			* Remove um cookie permanentemente.
+			* @param {string} name - O nome do cookie a ser removido.
+			* @returns {object} Uma promise com o resultado.
+			*/
 			function remove(name) {
 				var deferred = $q.defer();
 
@@ -84,8 +103,14 @@
 				return deferred.promise;
 			}
 
-			function clear(callback) {
-				if (!constants.isElectron) {
+			/**
+			* Remove todos os cookies permanentemente.
+			* @returns {object} Uma promise com o resultado.
+			*/
+			function clear() {
+				var deferred = $q.defer();
+
+				if (constants.isElectron) {
 					session.clearStorageData([], function() {
 						deferred.resolve();
 					});

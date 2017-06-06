@@ -11,7 +11,7 @@ md-content.login(flex)
 					form(name='LoginForm' layout='column' ng-submit='login.submitForm()')
 						md-input-container
 							label Nome de Usuário
-							input(type='text' name='user' ng-model='login.user' required)
+							input(type='text' name='user' ng-model='login.user' keys-shortcuts enter='login.advance()' required)
 							div(ng-messages='LoginForm.user.$error' role='alert' multiple)
 								div(ng-message='required') Informe o nome de usuário.
 						md-input-container
@@ -26,7 +26,7 @@ md-content.login(flex)
 				a(href='#/login') Esqueci a senha
 
 	.ver 
-		span Versão 2.0
+		span Versão {{version}}
 
 	.sign 
 		a(href='') Futura Agência - 2017

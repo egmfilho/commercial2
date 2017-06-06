@@ -74,27 +74,30 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					div(layout-gt-xs='row')
 						md-input-container
 							label Código
-							input(keys-shortcuts 
-								  enter='order.getPersonByCode($event.target.value)' 
+							input(ng-value='order.budget.seller.person_code' 
+								  blur-to='order.budget.seller.person_code'
+								  keys-shortcuts 
+								  enter='order.getPersonByCode($event.target.value, "0000000004,000000000R")' 
 								  shift-enter='order.scrollTo("section[name=\'customer\']")')
 						md-autocomplete(flex 
-										md-input-name='autocompleteField'
-										md-input-minlength='2'
-										md-input-maxlength='18'
-										md-no-cache='order.noCache'
-										md-selected-item='order.selectedItem2'
-										md-search-text='order.searchText'
-										md-items='item in order.getPersonByName(order.searchText, "Vendedor")'
-										md-item-text='item.Nome'
+										md-input-name='autocompleteSeller'
+										md-no-cache='false'
+										md-selected-item='order.budget.seller'
+										md-search-text='sellerQuery'
+										md-items='item in order.getPersonByName(sellerQuery, "0000000004,000000000R")'
+										md-item-text='item.person_name'
+										md-min-length='0'
 										md-require-match
 										md-floating-label='Nome')
 							md-item-template
-								div(md-highlight-text='order.searchText' style='line-height: 2') {{item.Nome}}
+								div(md-highlight-text='sellerQuery' style='line-height: 2') {{item.person_name}}
 								div(style='font-size: 11px;line-height: 1')
 									| Código: 
-									| {{item.Codigo}}
-					pre
-						| {{order.selectedItem2 | json}}
+									| {{item.person_code}}
+
+					pre(ng-if='debug')
+						| {{order.budget.seller | json}}
+
 		//- Produtos					
 		section(name='products')
 			md-card
@@ -207,52 +210,55 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					div(layout-gt-xs='row' layout-wrap)
 						md-input-container(flex='25')
 							label Código
-							input(ng-model='codigo')
-						
-						md-autocomplete(flex='75' 
-										md-input-name='autocompleteField'
-										md-input-minlength='2'
-										md-input-maxlength='18'
-										md-no-cache='order.noCache'
-										md-selected-item='order.selectedItem'
-										md-search-text='order.searchText'
-										md-items='item in order.querySearch(order.searchText)'
-										md-item-text='item.display'
-										md-require-match
+							input(ng-value='order.budget.customer.person_code' 
+								  blur-to='order.budget.customer.person_code'
+								  keys-shortcuts 
+								  enter='order.getPersonByCode($event.target.value, "0000000005")' 
+								  shift-enter='')
+						md-autocomplete(flex='75'
+										md-input-name='autocompleteCustomer'
+										md-no-cache='false'
+										md-selected-item='tempCustomer'
+										md-search-text='customerQuery'
+										md-selected-item-change='order.getCustomerByCode(item.person_code)'
+										md-items='item in order.getPersonByName(customerQuery, "0000000005")'
+										md-item-text='item.person_name'
+										md-min-length='0'
+										md-require-match='true'
 										md-floating-label='Nome')
 							md-item-template
-								div(md-highlight-text='order.searchText' style='line-height: 2') {{item.display}}
+								div(md-highlight-text='customerQuery' style='line-height: 2') {{item.person_name}}
 								div(style='font-size: 11px;line-height: 1')
 									| Código: 
-									| {{item.code}}
+									| {{item.person_code}}
 						
 						md-input-container.md-icon-float(flex='25')
 							label
 								span
 									i.fa.fa-lock &nbsp;
 									span Tipo
-							input(readonly ng-if='true')
-							md-select(ng-model='tipo' ng-if='false')
-								md-option(value='F') Pessoa Física
-								md-option(value='J') Pessoa Jurídica
+							input(ng-value='order.budget.customer.getType()' readonly)
 						
 						md-input-container(flex='25')
 							label 
 								i.fa.fa-lock &nbsp;
 								| CPF
-							input(readonly)
+							input(ng-value='order.budget.customer.person_cpf' readonly)
 
 						md-input-container(flex='25')
 							label 
 								i.fa.fa-lock &nbsp;
 								| CNPJ
-							input(readonly)
+							input(ng-value='order.budget.customer.person_cnpj' readonly)
 
 						md-input-container(flex='25')
 							label 
 								i.fa.fa-lock &nbsp;
 								| Inscrição Estadual
 							input(readonly)
+
+					pre(ng-if='debug')
+						| {{order.budget.customer | json}}
 
 					div(layout='row' style='margin-top: 30px')
 						md-tabs(md-selected='selectedTabIndex' md-border-bottom flex)

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:03:59
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-05 10:32:28
+* @Last Modified time: 2017-06-06 14:30:53
 */
 
 (function() {
@@ -17,26 +17,14 @@
 	function Authentication($rootScope, $http, cookies, User, constants) {
 
 		function login(username, password, callback) {
-			if (constants['bypass-login']) {
-				var res = JSON.parse(constants['login-fake-response']), 
-					user = new User(res.data.data);
-				cookies.set({ 
-					name: constants['cookie'], 
-					value: window.btoa(JSON.stringify(user)) 
-				});
-				console.log('login bypassed');
-				callback(res);
-				return;
-			}
-
 			$http({
 				method: 'POST',
 				url: constants.api + 'login.php',
-				data: { user: username, pass: password }
+				data: { user_user: username, user_pass: password }
 			}).then(function(res) {
 				if (res.status == 200) {
 					var user = new User(res.data.data);
-					if (constants.debug) console.log(user);
+					constants.debug && console.log(user);
 					cookies.set({ 
 						name: constants['cookie'], 
 						value: window.btoa(JSON.stringify(user)) 

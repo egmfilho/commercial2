@@ -1,12 +1,14 @@
-md-content(layout='column')
+md-content(layout='column' ng-controller='MainMenuCtrl as mainMenu')
 	.user(layout='row' layout-wrap)
 		.avatar(flex='25')
 			md-icon(md-font-set='material-icons') account_circle
 		.description(flex)
 			p 
-				b Eduardo Miranda
+				b {{mainMenu.currentUser.user_name}}
 				br
-				| egmfilho@live.com
+				| {{mainMenu.currentUser.user_mail}}
+				br
+				| Último login: {{mainMenu.currentUser.user_last_session.user_session_date | date:'short'}}
 
 	.modules(layout='row' layout-wrap)
 		.module(flex='50' layout-align='center')

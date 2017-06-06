@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 14:03:46
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-30 10:56:43
+* @Last Modified time: 2017-06-06 09:19:22
 */
 
 (function() {
@@ -13,6 +13,10 @@
 		.controller('LoginCtrl', ['$rootScope', '$location', 'Authentication', function($rootScope, $location, authentication) {
 
 			var self = this;
+
+			this.advance = function() {
+				jQuery('input[name="pass"]').select().focus();
+			};
 
 			this.submitForm = function() {
 				if (!self.user && ! self.pass) return;

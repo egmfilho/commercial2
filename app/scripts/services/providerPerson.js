@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 10:46:07
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-30 15:59:54
+* @Last Modified time: 2017-06-06 17:30:31
 */
 
 (function() {
@@ -34,40 +34,54 @@
 				// Methods declaration
 				// ******************************
 
-				function getById(id, type) {
+				function getById(id, category, options) {
 					return provider.get({
 						action: 'get'
 					}, {
-						IdPessoa: id,
-						TpPessoa: type
+						person_id: id,
+						person_category: category,
+						get_person_address: options && options.getAddress,
+						get_person_address_city: options && options.getAddress,
+						get_person_address_district: options && options.getAddress
 					}).$promise;
 				}
 
-				function getByCode(code, type) {
+				function getByCode(code, category, options) {
 					return provider.get({
 						action: 'get'
 					}, {
-						CdPessoa: code,
-						TpPessoa: type
+						person_code: code,
+						person_category: category,
+						get_person_address: options && options.getAddress,
+						get_person_address_city: options && options.getAddress,
+						get_person_address_district: options && options.getAddress
 					}).$promise;
 				}
 
-				function getByName(name, type, limit, page) {
+				function getByName(name, category, options) {
 					return provider.query({
 						action: 'getList'
 					}, {
-						NmPessoa: name,
-						TpPessoa: type,
-						Limite: limit,
-						page: page
+						person_name: name,
+						person_category: category,
+						get_person_address: options && options.getAddress,
+						get_person_address_city: options && options.getAddress,
+						get_person_address_district: options && options.getAddress,
+						limit: options && options.limit,
+						page: options && options.page
 					}).$promise;
 				}
 
-				function getByType(type) {
+				function getByType(category, options) {
 					return provider.query({
 						action: 'getList'
 					}, {
-						TpPessoa: type
+						person_category: category,
+						get_person_address: options && options.getAddress,
+						get_person_address_city: options && options.getAddress,
+						get_person_address_district: options && options.getAddress,
+						limit: options && options.limit,
+						page: options && options.page
 					}).$promise;
 				}
 

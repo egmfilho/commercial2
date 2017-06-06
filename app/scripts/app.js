@@ -2,13 +2,14 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-05 17:58:48
+* @Last Modified time: 2017-06-06 16:14:07
 */
 'use strict';
 
 angular.module('commercial2.constants', [ ]);
-angular.module('commercial2.controllers', [ ]);
 angular.module('commercial2.services', [ ]);
+angular.module('commercial2.directives', [ ]);
+angular.module('commercial2.controllers', [ ]);
 
 angular.module('commercial2', [
 		'ngAnimate',
@@ -22,8 +23,9 @@ angular.module('commercial2', [
 		'egmfilho.inputFilters',
 		'ui.mask',
 		'commercial2.constants',
-		'commercial2.controllers',
-		'commercial2.services'
+		'commercial2.services',
+		'commercial2.directives',
+		'commercial2.controllers'
 	])
 	.config(['$httpProvider', '$locationProvider', function($httpProvider, $locationProvider) {
 		$httpProvider.interceptors.push('Interceptor');
@@ -111,10 +113,7 @@ angular.module('commercial2', [
 			$rootScope.currentPath = $location.path();
 
 			Cookies.get(constants['cookie']).then(function(success) {
-				if (!$rootScope[constants['cookie']]) {
-					$rootScope[constants['cookie']] = JSON.parse(window.atob(success));
-					constants.debug && console.log($rootScope[constants['cookie']]);
-				}
+				constants.debug && console.log('Cookie de sessão verificado.');
 			}, function(error) {
 				constants.debug && console.log('cookie de sessao nao encontrado!');
 				/* Redireciona para tela de login apenas se a url nao for a de impressao */
@@ -126,7 +125,10 @@ angular.module('commercial2', [
 		});
 
 	}])
-	.run(['$rootScope', '$mdToast', 'MainMenu', 'CustomDialog', function($rootScope, $mdToast, mainMenu, customDialog) {
+	.run(['$rootScope', '$mdToast', 'MainMenu', 'CustomDialog', 'Constants', function($rootScope, $mdToast, mainMenu, customDialog, constants) {
+
+		/* Numero de versao atual do sistema */
+		$rootScope.version = constants.version;
 
 		/* Retorna um array vazio com o length especificado. */
 		/* Para ser usado no ng-repeat. */

@@ -11,6 +11,7 @@ const concat     = require('gulp-concat');
 const bower      = require('gulp-bower');
 const bowerFiles = require('main-bower-files');
 const cssnano    = require('gulp-cssnano');
+const merge      = require('merge-stream');
 
 var source = 'app/'; // removed ./ due the undetection of new/deleted files
 var dest   = './www/';
@@ -102,9 +103,15 @@ gulp.task('copy-images', function() {
 });
 
 gulp.task('copy-fonts', function() {	
-	return gulp.src('./bower_components/material-design-icons/iconfont/*.{eot,ijmap,svg,ttf,woff,woff2}')
+	var ngMaterial = gulp.src('./bower_components/material-design-icons/iconfont/*.{eot,ijmap,svg,ttf,woff,woff2}')
 		.pipe(gulp.dest(dest + 'styles'))
 		.pipe(connect.reload());
+
+	var fontAwesome = gulp.src('./bower_components/font-awesome/fonts/**/*.*')
+		.pipe(gulp.dest(dest + 'fonts'))
+		.pipe(connect.reload());
+
+	return merge(ngMaterial, fontAwesome);
 });
 
 gulp.task('copy-videos', function() {	
@@ -122,7 +129,7 @@ gulp.task('watch', function() {
 	gulp.watch([source + 'scripts/**/*.js'], ['app-bundle']);
 	gulp.watch(bowerFiles({ filter: '**/*.css' }), ['css']);
 	gulp.watch(bowerFiles({ filter: '**/*.js' }), ['vendor-bundle']);
-	gulp.watch(bowerFiles(), ['copy-fonts']);
+	gulp.watch(bowerFiles({ filter: '**/*.{eot,ijmap,svg,ttf,woff,woff2}' }), ['copy-fonts']);
 	gulp.watch([source + 'images/**/*.*'], ['copy-images']);
 	gulp.watch([source + 'fonts/**/*.*'], ['copy-fonts']);
 	gulp.watch([source + 'videos/**/*.*'], ['copy-videos']);

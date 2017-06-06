@@ -23,6 +23,7 @@
     "main-bower-files": "^2.13.1"
   },
   "dependencies": {
-    "electron": "^1.6.8"
+    "electron": "^1.6.8",
+    "merge-stream": "^1.0.1"
   }
 }
