@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-01 13:08:09
+* @Last Modified time: 2017-06-07 14:20:24
 */
 
 .order-toolbar {
@@ -98,6 +98,8 @@
 
 			md-card {
 				border: 3px solid white;
+				min-height: 150px;
+				height: 150px;
 
 				button { 
 					float: right;
@@ -105,6 +107,14 @@
 
 				&.active {
 					border-color: $secondary-color;
+				}
+
+				md-card-content {
+					padding: 8px;
+
+					p {
+						margin: 0;
+					}
 				}
 			}
 		}

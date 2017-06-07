@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 10:32:39
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-06 17:11:44
+* @Last Modified time: 2017-06-07 11:58:50
 */
 
 (function() {
@@ -33,26 +33,36 @@
 			}
 
 			Person.prototype = {
-				setMainAddress: setMainAddress,
 				isActive: this.person_active != 'N',
-				getType: getType
+				getType: getType,
+				getMainAddress: getMainAddress
 			};
+
+			return Person;
 
 			// ******************************
 			// Methods declaration
 			// ******************************
 
-			function setMainAddress(address) {
-				
-			}
-
+			/**
+			* Retorna o tipo de pessoa (Física ou Jurídica).
+			* @returns {string} - Uma string com o tipo.
+			*/
 			function getType() {
 				if (!this.person_type) return;
 
 				return this.person_type == 'J' ? 'Jurídica' : 'Física';
 			}
 
-			return Person;
+			/**
+			* Retorna o endereco principal.
+			* @returns {object} - O endereco principal.
+			*/
+			function getMainAddress() {
+				return this.person_address.find(function(a) {
+					return a.person_address_main != 'N';
+				});
+			}
 
 		}]);
 

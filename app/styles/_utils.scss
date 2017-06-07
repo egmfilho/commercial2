@@ -1,0 +1,40 @@
+/*
+* @Author: egmfilho
+* @Date:   2017-06-07 13:57:12
+* @Last Modified by:   egmfilho
+* @Last Modified time: 2017-06-07 14:20:45
+*/
+
+.text-center {
+	text-align: center;
+}
+
+.pull-right {
+	float: right;
+}
+
+.pull-left {
+	float: left;
+}
+
+.label {
+	padding: 2px 4px;
+	border-radius: 4px;
+	font-weight: bold;
+	letter-spacing: .25px;
+	font-size: 11px;
+	font-family: Verdana;
+	line-height: 14px;
+	background-color: #e7e7e7;
+	color: #555;
+
+	&.label-success {
+		background-color: $success-color;
+		color: #f5f5f5;		
+	}
+
+	&.label-error {
+		background-color: $error-color;
+		color: #f5f5f5;		
+	}
+}

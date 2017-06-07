@@ -2,10 +2,13 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-02 13:49:01
+* @Last Modified time: 2017-06-07 14:18:09
 */
 
 @import "../../bower_components/angular-material/angular-material.scss";
+
+$error-color: #F44336;
+$success-color: #4CAF50;
 
 $main-color: #607D8B;
 $main-color-darker: darken($main-color, 15%);
@@ -14,6 +17,11 @@ $main-color-light: lighten($main-color, 10%);
 $main-color-lighter: lighten($main-color, 15%);
 
 $secondary-color: #F99F57;
+
+body {
+	min-width: 950px !important;
+	overflow-x: auto;
+}
 
 .material-icons {
 	font-size: 1em;
@@ -57,12 +65,12 @@ md-toast {
 	}
 
 	&.error .md-toast-content{
-		background-color: #F44336;
+		background-color: $error-color;
 		color: white;
 	}
 
 	&.success .md-toast-content {
-		background-color: #4CAF50;
+		background-color: $success-color;
 		color: white;
 	}
 }
@@ -72,6 +80,7 @@ md-toast {
 	font-weight: 200;
 }
 
+@import "utils";
 @import "scrollbar";
 @import "prevent-highlight";
 @import "mainMenu";
