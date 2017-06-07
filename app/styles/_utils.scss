@@ -2,19 +2,15 @@
 * @Author: egmfilho
 * @Date:   2017-06-07 13:57:12
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-07 14:20:45
+* @Last Modified time: 2017-06-07 17:13:34
 */
 
 .text-center {
 	text-align: center;
 }
 
-.pull-right {
-	float: right;
-}
-
-.pull-left {
-	float: left;
+.text-primary {
+	color: $main-color;
 }
 
 .label {

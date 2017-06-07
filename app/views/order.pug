@@ -75,10 +75,10 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						md-input-container
 							label Código
 							input(ng-value='order.budget.seller.person_code' 
-								  blur-to='order.budget.seller.person_code'
-								  keys-shortcuts 
-								  enter='order.getSellerByCode($event.target.value)' 
-								  shift-enter='order.scrollTo("section[name=\'customer\']")')
+									blur-to='order.budget.seller.person_code'
+									keys-shortcuts 
+									enter='order.getSellerByCode($event.target.value)' 
+									shift-enter='order.scrollTo("section[name=\'customer\']")')
 						md-autocomplete(flex 
 										md-input-name='autocompleteSeller'
 										md-no-cache='false'
@@ -214,10 +214,10 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						md-input-container(flex='25')
 							label Código
 							input(ng-value='order.budget.customer.person_code' 
-								  blur-to='order.budget.customer.person_code'
-								  keys-shortcuts 
-								  enter='order.getCustomerByCode($event.target.value)' 
-								  shift-enter='')
+									blur-to='order.budget.customer.person_code'
+									keys-shortcuts 
+									enter='order.getCustomerByCode($event.target.value)' 
+									shift-enter='')
 						md-autocomplete(flex='75'
 										md-input-name='autocompleteCustomer'
 										md-no-cache='false'
@@ -265,42 +265,50 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					pre(ng-if='debug')
 						| {{order.budget.customer | json}}
 
-					div(layout='row' style='margin-top: 30px')
+					div(layout='column' style='margin-top: 30px')
 						md-tabs(md-selected='selectedTabIndex' md-border-bottom flex)
 							md-tab(label='Endereço de entrega')
 								md-content(layout='row' layout-wrap style='padding: 0' layout-fill)
 									div(flex 
-										layout='column' layout-align='center center' 
-										ng-if='order.budget.customer.person_address == 0')
+											layout='column' layout-align='center center' 
+											ng-if='order.budget.customer.person_address == 0')
 										h1.inner-text Nenhum endereço cadastrado.
 										md-button.md-raised.md-primary(ng-click='toast("hola")') &nbsp; Cadastrar &nbsp;
 									div(flex='33' 
 										ng-repeat='a in order.budget.customer.person_address track by $index'
 										ng-if='order.budget.customer.person_address.length > 0')
-										md-card(ng-class='{"active": $index == 0}')
+										md-card(ng-class='{"active": a.person_address_code == order.budget.deliveryAddressId}')
 											md-card-content(layout='column' layout-fill) 
 												div(flex='15' layout='row')
-													b Código: {{a.person_address_code}}
+													b Cód: {{a.person_address_code}}
+														span(ng-if='a.person_address_main != "N"') &nbsp;(Principal)
 													div(flex)
-													.label.label-success(ng-if='a.person_address_main != "N"') 
-														| Principal
+													.label.label-success(ng-if='a.person_address_code == order.budget.deliveryAddressId') 
+														| Selecionado
 													.label.label-error(ng-if='a.person_address_active == "N"') 
 														| Inativo
-												div(flex layout='row' layout-align='center center')
-													p.text-center
-														| {{a.person_address_type}} 
-														| {{a.person_address_public_place}}
-														| {{a.person_address_number}} -
-														| {{a.district.district_name}},
-														| {{a.city.city_name}} -
-														| {{a.city.uf_id}}
+												div(flex layout='row' layout-align='start center')
+													p.text-primary
+														| {{a.toString()}}
 												div(flex='30' layout='row' layout-align='end end')
-													md-button.md-icon-button.md-raised.md-primary(ng-disabled='$index === 0')
+													md-button.md-icon-button.md-raised.md-primary(
+															ng-click='order.budget.setDeliveryAddressId(a.person_address_code)' 
+															ng-disabled='a.person_address_code == order.budget.deliveryAddressId')
 														md-icon(md-font-icon='fa fa-check')
 
 							md-tab(label='Novo endereço')
 								md-content(layout-padding)
 									h2 Novo Endereço
+
+						.delivery-address
+							md-toolbar
+								.md-toolbar-tools
+									i.fa.fa-2x.fa-truck &nbsp;
+									p(ng-if='!order.budget.deliveryAddressId') Nenhum endereço informado!
+									div(layout='column' ng-if='order.budget.deliveryAddressId') 
+										span(style='font-size: 11px')
+											| Código: {{order.budget.getDeliveryAddress().person_address_code}}
+										span {{order.budget.getDeliveryAddress().toString()}}
 		//- Observações
 		section(name='notes')
 			md-card(layout-align='center')

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 13:06:07
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-30 12:37:33
+* @Last Modified time: 2017-06-07 16:14:55
 */
 
 .scrollbar1 {
@@ -14,6 +14,7 @@
 
 	&::-webkit-scrollbar {
 		width: 12px;
+		height: 12px;
 		background-color: #F5F5F5;
 	}
 
@@ -33,6 +34,7 @@
 
 	&::-webkit-scrollbar {
 		width: 10px;
+		height: 10px;
 		background-color: #F5F5F5;
 	}
 

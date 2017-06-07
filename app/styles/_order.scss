@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-07 14:20:24
+* @Last Modified time: 2017-06-07 16:52:13
 */
 
 .order-toolbar {
@@ -71,6 +71,16 @@
 	}
 
 	section[name='customer'] {
+		.delivery-address {
+			.md-toolbar-tools {
+				background-color: white;
+				color: $main-color;
+				font-size: .7em;
+				border: 1px solid #e1e1e1;
+				border-top: none;
+			}
+		}
+
 		md-tabs {		
 			border: 1px solid #e1e1e1;
 			border-radius: 0;

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 09:39:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-06 13:17:22
+* @Last Modified time: 2017-06-07 17:04:39
 */
 
 (function() {
@@ -77,7 +77,24 @@
 				}
 			}
 
+			Address.prototype = {
+				toString: toString
+			};
+
 			return Address;
+
+			// ******************************
+			// Methods declaration
+			// ******************************
+
+			function toString() {
+				return this.person_address_type + ' ' +
+					this.person_address_public_place + ' ' + 
+					this.person_address_number + ' - ' +
+					this.district.district_name + ', ' + 
+					this.city.city_name + ' - ' + 
+					this.city.uf_id
+			}
 
 		}]);
 		

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-07 11:47:06
+* @Last Modified time: 2017-06-07 17:10:03
 */
 (function() {
 	'use strict';
@@ -29,9 +29,12 @@
 			blurCustomer: blurCustomer
 		};
 
-		self.budget =  {
+		self.budget = {
 			seller: new Person(),
-			customer: new Person()
+			customer: new Person(),
+			deliveryAddressId: null,
+			setDeliveryAddressId: function(id) { self.budget.deliveryAddressId = id; },
+			getDeliveryAddress: function() { return self.budget.customer.person_address.find(function(a) { return a.person_address_code == self.budget.deliveryAddressId }) }
 		};
 
 		self.getPersonByCode   = getPersonByCode;
