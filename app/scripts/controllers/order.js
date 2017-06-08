@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-07 17:10:03
+* @Last Modified time: 2017-06-08 10:42:19
 */
 (function() {
 	'use strict';
@@ -26,7 +26,10 @@
 			tempSeller: null,
 			tempCustomer: null,			
 			blurSeller: blurSeller,
-			blurCustomer: blurCustomer
+			blurCustomer: blurCustomer,
+			address: {
+				selectedTabIndex: 0
+			}
 		};
 
 		self.budget = {
@@ -46,6 +49,10 @@
 		self.scrollTo          = scrollTo;
 		self.savePDF 		   = savePDF;
 		
+		$scope.$on('newAddress', function() {
+			self.internal.address.selectedTabIndex = 0;
+		});
+
 
 		self.editItemMenu      = editItemMenu;
 		self.showDialog        = showDialog;

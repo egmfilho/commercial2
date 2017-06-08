@@ -2,11 +2,31 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 09:39:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-07 17:04:39
+* @Last Modified time: 2017-06-08 14:10:39
 */
 
 (function() {
 	'use strict';
+
+	angular.module('commercial2.services')
+		.factory('Cep', [function() {
+
+			var _cep = { 
+				cep_code: null,
+				uf_id: null,
+				city_id: null,
+				district_id: null,
+				public_place: null,
+				public_place_type: null
+			};
+
+			function Cep(cep) {
+				angular.extend(this, _cep, cep);
+			}
+
+			return Cep;
+
+		}]);
 
 	angular.module('commercial2.services')
 		.factory('District', [function() {

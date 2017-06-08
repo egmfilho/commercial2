@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-06 16:14:07
+* @Last Modified time: 2017-06-08 12:28:18
 */
 'use strict';
 
@@ -127,8 +127,17 @@ angular.module('commercial2', [
 	}])
 	.run(['$rootScope', '$mdToast', 'MainMenu', 'CustomDialog', 'Constants', function($rootScope, $mdToast, mainMenu, customDialog, constants) {
 
-		/* Numero de versao atual do sistema */
+		/* Numero de versao atual do sistema. */
 		$rootScope.version = constants.version;
+
+		/* Controlador de carregamento. */
+		/* Exibe e esconde a tela de carregamento. */
+		$rootScope.loading = {
+			count: 0,
+			isLoading: function() { return this.count > 0 },
+			load: function() { this.count++ },
+			unload: function() { this.count--; this.count < 0 ? this.count = 0 : null; }
+		};
 
 		/* Retorna um array vazio com o length especificado. */
 		/* Para ser usado no ng-repeat. */
