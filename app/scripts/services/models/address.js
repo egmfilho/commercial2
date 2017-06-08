@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 09:39:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-08 14:10:39
+* @Last Modified time: 2017-06-08 15:45:51
 */
 
 (function() {
@@ -32,9 +32,9 @@
 		.factory('District', [function() {
 
 			var _district = {
-				district_id: '',
-				district_code: '',
-				district_name: ''
+				district_id: null,
+				district_code: null,
+				district_name: null
 			};
 
 			function District(district) {
@@ -49,12 +49,12 @@
 		.factory('City', [function() {
 
 			var _city = {
-				city_id: '',
-				uf_id: '',
-				city_code: '',
-				city_name: '',
-				city_ibge: '',
-				city_ddd: ''
+				city_id: null,
+				uf_id: null,
+				city_code: null,
+				city_name: null,
+				city_ibge: null,
+				city_ddd: null
 			};
 
 			function City(city) {
@@ -69,19 +69,19 @@
 		.factory('Address', ['District', 'City', function(District, City) {
 
 			var _address = {
-				person_id: '',
-				uf_id: '',
-				city_id: '',
-				district_id: '',
-				person_address_cep: '',
-				person_address_code: '',
-				person_address_active: '',
-				person_address_main: '',
-				person_address_delivery: '',
-				person_address_ie: '',
-				person_address_type: '',
-				person_address_public_place: '',
-				person_address_number: '',
+				person_id: null,
+				uf_id: null,
+				city_id: null,
+				district_id: null,
+				person_address_cep: null,
+				person_address_code: null,
+				person_address_active: 'Y',
+				person_address_main: 'N',
+				person_address_delivery: 'Y',
+				person_address_ie: null,
+				person_address_type: null,
+				person_address_public_place: null,
+				person_address_number: null,
 				city: new City(),
 				district: new District()
 			};

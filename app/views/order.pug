@@ -29,7 +29,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								|  Exportar
 						md-menu-divider
 						md-menu-item
-							md-button(ng-click='order.savePDF("http://github.com")')
+							md-button(ng-click='order.savePDF("http://github.com")' disabled)
 								md-icon(md-font-set='material-icons') print
 								|  Imprimir
 						md-menu-item
@@ -112,43 +112,59 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					div(layout-gt-xs='row')
 						md-input-container(flex='25')
 							label Código
-							input(ng-model='codigo')
-						md-autocomplete(flex 
-										md-input-name='autocompleteField'
-										md-input-minlength='2'
-										md-input-maxlength='18'
-										md-no-cache='order.noCache'
-										md-selected-item='order.selectedItem'
-										md-search-text='order.searchText'
-										md-items='item in order.querySearch(order.searchText)'
-										md-item-text='item.display'
-										md-require-match
-										md-floating-label='Descrição')
+							input(ng-value='order.internal.tempItem.product.product_code'
+									blur-to='order.internal.tempItem.product.product_code' 
+									enter='order.getProductByCode($event.target.value)')
+						
+						md-autocomplete(flex='75'
+										md-input-name='autocompleteProduct'
+										md-no-cache='false'
+										md-escape-options='none'
+										md-selected-item='order.internal.tempProduct'
+										md-search-text='productQuery'
+										md-selected-item-change='order.getProductByCode(item.product_code)'
+										md-items='item in order.getProductByName(productQuery)'
+										md-item-text='item.product_name'
+										md-min-length='3'
+										md-require-match='true'
+										md-floating-label='Nome'
+										ng-blur='order.internal.blurItem()')
 							md-item-template
-								div(md-highlight-text='order.searchText' style='line-height: 2') {{item.display}}
+								div(md-highlight-text='customerQuery' style='line-height: 2') {{item.product_name}}
 								div(style='font-size: 11px;line-height: 1')
 									| Código: 
-									| {{item.code}}
+									| {{item.product_code}}
+
 						md-input-container(flex='25')
 							label 
 								i.fa.fa-lock &nbsp;
 								| Valor unitário
-							input(ng-model='valor' tabindex='-1' readonly)
+							input(ng-value='order.internal.tempItem.product.price.price_value | currency:"R$ "' tabindex='-1' readonly)
+					
 					div(layout='row')
 						md-input-container(flex='25')
 							label Quantidade
-							input(ng-model='quantidade')
+							input(ng-model='order.internal.tempItem.order_item_amount')
+						
 						md-input-container(flex='25')
 							label Desconto %
-							input(ng-model='descontoAl' ng-model-options="{ updateOn: 'default blur' }")
+							input(ng-model='order.internal.tempItem.order_item_al_discount' 
+									ng-model-options="{ updateOn: 'default blur' }")
+						
 						md-input-container(flex='25')
 							label Desconto R$
-							input(ng-model='descontoVl' ng-model-options="{ updateOn: 'default blur' }")
+							input(ng-model='order.internal.tempItem.order_item_vl_discount' 
+									ng-model-options="{ updateOn: 'default blur' }"
+									keys-shortcuts enter='order.addItem()')
+						
 						md-input-container(flex='25')
 							label 
 								i.fa.fa-lock &nbsp;
 								| Total
-							input(ng-model='total' tabindex='-1' readonly)
+							input(ng-value='order.internal.tempItem.getValueTotal() | currency:"R$ "' tabindex='-1' readonly)
+
+					pre(ng-if='debug')
+						| {{order.internal.tempItem | json}}
 
 					div(layout='column' style='margin-top: 45px')
 						div(style='padding-right: 10px')
@@ -166,14 +182,14 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						.container-table
 							table.products-table
 								tbody
-									tr(ng-repeat='n in getNumber(12) track by $index' layout='row')
-										td 00000{{$index + 1}} Silicone bolado sinistramente qualificado
-										td UN
-										td 10
-										td R$ 15,00
-										td 10,00%
-										td R$ 15,00
-										td R$ 135,00 &nbsp;
+									tr(ng-repeat='i in order.budget.items' layout='row')
+										td {{i.product.product_code}} {{i.product.product_name}}
+										td {{i.product.unit.unit_initials}}
+										td {{i.order_item_amount}}
+										td {{i.order_item_value | currency}}
+										td {{i.order_item_al_discount | currency:''}}%
+										td {{i.order_item_vl_discount | currency}}
+										td {{i.getValueTotal() | currency}}
 										td
 											md-menu
 												md-button.md-icon-button(tabindex='-1' ng-click='order.editItemMenu($mdMenu, $event)')
@@ -327,7 +343,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 															data-md-container-class='query-select-container')
 														md-select-header.select-header
 															input.md-text(ng-model='address.queryDistrict' 
-																	type='search' placeholder='Bairro'
+																	type='search' placeholder='Digite o nome do bairro'
 																	ng-keydown="address.updateSearch($event)")
 														md-opt-group(label='Bairros')
 															md-option(ng-value='d.district_id' 
@@ -341,7 +357,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 															data-md-container-class='query-select-container')
 														md-select-header.select-header
 															input.md-text(ng-model='address.queryCity' 
-																	type='search' placeholder='Cidade'
+																	type='search' placeholder='Digite o nome da cidade'
 																	ng-keydown="address.updateSearch($event)")
 														md-opt-group(label='Cidades')
 															md-option(ng-value='c.city_id' 
@@ -355,7 +371,8 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
 												.offset-top-30(layout='row' layout-fill)
 													md-input-container(flex='50')
-														md-switch(name='delivery' ng-model='delivery')
+														md-switch(name='delivery' ng-true-value='"Y"' ng-false-value='"N"'
+																ng-model='address.newAddress.person_address_delivery')
 															| Endereço de Entrega
 
 													md-button.md-raised(flex='25' ng-click='address.clear()')

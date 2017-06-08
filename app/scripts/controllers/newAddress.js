@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-08 13:44:58
+* @Last Modified time: 2017-06-08 16:10:24
 */
 
 (function() {
@@ -39,6 +39,12 @@
 		self.submit              = submit;
 		self.updateSearch        = updateSearch;
 
+		$scope.$on('viewContentLoaded', function() {
+			constants.debug && console.log('loaded');
+			searchDistrict();
+			searchCity();
+		});
+
 		$scope.$watch(function() {
 			return self.queryDistrict;
 		}, function(newValue, oldValue) {
@@ -52,6 +58,10 @@
 			if (newValue)
 				searchCity();
 		});
+
+		$scope.testinho = function() {
+			console.log('mudou');
+		};
 
 		// ******************************
 		// Methods declaration

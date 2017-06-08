@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-08 10:42:19
+* @Last Modified time: 2017-06-08 18:09:16
 */
 (function() {
 	'use strict';
@@ -10,9 +10,22 @@
 	angular.module('commercial2.controllers')
 		.controller('OrderCtrl', OrderCtrl);
 
-	OrderCtrl.$inject = [ '$rootScope', '$scope', '$location', '$q', '$mdPanel', 'Constants', 'ProviderPerson', 'Person', 'ElectronWindow' ];
+	OrderCtrl.$inject = [ 
+		'$rootScope', 
+		'$scope', 
+		'$location', 
+		'$q', 
+		'$mdPanel', 
+		'Constants', 
+		'ProviderPerson', 
+		'Person', 
+		'ProviderProduct', 
+		'Product', 
+		'OrderItem',
+		'ElectronWindow' 
+	];
 
-	function OrderCtrl($rootScope, $scope, $location, $q, $mdPanel, constants, providerPerson, Person, ElectronWindow) {
+	function OrderCtrl($rootScope, $scope, $location, $q, $mdPanel, constants, providerPerson, Person, providerProduct, Product, OrderItem, ElectronWindow) {
 
 		var self = this;
 
@@ -24,9 +37,12 @@
 				customer: '0000000005'
 			},
 			tempSeller: null,
-			tempCustomer: null,			
+			tempCustomer: null,
+			tempProduct: null,
+			tempItem: new OrderItem(),
 			blurSeller: blurSeller,
 			blurCustomer: blurCustomer,
+			blurItem: blurItem,
 			address: {
 				selectedTabIndex: 0
 			}
@@ -35,6 +51,7 @@
 		self.budget = {
 			seller: new Person(),
 			customer: new Person(),
+			items: [ ],
 			deliveryAddressId: null,
 			setDeliveryAddressId: function(id) { self.budget.deliveryAddressId = id; },
 			getDeliveryAddress: function() { return self.budget.customer.person_address.find(function(a) { return a.person_address_code == self.budget.deliveryAddressId }) }
@@ -46,16 +63,22 @@
 		self.getSellerByName   = getSellerByName;
 		self.getCustomerByCode = getCustomerByCode;
 		self.getCustomerByName = getCustomerByName;
+		self.getProductByCode  = getProductByCode;
+		self.getProductByName  = getProductByName;
 		self.scrollTo          = scrollTo;
-		self.savePDF 		   = savePDF;
-		
-		$scope.$on('newAddress', function() {
-			self.internal.address.selectedTabIndex = 0;
-		});
-
+		self.savePDF           = savePDF;
 
 		self.editItemMenu      = editItemMenu;
 		self.showDialog        = showDialog;
+		self.addItem           = addItem;
+
+		$scope.$on('$viewContentLoaded', function() {
+			$scope.$broadcast('viewContentLoaded');
+		});
+
+		$scope.$on('newAddress', function() {
+			self.internal.address.selectedTabIndex = 0;
+		});
 
 		// ******************************
 		// Methods declaration
@@ -67,7 +90,7 @@
 		*/
 		function blurSeller() { 
 			if (self.budget.seller.person_id) 
-				self.internal.tempSeller = new Person(self.budget.seller) 
+				self.internal.tempSeller = new Person(self.budget.seller);
 		}
 
 		/**
@@ -76,7 +99,16 @@
 		*/
 		function blurCustomer() { 
 			if (self.budget.customer.person_id) 
-				self.internal.tempCustomer = new Person(self.budget.customer) 
+				self.internal.tempCustomer = new Person(self.budget.customer);
+		}
+
+		/**
+		* Recoloca o nome do produto no autocomplete quando 
+		* o usuario desiste da pesquisa.
+		*/
+		function blurItem() { 
+			if (self.internal.tempItem.product.product_id) 
+				self.internal.tempProduct = new Product(self.internal.tempItem.product);
 		}
 
 		/**
@@ -120,8 +152,6 @@
 		function getSellerByCode(code) {
 			if (!code || code == self.budget.seller.person_code) 
 				return;
-
-			console.log('get', code);
 
 			getPersonByCode(code, self.internal.personCategories.seller).then(function(success) {
 				self.budget.seller = new Person(success.data);
@@ -168,6 +198,45 @@
 		}
 
 		/**
+		* Pesquisa o produto pelo codigo.
+		* @param {string} code - O codio do produto.
+		*/
+		function getProductByCode(code) {
+			if (!code || code == self.internal.tempItem.product.product_code) 
+				return;
+
+			constants.debug && console.log('buscando produto por codigo', code);
+			providerProduct.getByCode(code, 1, '00A0000001', { limit: 10 }).then(function(success) {
+				// var item = new OrderItem();
+				// item.setProduct(new Product(success.data));
+				self.internal.tempItem.setProduct(new Product(success.data));
+			}, function(error) {
+				constants.debug && console.log(error);
+			});
+		}
+
+		/**
+		* Pesquisa produtos pelo nome.
+		* @param {string} name - O nome do produto.
+		* @returns {object} - Uma promise com o resultado.
+		*/
+		function getProductByName(name) {
+			var deferred = $q.defer();
+
+			if (!name || name.length < 3)
+				return [ ];
+
+			providerProduct.getByName(name, 1, '00A0000001', { limit: 10 }).then(function(success) {
+				deferred.resolve(success.data.map(function(p) { return new Product(p); }));
+			}, function(error) {
+				constants.debug && console.log(error);
+				deferred.resolve([ ]);
+			});
+
+			return deferred.promise;
+		}
+
+		/**
 		* Rola a tela ate o elemento informado.
 		* @param {(string|object)} selector - O elemento para qual o scroll vai rolar.
 		*/
@@ -204,6 +273,7 @@
 		}
 
 		function showDialog() {
+			return;
 
 			var dialog = $rootScope.customDialog();
 
@@ -221,6 +291,12 @@
 					}
 				};
 			}]);
+		}
+
+		function addItem() {
+			self.budget.items.push(new OrderItem(self.internal.tempItem));
+			self.internal.tempProduct = null;
+			self.internal.tempItem = new OrderItem();
 		}
 	}
 }());

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:06:00
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-06 14:26:32
+* @Last Modified time: 2017-06-08 16:14:38
 */
 
 (function() {
@@ -10,7 +10,7 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('User', ['UserProfile', 'Person', 'UserBusiness', 'UserPrice', function(UserProfile, Person, UserBusiness, UserPrice) {
+		.factory('User', ['UserProfile', 'Person', 'UserCompany', 'UserPrice', function(UserProfile, Person, UserCompany, UserPrice) {
 
 			var _user = {
 				user_id: null,
@@ -31,7 +31,7 @@
 				user_last_session: { },
 				user_profile: new UserProfile(),
 				user_seller: new Person(),
-				user_business: [ ],
+				user_company: [ ],
 				user_price: [ ]
 			};
 			
@@ -43,7 +43,7 @@
 						user_login: user.user_login ? new Date(user.user_login) : null,
 						user_date: user.user_date ? new Date(user.user_date) : null,
 						user_update: user.user_update ? new Date(user.user_update) : null,
-						user_business: user.user_business.map(function(b) { return new UserBusiness(b); }),
+						user_company: user.user_company.map(function(b) { return new UserCompany(b); }),
 						user_price: user.user_price.map(function(p) { return new UserPrice(p); })
 					});
 				}

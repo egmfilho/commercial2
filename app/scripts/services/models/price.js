@@ -2,20 +2,21 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 14:13:57
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-06 14:19:38
+* @Last Modified time: 2017-06-08 16:30:01
 */
 
 (function() {
 
 	'use strict';
 
+	/* Tabela de precos */
 	angular.module('commercial2.services')
 		.factory('PriceERP', [function() {
 
 			var _priceERP = {
-				price_id: '',
-				price_code: '',
-				price_name: ''
+				price_id: null,
+				price_code: null,
+				price_name: null
 			};
 
 			function PriceERP(priceERP) {
@@ -30,14 +31,15 @@
 
 		}]);
 
+	/* Vinculo do usuario com a tabela de precos */
 	angular.module('commercial2.services')
 		.factory('UserPrice', ['PriceERP', function(PriceERP) {
 
 			var _userPrice = {
-				user_price_id: '',
-				user_id: '',
-				price_id: '',
-				user_price_date: '',
+				user_price_id: null,
+				user_id: null,
+				price_id: null,
+				user_price_date: null,
 				price_erp: new PriceERP()
 			};
 
@@ -53,6 +55,32 @@
 			}
 
 			return UserPrice;
+
+		}]);
+
+	/* Preco do produto */
+	angular.module('commercial2.services')
+		.factory('Price', [function() {
+
+			var _price = {
+				product_id: null,
+				price_id: null,
+				company_id: null,
+				price_value: null,
+				price_date: null
+			};
+
+			function Price(price) {
+				angular.extend(this, _price);
+
+				if (price) {
+					angular.extend(this, price, {
+						price_date: new Date(price.price_date)
+					});
+				}
+			}
+
+			return Price;
 
 		}]);
 

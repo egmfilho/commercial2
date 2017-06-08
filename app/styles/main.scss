@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-08 11:57:58
+* @Last Modified time: 2017-06-08 15:39:45
 */
 
 @import "../../bower_components/angular-material/angular-material.scss";
@@ -79,6 +79,7 @@ md-toast {
 
 	md-content._md {
 		max-height: 240px;
+		padding: 0;
 	}
 
 	.select-header {
