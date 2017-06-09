@@ -4,7 +4,7 @@ div(role='dialog' layout='column' layout-align='center center')
 			h2 {{ctrl._title}}
 			span(flex)
 			md-button.md-icon-button(ng-if='!ctrl._unclosable')
-				md-icon(md-font-icon='fa fa-times' ng-click='ctrl._closeDialog()')
+				md-icon(md-font-icon='fa fa-times' ng-click='_reject()')
 	.body(flex)
 		.dialog-content(layout='column')
 			div(layout='column' ng-if='ctrl._templateUrl' ng-include='ctrl._templateUrl')
@@ -12,7 +12,7 @@ div(role='dialog' layout='column' layout-align='center center')
 				p {{ctrl._message}}
 	.footer(flex ng-if='!ctrl._unclosable')
 		.dialog-footer(layout='row')
-			md-button.md-raised.md-primary(ng-click='ctrl.positiveButton.action()' ng-if='ctrl.positiveButton') 
-				| &nbsp; {{ctrl.positiveButton.label}} &nbsp;
-			md-button.md-raised.md-primary(md-autofocus ng-click='ctrl._closeDialog()') 
-				| &nbsp; Fechar &nbsp;
+			md-button.md-raised.md-primary(ng-click='positiveButton.action()' ng-if='positiveButton') 
+				| &nbsp; {{positiveButton.label}} &nbsp;
+			md-button.md-raised.md-primary(md-autofocus ng-click='_negativeButton.action()') 
+				| &nbsp; {{_negativeButton.label}} &nbsp;

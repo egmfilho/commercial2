@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-02 11:56:42
+* @Last Modified time: 2017-06-09 13:06:54
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('CustomDialog', CustomDialog)
 
-	CustomDialog.$inject = [ '$mdPanel' ];
+	CustomDialog.$inject = [ '$q', '$mdPanel' ];
 
-	function CustomDialog($mdPanel) {
+	function CustomDialog($q, $mdPanel) {
 
 		var _dialog, _animation, _animationPosition, _config, _unclosable;
 
@@ -32,6 +32,7 @@
 
 		Dialog.prototype = {
 			showMessage: showMessage,
+			showConfirm: showConfirm,
 			showTemplate: showTemplate,
 			unclosable: unclosable,
 			close: close
@@ -47,9 +48,33 @@
 		 * Instancia uma janela com uma mensagem no body.
 		 * @param {string} title - O titulo da janela.
 		 * @param {string} message - Mensagem a ser exibida no corpo da janela.
+		 * @returns {object} Uma promise com o resultado.
 		 */	
 		function showMessage(title, message) {
 			return show(title, message);
+		}
+
+		/**
+		 * Instancia uma janela de confirmacao com um botao positivo e um negativo.
+		 * @param {string} title - O titulo da janela.
+		 * @param {string} message - Mensagem a ser exibida no corpo da janela.
+		 * @returns {object} Uma promise com o resultado.
+		 */	
+		function showConfirm(title, message) {
+			var controller = function($scope) {
+				$scope.positiveButton = {
+					label: 'Sim',
+					action: $scope._resolve
+				};
+
+				$scope._negativeButton = {
+					label: 'Não',
+					action: $scope._reject
+				};
+			};
+			controller.$inject = [ '$scope' ];
+
+			return show(title, message, null, controller);
 		}
 
 		/**
@@ -57,6 +82,7 @@
 		 * @param {string} title - O titulo da janela.
 		 * @param {string} templateUrl - Template que será incorporado ao corpo da janela.
 		 * @param {(function|string)} controller - (Opcional) Controller usado no template.
+		 * @returns {object} Uma promise com o resultado.
 		 */	
 		function showTemplate(title, templateUrl, controller) {
 			return show(title, null, templateUrl, controller);
@@ -84,24 +110,39 @@
 		 * @param {string} message - Mensagem a ser exibida no corpo da janela.
 		 * @param {string} templateUrl - Template que será incorporado ao corpo da janela.
 		 * @param {(function|string)} controller - (Opcional) Controller usado no template.
+		 * @returns {object} Uma promise com o resultado.
 		 */	
-		function show(title, message, templateUrl, controller) {			
+		function show(title, message, templateUrl, controller) {
+
+			var deferred = $q.defer();			
 			
-			// aqui coloca o controller do template
-			// dentro do controller padrao da janela
+			/* aqui coloca o controller do template  */
+			/* dentro do controller padrao da janela */
 			var _controller = function($controller, $scope, mdPanelRef) {
 				var vm = this;
-
-				if (controller)
-					angular.extend(this, $controller(controller, { '$scope': $scope, 'mdPanelRef': mdPanelRef }));
 
 				this._title 	  = title;
 				this._message 	  = message;
 				this._templateUrl = templateUrl;
 				this._unclosable  = _unclosable;
-				this._closeDialog = function() {
+
+				$scope._reject = function() {
+					deferred.reject();
 					if (mdPanelRef) mdPanelRef.close();
 				};
+
+				$scope._resolve = function() {
+					deferred.resolve();
+					if (mdPanelRef) mdPanelRef.close();
+				};
+
+				$scope._negativeButton = {
+					label: 'Fechar',
+					action: $scope._reject
+				};
+
+				if (controller)
+					angular.extend(this, $controller(controller, { '$scope': $scope, 'mdPanelRef': mdPanelRef }));
 			};
 			_controller.$inject = [ '$controller', '$scope', 'mdPanelRef' ];
 
@@ -123,8 +164,9 @@
 			};
 
 			_dialog = $mdPanel.create(_config);
+			_dialog.open();
 
-			return 	_dialog.open();
+			return deferred.promise;
 		}
 	}
 

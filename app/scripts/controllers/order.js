@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-09 10:27:49
+* @Last Modified time: 2017-06-09 12:55:53
 */
 (function() {
 	'use strict';
@@ -72,6 +72,7 @@
 		self.editItemMenu      = editItemMenu;
 		self.showDialog        = showDialog;
 		self.addItem           = addItem;
+		self.removeItem        = removeItem;
 
 		$scope.$on('$viewContentLoaded', function() {
 			$scope.$broadcast('viewContentLoaded');
@@ -349,6 +350,24 @@
 			}
 
 			self.focusOn('input[name="product-code"]');
+		}
+
+		function removeItem(item) {
+			if (!item)
+				return;
+
+			var message = 'Deseja remover o item: ';
+			message += item.product.product_code + ' - ';
+			message += item.product.product_name + '?';
+
+			$rootScope.customDialog().showConfirm('Aviso', message)
+				.then(function(success) {
+					constants.debug && console.log('resolved');
+					var index = self.budget.items.indexOf(item);
+					self.budget.items.splice(index, 1);
+				}, function(error) { 
+					constants.debug && console.log('rejected');
+				});
 		}
 	}
 }());
