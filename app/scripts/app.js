@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-08 12:28:18
+* @Last Modified time: 2017-06-09 10:20:15
 */
 'use strict';
 
@@ -133,10 +133,23 @@ angular.module('commercial2', [
 		/* Controlador de carregamento. */
 		/* Exibe e esconde a tela de carregamento. */
 		$rootScope.loading = {
+			dialog: null,
 			count: 0,
 			isLoading: function() { return this.count > 0 },
-			load: function() { this.count++ },
-			unload: function() { this.count--; this.count < 0 ? this.count = 0 : null; }
+			load: function() { 
+				if (this.count == 0) {
+					if (!this.dialog) 
+						this.dialog = $rootScope.customDialog().unclosable();
+					this.dialog.showMessage('Aguarde', 'Carregando informações...');
+				}
+				this.count++; 
+			},
+			unload: function() { 
+				this.count--; 
+				this.count = Math.max(this.count, 0); 
+				if (this.count == 0)
+					this.dialog.close();
+			}
 		};
 
 		/* Retorna um array vazio com o length especificado. */

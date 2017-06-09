@@ -85,7 +85,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										md-escape-options='none'
 										md-selected-item='order.internal.tempSeller'
 										md-search-text='sellerQuery'
-										md-selected-item-change='order.getSellerByCode(item.person_code)'
+										md-selected-item-change='item.person_code && order.getSellerByCode(item.person_code)'
 										md-items='item in order.getSellerByName(sellerQuery)'
 										md-item-text='item.person_name'
 										md-min-length='3'
@@ -112,17 +112,17 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					div(layout-gt-xs='row')
 						md-input-container(flex='25')
 							label Código
-							input(ng-value='order.internal.tempItem.product.product_code'
+							input(name='product-code' ng-value='order.internal.tempItem.product.product_code'
 									blur-to='order.internal.tempItem.product.product_code' 
-									enter='order.getProductByCode($event.target.value)')
+									keys-shortcuts enter='order.getProductByCode($event.target.value)')
 						
-						md-autocomplete(flex='75'
+						md-autocomplete(flex='75' keys-shortcuts enter='teste()'
 										md-input-name='autocompleteProduct'
 										md-no-cache='false'
 										md-escape-options='none'
 										md-selected-item='order.internal.tempProduct'
 										md-search-text='productQuery'
-										md-selected-item-change='order.getProductByCode(item.product_code)'
+										md-selected-item-change='item.product_code && order.getProductByCode(item.product_code)'
 										md-items='item in order.getProductByName(productQuery)'
 										md-item-text='item.product_name'
 										md-min-length='3'
@@ -131,9 +131,18 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										ng-blur='order.internal.blurItem()')
 							md-item-template
 								div(md-highlight-text='customerQuery' style='line-height: 2') {{item.product_name}}
-								div(style='font-size: 11px;line-height: 1')
-									| Código: 
-									| {{item.product_code}}
+								div(layout='row' style='color: #888')
+									div(style='font-size: 11px;line-height: 1')
+										| Código: 
+										| {{item.product_code}}
+									div(flex='5')
+									div(style='font-size: 11px;line-height: 1')
+										| Qtd em estoque: 
+										| {{item.stock.product_stock}}
+									div(flex='5')
+									div(style='font-size: 11px;line-height: 1')
+										| Preço: 
+										| {{item.price.price_value | currency: 'R$ '}}
 
 						md-input-container(flex='25')
 							label 
@@ -144,16 +153,18 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					div(layout='row')
 						md-input-container(flex='25')
 							label Quantidade
-							input(ng-model='order.internal.tempItem.order_item_amount')
+							input(name='amount' ng-model='order.internal.tempItem.order_item_amount'
+									keys-shortcuts enter='order.focusOn("input[name=\'al-discount\']")')
 						
 						md-input-container(flex='25')
 							label Desconto %
-							input(ng-model='order.internal.tempItem.order_item_al_discount' 
-									ng-model-options="{ updateOn: 'default blur' }")
+							input(name='al-discount' ng-model='order.internal.tempItem.order_item_al_discount' 
+									ng-model-options="{ updateOn: 'default blur' }"
+									keys-shortcuts enter='order.focusOn("input[name=\'vl-discount\']")')
 						
 						md-input-container(flex='25')
 							label Desconto R$
-							input(ng-model='order.internal.tempItem.order_item_vl_discount' 
+							input(name='vl-discount' ng-model='order.internal.tempItem.order_item_vl_discount' 
 									ng-model-options="{ updateOn: 'default blur' }"
 									keys-shortcuts enter='order.addItem()')
 						
@@ -167,23 +178,23 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						| {{order.internal.tempItem | json}}
 
 					div(layout='column' style='margin-top: 45px')
-						div(style='padding-right: 10px')
+						.products-table-header-container
 							table.products-table
 								thead
 									tr
-										th Produto
-										th Un
-										th Qtd
-										th Vl unit
-										th Desc %
-										th Desc R$
-										th Total
+										th &nbsp; PRODUTO
+										th UND
+										th QTD
+										th VL UNIT
+										th DESC %
+										th DESC R$
+										th VALOR TOTAL
 										th &nbsp;
 						.container-table
 							table.products-table
 								tbody
 									tr(ng-repeat='i in order.budget.items' layout='row')
-										td {{i.product.product_code}} {{i.product.product_name}}
+										td {{i.product.product_code}} - {{i.product.product_name}}
 										td {{i.product.unit.unit_initials}}
 										td {{i.order_item_amount}}
 										td {{i.order_item_value | currency}}
@@ -240,7 +251,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										md-escape-options='none'
 										md-selected-item='order.internal.tempCustomer'
 										md-search-text='customerQuery'
-										md-selected-item-change='order.getCustomerByCode(item.person_code)'
+										md-selected-item-change='item.person_code && order.getCustomerByCode(item.person_code)'
 										md-items='item in order.getCustomerByName(customerQuery)'
 										md-item-text='item.person_name'
 										md-min-length='3'
@@ -281,10 +292,10 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
 					div(layout='column' style='margin-top: 30px')
 						md-tabs(md-selected='order.internal.address.selectedTabIndex' md-border-bottom flex)
-							md-tab(label='Endereço de entrega')
+							md-tab(label='Endereço de entrega' ng-disabled='!order.budget.customer.person_id')
 								md-content(layout='row' layout-wrap style='padding: 0' layout-fill)
 									div(flex layout='column' layout-align='center center' 
-											ng-if='order.budget.customer.person_address == 0')
+											ng-if='order.budget.customer.person_id && order.budget.customer.person_address == 0')
 										h1.inner-text Nenhum endereço cadastrado.
 										md-button.md-raised.md-primary(ng-click='order.internal.address.selectedTabIndex = 1') 
 											| &nbsp; Cadastrar &nbsp;
@@ -311,7 +322,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 															ng-disabled='a.person_address_code == order.budget.deliveryAddressId')
 														md-icon(md-font-icon='fa fa-check')
 
-							md-tab(label='Novo endereço')
+							md-tab(label='Novo endereço' ng-disabled='!order.budget.customer.person_id')
 								md-content(ng-controller='NewAddressCtrl as address')
 									form(layout='row' name='newAddressForm')
 										md-card.new-address-card(flex)

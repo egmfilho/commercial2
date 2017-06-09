@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 16:35:38
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-08 17:49:07
+* @Last Modified time: 2017-06-09 10:26:23
 */
 
 (function() {
@@ -54,7 +54,8 @@
 						price_id: userPriceId,
 						limit: options && options.limit,
 						get_product_unit: options && options.getUnit,
-						get_product_price: options && options.getPrice
+						get_product_price: options && options.getPrice,
+						get_product_stock: options && options.getStock,
 					}).$promise;
 				}
 

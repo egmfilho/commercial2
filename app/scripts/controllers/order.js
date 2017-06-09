@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-08 18:09:16
+* @Last Modified time: 2017-06-09 10:27:49
 */
 (function() {
 	'use strict';
@@ -66,6 +66,7 @@
 		self.getProductByCode  = getProductByCode;
 		self.getProductByName  = getProductByName;
 		self.scrollTo          = scrollTo;
+		self.focusOn           = focusOn;
 		self.savePDF           = savePDF;
 
 		self.editItemMenu      = editItemMenu;
@@ -150,14 +151,24 @@
 		* @param {string} code - O codio do vendedor.
 		*/
 		function getSellerByCode(code) {
-			if (!code || code == self.budget.seller.person_code) 
+			if (!code) {
+				self.focusOn('input[name="autocompleteSeller"]');
+				return;
+			}
+
+			if (code == self.budget.seller.person_code || !parseInt(code))
 				return;
 
+			$rootScope.loading.load();
 			getPersonByCode(code, self.internal.personCategories.seller).then(function(success) {
 				self.budget.seller = new Person(success.data);
 				self.internal.tempSeller = new Person(success.data);
+				self.scrollTo('section[name="products"]');
+				self.focusOn('input[name="product-code"]');
+				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);
+				$rootScope.loading.unload();
 			});
 		}
 
@@ -175,16 +186,25 @@
 		* @param {string} code - O codio do cliente.
 		*/
 		function getCustomerByCode(code) {
-			if (!code || code == self.budget.customer.person_code) 
+			if (!code) {
+				self.focusOn('input[name="autocompleteCustomer"]');
+				return;
+			}
+
+			if (code == self.budget.customer.person_code || !parseInt(code))
 				return;
 
 			var options = { getAddress: true };
 			
+			$rootScope.loading.load();
 			getPersonByCode(code, self.internal.personCategories.customer, options).then(function(success) {
 				self.budget.customer = new Person(success.data);
+				self.budget.deliveryAddressId = null;
 				self.internal.tempCustomer = new Person(success.data);
+				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);
+				$rootScope.loading.unload();
 			});
 		}
 
@@ -202,16 +222,26 @@
 		* @param {string} code - O codio do produto.
 		*/
 		function getProductByCode(code) {
-			if (!code || code == self.internal.tempItem.product.product_code) 
+			if (!code) {
+				constants.debug && console.log('Sem codigo informado');
+				self.focusOn('input[name="autocompleteProduct"]');
 				return;
+			}
 
+			if (code == self.internal.tempItem.product.product_code || !parseInt(code)) {
+				return;
+			}
+
+			$rootScope.loading.load();
 			constants.debug && console.log('buscando produto por codigo', code);
 			providerProduct.getByCode(code, 1, '00A0000001', { limit: 10 }).then(function(success) {
-				// var item = new OrderItem();
-				// item.setProduct(new Product(success.data));
+				self.internal.tempProduct = new Product(success.data);
 				self.internal.tempItem.setProduct(new Product(success.data));
+				self.focusOn('input[name="amount"]');
+				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);
+				$rootScope.loading.unload();
 			});
 		}
 
@@ -221,12 +251,17 @@
 		* @returns {object} - Uma promise com o resultado.
 		*/
 		function getProductByName(name) {
-			var deferred = $q.defer();
+			var deferred = $q.defer(),
+				options  = {
+					limit: 10,
+					getPrice: true,
+					getStock: true
+				};
 
 			if (!name || name.length < 3)
 				return [ ];
 
-			providerProduct.getByName(name, 1, '00A0000001', { limit: 10 }).then(function(success) {
+			providerProduct.getByName(name, 1, '00A0000001', options).then(function(success) {
 				deferred.resolve(success.data.map(function(p) { return new Product(p); }));
 			}, function(error) {
 				constants.debug && console.log(error);
@@ -247,6 +282,15 @@
 			container.animate({
 				scrollTop: target - 5
 			});
+		}
+
+		/**
+		* Foca e seleciona o conteudo do elemento informado.
+		* @param {(string|object)} selector - O elemento para qual focar.
+		*/
+		function focusOn(selector) {
+			constants.debug && console.log('focus on', selector);
+			jQuery(selector)[0].focus();
 		}
 
 		/**
@@ -294,9 +338,17 @@
 		}
 
 		function addItem() {
-			self.budget.items.push(new OrderItem(self.internal.tempItem));
-			self.internal.tempProduct = null;
-			self.internal.tempItem = new OrderItem();
+			if (self.internal.tempItem.product && self.internal.tempItem.product.product_id) {
+				if (self.internal.tempItem.order_item_amount > 0) {
+					self.budget.items.push(new OrderItem(self.internal.tempItem));
+					var container = jQuery('.container-table');
+					container.animate({ scrollTop: container.height() });
+				}
+				self.internal.tempProduct = null;
+				self.internal.tempItem = new OrderItem();
+			}
+
+			self.focusOn('input[name="product-code"]');
 		}
 	}
 }());
