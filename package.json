@@ -5,14 +5,14 @@
   "main": "app.js",
   "scripts": {
     "start": "electron ./main.js",
-    "build": "electron-packager ./main.js"
+    "build": "electron-packager . Commercial --out=releases/ --platform=darwin --arch=x64 --ignore=node_modules/gulp* --ignore=bower_components --ignore=app --ignore=releases --ignore=.bower.json --ignore=gulpfile.js --ignore=Diagrama.asta --icon=commercial.icns"
   },
   "author": "@egmfilho",
   "license": "ISC",
   "devDependencies": {
     "bower": "^1.8.0",
-    "electron": "^1.6.10",
     "electron-packager": "^8.7.1",
+    "electron-prebuilt": "^1.4.13",
     "gulp": "^3.9.1",
     "gulp-bower": "0.0.13",
     "gulp-concat": "^2.6.1",

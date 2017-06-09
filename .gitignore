@@ -1,4 +1,5 @@
 /node_modules
 /bower_components
 /www
+/releases
 .DS_Store
