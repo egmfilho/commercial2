@@ -2,7 +2,7 @@
 // * @Author: egmfilho
 // * @Date:   2017-06-06 09:08:17
 // * @Last Modified by:   egmfilho
-// * @Last Modified time: 2017-06-09 17:08:21
+// * @Last Modified time: 2017-06-12 08:53:22
 // */
 
 // const electron = require('electron');
@@ -80,7 +80,7 @@ let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow = new BrowserWindow({width: 1024, height: 768})
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({

@@ -5,12 +5,13 @@
   "main": "app.js",
   "scripts": {
     "start": "electron ./app.js",
-    "build": "electron-packager . Commercial --out=releases/ --platform=darwin --arch=x64 --ignore=node_modules/gulp* --ignore=bower_components --ignore=app/ --ignore=releases --ignore=.bower.json --ignore=gulpfile.js --ignore=Diagrama.asta --icon=commercial.icns",
-    "build-win32": "electron-packager . Commercial --out=releases/ --platform=win32 --arch=x64 --ignore=node_modules/gulp* --ignore=bower_components --ignore=app/ --ignore=releases --ignore=.bower.json --ignore=gulpfile.js --ignore=Diagrama.asta --icon=commercial.ico"
+    "build-mac": "node ./builder.js darwin",
+    "build-win": "node ./builder.js win32"
   },
   "author": "@egmfilho",
   "license": "ISC",
   "devDependencies": {
+    "asar": "^0.13.0",
     "bower": "^1.8.0",
     "electron-packager": "^8.7.1",
     "electron-prebuilt": "^1.4.13",
