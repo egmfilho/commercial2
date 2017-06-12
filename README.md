@@ -10,6 +10,7 @@ Após clonar o projeto, rodar os seguintes comandos
 npm install
 
 bower install
+```
 
 ## Build
 
@@ -18,6 +19,7 @@ Primeiro é preciso compilar o código fonte usando o Gulp. O projeto compilado 
 ```sh
 # compila o codigo fonte
 gulp build
+```
 
 ### Build para MacOS
 
@@ -26,6 +28,7 @@ Cria o app dentro da pasta `<projeto>/releases/Commercial-darwin-x64`
 ```sh
 # gera o app para MacOS
 npm run build-mac
+```
 
 ### Build para Windows
 
@@ -34,3 +37,4 @@ Cria o app dentro da pasta `<projeto>/releases/Commercial-win32-x64`
 ```sh
 # gera o app para Windows
 npm run build-win
+```
