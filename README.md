@@ -1,6 +1,6 @@
 # Commercial 2
 
-Commercial 2 é uma versão atualizada do sistema Commercial - Gestor de vendas.
+Commercial 2 é uma versão atualizada do sistema **Commercial - Gestor de vendas**.
 
 ## Instalação
 
