@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-12 11:40:59
+* @Last Modified time: 2017-06-12 17:26:40
 */
 
 (function() {
@@ -16,7 +16,7 @@
 
 	function CustomDialog($q, $mdPanel) {
 
-		var _dialog, _animation, _animationPosition, _config, _unclosable;
+		var _dialog, _animation, _animationPosition, _config, _unclosable, _confirm;
 
 		function Dialog() {
 			_unclosable = false;
@@ -61,6 +61,8 @@
 		 * @returns {object} Uma promise com o resultado.
 		 */	
 		function showConfirm(title, message) {
+			_confirm = true;
+
 			var controller = function($scope) {
 				$scope.positiveButton = {
 					label: 'Sim',
@@ -125,6 +127,7 @@
 				this._message 	  = message;
 				this._templateUrl = templateUrl;
 				this._unclosable  = _unclosable;
+				this._confirm     = _confirm;
 
 				$scope._reject = function() {
 					deferred.reject();

@@ -9,12 +9,13 @@ div(role='dialog' layout='column' layout-align='center center')
 		.dialog-content(layout='column')
 			div(layout='column' ng-if='ctrl._templateUrl' ng-include='ctrl._templateUrl')
 			div(layout='row' layout-align='start center' ng-if='!ctrl._templateUrl')
-				md-progress-circular(md-mode='indeterminate' md-diameter='30px')
+				md-progress-circular(md-mode='indeterminate' md-diameter='30px' ng-if='ctrl._unclosable')
+				md-icon(md-font-set='material-icons' ng-if='ctrl._confirm') help
+				md-icon(md-font-set='material-icons' ng-if='!ctrl._confirm && !ctrl._unclosable') info
 				div(flex='5')
 				p {{ctrl._message}}
-	.footer(flex ng-if='!ctrl._unclosable')
-		.dialog-footer(layout='row')
-			md-button.md-raised.md-primary(ng-click='positiveButton.action()' ng-if='positiveButton') 
-				| &nbsp; {{positiveButton.label}} &nbsp;
-			md-button.md-raised.md-primary(md-autofocus ng-click='_negativeButton.action()') 
-				| &nbsp; {{_negativeButton.label}} &nbsp;
+	.footer(layout='row' layout-align='end center' layout-fill ng-if='!ctrl._unclosable')
+		md-button.md-primary(ng-click='positiveButton.action()' ng-if='positiveButton') 
+			| &nbsp; {{positiveButton.label}} &nbsp;
+		md-button.md-primary(md-autofocus ng-click='_negativeButton.action()') 
+			| &nbsp; {{_negativeButton.label}} &nbsp;

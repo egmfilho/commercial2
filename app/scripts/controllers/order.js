@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-12 16:34:32
+* @Last Modified time: 2017-06-12 17:42:00
 */
 
 (function() {
@@ -19,14 +19,15 @@
 		'$mdPanel', 
 		'Constants', 
 		'ProviderPerson', 
-		'Person', 
+		'Person',
+		'Address', 
 		'ProviderProduct', 
 		'Product', 
 		'OrderItem',
 		'ElectronWindow' 
 	];
 
-	function OrderCtrl($rootScope, $scope, $location, $q, $mdPanel, constants, providerPerson, Person, providerProduct, Product, OrderItem, ElectronWindow) {
+	function OrderCtrl($rootScope, $scope, $location, $q, $mdPanel, constants, providerPerson, Person, Address, providerProduct, Product, OrderItem, ElectronWindow) {
 
 		var self = this;
 
@@ -39,6 +40,7 @@
 			},
 			tempSeller: null,
 			tempCustomer: null,
+			tempAddress: new Address(),
 			tempProduct: null,
 			tempItem: new OrderItem(),
 			blurSeller: blurSeller,
@@ -58,8 +60,11 @@
 			getDeliveryAddress: function() { return self.budget.customer.person_address.find(function(a) { return a.person_address_code == self.budget.deliveryAddressId }) }
 		};
 
+		self.newCustomer       = newCustomer;
 		self.clearSeller       = clearSeller;
+		self.clearItems        = clearItems;
 		self.clearCustomer     = clearCustomer;
+		self.clearNote         = clearNote;
 		self.getPersonByCode   = getPersonByCode;
 		self.getPersonByName   = getPersonByName;	
 		self.getSellerByCode   = getSellerByCode;
@@ -117,22 +122,68 @@
 		}
 
 		/**
-		* Limpa os campos da sessao de vendedor
+		 *	Abre o modal de cadastro de novo cliente.
+		 */
+		function newCustomer() {
+			var dialog = $rootScope.customDialog();
+
+			dialog.showTemplate('Novo cliente', './partials/modalNewPerson.html', ['$scope', 'Person', 'mdPanelRef', function($scope, Person, mdPanelRef) {
+				this.customer = new Person();
+
+				this.teste = function() {
+					alert('Tell me your secrets...');
+				};
+
+				$scope.positiveButton = {
+					label: 'Salvar',
+					action: function() {
+						mdPanelRef.close();
+					}
+				};
+			}]);
+		}
+
+		/**
+		* Limpa os campos da sessao de vendedor.
 		*/
 		function clearSeller() {
-			$rootScope.dialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
+			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
 				self.budget.seller = new Person();
 				self.internal.tempSeller = null;
+				jQuery('input[ng-value="order.budget.seller.person_code"]').val('');
 			}, function() { });
 		}
 
 		/**
-		* Limpa os campos da sessao de vendedor
+		* Limpa os campos da sessao de produtos e esvazia a lista de itens.
+		*/
+		function clearItems() {
+			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos e esvaziar a lista de itens?').then(function() {
+				self.budget.items = [ ];
+				self.internal.tempItem = new OrderItem();
+				self.internal.tempProduct = null;
+				jQuery('input[ng-value="order.internal.tempItem.product.product_code"]').val('');
+			}, function() { });
+		}
+
+		/**
+		* Limpa os campos da sessao de vendedor.
 		*/
 		function clearCustomer() {
-			$rootScope.dialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
+			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
 				self.budget.customer = new Person();
 				self.internal.tempCustomer = null;	
+				self.internal.tempAddress = new Address();
+				jQuery('input[ng-value="order.budget.customer.person_code"]').val('');
+			}, function() { });
+		}
+
+		/**
+		* Limpa o campo de observacoes.
+		*/
+		function clearNote() {
+			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar o campo?').then(function() {
+				
 			}, function() { });
 		}
 

@@ -125,7 +125,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								span.md-title Produtos
 								span.md-subhead Adicione ou remova produtos
 							div(layout='column' layout-align='center end' layout-fill)
-								md-button.md-raised(ng-click='')
+								md-button.md-raised(ng-click='order.clearItems()')
 									| Limpar
 				md-card-content
 					div(layout-gt-xs='row')
@@ -267,8 +267,10 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							div(flex='90' layout='column')
 								span.md-title Cliente
 								span.md-subhead Informe o cliente e seu endereço de entrega
-							div(layout='column' layout-align='center end' layout-fill)
-								md-button.md-raised(ng-click='order.clearCostumer()')
+							div(layout='row' layout-align='end center' layout-fill)
+								md-button.md-raised(ng-click='order.newCustomer()')
+									| Novo
+								md-button.md-raised(ng-click='order.clearCustomer()')
 									| Limpar
 				
 				md-card-content
@@ -460,7 +462,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								span.md-title Observações
 								span.md-subhead Aqui você pode inserir informações adicionais sobre o orçamento
 							div(layout='column' layout-align='center end' layout-fill)
-								md-button.md-raised(ng-click='')
+								md-button.md-raised(ng-click='order.clearNote()')
 									| Limpar
 				md-card-content
 					div(layout-gt-xs='row')

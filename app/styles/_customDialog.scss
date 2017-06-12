@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 13:43:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-31 16:29:22
+* @Last Modified time: 2017-06-12 17:24:37
 */
 
 .custom-dialog {
@@ -35,7 +35,12 @@
 		max-height: 400px;
 		overflow-y: auto;
 		padding: 15px;
-		border-bottom: 1px solid #e7e7e7;
+		// border-bottom: 1px solid #e7e7e7;
+
+		md-icon {
+			margin: 0;
+			font-size: 32px;
+		}
 
 		md-input-container {
 			margin: 8px 0;
