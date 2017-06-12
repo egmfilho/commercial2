@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-12 11:26:37
+* @Last Modified time: 2017-06-12 16:37:51
 */
 'use strict';
 
@@ -113,8 +113,10 @@ angular.module('commercial2', [
 			$rootScope.currentPath = $location.path();
 
 			Cookies.get(constants['cookie']).then(function(success) {
-				if (!$rootScope.session)
-					$rootScope.session = JSON.parse(window.atob(success)).user_current_session.user_session_value;
+				if (!$rootScope['session-token']) {
+					var u = JSON.parse(window.atob(success));
+					$rootScope['session-token'] = u.user_id + ':' + u.user_current_session.user_session_value;
+				}
 				constants.debug && console.log('Cookie de sessão verificado.');
 			}, function(error) {
 				constants.debug && console.log('cookie de sessao nao encontrado!');

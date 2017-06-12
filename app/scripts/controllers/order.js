@@ -2,8 +2,9 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-12 11:35:30
+* @Last Modified time: 2017-06-12 16:34:32
 */
+
 (function() {
 	'use strict';
 
@@ -57,6 +58,8 @@
 			getDeliveryAddress: function() { return self.budget.customer.person_address.find(function(a) { return a.person_address_code == self.budget.deliveryAddressId }) }
 		};
 
+		self.clearSeller       = clearSeller;
+		self.clearCustomer     = clearCustomer;
 		self.getPersonByCode   = getPersonByCode;
 		self.getPersonByName   = getPersonByName;	
 		self.getSellerByCode   = getSellerByCode;
@@ -111,6 +114,26 @@
 		function blurItem() { 
 			if (self.internal.tempItem.product.product_id) 
 				self.internal.tempProduct = new Product(self.internal.tempItem.product);
+		}
+
+		/**
+		* Limpa os campos da sessao de vendedor
+		*/
+		function clearSeller() {
+			$rootScope.dialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
+				self.budget.seller = new Person();
+				self.internal.tempSeller = null;
+			}, function() { });
+		}
+
+		/**
+		* Limpa os campos da sessao de vendedor
+		*/
+		function clearCustomer() {
+			$rootScope.dialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
+				self.budget.customer = new Person();
+				self.internal.tempCustomer = null;	
+			}, function() { });
 		}
 
 		/**

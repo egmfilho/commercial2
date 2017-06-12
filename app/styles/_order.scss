@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-12 13:46:33
+* @Last Modified time: 2017-06-12 15:39:56
 */
 
 .order-toolbar {
@@ -39,6 +39,10 @@
 
 			.md-title {
 				color: white;
+			}
+
+			button.md-raised {
+				margin-right: 0;
 			}
 		}
 

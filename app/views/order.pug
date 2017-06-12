@@ -58,7 +58,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								| Produtos
 						md-menu-item
 							md-button(ng-click='order.scrollTo("section[name=\'customer\']")')
-								| Clientes
+								| Cliente
 						md-menu-item
 							md-button(ng-click='order.scrollTo("section[name=\'notes\']")')
 								| Observações
@@ -82,7 +82,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								span.md-title Vendedor
 								span.md-subhead Informe o vendedor
 							div(layout='column' layout-align='center end' layout-fill)
-								md-button.md-raised(ng-click='')
+								md-button.md-raised(ng-click='order.clearSeller()')
 									| Limpar
 				md-card-content
 					div(layout-gt-xs='row')
@@ -268,7 +268,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								span.md-title Cliente
 								span.md-subhead Informe o cliente e seu endereço de entrega
 							div(layout='column' layout-align='center end' layout-fill)
-								md-button.md-raised(ng-click='')
+								md-button.md-raised(ng-click='order.clearCostumer()')
 									| Limpar
 				
 				md-card-content

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 11:04:49
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-12 11:34:00
+* @Last Modified time: 2017-06-12 16:38:15
 */
 
 (function() {
@@ -27,9 +27,9 @@
 
 		function request(req) {
 			/* Injeta a sessao atual do usuario */
-			if ($rootScope.session) {
+			if ($rootScope['session-token']) {
 				constants.debug && console.log('injetando sessao no request');
-				req.headers['x-session-token'] = $rootScope.session;
+				req.headers['x-session-token'] = $rootScope['session-token'];
 			}
 
 			req.headers['Content-Type'] = 'application/x-www-form-urlencoded';
