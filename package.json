@@ -4,9 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "electron ./main.js",
-    "build": "electron-packager . Commercial --out=releases/ --platform=darwin --arch=x64 --ignore=node_modules/gulp* --ignore=bower_components --ignore=app --ignore=releases --ignore=.bower.json --ignore=gulpfile.js --ignore=Diagrama.asta --icon=commercial.icns",
-    "build-win32": "electron-packager . Commercial --out=releases/ --platform=win32 --arch=x64 --ignore=node_modules/gulp* --ignore=bower_components --ignore=app --ignore=releases --ignore=.bower.json --ignore=gulpfile.js --ignore=Diagrama.asta --icon=commercial.ico"
+    "start": "electron ./app.js",
+    "build": "electron-packager . Commercial --out=releases/ --platform=darwin --arch=x64 --ignore=node_modules/gulp* --ignore=bower_components --ignore=app/ --ignore=releases --ignore=.bower.json --ignore=gulpfile.js --ignore=Diagrama.asta --icon=commercial.icns",
+    "build-win32": "electron-packager . Commercial --out=releases/ --platform=win32 --arch=x64 --ignore=node_modules/gulp* --ignore=bower_components --ignore=app/ --ignore=releases --ignore=.bower.json --ignore=gulpfile.js --ignore=Diagrama.asta --icon=commercial.ico"
   },
   "author": "@egmfilho",
   "license": "ISC",
