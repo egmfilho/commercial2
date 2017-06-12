@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-09 14:15:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-12 10:04:48
+* @Last Modified time: 2017-06-12 10:14:34
 */
 
 const packager = require('electron-packager');
@@ -30,7 +30,8 @@ let options = {
 		'commercial.icns',
 		'commercial.ico',
 		'Diagrama.asta',
-		'gulpfile.js'
+		'gulpfile.js',
+		'README.md'
 	]
 };
 
