@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-09 09:38:10
+* @Last Modified time: 2017-06-12 13:46:33
 */
 
 .order-toolbar {
@@ -71,6 +71,7 @@
 	}
 
 	section[name='customer'] {
+
 		.delivery-address {
 			.md-toolbar-tools {
 				background-color: white;
@@ -129,6 +130,17 @@
 
 					p {
 						margin: 0;
+					}
+				}
+
+				&.dashed-empty-card {
+					border-style: dashed;
+					border-color: #e1e1e1;
+					background-color: transparent;
+					box-shadow: none;
+
+					p {
+						font-weight: bold !important;
 					}
 				}
 

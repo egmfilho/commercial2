@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-09 13:06:54
+* @Last Modified time: 2017-06-12 11:40:59
 */
 
 (function() {
@@ -156,7 +156,7 @@
 				fullscreen: false,
 				hasBackdrop: _unclosable,
 				position: $mdPanel.newPanelPosition().absolute().center(),
-				trapFocus: true,
+				trapFocus: !_unclosable,
 				zIndex: 80, // nao aumentar para nao ficar na frente do menu do select
 				clickOutsideToClose: !_unclosable,
 				escapeToClose: !_unclosable,

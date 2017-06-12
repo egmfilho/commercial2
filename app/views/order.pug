@@ -51,8 +51,17 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					button(ng-click='$mdMenu.open()') Ver
 					md-menu-content
 						md-menu-item
-							md-button(ng-click='')
+							md-button(ng-click='order.scrollTo("section[name=\'seller\']")')
 								| Vendedor
+						md-menu-item
+							md-button(ng-click='order.scrollTo("section[name=\'products\']")')
+								| Produtos
+						md-menu-item
+							md-button(ng-click='order.scrollTo("section[name=\'customer\']")')
+								| Clientes
+						md-menu-item
+							md-button(ng-click='order.scrollTo("section[name=\'notes\']")')
+								| Observações
 				md-menu
 					button(ng-click='$mdMenu.open()') Ajuda
 					md-menu-content
@@ -68,8 +77,13 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 			md-card
 				md-card-header
 					md-card-header-text
-						span.md-title Vendedor
-						span.md-subhead Informe o vendedor
+						div(layout='row')
+							div(flex='90' layout='column')
+								span.md-title Vendedor
+								span.md-subhead Informe o vendedor
+							div(layout='column' layout-align='center end' layout-fill)
+								md-button.md-raised(ng-click='')
+									| Limpar
 				md-card-content
 					div(layout-gt-xs='row')
 						md-input-container
@@ -106,8 +120,13 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 			md-card
 				md-card-header
 					md-card-header-text
-						span.md-title Produtos
-						span.md-subhead Adicione ou remova produtos
+						div(layout='row')
+							div(flex='90' layout='column')
+								span.md-title Produtos
+								span.md-subhead Adicione ou remova produtos
+							div(layout='column' layout-align='center end' layout-fill)
+								md-button.md-raised(ng-click='')
+									| Limpar
 				md-card-content
 					div(layout-gt-xs='row')
 						md-input-container(flex='25')
@@ -138,7 +157,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									div(flex='5')
 									div(style='font-size: 11px;line-height: 1')
 										| Qtd em estoque: 
-										| {{item.stock.product_stock}}
+										| {{item.stock.product_stock}} ({{item.unit.unit_initials}})
 									div(flex='5')
 									div(style='font-size: 11px;line-height: 1')
 										| Preço: 
@@ -244,8 +263,13 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 			md-card(layout-align='center')
 				md-card-header
 					md-card-header-text
-						span.md-title Cliente
-						span.md-subhead Informe o cliente e seu endereço de entrega
+						div(layout='row')
+							div(flex='90' layout='column')
+								span.md-title Cliente
+								span.md-subhead Informe o cliente e seu endereço de entrega
+							div(layout='column' layout-align='center end' layout-fill)
+								md-button.md-raised(ng-click='')
+									| Limpar
 				
 				md-card-content
 					div(layout-gt-xs='row' layout-wrap)
@@ -332,6 +356,16 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 															ng-click='order.budget.setDeliveryAddressId(a.person_address_code)' 
 															ng-disabled='a.person_address_code == order.budget.deliveryAddressId')
 														md-icon(md-font-icon='fa fa-check')
+									div(flex='33' ng-if='order.budget.customer.person_address.length > 0')
+										md-card.dashed-empty-card
+											md-card-content(layout='column' layout-align='center center' layout-fill)
+												div
+													md-button.md-icon-button.md-raised.md-primary(
+															ng-click='order.internal.address.selectedTabIndex = 1')
+														md-icon(md-font-icon='fa fa-plus')
+												div.offset-top-15
+													p.text-primary.text-center Novo Endereço
+
 
 							md-tab(label='Novo endereço' ng-disabled='!order.budget.customer.person_id')
 								md-content(ng-controller='NewAddressCtrl as address')
@@ -397,10 +431,10 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 																ng-model='address.newAddress.person_address_delivery')
 															| Endereço de Entrega
 
-													md-button.md-raised(flex='25' ng-click='address.clear()')
+													md-button.md-primary(flex='25' ng-click='address.clear()')
 														| Limpar
 
-													md-button.md-raised.md-primary(flex='25' ng-click='address.submit()')
+													md-button.md-primary(flex='25' ng-click='address.submit()')
 														| Cadastrar
 
 						.delivery-address
@@ -421,8 +455,13 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 			md-card(layout-align='center')
 				md-card-header
 					md-card-header-text
-						span.md-title Observações
-						span.md-subhead Aqui você pode inserir informações adicionais sobre o orçamento
+						div(layout='row')
+							div(flex='90' layout='column')
+								span.md-title Observações
+								span.md-subhead Aqui você pode inserir informações adicionais sobre o orçamento
+							div(layout='column' layout-align='center end' layout-fill)
+								md-button.md-raised(ng-click='')
+									| Limpar
 				md-card-content
 					div(layout-gt-xs='row')
 						md-input-container(flex)

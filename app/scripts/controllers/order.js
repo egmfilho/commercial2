@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-09 12:55:53
+* @Last Modified time: 2017-06-12 11:35:30
 */
 (function() {
 	'use strict';
@@ -256,7 +256,8 @@
 				options  = {
 					limit: 10,
 					getPrice: true,
-					getStock: true
+					getStock: true,
+					getUnit: true
 				};
 
 			if (!name || name.length < 3)

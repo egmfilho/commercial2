@@ -1,69 +1,9 @@
-// /*
-// * @Author: egmfilho
-// * @Date:   2017-06-06 09:08:17
-// * @Last Modified by:   egmfilho
-// * @Last Modified time: 2017-06-12 08:53:22
-// */
-
-// const electron = require('electron');
-// const {app, BrowserWindow} = electron;
-// const app = electron.app;
-// const BrowserWindow = electron.BrowserWindow;
-
-// var mainWindow;
-
-// function createWindow() {
-// 	mainWindow = new BrowserWindow({
-// 		devTools: true,
-// 		width: 1024,
-// 		height: 768,
-// 		webPreferences: {
-// 			partition: 'persist:commercial'
-// 		}
-// 	});
-
-// 	mainWindow.on('closed', function() {
-// 		mainWindow = null;
-// 	});
-
-// 	mainWindow.loadURL('file://' + __dirname + '/www/index.html');
-// }
-
-// app.on('ready', createWindow);
-
-// app.on('window-all-closed', function() {
-// 	if (process.platform !== 'darwin') {
-// 		app.quit();
-// 	}
-// });
-
-// app.on('activate', function() {
-// 	if (mainWindow === null) {
-// 		createWindow();
-// 	}
-// });
-
-
-
-
-
-
-// app.on('ready', function() {
-// 	var mainWindow = new BrowserWindow({
-// 		devTools: true,
-// 		width: 1024,
-// 		height: 768,
-// 		webPreferences: {
-// 			partition: 'persist:commercial'
-// 		}
-// 	});
-
-// 	mainWindow.loadURL('file://' + __dirname + '/www/index.html');
-// });
-
-
-
-
+/*
+* @Author: egmfilho
+* @Date:   2017-06-06 09:08:17
+* @Last Modified by:   egmfilho
+* @Last Modified time: 2017-06-12 13:30:54
+*/
 
 const electron = require('electron')
 // Module to control application life.
@@ -79,26 +19,30 @@ const url = require('url')
 let mainWindow
 
 function createWindow () {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1024, height: 768})
+	// Create the browser window.
+	mainWindow = new BrowserWindow({
+		width: 1024, 
+		height: 768,
+		devTools: false
+	})
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, '/www/index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+	// and load the index.html of the app.
+	mainWindow.loadURL(url.format({
+		pathname: path.join(__dirname, '/www/index.html'),
+		protocol: 'file:',
+		slashes: true
+	}))
 
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+	// Open the DevTools.
+	// mainWindow.webContents.openDevTools()
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null
-  })
+	// Emitted when the window is closed.
+	mainWindow.on('closed', function () {
+		// Dereference the window object, usually you would store windows
+		// in an array if your app supports multi windows, this is the time
+		// when you should delete the corresponding element.
+		mainWindow = null
+	})
 }
 
 // This method will be called when Electron has finished
@@ -108,19 +52,19 @@ app.on('ready', createWindow)
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+	// On OS X it is common for applications and their menu bar
+	// to stay active until the user quits explicitly with Cmd + Q
+	if (process.platform !== 'darwin') {
+		app.quit()
+	}
 })
 
 app.on('activate', function () {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow()
-  }
+	// On OS X it's common to re-create a window in the app when the
+	// dock icon is clicked and there are no other windows open.
+	if (mainWindow === null) {
+		createWindow()
+	}
 })
 
 // In this file you can include the rest of your app's specific main process
