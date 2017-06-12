@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-09 14:15:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-12 10:14:34
+* @Last Modified time: 2017-06-12 14:11:46
 */
 
 const packager = require('electron-packager');
@@ -19,6 +19,7 @@ let options = {
 	icon: icon,
 	name: 'Commercial',
 	out: path.join(__dirname, 'releases'),
+	overwrite: true,
 	ignore: [
 		'app/',
 		'bower_components/',
