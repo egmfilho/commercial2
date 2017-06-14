@@ -3,19 +3,22 @@ div(role='dialog' layout='column' layout-align='center center')
 		.md-toolbar-tools
 			h2 {{ctrl._title}}
 			span(flex)
-			md-button.md-icon-button(ng-if='!ctrl._unclosable')
-				md-icon(md-font-icon='fa fa-times' ng-click='_reject()')
-	.body(flex)
+			md-button.md-icon-button(ng-if='ctrl._showCloseButton')
+				md-icon(md-font-icon='fa fa-times' ng-click='ctrl._cancel()')
+	
+	.body(flex ng-if='!ctrl._templateUrl')
 		.dialog-content(layout='column')
-			div(layout='column' ng-if='ctrl._templateUrl' ng-include='ctrl._templateUrl')
-			div(layout='row' layout-align='start center' ng-if='!ctrl._templateUrl')
-				md-progress-circular(md-mode='indeterminate' md-diameter='30px' ng-if='ctrl._unclosable')
-				md-icon(md-font-set='material-icons' ng-if='ctrl._confirm') help
-				md-icon(md-font-set='material-icons' ng-if='!ctrl._confirm && !ctrl._unclosable') info
+			div(layout='row' layout-align='start center')
+				md-progress-circular(md-mode='indeterminate' md-diameter='30px' ng-if='ctrl._showProgress')
+				md-icon(md-font-set='material-icons' ng-if='ctrl._showConfirmSign') help
+				md-icon(md-font-set='material-icons' ng-if='ctrl._showInfoSign') info
 				div(flex='5')
 				p {{ctrl._message}}
-	.footer(layout='row' layout-align='end center' layout-fill ng-if='!ctrl._unclosable')
-		md-button.md-primary(ng-click='positiveButton.action()' ng-if='positiveButton') 
-			| &nbsp; {{positiveButton.label}} &nbsp;
-		md-button.md-primary(md-autofocus ng-click='_negativeButton.action()') 
-			| &nbsp; {{_negativeButton.label}} &nbsp;
+
+	.footer(layout='row' layout-align='end center' layout-fill ng-if='!ctrl._templateUrl')
+		md-button.md-primary(name='positive' ng-click='ctrl._close()' ng-if='ctrl._positiveButtonText') 
+			| &nbsp; {{ctrl._positiveButtonText}} &nbsp;
+		md-button.md-primary(name='negative' md-autofocus ng-click='ctrl._cancel()' ng-if='ctrl._negativeButtonText') 
+			| &nbsp; {{ctrl._negativeButtonText}} &nbsp;
+	
+	div(layout='column' ng-if='ctrl._templateUrl' ng-include='ctrl._templateUrl')

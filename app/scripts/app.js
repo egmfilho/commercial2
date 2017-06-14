@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-12 16:37:51
+* @Last Modified time: 2017-06-14 15:33:53
 */
 'use strict';
 
@@ -116,6 +116,7 @@ angular.module('commercial2', [
 				if (!$rootScope['session-token']) {
 					var u = JSON.parse(window.atob(success));
 					$rootScope['session-token'] = u.user_id + ':' + u.user_current_session.user_session_value;
+					$rootScope['user-companies-raw'] = u.user_company;
 				}
 				constants.debug && console.log('Cookie de sessão verificado.');
 			}, function(error) {
@@ -143,8 +144,8 @@ angular.module('commercial2', [
 			load: function() { 
 				if (this.count == 0) {
 					if (!this.dialog) 
-						this.dialog = $rootScope.customDialog().unclosable();
-					this.dialog.showMessage('Aguarde', 'Carregando informações...');
+						this.dialog = $rootScope.customDialog();
+					this.dialog.showUnclosable('Aguarde', 'Carregando informações...');
 				}
 				this.count++; 
 			},

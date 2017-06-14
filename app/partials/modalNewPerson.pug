@@ -1,51 +1,59 @@
-form(layout='row' layout-wrap name='newCostumerForm')
-	md-input-container(flex='66')
-		label Nome
-		input(name='name' ng-model='ctrl.person.Nome' required)
-		div(ng-messages='newCostumerForm.name.$error')
-			div(ng-message='required') Campo obrigatório!
+form(name='newCostumerForm')
+	.body(layout='row' layout-wrap)
+		md-input-container(flex='66')
+			label Nome
+			input(name='name' ng-model='ctrl.newCustomer.person_name' required)
+			div(ng-messages='newCostumerForm.name.$error')
+				div(ng-message='required') Campo obrigatório!
 
-	md-input-container.md-icon-float(flex='33')
-		label
-			span Tipo
-		md-select(name='type' ng-model='type' required)
-			md-option(value='F') Pessoa Física
-			md-option(value='J') Pessoa Jurídica
-		div(ng-messages='newCostumerForm.type.$error')
-			div(ng-message='required') Campo obrigatório!
+		md-input-container.md-icon-float(flex='33')
+			label
+				span Tipo
+			md-select(name='type' ng-model='ctrl.newCustomer.person_type' required)
+				md-option(value='F') Pessoa Física
+				md-option(value='J') Pessoa Jurídica
+			div(ng-messages='newCostumerForm.type.$error')
+				div(ng-message='required') Campo obrigatório!
 
-	md-input-container(flex='33')
-		label CPF
-		input(name='cpf' 
-			  ng-model='cpf' 
-			  ng-pattern="/^[0-9]{3}[.][0-9]{3}[.][0-9]{3}-[0-9]{2}$/" 
-			  ui-mask='999.999.999-99')
-		div(ng-messages='newCostumerForm.cpf.$error')
-			div(ng-message='pattern') CPF inválido!
+		md-input-container(flex='33')
+			label CPF
+			input(name='cpf' 
+				  ng-model='ctrl.newCustomer.person_cpf' 
+				  ng-pattern="/^[0-9]{3}[.][0-9]{3}[.][0-9]{3}-[0-9]{2}$/" 
+				  ui-mask='999.999.999-99')
+			div(ng-messages='newCostumerForm.cpf.$error')
+				div(ng-message='pattern') CPF inválido!
 
-	md-input-container(flex='33')
-		label CNPJ		
-		input(name='cnpj' 
-			  ng-model='cnpj' 
-			  ng-pattern="/^[0-9]{2}[.][0-9]{3}[.][0-9]{3}/[0-9]{4}[-][0-9]{2}$/" 
-			  ui-mask='99.999.999/9999-99')
-		div(ng-messages='newCostumerForm.cnpj.$error')
-			div(ng-message='pattern') CNPJ inválido!
+		md-input-container(flex='33')
+			label CNPJ		
+			input(name='cnpj' 
+				  ng-model='ctrl.newCustomer.person_cnpj' 
+				  ng-pattern="/^[0-9]{2}[.][0-9]{3}[.][0-9]{3}/[0-9]{4}[-][0-9]{2}$/" 
+				  ui-mask='99.999.999/9999-99')
+			div(ng-messages='newCostumerForm.cnpj.$error')
+				div(ng-message='pattern') CNPJ inválido!
 
-	md-input-container(flex='33')
-		label Inscrição Estadual
-		input()
+		md-input-container(flex='33')
+			label Inscrição Estadual
+			input(ng-model='ie')
 
-	md-input-container(flex='33')
-		label Telefone
-		input(name='phone' ng-model='phone' ui-mask='(99) 9999-9999')
+		md-input-container(flex='33')
+			label Telefone
+			input(name='phone' ng-model='phone' ui-mask='(99) 9999-9999')
 
-	md-input-container(flex='33')
-		label Celular
-		input(name='cel' ng-model='cel' ui-mask='(99) 99999-9999')
+		md-input-container(flex='33')
+			label Celular
+			input(name='cel' ng-model='cel' ui-mask='(99) 99999-9999')
 
-	md-input-container(flex='33')
-		label Email
-		input(name='email' type='email' ng-model='email')
-		div(ng-messages='newCostumerForm.email.$error')
-			div(ng-message='email') Email inválido!
+		md-input-container(flex='33')
+			label Email
+			input(name='email' type='email' ng-model='email')
+			div(ng-messages='newCostumerForm.email.$error')
+				div(ng-message='email') Email inválido!
+
+	.footer(layout='row' layout-align='end center')
+		md-button.md-primary(ng-click='ctrl._close(ctrl.newCustomer)')
+			| &nbsp; Cadastrar &nbsp;
+
+		md-button.md-primary(ng-click='ctrl._cancel()')
+			| &nbsp; Fechar &nbsp;

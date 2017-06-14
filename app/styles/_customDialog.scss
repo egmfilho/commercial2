@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 13:43:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-12 17:24:37
+* @Last Modified time: 2017-06-14 16:34:49
 */
 
 .custom-dialog {
@@ -25,6 +25,10 @@
 				h2 {
 					font-size: .8em;
 					margin: 0;
+				}
+
+				button.md-icon-button {
+					margin-right: -15px;
 				}
 			}
 		}
@@ -59,5 +63,9 @@
 				}
 			}
 		}
+	}
+
+	.footer {
+		padding: 5px;
 	}
 }

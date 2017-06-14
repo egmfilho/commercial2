@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-12 17:42:00
+* @Last Modified time: 2017-06-14 17:56:23
 */
 
 (function() {
@@ -14,6 +14,7 @@
 	OrderCtrl.$inject = [ 
 		'$rootScope', 
 		'$scope', 
+		'$timeout',
 		'$location', 
 		'$q', 
 		'$mdPanel', 
@@ -24,14 +25,17 @@
 		'ProviderProduct', 
 		'Product', 
 		'OrderItem',
+		'UserCompany',
 		'ElectronWindow' 
 	];
 
-	function OrderCtrl($rootScope, $scope, $location, $q, $mdPanel, constants, providerPerson, Person, Address, providerProduct, Product, OrderItem, ElectronWindow) {
+	function OrderCtrl($rootScope, $scope, $timeout, $location, $q, $mdPanel, constants, providerPerson, Person, Address, providerProduct, Product, OrderItem, UserCompany, ElectronWindow) {
 
 		var self = this;
 
 		$scope.debug = constants.debug;
+		
+		self.selectCompany = selectCompany;
 
 		self.internal = {
 			personCategories: {
@@ -54,11 +58,13 @@
 		self.budget = {
 			seller: new Person(),
 			customer: new Person(),
+			companyId: null,
 			items: [ ],
 			deliveryAddressId: null,
 			setDeliveryAddressId: function(id) { self.budget.deliveryAddressId = id; },
 			getDeliveryAddress: function() { return self.budget.customer.person_address.find(function(a) { return a.person_address_code == self.budget.deliveryAddressId }) }
 		};
+
 
 		self.newCustomer       = newCustomer;
 		self.clearSeller       = clearSeller;
@@ -78,11 +84,15 @@
 		self.savePDF           = savePDF;
 
 		self.editItemMenu      = editItemMenu;
+		self.showEditItemModal = showEditItemModal;
 		self.showDialog        = showDialog;
 		self.addItem           = addItem;
 		self.removeItem        = removeItem;
 
 		$scope.$on('$viewContentLoaded', function() {
+			if (!self.budget.companyId) {
+				selectCompany();
+			}
 			$scope.$broadcast('viewContentLoaded');
 		});
 
@@ -93,6 +103,37 @@
 		// ******************************
 		// Methods declaration
 		// ******************************
+
+		/**
+		* Abre uma janela para informar a loja quando 
+		* o usuario possui mais de uma loja vinculada.
+		*/
+		function selectCompany() {
+			var dialog = $rootScope.customDialog(),
+				controller = function() { },
+				options,
+				_companies = $rootScope['user-companies-raw'].map(function(c) {
+					return new UserCompany(c);
+				});
+
+			controller.prototype = {
+				companies: _companies,
+				companyId: _companies[0].company_id
+			};
+
+			options = { 
+				hasBackdrop: true,
+				clickOutsideToClose: false,
+				escapeToClose: false,
+				zIndex: 1
+			};
+
+			dialog.showTemplate('Informe a empresa', './partials/modalSelectCompany.html', controller, options)
+				.then(function(res) {
+					self.budget.companyId = res;
+					constants.debug && console.log('companyId: ', self.budget.companyId);
+				}, function(error) { });
+		}
 
 		/**
 		* Recoloca o nome do vendedor no autocomplete quando 
@@ -125,22 +166,19 @@
 		 *	Abre o modal de cadastro de novo cliente.
 		 */
 		function newCustomer() {
-			var dialog = $rootScope.customDialog();
+			var dialog = $rootScope.customDialog(),
+				controller = function () { };
 
-			dialog.showTemplate('Novo cliente', './partials/modalNewPerson.html', ['$scope', 'Person', 'mdPanelRef', function($scope, Person, mdPanelRef) {
-				this.customer = new Person();
+			controller.prototype = {
+				newCustomer: new Person(),
+				newAddress: new Address(),
+				_showCloseButton: true
+			};
 
-				this.teste = function() {
-					alert('Tell me your secrets...');
-				};
-
-				$scope.positiveButton = {
-					label: 'Salvar',
-					action: function() {
-						mdPanelRef.close();
-					}
-				};
-			}]);
+			dialog.showTemplate('Novo cliente', './partials/modalNewPerson.html', controller)
+				.then(function(res) {
+					console.log(res);
+				}, function(res) { });
 		}
 
 		/**
@@ -309,7 +347,7 @@
 
 			$rootScope.loading.load();
 			constants.debug && console.log('buscando produto por codigo', code);
-			providerProduct.getByCode(code, 1, '00A0000001', { limit: 10 }).then(function(success) {
+			providerProduct.getByCode(code, self.budget.companyId, '00A0000001', { limit: 10 }).then(function(success) {
 				self.internal.tempProduct = new Product(success.data);
 				self.internal.tempItem.setProduct(new Product(success.data));
 				self.focusOn('input[name="amount"]');
@@ -337,7 +375,7 @@
 			if (!name || name.length < 3)
 				return [ ];
 
-			providerProduct.getByName(name, 1, '00A0000001', options).then(function(success) {
+			providerProduct.getByName(name, self.budget.companyId, '00A0000001', options).then(function(success) {
 				deferred.resolve(success.data.map(function(p) { return new Product(p); }));
 			}, function(error) {
 				constants.debug && console.log(error);
@@ -365,8 +403,10 @@
 		* @param {(string|object)} selector - O elemento para qual focar.
 		*/
 		function focusOn(selector) {
-			constants.debug && console.log('focus on', selector);
-			jQuery(selector)[0].focus();
+			$timeout(function() {
+				constants.debug && console.log('focus on', selector);
+				jQuery(selector)[0].focus();
+			}, 100);
 		}
 
 		/**
@@ -390,6 +430,22 @@
 
 		function editItemMenu($mdMenu, event) {
 			$mdMenu.open(event);
+		}
+
+		function showEditItemModal(item) {
+			var dialog = $rootScope.customDialog(),
+				controller = function() { };
+
+			controller.prototype = {
+				_showCloseButton: true,
+				item: new OrderItem(item)
+			};
+
+			dialog.showTemplate('Editar', './partials/modalEditItem.html', controller)
+				.then(function(res) {
+					var index = self.budget.items.indexOf(item);
+					self.budget.items[index] = new OrderItem(res);
+				}, function(error) { });
 		}
 
 		function showDialog() {

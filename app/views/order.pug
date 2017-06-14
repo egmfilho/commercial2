@@ -42,11 +42,21 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								md-icon(md-font-set='material-icons') delete_forever
 								|  Excluir
 				md-menu
-					button(ng-click='$mdMenu.open()') Editar
+					button(ng-click='$mdMenu.open()') Orçamento
 					md-menu-content
 						md-menu-item
 							md-button(ng-click='')
-								| Vendedor
+								md-icon(md-font-set='material-icons') assignment_ind
+								| Remover vendedor
+						md-menu-item
+							md-button(ng-click='')
+								md-icon(md-font-set='material-icons') person
+								| Remover cliente
+						md-menu-divider
+						md-menu-item
+							md-button(ng-click='')
+								md-icon(md-font-set='material-icons') monetization_on
+								| Aplicar desconto geral
 				md-menu
 					button(ng-click='$mdMenu.open()') Ver
 					md-menu-content
@@ -172,30 +182,27 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					div(layout='row')
 						md-input-container(flex='25')
 							label 
-								//- i.fa.fa-lock(ng-if='!order.internal.tempItem.product.product_code') &nbsp;
 								| Quantidade
 							input(name='amount' ng-model='order.internal.tempItem.order_item_amount'
 									keys-shortcuts enter='order.focusOn("input[name=\'al-discount\']")'
-									currency number-only)
+									currency number-only ng-disabled='!order.internal.tempItem.product.product_code')
 						
 						md-input-container(flex='25')
 							label 
-								//- i.fa.fa-lock(ng-if='!order.internal.tempItem.product.product_code') &nbsp;
 								| Desconto %
 							input(name='al-discount' ng-model='order.internal.tempItem.order_item_al_discount' 
 									ng-model-options="{ updateOn: 'default blur' }"
 									ng-blur='order.internal.tempItem.setAlDiscount(order.internal.tempItem.order_item_al_discount)'
-									currency number-only
+									currency number-only ng-disabled='!order.internal.tempItem.product.product_code'
 									keys-shortcuts enter='order.focusOn("input[name=\'vl-discount\']")')
 						
 						md-input-container(flex='25')
 							label 
-								//- i.fa.fa-lock(ng-if='!order.internal.tempItem.product.product_code') &nbsp;
 								| Desconto R$
 							input(name='vl-discount' ng-model='order.internal.tempItem.order_item_vl_discount' 
 									ng-model-options="{ updateOn: 'default blur' }"
 									ng-blur='order.internal.tempItem.setVlDiscount(order.internal.tempItem.order_item_vl_discount)'
-									currency number-only
+									currency number-only ng-disabled='!order.internal.tempItem.product.product_code'
 									keys-shortcuts enter='order.addItem()')
 						
 						md-input-container(flex='25')
@@ -237,7 +244,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 													md-icon(md-font-icon='fa fa-ellipsis-v')
 												md-menu-content(width='2')
 													md-menu-item
-														md-button(ng-click='') 
+														md-button(ng-click='order.showEditItemModal(i)') 
 															md-icon(md-font-set='material-icons' md-menu-align-target) create
 															|  Editar
 													md-menu-divider

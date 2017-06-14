@@ -1,0 +1,37 @@
+.body(layout='row')
+	md-input-container(flex='25')
+		label 
+			| Quantidade
+		input(name='edit.amount' ng-model='ctrl.item.order_item_amount' currency number-only
+				keys-shortcuts enter='focusOn("input[name=\'edit.al-discount\']")')
+	
+	md-input-container(flex='25')
+		label 
+			| Desconto %
+		input(name='edit.al-discount' ng-model='ctrl.item.order_item_al_discount' 
+				ng-model-options="{ updateOn: 'default blur' }"
+				ng-blur='ctrl.item.setAlDiscount(ctrl.item.order_item_al_discount)'
+				keys-shortcuts enter='focusOn("input[name=\'edit.vl-discount\']")'
+				currency number-only)
+	
+	md-input-container(flex='25')
+		label 
+			| Desconto R$
+		input(name='edit.vl-discount' ng-model='ctrl.item.order_item_vl_discount' 
+				ng-model-options="{ updateOn: 'default blur' }"
+				ng-blur='ctrl.item.setVlDiscount(ctrl.item.order_item_vl_discount)'
+				keys-shortcuts enter='focusOn("button[name=\'positive\']")' prevent-default
+				currency number-only)
+
+	md-input-container(flex='25')
+		label 
+			i.fa.fa-lock &nbsp;
+			| Total
+		input(ng-value='ctrl.item.getValueTotal() | currency:"R$ "' tabindex='-1' readonly)
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-primary(ng-click='ctrl._close(ctrl.item)')
+		| &nbsp; Editar &nbsp;
+
+	md-button.md-primary(ng-click='ctrl._cancel()')
+		| &nbsp; Cancelar &nbsp;
