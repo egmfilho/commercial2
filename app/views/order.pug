@@ -337,43 +337,54 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					div(layout='column' style='margin-top: 30px')
 						md-tabs(md-selected='order.internal.address.selectedTabIndex' md-border-bottom flex)
 							md-tab(label='Endereço de entrega' ng-disabled='!order.budget.order_client.person_id')
-								md-content(layout='row' layout-wrap style='padding: 0' layout-fill)
-									div(flex layout='column' layout-align='center center' 
-											ng-if='order.budget.order_client.person_id && order.budget.order_client.person_address == 0')
-										h1.inner-text Nenhum endereço cadastrado.
-										md-button.md-raised.md-primary(ng-click='order.internal.address.selectedTabIndex = 1') 
-											| &nbsp; Cadastrar &nbsp;
-									div(flex='33' 
-										ng-repeat='a in order.budget.order_client.person_address track by $index'
-										ng-if='order.budget.order_client.person_address.length > 0')
-										md-card(ng-class='{"active": a.person_address_code == order.budget.order_address_delivery_code}')
-											md-card-content(layout='column' layout-fill) 
-												div(flex='15' layout='row')
-													b Cód: {{a.person_address_code}}
-														span(ng-if='a.person_address_main != "N"') &nbsp;(Principal)
-													div(flex)
-													.label.label-success(ng-if='a.person_address_code == order.budget.order_address_delivery_code') 
-														i.fa.fa-map-marker &nbsp;
-														| Selecionado
-													.label.label-error(ng-if='a.person_address_active == "N"') 
-														| Inativo
-												div(flex layout='row' layout-align='start center')
-													p.text-primary
-														| {{a.toString()}}
-												div(flex='30' layout='row' layout-align='end end')
-													md-button.md-icon-button.md-raised.md-primary(
-															ng-click='order.budget.setDeliveryAddress(a)' 
-															ng-disabled='a.person_address_code == order.budget.order_address_delivery_code')
-														md-icon(md-font-icon='fa fa-check')
-									div(flex='33' ng-if='order.budget.order_client.person_address.length > 0')
-										md-card.dashed-empty-card
-											md-card-content(layout='column' layout-align='center center' layout-fill)
-												div
-													md-button.md-icon-button.md-raised.md-primary(
-															ng-click='order.internal.address.selectedTabIndex = 1')
-														md-icon(md-font-icon='fa fa-plus')
-												div.offset-top-15
-													p.text-primary.text-center Novo Endereço
+								md-content(layout='column' style='padding: 0' layout-fill)
+									.boneco(flex layout='row' layout-wrap style='overflow: auto')
+										div(flex layout='column' layout-align='center center' 
+												ng-if='order.budget.order_client.person_id && order.budget.order_client.person_address == 0')
+											h1.inner-text Nenhum endereço cadastrado.
+											md-button.md-raised.md-primary(ng-click='order.internal.address.selectedTabIndex = 1') 
+												| &nbsp; Cadastrar &nbsp;
+										div(flex='33' 
+												ng-repeat='a in order.budget.order_client.person_address track by $index'
+												ng-if='order.budget.order_client.person_address.length > 0')
+											md-card(ng-class='{"active": a.person_address_code == order.budget.order_address_delivery_code}')
+												md-card-content(layout='column' layout-fill) 
+													div(flex='15' layout='row')
+														b Cód: {{a.person_address_code}}
+															span(ng-if='a.person_address_main != "N"') &nbsp;(Principal)
+														div(flex)
+														.label.label-success(ng-if='a.person_address_code == order.budget.order_address_delivery_code') 
+															i.fa.fa-map-marker &nbsp;
+															| Selecionado
+														.label.label-error(ng-if='a.person_address_active == "N"') 
+															| Inativo
+													div(flex layout='row' layout-align='start center')
+														p.text-primary
+															| {{a.toString()}}
+													div(flex='30' layout='row' layout-align='end end')
+														md-button.md-icon-button.md-raised.md-primary(
+																ng-click='order.budget.setDeliveryAddress(a)' 
+																ng-disabled='a.person_address_active == "N" || a.person_address_code == order.budget.order_address_delivery_code')
+															md-icon(md-font-icon='fa fa-check')
+										div(flex='33' ng-if='order.budget.order_client.person_address.length > 0')
+											md-card.dashed-empty-card
+												md-card-content(layout='column' layout-align='center center' layout-fill)
+													div
+														md-button.md-icon-button.md-raised.md-primary(
+																ng-click='order.internal.address.selectedTabIndex = 1')
+															md-icon(md-font-icon='fa fa-plus')
+													div.offset-top-15
+														p.text-primary.text-center Novo Endereço
+
+									.delivery-address
+										md-toolbar
+											.md-toolbar-tools
+												i.fa.fa-2x.fa-truck &nbsp;
+												p(ng-if='!order.budget.order_address_delivery_code') Nenhum endereço informado!
+												div(layout='column' ng-if='order.budget.order_address_delivery_code') 
+													span(style='font-size: 11px')
+														| Código: {{order.budget.order_address.person_address_code}}
+													span {{order.budget.order_address.toString()}}
 
 
 							md-tab(label='Novo endereço' ng-disabled='!order.budget.order_client.person_id')
@@ -381,6 +392,15 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									form(layout='row' name='newAddressForm')
 										md-card.new-address-card(flex)
 											md-card-content(layout='row' layout-wrap)
+
+												div(flex='100' layout='row')
+													span.md-subhead Endereço
+													span(flex)
+													md-input-container(style='margin: 0')
+														md-switch(name='delivery' ng-true-value='"Y"' ng-false-value='"N"'
+																ng-model='address.newAddress.person_address_delivery')
+															| Endereço de Entrega
+
 												md-input-container(flex='15')
 													label 
 														| CEP
@@ -442,12 +462,15 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 														| Inscrição Estadual
 													input(ng-model='ie')
 
-												md-input-container(flex='15')
+												div(flex='100') 
+													p.md-subhead(style='margin: 8px 0') Contatos
+
+												md-input-container(flex='25')
 													label 
 														| Telefone
 													input(ng-model='t')
 
-												md-input-container(flex='15')
+												md-input-container(flex='25')
 													label 
 														| Celular
 													input(ng-model='c')
@@ -457,34 +480,18 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 														| Email
 													input(ng-model='e')
 
-												span(flex)
-
 												md-input-container(flex='25')
-													md-switch(name='delivery' ng-true-value='"Y"' ng-false-value='"N"'
-															ng-model='address.newAddress.person_address_delivery')
-														| Endereço de Entrega
+													label 
+														| Outros
+													input(ng-model='o')
 
-												.offset-top-30(layout='row' layout-align='end center')
-													//- md-input-container(flex='50')
-														md-switch(name='delivery' ng-true-value='"Y"' ng-false-value='"N"'
-																ng-model='address.newAddress.person_address_delivery')
-															| Endereço de Entrega
-
-													md-button.md-primary(flex='25' ng-click='address.clear()')
+												div(layout='row' layout-fill layout-align='end center')
+													md-button.md-primary(ng-click='address.clear()')
 														| Limpar
 
-													md-button.md-primary(flex='25' ng-click='address.submit()')
+													md-button.md-primary(ng-click='address.submit()')
 														| Cadastrar
 
-						.delivery-address
-							md-toolbar
-								.md-toolbar-tools
-									i.fa.fa-2x.fa-truck &nbsp;
-									p(ng-if='!order.budget.order_address_delivery_code') Nenhum endereço informado!
-									div(layout='column' ng-if='order.budget.order_address_delivery_code') 
-										span(style='font-size: 11px')
-											| Código: {{order.budget.order_address.person_address_code}}
-										span {{order.budget.order_address.toString()}}
 					
 					pre(ng-if='debug')
 						| {{order.budget.order_client | json}}

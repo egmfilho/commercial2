@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-14 09:33:11
+* @Last Modified time: 2017-06-16 17:31:55
 */
 
 .order-toolbar {
@@ -81,8 +81,7 @@
 				background-color: white;
 				color: $main-color;
 				font-size: .7em;
-				border: 1px solid #e1e1e1;
-				border-top: none;
+				border-top: 1px solid #e1e1e1;
 			}
 		}
 
@@ -90,7 +89,7 @@
 			border: 1px solid #e1e1e1;
 			border-radius: 0;
 			background-color: #f5f5f5;
-			height: 260px;
+			height: 365px;
 
 			.inner-text {
 				text-shadow: -1px -1px 1px rgba(0,0,0,0.3);

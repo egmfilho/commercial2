@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-16 13:36:40
+* @Last Modified time: 2017-06-16 17:13:56
 */
 
 (function() {
@@ -78,6 +78,7 @@
 		self.scrollTo           = scrollTo;
 		self.focusOn            = focusOn;
 		self.savePDF            = savePDF;
+		self.showNotFound       = showNotFound;
 
 		self.editItemMenu       = editItemMenu;
 		self.showEditItemModal  = showEditItemModal;
@@ -188,7 +189,7 @@
 		 * @param {object} person - O cliente a ser adicionado.
 		 */		
 		function setCustomer(person) {
-			self.budget.order_client = new Person(person);
+			self.budget.setCustomer(new Person(person));
 			self.budget.order_address_delivery_code = null;
 			self.internal.tempCustomer = new Person(person);
 		}
@@ -198,7 +199,7 @@
 		*/
 		function clearSeller() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
-				self.budget.order_seller = new Person();
+				self.budget.removeSeller();
 				self.internal.tempSeller = null;
 				jQuery('input[ng-value="order.budget.order_seller.person_code"]').val('');
 			}, function() { });
@@ -221,7 +222,7 @@
 		*/
 		function clearCustomer() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
-				self.budget.order_client = new Person();
+				self.budget.removeCustomer();
 				self.internal.tempCustomer = null;	
 				self.internal.tempAddress = new Address();
 				jQuery('input[ng-value="order.budget.order_client.person_code"]').val('');
@@ -286,14 +287,19 @@
 
 			$rootScope.loading.load();
 			getPersonByCode(code, self.internal.personCategories.seller).then(function(success) {
-				self.budget.order_seller = new Person(success.data);
+				self.budget.setSeller(new Person(success.data));
 				self.internal.tempSeller = new Person(success.data);
-				self.scrollTo('section[name="products"]');
-				self.focusOn('input[name="product-code"]');
+				$timeout(function() {
+					self.scrollTo('section[name="products"]');
+					self.focusOn('input[name="product-code"]');
+				}, 500);
 				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);
 				$rootScope.loading.unload();
+
+				if (error.status == 404)
+					self.showNotFound();
 			});
 		}
 
@@ -328,6 +334,9 @@
 			}, function(error) {
 				constants.debug && console.log(error);
 				$rootScope.loading.unload();
+
+				if (error.status == 404)
+					self.showNotFound();
 			});
 		}
 
@@ -365,6 +374,9 @@
 			}, function(error) {
 				constants.debug && console.log(error);
 				$rootScope.loading.unload();
+
+				if (error.status == 404)
+					self.showNotFound();
 			});
 		}
 
@@ -475,6 +487,12 @@
 			ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/1?action=print');
 		}
 
+		/**
+		* Exibe um modal com aviso de 404 not found.
+		*/
+		function showNotFound() {
+			$rootScope.customDialog().showMessage('Aviso', 'Nenhum resultado encontrado!');
+		}
 
 
 

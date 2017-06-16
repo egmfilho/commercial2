@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-16 10:04:50
+* @Last Modified time: 2017-06-16 16:36:20
 */
 
 (function() {
@@ -115,16 +115,16 @@
 		 * @param {object} customer - O objeto do cliente.
 		 */
 		function setCustomer(customer) {
-			this.order_customer = new Person(customer);
-			this.order_customer_id = this.order_customer.person_id;
+			this.order_client = new Person(customer);
+			this.order_client_id = this.order_client.person_id;
 		}
 
 		/**
 		 * Remove o cliente vinculado ao orcamento.
 		 */
 		function removeCustomer() {
-			this.order_customer = new Person();
-			this.order_customer_id = null;
+			this.order_client = new Person();
+			this.order_client_id = null;
 		}
 
 		/**
