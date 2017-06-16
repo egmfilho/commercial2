@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-14 15:33:53
+* @Last Modified time: 2017-06-16 12:38:24
 */
 'use strict';
 
@@ -105,12 +105,15 @@ angular.module('commercial2', [
 			});
 
 	}])
-	.run(['$rootScope', '$location', 'Cookies', 'Constants', function($rootScope, $location, Cookies, constants) {
+	.run(['$rootScope', '$location', 'Cookies', 'CustomDialogManager', 'Constants', function($rootScope, $location, Cookies, CustomDialogManager, constants) {
 		/* Aqui verifica se o usuario esta logado. */
 		/* Caso contrario redireciona para tela de login. */
 		$rootScope.$on('$routeChangeStart', function(event, next, current) {
 			/* Armazena a localizacao atual para usar nas condicionais das views */
 			$rootScope.currentPath = $location.path();
+
+			/* Mata todos os modais ainda abertos */
+			CustomDialogManager.closeAll();
 
 			Cookies.get(constants['cookie']).then(function(success) {
 				if (!$rootScope['session-token']) {
@@ -121,13 +124,20 @@ angular.module('commercial2', [
 				constants.debug && console.log('Cookie de sessão verificado.');
 			}, function(error) {
 				constants.debug && console.log('cookie de sessao nao encontrado!');
-				/* Redireciona para tela de login apenas se a url nao for a de impressao */
-				/*  ou a propria tela de login */
+				/* Redireciona para tela de login apenas se a url */
+				/* nao for a de impressao ou a propria tela de login */
 				if (next.templateUrl && next.templateUrl !== 'views/login.html' && next.templateUrl.indexOf('print-order.html') < 0) {
+					$rootScope.clearCredentials();
 					$location.path('/login');
 				}
 			});
 		});
+
+		/* Remove as informacoes temporarias do usuario. */
+		$rootScope.clearCredentials = function() {
+			delete $rootScope['session-token'];
+			delete $rootScope['user-companies-raw'];
+		};
 
 	}])
 	.run(['$rootScope', '$mdToast', 'MainMenu', 'CustomDialog', 'Constants', function($rootScope, $mdToast, mainMenu, customDialog, constants) {
@@ -169,7 +179,7 @@ angular.module('commercial2', [
 				$mdToast.simple()
 					.toastClass(class)
 					.textContent(message)
-					.position('top left right')
+					.position('bottom right')
 					.hideDelay(3000)
 			);
 		};

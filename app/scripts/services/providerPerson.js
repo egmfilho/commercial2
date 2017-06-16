@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 10:46:07
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-12 13:45:30
+* @Last Modified time: 2017-06-16 13:30:26
 */
 
 (function() {
@@ -85,7 +85,8 @@
 					}).$promise;
 				}
 
-				function save(person) {
+				function save(person, category) {
+					person.person_category = category;
 					return provider.save({
 						action: 'insert'
 					}, person).$promise;

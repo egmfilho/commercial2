@@ -37,20 +37,6 @@ form(name='newCostumerForm')
 			label Inscrição Estadual
 			input(ng-model='ie')
 
-		md-input-container(flex='33')
-			label Telefone
-			input(name='phone' ng-model='phone' ui-mask='(99) 9999-9999')
-
-		md-input-container(flex='33')
-			label Celular
-			input(name='cel' ng-model='cel' ui-mask='(99) 99999-9999')
-
-		md-input-container(flex='33')
-			label Email
-			input(name='email' type='email' ng-model='email')
-			div(ng-messages='newCostumerForm.email.$error')
-				div(ng-message='email') Email inválido!
-
 	.footer(layout='row' layout-align='end center')
 		md-button.md-primary(ng-click='ctrl._close(ctrl.newCustomer)')
 			| &nbsp; Cadastrar &nbsp;

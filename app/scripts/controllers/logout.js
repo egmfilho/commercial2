@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-02 10:27:31
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-02 13:50:46
+* @Last Modified time: 2017-06-16 10:09:38
 */
 
 (function() {
@@ -17,7 +17,7 @@
 	function LogoutCtrl($rootScope, $timeout, $location, Authentication) {
 
 		var alert = $rootScope.customDialog();
-		alert.unclosable().showMessage('Logout', 'Efetuando logout, aguarde...');
+		alert.showUnclosable('Logout', 'Efetuando logout, aguarde...');
 
 		Authentication.logout(function(res) {
 			if (res.status == 200) {

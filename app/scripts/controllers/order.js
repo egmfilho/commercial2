@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-14 17:56:23
+* @Last Modified time: 2017-06-16 13:36:40
 */
 
 (function() {
@@ -18,7 +18,9 @@
 		'$location', 
 		'$q', 
 		'$mdPanel', 
-		'Constants', 
+		'Cookies',
+		'Constants',
+		'Order', 
 		'ProviderPerson', 
 		'Person',
 		'Address', 
@@ -29,7 +31,7 @@
 		'ElectronWindow' 
 	];
 
-	function OrderCtrl($rootScope, $scope, $timeout, $location, $q, $mdPanel, constants, providerPerson, Person, Address, providerProduct, Product, OrderItem, UserCompany, ElectronWindow) {
+	function OrderCtrl($rootScope, $scope, $timeout, $location, $q, $mdPanel, Cookies, constants, Order, providerPerson, Person, Address, providerProduct, Product, OrderItem, UserCompany, ElectronWindow) {
 
 		var self = this;
 
@@ -55,42 +57,35 @@
 			}
 		};
 
-		self.budget = {
-			seller: new Person(),
-			customer: new Person(),
-			companyId: null,
-			items: [ ],
-			deliveryAddressId: null,
-			setDeliveryAddressId: function(id) { self.budget.deliveryAddressId = id; },
-			getDeliveryAddress: function() { return self.budget.customer.person_address.find(function(a) { return a.person_address_code == self.budget.deliveryAddressId }) }
-		};
+		self.budget = new Order();
 
+		self.newCustomer        = newCustomer;
+		self.setCustomer        = setCustomer;
+		self.clearSeller        = clearSeller;
+		self.clearItems         = clearItems;
+		self.clearCustomer      = clearCustomer;
+		self.clearNote          = clearNote;
+		self.getPersonByCode    = getPersonByCode;
+		self.getPersonByName    = getPersonByName;	
+		self.getSellerByCode    = getSellerByCode;
+		self.getSellerByName    = getSellerByName;
+		self.getCustomerByCode  = getCustomerByCode;
+		self.getCustomerByName  = getCustomerByName;
+		self.getProductByCode   = getProductByCode;
+		self.getProductByName   = getProductByName;
+		self.setTotalAlDiscount = setTotalAlDiscount;
+		self.setTotalVlDiscount = setTotalVlDiscount;
+		self.scrollTo           = scrollTo;
+		self.focusOn            = focusOn;
+		self.savePDF            = savePDF;
 
-		self.newCustomer       = newCustomer;
-		self.clearSeller       = clearSeller;
-		self.clearItems        = clearItems;
-		self.clearCustomer     = clearCustomer;
-		self.clearNote         = clearNote;
-		self.getPersonByCode   = getPersonByCode;
-		self.getPersonByName   = getPersonByName;	
-		self.getSellerByCode   = getSellerByCode;
-		self.getSellerByName   = getSellerByName;
-		self.getCustomerByCode = getCustomerByCode;
-		self.getCustomerByName = getCustomerByName;
-		self.getProductByCode  = getProductByCode;
-		self.getProductByName  = getProductByName;
-		self.scrollTo          = scrollTo;
-		self.focusOn           = focusOn;
-		self.savePDF           = savePDF;
-
-		self.editItemMenu      = editItemMenu;
-		self.showEditItemModal = showEditItemModal;
-		self.showDialog        = showDialog;
-		self.addItem           = addItem;
-		self.removeItem        = removeItem;
+		self.editItemMenu       = editItemMenu;
+		self.showEditItemModal  = showEditItemModal;
+		self.addItem            = addItem;
+		self.removeItem         = removeItem;
 
 		$scope.$on('$viewContentLoaded', function() {
-			if (!self.budget.companyId) {
+			if (!self.budget.order_company_id) {
 				selectCompany();
 			}
 			$scope.$broadcast('viewContentLoaded');
@@ -130,8 +125,8 @@
 
 			dialog.showTemplate('Informe a empresa', './partials/modalSelectCompany.html', controller, options)
 				.then(function(res) {
-					self.budget.companyId = res;
-					constants.debug && console.log('companyId: ', self.budget.companyId);
+					self.budget.order_company_id = res;
+					constants.debug && console.log('companyId: ', self.budget.order_company_id);
 				}, function(error) { });
 		}
 
@@ -140,8 +135,8 @@
 		* o usuario desiste da pesquisa.
 		*/
 		function blurSeller() { 
-			if (self.budget.seller.person_id) 
-				self.internal.tempSeller = new Person(self.budget.seller);
+			if (self.budget.order_seller.person_id) 
+				self.internal.tempSeller = new Person(self.budget.order_seller);
 		}
 
 		/**
@@ -149,8 +144,8 @@
 		* o usuario desiste da pesquisa.
 		*/
 		function blurCustomer() { 
-			if (self.budget.customer.person_id) 
-				self.internal.tempCustomer = new Person(self.budget.customer);
+			if (self.budget.order_client.person_id) 
+				self.internal.tempCustomer = new Person(self.budget.order_client);
 		}
 
 		/**
@@ -163,22 +158,39 @@
 		}
 
 		/**
-		 *	Abre o modal de cadastro de novo cliente.
+		 * Abre o modal de cadastro de novo cliente.
+		 * @param {object} person - O modal ja abre preenchido.
 		 */
-		function newCustomer() {
+		function newCustomer(person) {
 			var dialog = $rootScope.customDialog(),
 				controller = function () { };
 
 			controller.prototype = {
-				newCustomer: new Person(),
-				newAddress: new Address(),
+				newCustomer: new Person(person),
 				_showCloseButton: true
 			};
 
 			dialog.showTemplate('Novo cliente', './partials/modalNewPerson.html', controller)
 				.then(function(res) {
-					console.log(res);
+					$rootScope.loading.load();
+					providerPerson.save(res, self.internal.personCategories.customer).then(function(success) {
+						self.setCustomer(angular.extend({ }, res, success.data));
+						$rootScope.loading.unload();
+					}, function(error) {
+						$rootScope.loading.unload();
+						newCustomer(res);
+					});
 				}, function(res) { });
+		}
+
+		/**
+		 * Adiciona um cliente ao pedido.
+		 * @param {object} person - O cliente a ser adicionado.
+		 */		
+		function setCustomer(person) {
+			self.budget.order_client = new Person(person);
+			self.budget.order_address_delivery_code = null;
+			self.internal.tempCustomer = new Person(person);
 		}
 
 		/**
@@ -186,9 +198,9 @@
 		*/
 		function clearSeller() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
-				self.budget.seller = new Person();
+				self.budget.order_seller = new Person();
 				self.internal.tempSeller = null;
-				jQuery('input[ng-value="order.budget.seller.person_code"]').val('');
+				jQuery('input[ng-value="order.budget.order_seller.person_code"]').val('');
 			}, function() { });
 		}
 
@@ -197,7 +209,7 @@
 		*/
 		function clearItems() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos e esvaziar a lista de itens?').then(function() {
-				self.budget.items = [ ];
+				self.budget.order_items = [ ];
 				self.internal.tempItem = new OrderItem();
 				self.internal.tempProduct = null;
 				jQuery('input[ng-value="order.internal.tempItem.product.product_code"]').val('');
@@ -209,10 +221,10 @@
 		*/
 		function clearCustomer() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
-				self.budget.customer = new Person();
+				self.budget.order_client = new Person();
 				self.internal.tempCustomer = null;	
 				self.internal.tempAddress = new Address();
-				jQuery('input[ng-value="order.budget.customer.person_code"]').val('');
+				jQuery('input[ng-value="order.budget.order_client.person_code"]').val('');
 			}, function() { });
 		}
 
@@ -269,12 +281,12 @@
 				return;
 			}
 
-			if (code == self.budget.seller.person_code || !parseInt(code))
+			if (code == self.budget.order_seller.person_code || !parseInt(code))
 				return;
 
 			$rootScope.loading.load();
 			getPersonByCode(code, self.internal.personCategories.seller).then(function(success) {
-				self.budget.seller = new Person(success.data);
+				self.budget.order_seller = new Person(success.data);
 				self.internal.tempSeller = new Person(success.data);
 				self.scrollTo('section[name="products"]');
 				self.focusOn('input[name="product-code"]');
@@ -304,16 +316,14 @@
 				return;
 			}
 
-			if (code == self.budget.customer.person_code || !parseInt(code))
+			if (code == self.budget.order_client.person_code || !parseInt(code))
 				return;
 
 			var options = { getAddress: true };
 			
 			$rootScope.loading.load();
 			getPersonByCode(code, self.internal.personCategories.customer, options).then(function(success) {
-				self.budget.customer = new Person(success.data);
-				self.budget.deliveryAddressId = null;
-				self.internal.tempCustomer = new Person(success.data);
+				setCustomer(success.data);
 				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);
@@ -347,7 +357,7 @@
 
 			$rootScope.loading.load();
 			constants.debug && console.log('buscando produto por codigo', code);
-			providerProduct.getByCode(code, self.budget.companyId, '00A0000001', { limit: 10 }).then(function(success) {
+			providerProduct.getByCode(code, self.budget.order_company_id, '00A0000001', { limit: 10 }).then(function(success) {
 				self.internal.tempProduct = new Product(success.data);
 				self.internal.tempItem.setProduct(new Product(success.data));
 				self.focusOn('input[name="amount"]');
@@ -375,7 +385,7 @@
 			if (!name || name.length < 3)
 				return [ ];
 
-			providerProduct.getByName(name, self.budget.companyId, '00A0000001', options).then(function(success) {
+			providerProduct.getByName(name, self.budget.order_company_id, '00A0000001', options).then(function(success) {
 				deferred.resolve(success.data.map(function(p) { return new Product(p); }));
 			}, function(error) {
 				constants.debug && console.log(error);
@@ -383,6 +393,48 @@
 			});
 
 			return deferred.promise;
+		}
+
+		/**
+		* Aplica uma aliquota de desconto igual para todos os items.
+		* @param {float} value - O valor do desconto.
+		*/
+		function setTotalAlDiscount(value) {
+			if (!value) return;
+
+			value = Math.max(parseFloat(value), 0);
+
+			Cookies.get(constants['cookie']).then(function(res) {
+				var user = JSON.parse(window.atob(res));
+				if (value > user.user_max_discount) {
+
+				} else {
+
+				}
+			}, function(res) {
+				constants.debug && console.log('Cookie de usuario nao encontrado!');
+			});
+		}
+
+		/**
+		* Aplica um valor de desconto igual para todos os items.
+		* @param {float} value - O valor do desconto.
+		*/
+		function setTotalVlDiscount(value) {
+			if (!value) return;
+
+			value =  Math.max(parseFloat(value), 0);
+
+			Cookies.get(constants['cookie']).then(function(res) {
+				var user = JSON.parse(window.atob(res));
+				if (value > user.user_max_discount) {
+
+				} else {
+
+				}
+			}, function(res) {
+				constants.debug && console.log('Cookie de usuario nao encontrado!');
+			});
 		}
 
 		/**
@@ -443,36 +495,15 @@
 
 			dialog.showTemplate('Editar', './partials/modalEditItem.html', controller)
 				.then(function(res) {
-					var index = self.budget.items.indexOf(item);
-					self.budget.items[index] = new OrderItem(res);
+					var index = self.budget.order_items.indexOf(item);
+					self.budget.order_items[index] = new OrderItem(res);
 				}, function(error) { });
-		}
-
-		function showDialog() {
-			return;
-
-			var dialog = $rootScope.customDialog();
-
-			dialog.showTemplate('Template', './partials/modalNewPerson.html', ['Person', 'mdPanelRef', function(Person, mdPanelRef) {
-				this.customer = new Person();
-
-				this.teste = function() {
-					alert('Tell me your secrets...');
-				};
-
-				this.positiveButton = {
-					label: 'Texas',
-					action: function() {
-						mdPanelRef.close();
-					}
-				};
-			}]);
 		}
 
 		function addItem() {
 			if (self.internal.tempItem.product && self.internal.tempItem.product.product_id) {
 				if (self.internal.tempItem.order_item_amount > 0) {
-					self.budget.items.push(new OrderItem(self.internal.tempItem));
+					self.budget.order_items.push(new OrderItem(self.internal.tempItem));
 					var container = jQuery('.container-table');
 					container.animate({ scrollTop: container.height() });
 				}
@@ -487,15 +518,15 @@
 			if (!item)
 				return;
 
-			var message = 'Deseja remover o item: ';
+			var message = 'Deseja remover o item? <br><br><b>';
 			message += item.product.product_code + ' - ';
-			message += item.product.product_name + '?';
+			message += item.product.product_name + '</b>';
 
 			$rootScope.customDialog().showConfirm('Aviso', message)
 				.then(function(success) {
 					constants.debug && console.log('resolved');
-					var index = self.budget.items.indexOf(item);
-					self.budget.items.splice(index, 1);
+					var index = self.budget.order_items.indexOf(item);
+					self.budget.order_items.splice(index, 1);
 				}, function(error) { 
 					constants.debug && console.log('rejected');
 				});

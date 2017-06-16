@@ -98,8 +98,8 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					div(layout-gt-xs='row')
 						md-input-container
 							label Código
-							input(ng-value='order.budget.seller.person_code' 
-									blur-to='order.budget.seller.person_code'
+							input(ng-value='order.budget.order_seller.person_code' 
+									blur-to='order.budget.order_seller.person_code'
 									keys-shortcuts 
 									enter='order.getSellerByCode($event.target.value)' 
 									shift-enter='order.scrollTo("section[name=\'customer\']")')
@@ -123,7 +123,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									| {{item.person_code}}
 
 					pre(ng-if='debug')
-						| {{order.budget.seller | json}}
+						| {{order.budget.order_seller | json}}
 
 		//- Produtos					
 		section(name='products')
@@ -230,7 +230,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						.container-table
 							table.products-table
 								tbody
-									tr(ng-repeat='i in order.budget.items' layout='row')
+									tr(ng-repeat='i in order.budget.order_items' layout='row')
 										td {{i.product.product_code}} - {{i.product.product_name}}
 										td {{i.product.unit.unit_initials}}
 										td {{i.order_item_amount}}
@@ -284,8 +284,8 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					div(layout-gt-xs='row' layout-wrap)
 						md-input-container(flex='25')
 							label Código
-							input(ng-value='order.budget.customer.person_code' 
-									blur-to='order.budget.customer.person_code'
+							input(ng-value='order.budget.order_client.person_code' 
+									blur-to='order.budget.order_client.person_code'
 									keys-shortcuts 
 									enter='order.getCustomerByCode($event.target.value)' 
 									shift-enter='')
@@ -313,46 +313,46 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								span
 									i.fa.fa-lock &nbsp;
 									span Tipo
-							input(ng-value='order.budget.customer.getType()' readonly)
+							input(ng-value='order.budget.order_client.getType()' readonly)
 						
 						md-input-container(flex='25')
 							label 
 								i.fa.fa-lock &nbsp;
 								| CPF
-							input(ng-value='order.budget.customer.person_cpf' readonly)
+							input(ng-value='order.budget.order_client.person_cpf' readonly)
 
 						md-input-container(flex='25')
 							label 
 								i.fa.fa-lock &nbsp;
 								| CNPJ
-							input(ng-value='order.budget.customer.person_cnpj' readonly)
+							input(ng-value='order.budget.order_client.person_cnpj' readonly)
 
 						md-input-container(flex='25')
 							label 
 								i.fa.fa-lock &nbsp;
 								| Inscrição Estadual
-							input(ng-value='order.budget.customer.getMainAddress().person_address_ie' readonly)
+							input(ng-value='order.budget.order_client.getMainAddress().person_address_ie' readonly)
 
 
 					div(layout='column' style='margin-top: 30px')
 						md-tabs(md-selected='order.internal.address.selectedTabIndex' md-border-bottom flex)
-							md-tab(label='Endereço de entrega' ng-disabled='!order.budget.customer.person_id')
+							md-tab(label='Endereço de entrega' ng-disabled='!order.budget.order_client.person_id')
 								md-content(layout='row' layout-wrap style='padding: 0' layout-fill)
 									div(flex layout='column' layout-align='center center' 
-											ng-if='order.budget.customer.person_id && order.budget.customer.person_address == 0')
+											ng-if='order.budget.order_client.person_id && order.budget.order_client.person_address == 0')
 										h1.inner-text Nenhum endereço cadastrado.
 										md-button.md-raised.md-primary(ng-click='order.internal.address.selectedTabIndex = 1') 
 											| &nbsp; Cadastrar &nbsp;
 									div(flex='33' 
-										ng-repeat='a in order.budget.customer.person_address track by $index'
-										ng-if='order.budget.customer.person_address.length > 0')
-										md-card(ng-class='{"active": a.person_address_code == order.budget.deliveryAddressId}')
+										ng-repeat='a in order.budget.order_client.person_address track by $index'
+										ng-if='order.budget.order_client.person_address.length > 0')
+										md-card(ng-class='{"active": a.person_address_code == order.budget.order_address_delivery_code}')
 											md-card-content(layout='column' layout-fill) 
 												div(flex='15' layout='row')
 													b Cód: {{a.person_address_code}}
 														span(ng-if='a.person_address_main != "N"') &nbsp;(Principal)
 													div(flex)
-													.label.label-success(ng-if='a.person_address_code == order.budget.deliveryAddressId') 
+													.label.label-success(ng-if='a.person_address_code == order.budget.order_address_delivery_code') 
 														i.fa.fa-map-marker &nbsp;
 														| Selecionado
 													.label.label-error(ng-if='a.person_address_active == "N"') 
@@ -362,10 +362,10 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 														| {{a.toString()}}
 												div(flex='30' layout='row' layout-align='end end')
 													md-button.md-icon-button.md-raised.md-primary(
-															ng-click='order.budget.setDeliveryAddressId(a.person_address_code)' 
-															ng-disabled='a.person_address_code == order.budget.deliveryAddressId')
+															ng-click='order.budget.setDeliveryAddress(a)' 
+															ng-disabled='a.person_address_code == order.budget.order_address_delivery_code')
 														md-icon(md-font-icon='fa fa-check')
-									div(flex='33' ng-if='order.budget.customer.person_address.length > 0')
+									div(flex='33' ng-if='order.budget.order_client.person_address.length > 0')
 										md-card.dashed-empty-card
 											md-card-content(layout='column' layout-align='center center' layout-fill)
 												div
@@ -376,7 +376,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 													p.text-primary.text-center Novo Endereço
 
 
-							md-tab(label='Novo endereço' ng-disabled='!order.budget.customer.person_id')
+							md-tab(label='Novo endereço' ng-disabled='!order.budget.order_client.person_id')
 								md-content(ng-controller='NewAddressCtrl as address')
 									form(layout='row' name='newAddressForm')
 										md-card.new-address-card(flex)
@@ -401,7 +401,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 														| Número
 													input(ng-model='address.newAddress.person_address_number')
 
-												md-input-container(flex='35')
+												md-input-container(flex='30')
 													label 
 														| Bairro
 													md-select(ng-model='address.newAddress.district_id'
@@ -415,7 +415,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 																	ng-repeat='d in address.queryDistrictResult')
 																| {{d.district_name}}
 
-												md-input-container(flex='35')
+												md-input-container(flex='30')
 													label 
 														| Cidade
 													md-select(ng-model='address.newAddress.city_id'
@@ -429,13 +429,43 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 																	ng-repeat='c in address.queryCityResult')
 																| {{c.city_name}} - {{c.uf_id}}
 
-												md-input-container(flex='30')
+												md-input-container.md-icon-float(flex='20')
+													label
+														span Contribuição de ICMS
+													md-select(name='category' ng-model='j')
+														md-option(value='1') Contribuinte ICMS
+														md-option(value='2') Contribuinte Isento
+														md-option(value='9') Não contribuinte
+
+												md-input-container(flex='20')
 													label 
 														| Inscrição Estadual
 													input(ng-model='ie')
 
-												.offset-top-30(layout='row' layout-fill)
-													md-input-container(flex='50')
+												md-input-container(flex='15')
+													label 
+														| Telefone
+													input(ng-model='t')
+
+												md-input-container(flex='15')
+													label 
+														| Celular
+													input(ng-model='c')
+
+												md-input-container(flex='25')
+													label 
+														| Email
+													input(ng-model='e')
+
+												span(flex)
+
+												md-input-container(flex='25')
+													md-switch(name='delivery' ng-true-value='"Y"' ng-false-value='"N"'
+															ng-model='address.newAddress.person_address_delivery')
+														| Endereço de Entrega
+
+												.offset-top-30(layout='row' layout-align='end center')
+													//- md-input-container(flex='50')
 														md-switch(name='delivery' ng-true-value='"Y"' ng-false-value='"N"'
 																ng-model='address.newAddress.person_address_delivery')
 															| Endereço de Entrega
@@ -450,14 +480,14 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							md-toolbar
 								.md-toolbar-tools
 									i.fa.fa-2x.fa-truck &nbsp;
-									p(ng-if='!order.budget.deliveryAddressId') Nenhum endereço informado!
-									div(layout='column' ng-if='order.budget.deliveryAddressId') 
+									p(ng-if='!order.budget.order_address_delivery_code') Nenhum endereço informado!
+									div(layout='column' ng-if='order.budget.order_address_delivery_code') 
 										span(style='font-size: 11px')
-											| Código: {{order.budget.getDeliveryAddress().person_address_code}}
-										span {{order.budget.getDeliveryAddress().toString()}}
+											| Código: {{order.budget.order_address.person_address_code}}
+										span {{order.budget.order_address.toString()}}
 					
 					pre(ng-if='debug')
-						| {{order.budget.customer | json}}
+						| {{order.budget.order_client | json}}
 
 		//- Observações
 		section(name='notes')
@@ -475,4 +505,4 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					div(layout-gt-xs='row')
 						md-input-container(flex)
 							label Observações
-							textarea(ng-model='observacoes' md-maxlength='150' rows='3')
+							textarea(ng-model='order.budget.order_note' md-maxlength='150' rows='3')

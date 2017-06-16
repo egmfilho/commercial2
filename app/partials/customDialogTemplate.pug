@@ -13,7 +13,7 @@ div(role='dialog' layout='column' layout-align='center center')
 				md-icon(md-font-set='material-icons' ng-if='ctrl._showConfirmSign') help
 				md-icon(md-font-set='material-icons' ng-if='ctrl._showInfoSign') info
 				div(flex='5')
-				p {{ctrl._message}}
+				p(ng-bind-html='ctrl._message')
 
 	.footer(layout='row' layout-align='end center' layout-fill ng-if='!ctrl._templateUrl')
 		md-button.md-primary(name='positive' ng-click='ctrl._close()' ng-if='ctrl._positiveButtonText') 

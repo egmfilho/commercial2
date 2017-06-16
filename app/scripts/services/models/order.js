@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-14 17:50:31
+* @Last Modified time: 2017-06-16 10:04:50
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('Order', Order);
 
-	Order.$inject = [ 'OrderItem', 'Person' ];
+	Order.$inject = [ 'OrderItem', 'Person', 'Address', 'CompanyERP' ];
 
-	function Order(OrderItem, Person) {
+	function Order(OrderItem, Person, Address, CompanyERP) {
 
 		var _order = {
 			order_id: null,
@@ -22,6 +22,7 @@
 			order_user_id: null,
 			order_status_id: null, 
 			order_client_id: null,
+			order_address_delivery_code: null,
 			order_seller_id: null,
 			order_term_id: null,
 			order_origin_id: null,
@@ -40,7 +41,8 @@
 			order_items: [ ],
 			order_company: new CompanyERP(),
 			order_seller: new Person(),
-			order_client: new Person()
+			order_client: new Person(),
+			order_address: new Address()
 		};
 
 		function Order(order) {
@@ -48,13 +50,16 @@
 
 			if (order) {
 				angular.extend(this, order, {
-					order_mail_sent: order.order_mail_sent.split(';').map(function(i) { return { name: i.split(':')[0], email: i.split(':')[1]} }),
+					order_mail_sent: order.order_mail_sent.split(';').map(function(i) { 
+						return { name: i.split(':')[0], email: i.split(':')[1] } 
+					}),
 					order_update: order.order_update ? new Date(order.order_update) : null,
 					order_date: order.order_date ? new Date(order.order_date) : null,
 					order_items: order.items.map(function(oi) { return new OrderItem(oi); }),
 					order_company: new CompanyERP(order.order_company),
 					order_seller: new Person(order.order_selelr),
-					order_client: new Person(order.order_client)
+					order_client: new Person(order.order_client),
+					order_address: new Address(order.order_address)
 				});
 			}
 		}
@@ -68,6 +73,7 @@
 			addItem: addItem,
 			removeItem: removeItem,
 			hasItem: hasItem,
+			setDeliveryAddress: setDeliveryAddress,
 			setAlDiscount: setAlDiscount,
 			setVlDiscount: setVlDiscount
 		};
@@ -158,12 +164,33 @@
 			return -1;
 		}
 
+		/**
+		* Aplica uma aliquota de desconto igual para todos os items.
+		* @param {float} value - O valor do desconto.
+		*/
 		function setAlDiscount(value) {
-			
+			angular.forEach(this.order_items, function(item) {
+				item.setAlDiscount(value);
+			});
 		}
 
+		/**
+		* Aplica um valor de desconto igual para todos os items.
+		* @param {float} value - O valor do desconto.
+		*/
 		function setVlDiscount(value) {
-			
+			angular.forEach(this.order_items, function(item) {
+				item.setVlDiscount(value);
+			});	
+		}
+
+		/**
+		* Adiciona o endereco de entrega do pedido.
+		* @param {object} address - O endereco de entrega.
+		*/
+		function setDeliveryAddress(address) {
+			this.order_address = new Address(address);
+			this.order_address_delivery_code = this.order_address.person_address_code;
 		}
 
 	}

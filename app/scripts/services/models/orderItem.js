@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-09 13:16:01
+* @Last Modified time: 2017-06-16 11:15:06
 */
 
 (function() {
@@ -66,20 +66,20 @@
 			}
 
 			function setAlDiscount(value) {
-				value = Math.max(parseFloat(value), 0);
+				if (!value) return;
 
-				if (value)
-					this.order_item_al_discount = value;
+				value = Math.max(parseFloat(value), 0);
+				this.order_item_al_discount = value;
 
 				var full_value = this.order_item_value * this.order_item_amount;
 				this.order_item_vl_discount = (full_value * (value / 100)).toFixed(2);
 			}
 
 			function setVlDiscount(value) {
-				value = Math.max(parseFloat(value), 0);
+				if (!value) return;
 
-				if (value)
-					this.order_item_vl_discount = value;
+				value = Math.max(parseFloat(value), 0);
+				this.order_item_vl_discount = value;
 
 				var full_value = this.order_item_value * this.order_item_amount;
 				this.order_item_al_discount = full_value && ((value * 100) / full_value).toFixed(2);

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 11:04:49
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-14 10:08:14
+* @Last Modified time: 2017-06-16 10:17:57
 */
 
 (function() {
@@ -41,8 +41,8 @@
 			if (rejection.status == 401) {
 				if (Cookies.get(constants['cookie'])) {
 					Cookies.remove(constants['cookie']);
-					$rootScope.session = null;
 				}
+				$rootScope.clearCredentials();
 
 				$location.path('/login');
 			}
