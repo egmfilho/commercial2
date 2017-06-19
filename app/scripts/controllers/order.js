@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-19 13:39:34
+* @Last Modified time: 2017-06-19 17:17:44
 */
 
 (function() {
@@ -46,7 +46,7 @@
 			tempCustomer: null,
 			tempAddress: new Address(),
 			tempProduct: null,
-			tempItem: new OrderItem({ price_id: getMainUserPriceId() }),
+			tempItem: new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() }),
 			blurSeller: blurSeller,
 			blurCustomer: blurCustomer,
 			blurItem: blurItem,
@@ -72,6 +72,7 @@
 		self.getCustomerByName  = getCustomerByName;
 		self.getProductByCode   = getProductByCode;
 		self.getProductByName   = getProductByName;
+		self.priceTableChanged  = priceTableChanged;
 		self.setTotalAlDiscount = setTotalAlDiscount;
 		self.setTotalVlDiscount = setTotalVlDiscount;
 		self.scrollTo           = scrollTo;
@@ -100,7 +101,7 @@
 
 			for (i = 0; i < uPrices.length; i++) {
 				if (uPrices[i].user_price_main == 'Y')
-					return uPrices[i].price_id;
+					return uPrices[i];
 			}
 
 			return null;
@@ -223,7 +224,7 @@
 		* Limpa os campos de pesquisa de produto.
 		*/
 		function clearProductSearch() {
-			self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId() });
+			self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() });
 			self.internal.tempProduct = null;
 			$scope.productQuery = '';
 		}
@@ -444,6 +445,15 @@
 		}
 
 		/**
+		 * Adiciona a tabela de precos em um item.
+		 * @param {string} priceId - O id da tabela.
+		 */
+		function priceTableChanged(priceId) {
+			clearProductSearch();
+			self.internal.tempItem.price_id = priceId;
+		}
+
+		/**
 		* Aplica uma aliquota de desconto igual para todos os items.
 		* @param {float} value - O valor do desconto.
 		*/
@@ -473,16 +483,11 @@
 
 			value =  Math.max(parseFloat(value), 0);
 
-			Cookies.get(constants['cookie']).then(function(res) {
-				var user = JSON.parse(window.atob(res));
-				if (value > user.user_max_discount) {
+			if (value > parseFloat(Globals.get('user-max-discount'))) {
 
-				} else {
+			} else {
 
-				}
-			}, function(res) {
-				constants.debug && console.log('Cookie de usuario nao encontrado!');
-			});
+			}
 		}
 
 		/**
@@ -562,7 +567,7 @@
 					container.animate({ scrollTop: container.height() });
 				}
 				self.internal.tempProduct = null;
-				self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId() });
+				self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() });
 			}
 
 			self.focusOn('input[name="autocompleteProduct"]');

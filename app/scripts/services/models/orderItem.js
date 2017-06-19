@@ -2,13 +2,13 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-19 12:19:37
+* @Last Modified time: 2017-06-19 16:07:04
 */
 
 (function() {
 
 	angular.module('commercial2.services')
-		.factory('OrderItem', ['Product', function(Product) {
+		.factory('OrderItem', ['Product', 'UserPrice', function(Product, UserPrice) {
 
 			var _item = {
 				order_item_id: null,
@@ -23,7 +23,8 @@
 				order_item_update: null,
 				order_item_date: null,
 				order_item_value_unitary: null,
-				product: new Product()
+				product: new Product(),
+				user_price: new UserPrice()
 			}
 
 			function Item(item) {
@@ -33,13 +34,15 @@
 					angular.extend(this, item, {
 						order_item_update: item.order_item_update ? new Date(order_item_update) : null,
 						order_item_date: item.order_item_date ? new Date(order_item_date) : null,
-						product: item.product ? new Product(item.product) : new Product()
+						product: item.product ? new Product(item.product) : new Product(),
+						user_price: item.user_price ? new UserPrice(item.user_price) : new UserPrice()
 					});
 				}
 			}
 
 			Item.prototype = {
 				setProduct: setProduct,
+				setUserPrice: setUserPrice,
 				setAmount: setAmount,
 				setAlDiscount: setAlDiscount,
 				setVlDiscount: setVlDiscount,
@@ -60,6 +63,12 @@
 				this.order_item_value = this.product.price.price_value;
 				this.order_item_vl_discount = 0;
 				this.order_item_al_discount = 0;
+			}
+
+			function setUserPrice(userPrice) {
+				if (userPrice)
+					this.user_price = new UserPrice(userPrice);
+				this.price_id = this.user_price.price_id;
 			}
 
 			function setAmount(value) {

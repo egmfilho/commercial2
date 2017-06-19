@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-08 16:10:24
+* @Last Modified time: 2017-06-19 17:46:05
 */
 
 (function() {
@@ -13,7 +13,9 @@
 		.controller('NewAddressCtrl', NewAddressCtrl);
 
 	NewAddressCtrl.$inject = [ 
+		'$rootScope',
 		'$scope', 
+		'$http',
 		'Address', 
 		'ProviderDistrict', 
 		'District', 
@@ -22,7 +24,7 @@
 		'Constants' 
 	];
 
-	function NewAddressCtrl($scope, Address, providerDistrict, District, providerCity, City, constants) {
+	function NewAddressCtrl($rootScope, $scope, $http, Address, providerDistrict, District, providerCity, City, constants) {
 
 		var self = this;
 
@@ -30,6 +32,7 @@
 		
 		self.newAddress          = new Address();
 
+		self.getCep              = getCep;
 		self.queryDistrict       = null;
 		self.queryDistrictResult = [ ];
 		self.queryCity           = null;
@@ -38,6 +41,7 @@
 		self.clear 	             = clear;
 		self.submit              = submit;
 		self.updateSearch        = updateSearch;
+
 
 		$scope.$on('viewContentLoaded', function() {
 			constants.debug && console.log('loaded');
@@ -66,6 +70,23 @@
 		// ******************************
 		// Methods declaration
 		// ******************************
+
+		function getCep(cep) {
+			$rootScope.loading.load();
+			$http({
+				method: 'POST',
+				url: constants.api + 'cep.php?action=get',
+				data: { 
+					cep_code: cep
+				}
+			}).then(function(success) {
+				console.log(success);
+				$rootScope.loading.unload();
+			}, function(error) {
+				constants.debug && console.log(error);
+				$rootScope.loading.unload();
+			});
+		}
 
 		function clear() {
 			self.data = new Address();

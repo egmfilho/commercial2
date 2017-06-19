@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:03:59
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-19 10:23:54
+* @Last Modified time: 2017-06-19 17:00:31
 */
 
 (function() {
@@ -46,7 +46,7 @@
 				Globals.clear();
 				callback(res);
 			}, function(res) {
-				if (cosntants.debug) console.log(res);
+				constants.debug && console.log(res);
 				callback(res);
 			});
 		}

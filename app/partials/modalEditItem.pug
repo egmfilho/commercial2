@@ -1,8 +1,13 @@
 .body(layout='column')
-	p.well 
+	p.well.offset-bottom-15 
+		b.text-400 Produto: &nbsp;
 		| {{ctrl.item.product.product_code}} - {{ctrl.item.product.product_name}}
 		br
-		| Tabela de preços: 
+		b.text-400 Tabela de preços: &nbsp;
+		| {{ctrl.item.user_price.price_erp.price_name}}
+		br
+		b.text-400 Valor unitário: &nbsp;
+		| {{ctrl.item.product.price.price_value | currency:'R$ '}}
 
 	div(layout='row')
 		md-input-container(flex='25')

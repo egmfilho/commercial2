@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-19 08:59:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-19 12:28:39
+* @Last Modified time: 2017-06-19 16:53:21
 */
 
 (function() {
@@ -63,6 +63,7 @@
 				Globals.set('session-token', u.user_id + ':' + u.user_current_session.user_session_value);
 				Globals.set('user-companies-raw', u.user_company);
 				Globals.set('user-prices-raw', u.user_price);
+				Globals.set('user-max-discount', u.user_max_discount);
 				deferred.resolve();
 			}, function(error) {
 				deferred.reject();
