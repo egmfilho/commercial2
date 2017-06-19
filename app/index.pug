@@ -4,7 +4,7 @@ block page
 	div(ng-view='' autoscroll layout='column' flex)
 
 block header
-	header(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath.indexOf("/order/print/") < 0')
+	header(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath !== "/loading" && currentPath.indexOf("/order/print/") < 0')
 		md-toolbar
 			.md-toolbar-tools
 				md-button.md-icon-button(ng-click='showMainMenu()')
@@ -21,7 +21,7 @@ block header
 								|  Redefinir senha de usuário
 
 block footer
-	footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath.indexOf("/order/print/") < 0')
+	footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath !== "/loading" && currentPath.indexOf("/order/print/") < 0')
 		md-toolbar
 			div(layout='row' layout-align='center center' flex)
 				| Futura Agência - 2017

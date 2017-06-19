@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 14:13:57
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-08 16:30:01
+* @Last Modified time: 2017-06-19 12:41:05
 */
 
 (function() {
@@ -40,6 +40,7 @@
 				user_id: null,
 				price_id: null,
 				user_price_date: null,
+				user_price_main: 'N',
 				price_erp: new PriceERP()
 			};
 

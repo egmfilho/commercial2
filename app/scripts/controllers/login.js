@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 14:03:46
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-06 09:19:22
+* @Last Modified time: 2017-06-19 09:04:56
 */
 
 (function() {
@@ -30,7 +30,7 @@
 							$rootScope.toast('Usuário ou senha inválidos.', 'error');
 							break;
 						case 200: 
-							$location.path('home');
+							$location.path('loading');
 							break;
 						default:
 							break;

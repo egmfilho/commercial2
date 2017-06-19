@@ -106,6 +106,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						md-autocomplete(flex 
 										md-input-name='autocompleteSeller'
 										md-no-cache='false'
+										md-autoselect='true'
 										md-escape-options='none'
 										md-selected-item='order.internal.tempSeller'
 										md-search-text='sellerQuery'
@@ -139,15 +140,17 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									| Limpar
 				md-card-content
 					div(layout-gt-xs='row')
-						md-input-container(flex='25')
-							label Código
-							input(name='product-code' ng-value='order.internal.tempItem.product.product_code'
-									blur-to='order.internal.tempItem.product.product_code' 
-									keys-shortcuts enter='order.getProductByCode($event.target.value)')
+						md-input-container.md-icon-float(flex='25')
+							label
+								span Tabela de preços
+							md-select(name='type' ng-model='order.internal.tempItem.price_id' ng-change='order.clearProductSearch()')
+								md-option(ng-value='t.price_id' ng-repeat='t in order.internal.userPrices')
+									| {{t.price_erp.price_name}} 
 						
-						md-autocomplete(flex='75' keys-shortcuts enter='teste()'
+						md-autocomplete(flex='75'
 										md-input-name='autocompleteProduct'
-										md-no-cache='false'
+										md-no-cache='true'
+										md-autoselect='true'
 										md-escape-options='none'
 										md-selected-item='order.internal.tempProduct'
 										md-search-text='productQuery'
@@ -156,7 +159,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										md-item-text='item.product_name'
 										md-min-length='3'
 										md-require-match='true'
-										md-floating-label='Nome'
+										md-floating-label='Código ou descrição'
 										ng-blur='order.internal.blurItem()')
 							md-item-template
 								div(md-highlight-text='customerQuery' style='line-height: 2') {{item.product_name}}
@@ -292,6 +295,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						md-autocomplete(flex='75'
 										md-input-name='autocompleteCustomer'
 										md-no-cache='false'
+										md-autoselect='true'
 										md-escape-options='none'
 										md-selected-item='order.internal.tempCustomer'
 										md-search-text='customerQuery'

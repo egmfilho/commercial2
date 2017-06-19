@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-08 15:39:45
+* @Last Modified time: 2017-06-19 14:01:52
 */
 
 @import "../../bower_components/angular-material/angular-material.scss";
@@ -107,12 +107,21 @@ md-toast {
 	}
 }
 
+.well {
+	margin: 0;
+	padding: 5px;
+	background-color: whitesmoke;
+	border: 1px solid #d7d7d7;
+	font-weight: 300;
+}
+
 @import "utils";
 @import "scrollbar";
 @import "prevent-highlight";
 @import "mainMenu";
 @import "customDialog";
 @import "login";
+@import "afterLogin";
 @import "logout";
 @import "order";
 @import "order-tab";

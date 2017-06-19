@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-16 12:38:24
+* @Last Modified time: 2017-06-19 09:18:11
 */
 'use strict';
 
@@ -70,6 +70,11 @@ angular.module('commercial2', [
 				controller: 'LoginCtrl',
 				controllerAs: 'login'
 			})
+			.when('/loading', {
+				templateUrl: 'views/afterLogin.html',
+				controller: 'AfterLoginCtrl',
+				controllerAs: 'afterLogin'
+			})
 			.when('/logout', {
 				templateUrl: 'views/logout.html',
 				controller: 'LogoutCtrl',
@@ -105,7 +110,7 @@ angular.module('commercial2', [
 			});
 
 	}])
-	.run(['$rootScope', '$location', 'Cookies', 'CustomDialogManager', 'Constants', function($rootScope, $location, Cookies, CustomDialogManager, constants) {
+	.run(['$rootScope', '$location', 'Cookies', 'CustomDialogManager', 'Globals', 'Constants', function($rootScope, $location, Cookies, CustomDialogManager, Globals, constants) {
 		/* Aqui verifica se o usuario esta logado. */
 		/* Caso contrario redireciona para tela de login. */
 		$rootScope.$on('$routeChangeStart', function(event, next, current) {
@@ -116,11 +121,6 @@ angular.module('commercial2', [
 			CustomDialogManager.closeAll();
 
 			Cookies.get(constants['cookie']).then(function(success) {
-				if (!$rootScope['session-token']) {
-					var u = JSON.parse(window.atob(success));
-					$rootScope['session-token'] = u.user_id + ':' + u.user_current_session.user_session_value;
-					$rootScope['user-companies-raw'] = u.user_company;
-				}
 				constants.debug && console.log('Cookie de sessão verificado.');
 			}, function(error) {
 				constants.debug && console.log('cookie de sessao nao encontrado!');
@@ -135,8 +135,7 @@ angular.module('commercial2', [
 
 		/* Remove as informacoes temporarias do usuario. */
 		$rootScope.clearCredentials = function() {
-			delete $rootScope['session-token'];
-			delete $rootScope['user-companies-raw'];
+			Globals.clear();
 		};
 
 	}])

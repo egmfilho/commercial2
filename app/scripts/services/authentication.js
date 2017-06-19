@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:03:59
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-16 10:15:27
+* @Last Modified time: 2017-06-19 10:23:54
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('Authentication', Authentication);
 
-	Authentication.$inject = [ '$rootScope', '$http', 'Cookies', 'User', 'Constants' ];
+	Authentication.$inject = [ '$http', 'Cookies', 'User', 'Constants', 'Globals' ];
 
-	function Authentication($rootScope, $http, cookies, User, constants) {
+	function Authentication($http, cookies, User, constants, Globals) {
 
 		function login(username, password, callback) {
 			$http({
@@ -43,7 +43,7 @@
 				url: constants.api + 'logout.php'
 			}).then(function(res) {
 				cookies.clear();
-				$rootScope.clearCredentials();
+				Globals.clear();
 				callback(res);
 			}, function(res) {
 				if (cosntants.debug) console.log(res);

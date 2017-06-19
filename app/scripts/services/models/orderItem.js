@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-16 11:15:06
+* @Last Modified time: 2017-06-19 12:19:37
 */
 
 (function() {
@@ -14,6 +14,7 @@
 				order_item_id: null,
 				order_id: null,
 				product_id: null,
+				price_id: null,
 				order_item_amount: 1,
 				order_item_value: null,
 				order_item_al_discount: 0,

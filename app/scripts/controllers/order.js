@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-16 17:13:56
+* @Last Modified time: 2017-06-19 13:39:34
 */
 
 (function() {
@@ -20,6 +20,7 @@
 		'$mdPanel', 
 		'Cookies',
 		'Constants',
+		'Globals',
 		'Order', 
 		'ProviderPerson', 
 		'Person',
@@ -31,7 +32,7 @@
 		'ElectronWindow' 
 	];
 
-	function OrderCtrl($rootScope, $scope, $timeout, $location, $q, $mdPanel, Cookies, constants, Order, providerPerson, Person, Address, providerProduct, Product, OrderItem, UserCompany, ElectronWindow) {
+	function OrderCtrl($rootScope, $scope, $timeout, $location, $q, $mdPanel, Cookies, constants, Globals, Order, providerPerson, Person, Address, providerProduct, Product, OrderItem, UserCompany, ElectronWindow) {
 
 		var self = this;
 
@@ -40,15 +41,12 @@
 		self.selectCompany = selectCompany;
 
 		self.internal = {
-			personCategories: {
-				seller: '0000000004,000000000R',
-				customer: '0000000005'
-			},
+			userPrices: Globals.get('user-prices-raw'),
 			tempSeller: null,
 			tempCustomer: null,
 			tempAddress: new Address(),
 			tempProduct: null,
-			tempItem: new OrderItem(),
+			tempItem: new OrderItem({ price_id: getMainUserPriceId() }),
 			blurSeller: blurSeller,
 			blurCustomer: blurCustomer,
 			blurItem: blurItem,
@@ -62,6 +60,7 @@
 		self.newCustomer        = newCustomer;
 		self.setCustomer        = setCustomer;
 		self.clearSeller        = clearSeller;
+		self.clearProductSearch = clearProductSearch;
 		self.clearItems         = clearItems;
 		self.clearCustomer      = clearCustomer;
 		self.clearNote          = clearNote;
@@ -96,6 +95,21 @@
 			self.internal.address.selectedTabIndex = 0;
 		});
 
+		function getMainUserPriceId() {
+			var i, uPrices = Globals.get('user-prices-raw');
+
+			for (i = 0; i < uPrices.length; i++) {
+				if (uPrices[i].user_price_main == 'Y')
+					return uPrices[i].price_id;
+			}
+
+			return null;
+		}
+
+		$scope.teste = function() {
+			console.log('mudou');
+		}
+
 		// ******************************
 		// Methods declaration
 		// ******************************
@@ -108,7 +122,7 @@
 			var dialog = $rootScope.customDialog(),
 				controller = function() { },
 				options,
-				_companies = $rootScope['user-companies-raw'].map(function(c) {
+				_companies = Globals.get('user-companies-raw').map(function(c) {
 					return new UserCompany(c);
 				});
 
@@ -174,7 +188,7 @@
 			dialog.showTemplate('Novo cliente', './partials/modalNewPerson.html', controller)
 				.then(function(res) {
 					$rootScope.loading.load();
-					providerPerson.save(res, self.internal.personCategories.customer).then(function(success) {
+					providerPerson.save(res, Globals.get('personCategories').customer).then(function(success) {
 						self.setCustomer(angular.extend({ }, res, success.data));
 						$rootScope.loading.unload();
 					}, function(error) {
@@ -206,14 +220,21 @@
 		}
 
 		/**
+		* Limpa os campos de pesquisa de produto.
+		*/
+		function clearProductSearch() {
+			self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId() });
+			self.internal.tempProduct = null;
+			$scope.productQuery = '';
+		}
+
+		/**
 		* Limpa os campos da sessao de produtos e esvazia a lista de itens.
 		*/
 		function clearItems() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos e esvaziar a lista de itens?').then(function() {
 				self.budget.order_items = [ ];
-				self.internal.tempItem = new OrderItem();
-				self.internal.tempProduct = null;
-				jQuery('input[ng-value="order.internal.tempItem.product.product_code"]').val('');
+				clearProductSearch();
 			}, function() { });
 		}
 
@@ -286,7 +307,7 @@
 				return;
 
 			$rootScope.loading.load();
-			getPersonByCode(code, self.internal.personCategories.seller).then(function(success) {
+			getPersonByCode(code, Globals.get('personCategories').seller).then(function(success) {
 				self.budget.setSeller(new Person(success.data));
 				self.internal.tempSeller = new Person(success.data);
 				$timeout(function() {
@@ -309,7 +330,7 @@
 		* @returns {object} - Uma promise com o resultado.
 		*/
 		function getSellerByName(name) {
-			return getPersonByName(name, self.internal.personCategories.seller);
+			return getPersonByName(name, Globals.get('personCategories').seller);
 		}
 
 		/**
@@ -328,7 +349,7 @@
 			var options = { getAddress: true };
 			
 			$rootScope.loading.load();
-			getPersonByCode(code, self.internal.personCategories.customer, options).then(function(success) {
+			getPersonByCode(code, Globals.get('personCategories').customer, options).then(function(success) {
 				setCustomer(success.data);
 				$rootScope.loading.unload();
 			}, function(error) {
@@ -346,7 +367,7 @@
 		* @returns {object} - Uma promise com o resultado.
 		*/
 		function getCustomerByName(name) {
-			return getPersonByName(name, self.internal.personCategories.customer);
+			return getPersonByName(name, Globals.get('personCategories').customer);
 		}
 
 		/**
@@ -364,9 +385,15 @@
 				return;
 			}
 
+			var options = {
+				getPrice: true,
+				getStock: true,
+				getUnit: true
+			};
+
 			$rootScope.loading.load();
 			constants.debug && console.log('buscando produto por codigo', code);
-			providerProduct.getByCode(code, self.budget.order_company_id, '00A0000001', { limit: 10 }).then(function(success) {
+			providerProduct.getByCode(code, self.budget.order_company_id, self.internal.tempItem.price_id, options).then(function(success) {
 				self.internal.tempProduct = new Product(success.data);
 				self.internal.tempItem.setProduct(new Product(success.data));
 				self.focusOn('input[name="amount"]');
@@ -386,6 +413,10 @@
 		* @returns {object} - Uma promise com o resultado.
 		*/
 		function getProductByName(name) {
+
+			if (!name || name.length < 3)
+				deferred.resolve([ ]);
+
 			var deferred = $q.defer(),
 				options  = {
 					limit: 10,
@@ -394,15 +425,20 @@
 					getUnit: true
 				};
 
-			if (!name || name.length < 3)
-				return [ ];
-
-			providerProduct.getByName(name, self.budget.order_company_id, '00A0000001', options).then(function(success) {
-				deferred.resolve(success.data.map(function(p) { return new Product(p); }));
-			}, function(error) {
-				constants.debug && console.log(error);
-				deferred.resolve([ ]);
-			});
+			if (!isNaN(name) && angular.isNumber(+name)) {
+				providerProduct.getByCode(name, self.budget.order_company_id, self.internal.tempItem.price_id, options).then(function(success) {
+					deferred.resolve([ new Product(success.data) ]);
+				}, function(error) {
+					deferred.resolve([ ]);
+				});
+			} else {
+				providerProduct.getByName(name, self.budget.order_company_id, self.internal.tempItem.price_id, options).then(function(success) {
+					deferred.resolve(success.data.map(function(p) { return new Product(p); }));
+				}, function(error) {
+					constants.debug && console.log(error);
+					deferred.resolve([ ]);
+				});
+			}
 
 			return deferred.promise;
 		}
@@ -526,10 +562,10 @@
 					container.animate({ scrollTop: container.height() });
 				}
 				self.internal.tempProduct = null;
-				self.internal.tempItem = new OrderItem();
+				self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId() });
 			}
 
-			self.focusOn('input[name="product-code"]');
+			self.focusOn('input[name="autocompleteProduct"]');
 		}
 
 		function removeItem(item) {

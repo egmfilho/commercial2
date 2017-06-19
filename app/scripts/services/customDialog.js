@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-16 12:39:05
+* @Last Modified time: 2017-06-19 10:03:49
 */
 
 (function() {
@@ -43,7 +43,7 @@
 
 		function showUnclosable(title, message) {
 			function controller() {
-				this.showProgress = true;
+				this._showProgress = true;
 			}
 
 			return show(title, message, null, controller, {

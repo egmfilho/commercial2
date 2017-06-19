@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 11:04:49
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-16 10:17:57
+* @Last Modified time: 2017-06-19 10:39:52
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('Interceptor', Interceptor);
 
-	Interceptor.$inject = ['$rootScope', '$location', '$q', 'Cookies', '$httpParamSerializerJQLike', 'Constants' ];
+	Interceptor.$inject = [ '$location', '$q', '$httpParamSerializerJQLike', 'Cookies', 'Globals', 'Constants' ];
 
-	function Interceptor($rootScope, $location, $q, Cookies, $httpParamSerializerJQLike, constants) {
+	function Interceptor($location, $q, $httpParamSerializerJQLike, Cookies, Globals, constants) {
 
 		return {
 			'request': 		 request,
@@ -27,9 +27,9 @@
 
 		function request(req) {
 			/* Injeta a sessao atual do usuario */
-			if ($rootScope['session-token']) {
+			if (Globals.get('session-token')) {
 				constants.debug && console.log('injetando sessao no request');
-				req.headers['x-session-token'] = $rootScope['session-token'];
+				req.headers['x-session-token'] = Globals.get('session-token');
 			}
 
 			req.headers['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -42,7 +42,7 @@
 				if (Cookies.get(constants['cookie'])) {
 					Cookies.remove(constants['cookie']);
 				}
-				$rootScope.clearCredentials();
+				Globals.clear();
 
 				$location.path('/login');
 			}
