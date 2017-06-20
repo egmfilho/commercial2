@@ -392,123 +392,12 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 														| Código: {{order.budget.order_address.person_address_code}}
 													span {{order.budget.order_address.toString()}}
 
-
 							md-tab(label='Novo endereço' ng-disabled='!order.budget.order_client.person_id')
-								md-content(ng-controller='NewAddressCtrl as address')
+								md-content
 									form(layout='row' name='newAddressForm')
 										md-card.new-address-card(flex)
-											md-card-content(layout='row' layout-wrap)
+											md-card-content(ng-include='"./partials/newAddress.html"')
 
-												div(flex='100' layout='row')
-													span.md-subhead Endereço
-													span(flex)
-													md-input-container(style='margin: 0')
-														md-switch(name='delivery' ng-true-value='"Y"' ng-false-value='"N"'
-																ng-model='address.newAddress.person_address_delivery')
-															| Endereço de Entrega
-
-												md-input-container(flex='15')
-													label 
-														| CEP
-													input(ng-model='address.newAddress.person_address_cep' 
-															ui-mask='99999-999' model-view-value='true'
-															ng-blur='address.getCep(address.newAddress.person_address_cep)')
-
-												md-input-container(flex='10')
-													label 
-														| Tipo
-													md-select(ng-model='address.newAddress.person_address_type')
-														md-option(ng-value='t' ng-repeat='t in address.types')
-															| {{t}} 
-
-												md-input-container(flex='60')
-													label 
-														| Logradouro
-													input(ng-model='address.newAddress.person_address_public_place')
-
-												md-input-container(flex='15')
-													label 
-														| Número
-													input(ng-model='address.newAddress.person_address_number')
-
-												md-input-container(flex='30')
-													label 
-														| Bairro
-													md-select(ng-model='address.newAddress.district_id'
-															data-md-container-class='query-select-container')
-														md-select-header.select-header
-															input.md-text(ng-model='address.queryDistrict' 
-																	type='search' placeholder='Digite o nome do bairro'
-																	ng-keydown="address.updateSearch($event)")
-														md-opt-group(label='Bairros')
-															md-option(ng-value='d.district_id' 
-																	ng-repeat='d in address.queryDistrictResult')
-																| {{d.district_name}}
-
-												md-input-container(flex='30')
-													label 
-														| Cidade
-													md-select(ng-model='address.newAddress.city_id'
-															data-md-container-class='query-select-container')
-														md-select-header.select-header
-															input.md-text(ng-model='address.queryCity' 
-																	type='search' placeholder='Digite o nome da cidade'
-																	ng-keydown="address.updateSearch($event)")
-														md-opt-group(label='Cidades')
-															md-option(ng-value='c.city_id' 
-																	ng-repeat='c in address.queryCityResult')
-																| {{c.city_name}} - {{c.uf_id}}
-
-												md-input-container.md-icon-float(flex='20')
-													label
-														span Contribuição de ICMS
-													md-select(name='category' ng-model='address.newAddress.icms_type'
-															ng-change='address.icmsChanged()')
-														md-option(value='1') Contribuinte ICMS
-														md-option(value='2') Contribuinte Isento
-														md-option(value='9') Não contribuinte
-
-												md-input-container(flex='20')
-													label 
-														i.fa.fa-lock(ng-if='address.newAddress.icms_type == 2') &nbsp;
-														| Inscrição Estadual
-													input(ng-model='address.newAddress.person_address_ie' 
-															ng-disabled='address.newAddress.icms_type == 2')
-
-												div(flex='100') 
-													p.md-subhead(style='margin: 8px 0') Contatos
-
-												md-input-container(flex='25')
-													label 
-														| Telefone
-													input(ng-model='t')
-
-												md-input-container(flex='25')
-													label 
-														| Celular
-													input(ng-model='c')
-
-												md-input-container(flex='25')
-													label 
-														| Email
-													input(ng-model='e')
-
-												md-input-container(flex='25')
-													label 
-														| Outros
-													input(ng-model='o')
-
-												div(layout='row' layout-fill layout-align='end center')
-													md-button.md-primary(ng-click='address.clear()')
-														| Limpar
-
-													md-button.md-primary(ng-click='address.submit()')
-														| Cadastrar
-
-											pre(ng-if='debug')
-												| {{address.newAddress | json}}
-
-					
 					pre(ng-if='debug')
 						| {{order.budget.order_client | json}}
 

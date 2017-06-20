@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-20 09:55:39
+* @Last Modified time: 2017-06-20 13:52:24
 */
 
 (function() {
@@ -16,17 +16,19 @@
 		'$rootScope',
 		'$scope', 
 		'$http',
+		'ProviderAddress',
 		'Address', 
 		'ProviderDistrict', 
 		'District', 
 		'ProviderCity', 
 		'City', 
+		'Globals',
 		'Constants' 
 	];
 
-	function NewAddressCtrl($rootScope, $scope, $http, Address, providerDistrict, District, providerCity, City, constants) {
+	function NewAddressCtrl($rootScope, $scope, $http, providerAddress, Address, providerDistrict, District, providerCity, City, Globals, constants) {
 
-		var self = this;
+		var self = this, _personId = null;
 
 		self.types               = [ 'AV', 'EST', 'PC', 'RUA', 'ROD' ];
 		
@@ -43,11 +45,16 @@
 		self.updateSearch        = updateSearch;
 		self.icmsChanged         = icmsChanged;
 
-
-		$scope.$on('viewContentLoaded', function() {
-			constants.debug && console.log('loaded');
+		$scope.$on('orderViewLoaded', function() {
+			constants.debug && console.log('new address controller loaded!');
+			clear();
 			searchDistrict();
 			searchCity();
+		});
+
+		$scope.$on('customerAdded', function(event, args) {
+			_personId = args.person_id;
+			self.newAddress.person_id = _personId;
 		});
 
 		$scope.$watch(function() {
@@ -73,6 +80,8 @@
 		// ******************************
 
 		function getCep(cep) {
+			if (!cep) return;
+
 			$rootScope.loading.load();
 			$http({
 				method: 'POST',
@@ -85,8 +94,16 @@
 				self.newAddress.person_address_public_place = success.data.data.public_place;
 				self.queryDistrict = success.data.data.district_name;
 				self.newAddress.district_id = success.data.data.district_id;
+				self.newAddress.district = new District({
+					district_id: success.data.data.district_id, 
+					district_name: success.data.data.district_name
+				});
 				self.queryCity = success.data.data.city_name;
 				self.newAddress.city_id = success.data.data.city_id;
+				self.newAddress.city = new City({ 
+					city_id: success.data.data.city_id, 
+					city_name: success.data.data.city_name
+				});
 				self.newAddress.uf_id = success.data.data.uf_id;
 				$rootScope.loading.unload();
 			}, function(error) {
@@ -96,13 +113,27 @@
 		}
 
 		function clear() {
-			self.data = new Address();
-			constants.debug && console.log('clear');
+			self.newAddress = new Address();
+			self.newAddress.person_id = _personId;
+			self.newAddress.contacts = [
+				{ contact_type_id: Globals.get('contactTypes')['phone'], contact_value: null, label: 'Telefone' },
+				{ contact_type_id: Globals.get('contactTypes')['mobile'], contact_value: null, label: 'Celular' },
+				{ contact_type_id: Globals.get('contactTypes')['mail'], contact_value: null, label: 'Email' },
+				{ contact_type_id: Globals.get('contactTypes')['others'], contact_value: null, label: 'Outro' }
+			];
 		}
 
 		function submit() {
-			constants.debug && console.log(self.newAddress);
-			$scope.$emit('newAddress');
+			$rootScope.loading.load();
+			providerAddress.save(self.newAddress).then(function(success) {
+				self.newAddress.person_address_code = success.data.address_code;
+				$scope.$emit('newAddress', self.newAddress);				
+				clear();
+				$rootScope.loading.unload();
+			}, function(error) {
+				constants.debug && console.log(error);
+				$rootScope.loading.unload();
+			});
 		}
 
 		function updateSearch(e) {

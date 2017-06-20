@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-19 17:17:44
+* @Last Modified time: 2017-06-20 12:58:46
 */
 
 (function() {
@@ -89,10 +89,16 @@
 			if (!self.budget.order_company_id) {
 				selectCompany();
 			}
-			$scope.$broadcast('viewContentLoaded');
+
+			$timeout(function() { $scope.$broadcast('orderViewLoaded'); });
 		});
 
-		$scope.$on('newAddress', function() {
+		$scope.$on('newAddress', function(event, args) {
+			self.budget.order_client.person_address.push(new Address(args));
+			
+			if (args.person_address_delivery == 'Y')
+				self.budget.setDeliveryAddress(args);
+
 			self.internal.address.selectedTabIndex = 0;
 		});
 
@@ -352,6 +358,7 @@
 			$rootScope.loading.load();
 			getPersonByCode(code, Globals.get('personCategories').customer, options).then(function(success) {
 				setCustomer(success.data);
+				$scope.$broadcast('customerAdded', self.budget.order_client);
 				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);

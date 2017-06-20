@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 09:39:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-20 09:56:51
+* @Last Modified time: 2017-06-20 13:43:05
 */
 
 (function() {
@@ -84,7 +84,8 @@
 				person_address_number: null,
 				icms_type: null,
 				city: new City(),
-				district: new District()
+				district: new District(),
+				contacts: [ ]
 			};
 
 			function Address(address) {
@@ -99,7 +100,9 @@
 			}
 
 			Address.prototype = {
-				toString: toString
+				toString: toString,
+				setDistrict: setDistrict,
+				setCity: setCity
 			};
 
 			return Address;
@@ -114,7 +117,21 @@
 					this.person_address_number + ' - ' +
 					this.district.district_name + ', ' + 
 					this.city.city_name + ' - ' + 
-					this.city.uf_id
+					this.city.uf_id;
+			}
+
+			function setDistrict(district) {
+				if (district)
+					this.district = new District(district);
+
+				setTimeout(function() { this.district_id = this.district.district_id; }, 500);
+			}
+
+			function setCity(city) {
+				if (city)
+					this.city = new City(city);
+
+				this.city_id = this.city.city_id;
 			}
 
 		}]);
