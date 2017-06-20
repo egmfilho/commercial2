@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 09:39:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-08 15:45:51
+* @Last Modified time: 2017-06-20 09:56:51
 */
 
 (function() {
@@ -82,6 +82,7 @@
 				person_address_type: null,
 				person_address_public_place: null,
 				person_address_number: null,
+				icms_type: null,
 				city: new City(),
 				district: new District()
 			};

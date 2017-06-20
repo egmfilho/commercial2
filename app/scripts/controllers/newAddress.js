@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-19 17:46:05
+* @Last Modified time: 2017-06-20 09:55:39
 */
 
 (function() {
@@ -41,6 +41,7 @@
 		self.clear 	             = clear;
 		self.submit              = submit;
 		self.updateSearch        = updateSearch;
+		self.icmsChanged         = icmsChanged;
 
 
 		$scope.$on('viewContentLoaded', function() {
@@ -80,7 +81,13 @@
 					cep_code: cep
 				}
 			}).then(function(success) {
-				console.log(success);
+				self.newAddress.person_address_type = success.data.data.public_place_type;
+				self.newAddress.person_address_public_place = success.data.data.public_place;
+				self.queryDistrict = success.data.data.district_name;
+				self.newAddress.district_id = success.data.data.district_id;
+				self.queryCity = success.data.data.city_name;
+				self.newAddress.city_id = success.data.data.city_id;
+				self.newAddress.uf_id = success.data.data.uf_id;
 				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);
@@ -124,6 +131,15 @@
 			}, function(error) {
 				constants.debug && console.log(error);
 			});
+		}
+
+		function icmsChanged() {
+			if (self.newAddress.icms_type == 2) {
+				self.newAddress.person_address_ie = 'ISENTO';
+			} else {
+				if (self.newAddress.person_address_ie == 'ISENTO')
+					self.newAddress.person_address_ie = null;
+			}
 		}
 
 	}

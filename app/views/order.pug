@@ -462,15 +462,18 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 												md-input-container.md-icon-float(flex='20')
 													label
 														span Contribuição de ICMS
-													md-select(name='category' ng-model='j')
+													md-select(name='category' ng-model='address.newAddress.icms_type'
+															ng-change='address.icmsChanged()')
 														md-option(value='1') Contribuinte ICMS
 														md-option(value='2') Contribuinte Isento
 														md-option(value='9') Não contribuinte
 
 												md-input-container(flex='20')
 													label 
+														i.fa.fa-lock(ng-if='address.newAddress.icms_type == 2') &nbsp;
 														| Inscrição Estadual
-													input(ng-model='ie')
+													input(ng-model='address.newAddress.person_address_ie' 
+															ng-disabled='address.newAddress.icms_type == 2')
 
 												div(flex='100') 
 													p.md-subhead(style='margin: 8px 0') Contatos
@@ -501,6 +504,9 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
 													md-button.md-primary(ng-click='address.submit()')
 														| Cadastrar
+
+											pre(ng-if='debug')
+												| {{address.newAddress | json}}
 
 					
 					pre(ng-if='debug')

@@ -23,6 +23,7 @@ form(name='newCostumerForm')
 				  ng-model='ctrl.newCustomer.person_cpf' 
 				  ng-pattern="/^[0-9]{3}[.][0-9]{3}[.][0-9]{3}-[0-9]{2}$/" 
 				  ui-mask='999.999.999-99'
+				  model-view-value='true'
 				  ng-disabled='ctrl.newCustomer.person_type != "F"')
 			div(ng-messages='newCostumerForm.cpf.$error')
 				div(ng-message='pattern') CPF inválido!
@@ -35,6 +36,7 @@ form(name='newCostumerForm')
 				  ng-model='ctrl.newCustomer.person_cnpj' 
 				  ng-pattern="/^[0-9]{2}[.][0-9]{3}[.][0-9]{3}/[0-9]{4}[-][0-9]{2}$/" 
 				  ui-mask='99.999.999/9999-99'
+				  model-view-value='true'
 				  ng-disabled='ctrl.newCustomer.person_type != "J"')
 			div(ng-messages='newCostumerForm.cnpj.$error')
 				div(ng-message='pattern') CNPJ inválido!
