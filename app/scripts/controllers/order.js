@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-20 12:58:46
+* @Last Modified time: 2017-06-20 17:56:37
 */
 
 (function() {
@@ -38,25 +38,9 @@
 
 		$scope.debug = constants.debug;
 		
-		self.selectCompany = selectCompany;
-
-		self.internal = {
-			userPrices: Globals.get('user-prices-raw'),
-			tempSeller: null,
-			tempCustomer: null,
-			tempAddress: new Address(),
-			tempProduct: null,
-			tempItem: new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() }),
-			blurSeller: blurSeller,
-			blurCustomer: blurCustomer,
-			blurItem: blurItem,
-			address: {
-				selectedTabIndex: 0
-			}
-		};
-
-		self.budget = new Order();
-
+		self.selectCompany      = selectCompany;
+		self.internal           = internalItems();
+		self.budget             = new Order();
 		self.newCustomer        = newCustomer;
 		self.setCustomer        = setCustomer;
 		self.clearSeller        = clearSeller;
@@ -102,6 +86,39 @@
 			self.internal.address.selectedTabIndex = 0;
 		});
 
+		$scope.newOrder = function() {
+			$rootScope.customDialog().showConfirm('Aviso', 'Deseja descartar o orçamento atual?')
+				.then(function(success) {
+					self.budget = new Order();
+					self.internal = internalItems();
+				}, function(error) { });
+		};
+
+		$scope.open = function() {
+
+		};
+
+		$scope.save = function() {
+
+		};
+
+		function internalItems() {
+			return {
+				userPrices: Globals.get('user-prices-raw'),
+				tempSeller: null,
+				tempCustomer: null,
+				tempAddress: new Address(),
+				tempProduct: null,
+				tempItem: new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() }),
+				blurSeller: blurSeller,
+				blurCustomer: blurCustomer,
+				blurItem: blurItem,
+				address: {
+					selectedTabIndex: 0
+				}
+			};
+		}
+
 		function getMainUserPriceId() {
 			var i, uPrices = Globals.get('user-prices-raw');
 
@@ -111,10 +128,6 @@
 			}
 
 			return null;
-		}
-
-		$scope.teste = function() {
-			console.log('mudou');
 		}
 
 		// ******************************
@@ -213,6 +226,7 @@
 			self.budget.setCustomer(new Person(person));
 			self.budget.order_address_delivery_code = null;
 			self.internal.tempCustomer = new Person(person);
+			$scope.$broadcast('customerAdded', self.budget.order_client);
 		}
 
 		/**
@@ -319,7 +333,7 @@
 				self.internal.tempSeller = new Person(success.data);
 				$timeout(function() {
 					self.scrollTo('section[name="products"]');
-					self.focusOn('input[name="product-code"]');
+					self.focusOn('input[name="autocompleteProduct"]');
 				}, 500);
 				$rootScope.loading.unload();
 			}, function(error) {
@@ -353,12 +367,11 @@
 			if (code == self.budget.order_client.person_code || !parseInt(code))
 				return;
 
-			var options = { getAddress: true };
+			var options = { getAddress: true, getContact: true };
 			
 			$rootScope.loading.load();
 			getPersonByCode(code, Globals.get('personCategories').customer, options).then(function(success) {
 				setCustomer(success.data);
-				$scope.$broadcast('customerAdded', self.budget.order_client);
 				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);

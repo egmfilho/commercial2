@@ -44,7 +44,7 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 			md-opt-group(label='Bairros')
 				md-option(ng-value='d' 
 						ng-repeat='d in address.queryDistrictResult' 
-						ng-click='address.newAddress.district_id = d.district_id')
+						ng-click='address.districtChanged(d.district_id)')
 					| {{d.district_name}}
 
 	md-input-container(flex='30')
@@ -60,7 +60,7 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 			md-opt-group(label='Cidades')
 				md-option(ng-value='c' 
 						ng-repeat='c in address.queryCityResult'
-						ng-click='address.newAddress.city_id = c.city_id')
+						ng-click='address.cityChanged(c.city_id, c.uf_id)')
 					| {{c.city_name}} - {{c.uf_id}}
 
 	md-input-container.md-icon-float(flex='20')
@@ -82,9 +82,9 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 	div(flex='100') 
 		p.md-subhead(style='margin: 8px 0') Contatos
 
-	md-input-container(flex='25' ng-repeat='contact in address.newAddress.contacts')
+	md-input-container(flex='25' ng-repeat='contact in address.newAddress.person_contact')
 		label 
-			| {{contact.label}}
+			| {{contact.contact_type_label}}
 		input(ng-model='contact.contact_value')
 
 	div(layout='row' layout-fill layout-align='end center')

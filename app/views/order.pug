@@ -11,7 +11,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					button(ng-click='$mdMenu.open()') Arquivo
 					md-menu-content
 						md-menu-item
-							md-button(ng-click='order.showDialog()')
+							md-button(ng-click='newOrder()')
 								md-icon(md-font-set='material-icons') insert_drive_file
 								|  Novo
 						md-menu-item
@@ -281,7 +281,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								span.md-subhead Informe o cliente e seu endereço de entrega
 							div(layout='row' layout-align='end center' layout-fill)
 								md-button.md-raised(ng-click='order.newCustomer()')
-									| Novo
+									| &nbsp; Cadastrar &nbsp;
 								md-button.md-raised(ng-click='order.clearCustomer()')
 									| Limpar
 				

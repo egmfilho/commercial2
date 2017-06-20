@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 10:46:07
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-16 13:30:26
+* @Last Modified time: 2017-06-20 16:10:58
 */
 
 (function() {
@@ -42,7 +42,8 @@
 						person_category: category,
 						get_person_address: options && options.getAddress,
 						get_person_address_city: options && options.getAddress,
-						get_person_address_district: options && options.getAddress
+						get_person_address_district: options && options.getAddress,
+						get_person_address_contact: options && options.getContact
 					}).$promise;
 				}
 
@@ -54,7 +55,8 @@
 						person_category: category,
 						get_person_address: options && options.getAddress,
 						get_person_address_city: options && options.getAddress,
-						get_person_address_district: options && options.getAddress
+						get_person_address_district: options && options.getAddress,
+						get_person_address_contact: options && options.getContact
 					}).$promise;
 				}
 
@@ -67,6 +69,7 @@
 						get_person_address: options && options.getAddress,
 						get_person_address_city: options && options.getAddress,
 						get_person_address_district: options && options.getAddress,
+						get_person_address_contact: options && options.getContact,
 						limit: options && options.limit,
 						page: options && options.page
 					}).$promise;
@@ -80,6 +83,7 @@
 						get_person_address: options && options.getAddress,
 						get_person_address_city: options && options.getAddress,
 						get_person_address_district: options && options.getAddress,
+						get_person_address_contact: options && options.getContact,
 						limit: options && options.limit,
 						page: options && options.page
 					}).$promise;

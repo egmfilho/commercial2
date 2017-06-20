@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-20 13:52:24
+* @Last Modified time: 2017-06-20 17:22:25
 */
 
 (function() {
@@ -43,6 +43,8 @@
 		self.clear 	             = clear;
 		self.submit              = submit;
 		self.updateSearch        = updateSearch;
+		self.districtChanged     = districtChanged;
+		self.cityChanged         = cityChanged;
 		self.icmsChanged         = icmsChanged;
 
 		$scope.$on('orderViewLoaded', function() {
@@ -115,12 +117,20 @@
 		function clear() {
 			self.newAddress = new Address();
 			self.newAddress.person_id = _personId;
-			self.newAddress.contacts = [
-				{ contact_type_id: Globals.get('contactTypes')['phone'], contact_value: null, label: 'Telefone' },
-				{ contact_type_id: Globals.get('contactTypes')['mobile'], contact_value: null, label: 'Celular' },
-				{ contact_type_id: Globals.get('contactTypes')['mail'], contact_value: null, label: 'Email' },
-				{ contact_type_id: Globals.get('contactTypes')['others'], contact_value: null, label: 'Outro' }
-			];
+
+			/* Carrega e insere a propriedade key */
+			angular.forEach(Globals.get('contactTypes'), function(value, key) {
+				self.newAddress.person_contact.push(angular.extend({ }, value, { key: key }));
+			});
+			/* Ordena pela propriedade key */
+			self.newAddress.person_contact = self.newAddress.person_contact.sort(function(a, b) {
+				return a.key < b.key ? -1 : 1;
+			});
+
+			self.queryDistrict = null;
+			self.queryCity = null;
+			searchDistrict();
+			searchCity();
 		}
 
 		function submit() {
@@ -162,6 +172,15 @@
 			}, function(error) {
 				constants.debug && console.log(error);
 			});
+		}
+
+		function districtChanged(id) {
+			self.newAddress.district_id = id;
+		}
+
+		function cityChanged(city_id, uf_id) {
+			self.newAddress.city_id = city_id;
+			self.newAddress.uf_id = uf_id;
 		}
 
 		function icmsChanged() {
