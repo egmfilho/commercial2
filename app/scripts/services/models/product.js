@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 16:16:04
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-09 10:44:08
+* @Last Modified time: 2017-06-21 08:35:37
 */
 
 (function() {
@@ -12,15 +12,11 @@
 	angular.module('commercial2.services')
 		.factory('Stock', [function() {
 
-			var _stock = {
-				company_id: null,
-				product_id: null,
-				product_stock: 0, // inicializa com 0 pois pode vir null do servidor
-				product_stock_date: null
-			};
-
 			function Stock(stock) {
-				angular.extend(this, _stock);
+				this.company_id         = null;
+				this.product_id         = null;
+				this.product_stock      = 0; // inicializa com 0 pois pode vir null do servidor
+				this.product_stock_date = null;
 
 				if (stock) {
 					angular.extend(this, stock, {
@@ -36,28 +32,24 @@
 	angular.module('commercial2.services')
 		.factory('Product', ['Price', 'Unit', 'Stock', function(Price, Unit, Stock) {
 
-			var _product = {
-				product_id: null,
-				product_group_id: null,
-				unity_id: null,
-				icms_id: null,
-				ncm_id: null,
-				company_id: null,
-				product_code: null,
-				product_ean: null,
-				product_name: null,
-				product_classification: null,
-				product_active: null,
-				product_aliquot_second_pass: null,
-				product_cfop: null,
-				product_date: null,
-				unit: new Unit(),
-				price: new Price(),
-				stock: new Stock()
-			};
-
 			function Product(product) {
-				angular.extend(this, _product);
+				this.product_id                  = null;
+				this.product_group_id            = null;
+				this.unity_id                    = null;
+				this.icms_id                     = null;
+				this.ncm_id                      = null;
+				this.company_id                  = null;
+				this.product_code                = null;
+				this.product_ean                 = null;
+				this.product_name                = null;
+				this.product_classification      = null;
+				this.product_active              = null;
+				this.product_aliquot_second_pass = null;
+				this.product_cfop                = null;
+				this.product_date                = null;
+				this.unit                        = new Unit();
+				this.price                       = new Price();
+				this.stock                       = new Stock();
 
 				if (product) {
 					angular.extend(this, product, {

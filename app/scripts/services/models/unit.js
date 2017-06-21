@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 16:28:45
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-08 16:31:24
+* @Last Modified time: 2017-06-21 08:36:26
 */
 
 (function() {
@@ -12,16 +12,12 @@
 	angular.module('commercial2.services')
 		.factory('Unit', [function() {
 
-			var _unit = {
-				unit_id: null, 
-				unit_code: null,
-				unit_initials: null, 
-				unit_name: null,
-				unit_format: null
-			};
-
 			function Unit(unit) {
-				angular.extend(this, _unit);
+				this.unit_id       = null;
+				this.unit_code     = null;
+				this.unit_initials = null;
+				this.unit_name     = null;
+				this.unit_format   = null;
 
 				if (unit) {
 					angular.extend(this, unit);

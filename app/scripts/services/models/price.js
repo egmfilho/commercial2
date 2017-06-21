@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 14:13:57
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-19 12:41:05
+* @Last Modified time: 2017-06-21 08:32:54
 */
 
 (function() {
@@ -13,14 +13,10 @@
 	angular.module('commercial2.services')
 		.factory('PriceERP', [function() {
 
-			var _priceERP = {
-				price_id: null,
-				price_code: null,
-				price_name: null
-			};
-
 			function PriceERP(priceERP) {
-				angular.extend(this, _priceERP);
+				this.price_id   = null;
+				this.price_code = null;
+				this.price_name = null;
 
 				if (priceERP) {
 					angular.extend(this, priceERP);
@@ -35,17 +31,13 @@
 	angular.module('commercial2.services')
 		.factory('UserPrice', ['PriceERP', function(PriceERP) {
 
-			var _userPrice = {
-				user_price_id: null,
-				user_id: null,
-				price_id: null,
-				user_price_date: null,
-				user_price_main: 'N',
-				price_erp: new PriceERP()
-			};
-
 			function UserPrice(userPrice) {
-				angular.extend(this, _userPrice);
+				this.user_price_id   = null;
+				this.user_id         = null;
+				this.price_id        = null;
+				this.user_price_date = null;
+				this.user_price_main = 'N';
+				this.price_erp       = new PriceERP();
 
 				if (userPrice) {
 					angular.extend(this, userPrice, {
@@ -63,16 +55,12 @@
 	angular.module('commercial2.services')
 		.factory('Price', [function() {
 
-			var _price = {
-				product_id: null,
-				price_id: null,
-				company_id: null,
-				price_value: null,
-				price_date: null
-			};
-
 			function Price(price) {
-				angular.extend(this, _price);
+				this.product_id  = null;
+				this.price_id    = null;
+				this.company_id  = null;
+				this.price_value = null;
+				this.price_date  = null;
 
 				if (price) {
 					angular.extend(this, price, {

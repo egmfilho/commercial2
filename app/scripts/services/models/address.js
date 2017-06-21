@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 09:39:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-20 15:30:17
+* @Last Modified time: 2017-06-21 12:02:11
 */
 
 (function() {
@@ -11,17 +11,15 @@
 	angular.module('commercial2.services')
 		.factory('Cep', [function() {
 
-			var _cep = { 
-				cep_code: null,
-				uf_id: null,
-				city_id: null,
-				district_id: null,
-				public_place: null,
-				public_place_type: null
-			};
-
 			function Cep(cep) {
-				angular.extend(this, _cep, cep);
+				this.cep_code          = null;
+				this.uf_id             = null;
+				this.city_id           = null;
+				this.district_id       = null;
+				this.public_place      = null;
+				this.public_place_type = null;
+
+				angular.extend(this, cep);
 			}
 
 			return Cep;
@@ -31,14 +29,12 @@
 	angular.module('commercial2.services')
 		.factory('District', [function() {
 
-			var _district = {
-				district_id: null,
-				district_code: null,
-				district_name: null
-			};
-
 			function District(district) {
-				angular.extend(this, _district, district);
+				this.district_id   = null;
+				this.district_code = null;
+				this.district_name = null;
+
+				angular.extend(this, district);
 			}
 
 			return District;
@@ -48,17 +44,15 @@
 	angular.module('commercial2.services')
 		.factory('City', [function() {
 
-			var _city = {
-				city_id: null,
-				uf_id: null,
-				city_code: null,
-				city_name: null,
-				city_ibge: null,
-				city_ddd: null
-			};
-
 			function City(city) {
-				angular.extend(this, _city, city);
+				this.city_id   = null;
+				this.uf_id     = null;
+				this.city_code = null;
+				this.city_name = null;
+				this.city_ibge = null;
+				this.city_ddd  = null;
+
+				angular.extend(this, city);
 			}
 
 			return City;
@@ -68,28 +62,24 @@
 	angular.module('commercial2.services')
 		.factory('Address', ['District', 'City', function(District, City) {
 
-			var _address = {
-				person_id: null,
-				uf_id: null,
-				city_id: null,
-				district_id: null,
-				person_address_cep: null,
-				person_address_code: null,
-				person_address_active: 'Y',
-				person_address_main: 'N',
-				person_address_delivery: 'Y',
-				person_address_ie: null,
-				person_address_type: null,
-				person_address_public_place: null,
-				person_address_number: null,
-				icms_type: null,
-				city: new City(),
-				district: new District(),
-				person_contact: [ ]
-			};
-
 			function Address(address) {
-				angular.extend(this, _address);
+				this.person_id                   = null;
+				this.uf_id                       = null;
+				this.city_id                     = null;
+				this.district_id                 = null;
+				this.person_address_cep          = null;
+				this.person_address_code         = null;
+				this.person_address_active       = 'Y';
+				this.person_address_main         = 'N';
+				this.person_address_delivery     = 'Y';
+				this.person_address_ie           = null;
+				this.person_address_type         = null;
+				this.person_address_public_place = null;
+				this.person_address_number       = null;
+				this.icms_type                   = null;
+				this.city                        = new City();
+				this.district                    = new District();
+				this.person_address_contact              = new Array();
 
 				if (address) {
 					angular.extend(this, address, { 

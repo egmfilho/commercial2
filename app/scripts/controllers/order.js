@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-20 17:56:37
+* @Last Modified time: 2017-06-21 14:04:41
 */
 
 (function() {
@@ -49,7 +49,7 @@
 		self.clearCustomer      = clearCustomer;
 		self.clearNote          = clearNote;
 		self.getPersonByCode    = getPersonByCode;
-		self.getPersonByName    = getPersonByName;	
+		self.getPersonByName    = getPersonByName;
 		self.getSellerByCode    = getSellerByCode;
 		self.getSellerByName    = getSellerByName;
 		self.getCustomerByCode  = getCustomerByCode;
@@ -57,12 +57,15 @@
 		self.getProductByCode   = getProductByCode;
 		self.getProductByName   = getProductByName;
 		self.priceTableChanged  = priceTableChanged;
+		self.setItemAlDiscount  = setItemAlDiscount;
+		self.setItemVlDiscount  = setItemVlDiscount;
 		self.setTotalAlDiscount = setTotalAlDiscount;
 		self.setTotalVlDiscount = setTotalVlDiscount;
 		self.scrollTo           = scrollTo;
 		self.focusOn            = focusOn;
 		self.savePDF            = savePDF;
 		self.showNotFound       = showNotFound;
+		self.showAddressContact = showAddressContact;
 
 		self.editItemMenu       = editItemMenu;
 		self.showEditItemModal  = showEditItemModal;
@@ -78,6 +81,7 @@
 		});
 
 		$scope.$on('newAddress', function(event, args) {
+			constants.debug && console.log('$on: newAddress', args);
 			self.budget.order_client.person_address.push(new Address(args));
 			
 			if (args.person_address_delivery == 'Y')
@@ -110,6 +114,8 @@
 				tempAddress: new Address(),
 				tempProduct: null,
 				tempItem: new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() }),
+				tempItemAlDiscount: 0,
+				tempItemVlDiscount: 0,
 				blurSeller: blurSeller,
 				blurCustomer: blurCustomer,
 				blurItem: blurItem,
@@ -135,9 +141,9 @@
 		// ******************************
 
 		/**
-		* Abre uma janela para informar a loja quando 
-		* o usuario possui mais de uma loja vinculada.
-		*/
+		 * Abre uma janela para informar a loja quando 
+		 * o usuario possui mais de uma loja vinculada.
+		 */
 		function selectCompany() {
 			var dialog = $rootScope.customDialog(),
 				controller = function() { },
@@ -166,27 +172,27 @@
 		}
 
 		/**
-		* Recoloca o nome do vendedor no autocomplete quando 
-		* o usuario desiste da pesquisa.
-		*/
+		 * Recoloca o nome do vendedor no autocomplete quando 
+		 * o usuario desiste da pesquisa.
+		 */
 		function blurSeller() { 
 			if (self.budget.order_seller.person_id) 
 				self.internal.tempSeller = new Person(self.budget.order_seller);
 		}
 
 		/**
-		* Recoloca o nome do cliente no autocomplete quando 
-		* o usuario desiste da pesquisa.
-		*/
+		 * Recoloca o nome do cliente no autocomplete quando 
+		 * o usuario desiste da pesquisa.
+		 */
 		function blurCustomer() { 
-			if (self.budget.order_client.person_id) 
+			if (self.budget.order_client.person_id)
 				self.internal.tempCustomer = new Person(self.budget.order_client);
 		}
 
 		/**
-		* Recoloca o nome do produto no autocomplete quando 
-		* o usuario desiste da pesquisa.
-		*/
+		 * Recoloca o nome do produto no autocomplete quando 
+		 * o usuario desiste da pesquisa.
+		 */
 		function blurItem() { 
 			if (self.internal.tempItem.product.product_id) 
 				self.internal.tempProduct = new Product(self.internal.tempItem.product);
@@ -221,7 +227,7 @@
 		/**
 		 * Adiciona um cliente ao pedido.
 		 * @param {object} person - O cliente a ser adicionado.
-		 */		
+		 */	
 		function setCustomer(person) {
 			self.budget.setCustomer(new Person(person));
 			self.budget.order_address_delivery_code = null;
@@ -230,8 +236,8 @@
 		}
 
 		/**
-		* Limpa os campos da sessao de vendedor.
-		*/
+		 * Limpa os campos da sessao de vendedor.
+		 */
 		function clearSeller() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
 				self.budget.removeSeller();
@@ -241,8 +247,8 @@
 		}
 
 		/**
-		* Limpa os campos de pesquisa de produto.
-		*/
+		 * Limpa os campos de pesquisa de produto.
+		 */
 		function clearProductSearch() {
 			self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() });
 			self.internal.tempProduct = null;
@@ -250,8 +256,8 @@
 		}
 
 		/**
-		* Limpa os campos da sessao de produtos e esvazia a lista de itens.
-		*/
+		 * Limpa os campos da sessao de produtos e esvazia a lista de itens.
+		 */
 		function clearItems() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos e esvaziar a lista de itens?').then(function() {
 				self.budget.order_items = [ ];
@@ -260,8 +266,8 @@
 		}
 
 		/**
-		* Limpa os campos da sessao de vendedor.
-		*/
+		 * Limpa os campos da sessao de vendedor.
+		 */
 		function clearCustomer() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
 				self.budget.removeCustomer();
@@ -272,8 +278,8 @@
 		}
 
 		/**
-		* Limpa o campo de observacoes.
-		*/
+		 * Limpa o campo de observacoes.
+		 */
 		function clearNote() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar o campo?').then(function() {
 				
@@ -281,11 +287,11 @@
 		}
 
 		/**
-		* Pesquisa pessoa pelo codigo.
-		* @param {string} code - O codigo da pessoa.
-		* @param {string} category - Categoria ('Cliente' ou 'Vendedor').
-		* @returns {object} - Uma promise com o resultado.
-		*/
+		 * Pesquisa pessoa pelo codigo.
+		 * @param {string} code - O codigo da pessoa.
+		 * @param {string} category - Categoria ('Cliente' ou 'Vendedor').
+		 * @returns {object} - Uma promise com o resultado.
+		 */
 		function getPersonByCode(code, category, options) {
 			if (!code) return;
 
@@ -293,11 +299,11 @@
 		}
 
 		/**
-		* Pesquisa pessoa pelo nome.
-		* @param {string} name - O nome da pessoa.
-		* @param {string} category - Categoria ('Cliente' ou 'Vendedor').
-		* @returns {object} - Uma promise com o resultado.
-		*/
+		 * Pesquisa pessoa pelo nome.
+		 * @param {string} name - O nome da pessoa.
+		 * @param {string} category - Categoria ('Cliente' ou 'Vendedor').
+		 * @returns {object} - Uma promise com o resultado.
+		 */
 		function getPersonByName(name, category) {
 			var deferred = $q.defer();
 
@@ -315,9 +321,9 @@
 		}
 
 		/**
-		* Pesquisa o vendedor pelo codigo.
-		* @param {string} code - O codio do vendedor.
-		*/
+		 * Pesquisa o vendedor pelo codigo.
+		 * @param {string} code - O codio do vendedor.
+		 */
 		function getSellerByCode(code) {
 			if (!code) {
 				self.focusOn('input[name="autocompleteSeller"]');
@@ -346,18 +352,18 @@
 		}
 
 		/**
-		* Pesquisa vendedores pelo nome.
-		* @param {string} name - O nome do vendedor.
-		* @returns {object} - Uma promise com o resultado.
-		*/
+		 * Pesquisa vendedores pelo nome.
+		 * @param {string} name - O nome do vendedor.
+		 * @returns {object} - Uma promise com o resultado.
+		 */
 		function getSellerByName(name) {
 			return getPersonByName(name, Globals.get('personCategories').seller);
 		}
 
 		/**
-		* Pesquisa o cliente pelo codigo.
-		* @param {string} code - O codio do cliente.
-		*/
+		 * Pesquisa o cliente pelo codigo.
+		 * @param {string} code - O codio do cliente.
+		 */
 		function getCustomerByCode(code) {
 			if (!code) {
 				self.focusOn('input[name="autocompleteCustomer"]');
@@ -383,18 +389,18 @@
 		}
 
 		/**
-		* Pesquisa clientes pelo nome.
-		* @param {string} name - O nome do cliente.
-		* @returns {object} - Uma promise com o resultado.
-		*/
+		 * Pesquisa clientes pelo nome.
+		 * @param {string} name - O nome do cliente.
+		 * @returns {object} - Uma promise com o resultado.
+		 */
 		function getCustomerByName(name) {
 			return getPersonByName(name, Globals.get('personCategories').customer);
 		}
 
 		/**
-		* Pesquisa o produto pelo codigo.
-		* @param {string} code - O codio do produto.
-		*/
+		 * Pesquisa o produto pelo codigo.
+		 * @param {string} code - O codio do produto.
+		 */
 		function getProductByCode(code) {
 			if (!code) {
 				constants.debug && console.log('Sem codigo informado');
@@ -429,10 +435,10 @@
 		}
 
 		/**
-		* Pesquisa produtos pelo nome.
-		* @param {string} name - O nome do produto.
-		* @returns {object} - Uma promise com o resultado.
-		*/
+		 * Pesquisa produtos pelo nome.
+		 * @param {string} name - O nome do produto.
+		 * @returns {object} - Uma promise com o resultado.
+		 */
 		function getProductByName(name) {
 
 			if (!name || name.length < 3)
@@ -474,30 +480,50 @@
 		}
 
 		/**
-		* Aplica uma aliquota de desconto igual para todos os items.
-		* @param {float} value - O valor do desconto.
-		*/
-		function setTotalAlDiscount(value) {
-			if (!value) return;
+		 * Aplica uma aliquota de desconto no item atual.
+		 * @param {float} value - O valor do desconto.
+		 */
+		function setItemAlDiscount(value) {
+			var max = parseFloat(Globals.get('user-max-discount') || 0);
 
-			value = Math.max(parseFloat(value), 0);
+			if (value > max) {
+				value = max;
+			}
 
-			Cookies.get(constants['cookie']).then(function(res) {
-				var user = JSON.parse(window.atob(res));
-				if (value > user.user_max_discount) {
-
-				} else {
-
-				}
-			}, function(res) {
-				constants.debug && console.log('Cookie de usuario nao encontrado!');
-			});
+			self.internal.tempItem.setAlDiscount(value);
+			self.internal.tempItemAlDiscount = self.internal.tempItem.order_item_al_discount;
+			self.internal.tempItemVlDiscount = self.internal.tempItem.order_item_vl_discount;
 		}
 
 		/**
-		* Aplica um valor de desconto igual para todos os items.
-		* @param {float} value - O valor do desconto.
-		*/
+		 * Aplica um valor de desconto no item atual.
+		 * @param {float} value - O valor do desconto.
+		 */
+		function setItemVlDiscount(value) {
+			var maxAl = parseFloat(Globals.get('user-max-discount') || 0),
+				currentAl = (parseFloat(value) * 100) / self.internal.tempItem.getValue();
+
+			if (currentAl > maxAl) {
+				currentAl = maxAl;
+			}
+
+			// self.internal.tempItem.setVlDiscount(value);
+			// self.internal.tempItemAlDiscount = self.internal.tempItem.order_item_al_discount;
+			setItemAlDiscount(currentAl);
+		}
+
+		/**
+		 * Aplica uma aliquota de desconto igual para todos os items.
+		 * @param {float} value - O valor do desconto.
+		 */
+		function setTotalAlDiscount(value) {
+			if (!value) return;
+		}
+
+		/**
+		 * Aplica um valor de desconto igual para todos os items.
+		 * @param {float} value - O valor do desconto.
+		 */
 		function setTotalVlDiscount(value) {
 			if (!value) return;
 
@@ -511,9 +537,9 @@
 		}
 
 		/**
-		* Rola a tela ate o elemento informado.
-		* @param {(string|object)} selector - O elemento para qual o scroll vai rolar.
-		*/
+		 * Rola a tela ate o elemento informado.
+		 * @param {(string|object)} selector - O elemento para qual o scroll vai rolar.
+		 */
 		function scrollTo(selector) {
 			var container = jQuery('#order'),
 				target    = jQuery(selector)[0].offsetTop;
@@ -524,9 +550,9 @@
 		}
 
 		/**
-		* Foca e seleciona o conteudo do elemento informado.
-		* @param {(string|object)} selector - O elemento para qual focar.
-		*/
+		 * Foca e seleciona o conteudo do elemento informado.
+		 * @param {(string|object)} selector - O elemento para qual focar.
+		 */
 		function focusOn(selector) {
 			$timeout(function() {
 				constants.debug && console.log('focus on', selector);
@@ -535,27 +561,45 @@
 		}
 
 		/**
-		* Instancia uma nova janela e chama o dialogo para salvar o PDF.
-		*/
+		 * Instancia uma nova janela e chama o dialogo para salvar o PDF.
+		 */
 		function savePDF() {
 			ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/1?action=pdf');
 		}
 
 		/**
-		* Instancia uma nova janela e chama o dialogo de impressao.
-		*/
+		 * Instancia uma nova janela e chama o dialogo de impressao.
+		 */
 		function print() {
 			ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/1?action=print');
 		}
 
 		/**
-		* Exibe um modal com aviso de 404 not found.
-		*/
+		 * Exibe um modal com aviso de 404 not found.
+		 */
 		function showNotFound() {
 			$rootScope.customDialog().showMessage('Aviso', 'Nenhum resultado encontrado!');
 		}
 
+		/**
+		 * Exibe um modal com os contatos do endereco.
+		 * @param (object) - um array com os contatos.
+		 */
+		function showAddressContact(array) {
+			var html = '';
+			
+			if (array.length) {
+				angular.forEach(array, function(item) {
+					html += '<b>' + item.person_address_contact_label + ': </b>';
+					html += item.person_address_contact_value;
+					html += '<br>';
+				});
+			} else {
+				html += 'Nenhum contato cadastrado.'
+			}
 
+			$rootScope.customDialog().showMessage('Contatos', html);
+		}
 
 
 

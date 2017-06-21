@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:07:16
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-30 12:03:51
+* @Last Modified time: 2017-06-21 08:43:14
 */
 
 (function() {
@@ -12,16 +12,12 @@
 	angular.module('commercial2.services')
 		.factory('UserProfile', ['UserPermissions', function(UserPermissions) {
 
-			var _userProfile = {
-				user_profile_id: '',
-				user_profile_name: '',
-				user_profile_date: '',
-				user_profile_update: '',
-				user_profile_access: new UserPermissions()
-			};
-
 			function UserProfile(userProfile) {
-				angular.extend(this, _userProfile);
+				this.user_profile_id     = null;
+				this.user_profile_name   = null;
+				this.user_profile_date   = null;
+				this.user_profile_update = null;
+				this.user_profile_access = new UserPermissions();
 
 				if (userProfile) {
 					angular.extend(this, userProfile, {

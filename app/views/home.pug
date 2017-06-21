@@ -1,2 +1,2 @@
-section(layout='row' flex)
-	div(name='hadouken')
+section(layout='row' flex ng-if='home.template')
+	div(ng-bind-html='home.template')

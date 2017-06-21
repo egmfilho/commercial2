@@ -82,10 +82,10 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 	div(flex='100') 
 		p.md-subhead(style='margin: 8px 0') Contatos
 
-	md-input-container(flex='25' ng-repeat='contact in address.newAddress.person_contact')
+	md-input-container(flex='25' ng-repeat='contact in address.newAddress.person_address_contact')
 		label 
-			| {{contact.contact_type_label}}
-		input(ng-model='contact.contact_value')
+			| {{contact.person_address_contact_label}}
+		input(ng-model='contact.person_address_contact_value')
 
 	div(layout='row' layout-fill layout-align='end center')
 		md-button.md-primary(ng-click='address.clear()')

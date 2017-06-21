@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-20 17:22:25
+* @Last Modified time: 2017-06-21 12:39:28
 */
 
 (function() {
@@ -21,12 +21,13 @@
 		'ProviderDistrict', 
 		'District', 
 		'ProviderCity', 
-		'City', 
+		'City',
+		'Contact', 
 		'Globals',
 		'Constants' 
 	];
 
-	function NewAddressCtrl($rootScope, $scope, $http, providerAddress, Address, providerDistrict, District, providerCity, City, Globals, constants) {
+	function NewAddressCtrl($rootScope, $scope, $http, providerAddress, Address, providerDistrict, District, providerCity, City, Contact, Globals, constants) {
 
 		var self = this, _personId = null;
 
@@ -120,10 +121,14 @@
 
 			/* Carrega e insere a propriedade key */
 			angular.forEach(Globals.get('contactTypes'), function(value, key) {
-				self.newAddress.person_contact.push(angular.extend({ }, value, { key: key }));
+				self.newAddress.person_address_contact.push(new Contact({
+					person_address_contact_type_id: value.contact_type_id,
+					person_address_contact_label: value.contact_type_label,
+					key: key
+				}));
 			});
 			/* Ordena pela propriedade key */
-			self.newAddress.person_contact = self.newAddress.person_contact.sort(function(a, b) {
+			self.newAddress.person_address_contact = self.newAddress.person_address_contact.sort(function(a, b) {
 				return a.key < b.key ? -1 : 1;
 			});
 
@@ -137,7 +142,8 @@
 			$rootScope.loading.load();
 			providerAddress.save(self.newAddress).then(function(success) {
 				self.newAddress.person_address_code = success.data.address_code;
-				$scope.$emit('newAddress', self.newAddress);				
+				constants.debug && console.log('$emit: newAddress', self.newAddress);
+				$scope.$emit('newAddress', self.newAddress);
 				clear();
 				$rootScope.loading.unload();
 			}, function(error) {

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 10:32:39
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-16 11:40:07
+* @Last Modified time: 2017-06-21 08:30:17
 */
 
 (function() {
@@ -11,19 +11,15 @@
 	angular.module('commercial2.services')
 		.factory('Person', ['Constants', 'Address', function(constants, Address) {
 
-			var _person = {
-				person_id: null,
-				person_code: null,
-				person_name: null,
-				person_cpf: null,
-				person_cnpj: null,
-				person_type: constants['default-person-type'],
-				person_active: null,
-				person_address: [ ]
-			};
-
 			function Person(person) {
-				angular.extend(this, _person);
+				this.person_id      = null;
+				this.person_code    = null;
+				this.person_name    = null;
+				this.person_cpf     = null;
+				this.person_cnpj    = null;
+				this.person_type    = constants['default-person-type'];
+				this.person_active  = null;
+				this.person_address = new Array();
 
 				if (person) {
 					angular.extend(this, person, { 

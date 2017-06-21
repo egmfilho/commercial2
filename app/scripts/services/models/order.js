@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-20 18:00:51
+* @Last Modified time: 2017-06-21 08:14:35
 */
 
 (function() {
@@ -16,63 +16,33 @@
 
 	function Order(OrderItem, Person, Address, CompanyERP) {
 
-		// var _order = {
-		// 	order_id: null,
-		// 	order_company_id: null,
-		// 	order_user_id: null,
-		// 	order_status_id: null, 
-		// 	order_client_id: null,
-		// 	order_address_delivery_code: null,
-		// 	order_seller_id: null,
-		// 	order_term_id: null,
-		// 	order_origin_id: null,
-		// 	order_code: null,
-		// 	order_code_erp: null,
-		// 	order_code_nfe: null,
-		// 	order_value: 0,
-		// 	order_al_discount: 0,
-		// 	order_vl_discount: 0,
-		// 	order_value_total: 0,
-		// 	order_note: null,
-		// 	order_mail_sent: new Array(),
-		// 	order_trash: 'N',
-		// 	order_update: null,
-		// 	order_date: null,
-		// 	order_items: new Array(),
-		// 	order_company: new CompanyERP(),
-		// 	order_seller: new Person(),
-		// 	order_client: new Person(),
-		// 	order_address: new Address()
-		// };
-
 		function _Order(order) {
-			// angular.extend(this, _order);
-			this.order_id = null;
-			this.order_company_id = null;
-			this.order_user_id = null;
-			this.order_status_id = null; 
-			this.order_client_id = null;
+			this.order_id                    = null;
+			this.order_company_id            = null;
+			this.order_user_id               = null;
+			this.order_status_id             = null; 
+			this.order_client_id             = null;
 			this.order_address_delivery_code = null;
-			this.order_seller_id = null;
-			this.order_term_id = null;
-			this.order_origin_id = null;
-			this.order_code = null;
-			this.order_code_erp = null;
-			this.order_code_nfe = null;
-			this.order_value = 0;
-			this.order_al_discount = 0;
-			this.order_vl_discount = 0;
-			this.order_value_total = 0;
-			this.order_note = null;
-			this.order_mail_sent = new Array();
-			this.order_trash = 'N';
-			this.order_update = null;
-			this.order_date = null;
-			this.order_items = new Array();
-			this.order_company = new CompanyERP();
-			this.order_seller = new Person();
-			this.order_client = new Person();
-			this.order_address = new Address();
+			this.order_seller_id             = null;
+			this.order_term_id               = null;
+			this.order_origin_id             = null;
+			this.order_code                  = null;
+			this.order_code_erp              = null;
+			this.order_code_nfe              = null;
+			this.order_value                 = 0;
+			this.order_al_discount           = 0;
+			this.order_vl_discount           = 0;
+			this.order_value_total           = 0;
+			this.order_note                  = null;
+			this.order_mail_sent             = new Array();
+			this.order_trash                 = 'N';
+			this.order_update                = null;
+			this.order_date                  = null;
+			this.order_items                 = new Array();
+			this.order_company               = new CompanyERP();
+			this.order_seller                = new Person();
+			this.order_client                = new Person();
+			this.order_address               = new Address();
 
 			if (order) {
 				angular.extend(this, order, {
