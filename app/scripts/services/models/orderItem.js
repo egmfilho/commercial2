@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-21 14:10:52
+* @Last Modified time: 2017-06-21 18:00:17
 */
 
 (function() {
@@ -73,9 +73,12 @@
 			}
 
 			function setAlDiscount(value) {
-				if (!value) return;
+				if (value == null) return;
 
-				value = Math.max(parseFloat(value), 0);
+				/* para arredonda pra cima */
+				value = parseFloat(value) + 0.0049999;
+				/* arredonda pra 2 casas decimais ou joga o 0 se for negativo */
+				value = Math.max(parseFloat(value.toFixed(2)), 0);
 				this.order_item_al_discount = value;
 
 				var full_value = this.order_item_value_unitary * this.order_item_amount;

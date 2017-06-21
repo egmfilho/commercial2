@@ -1,0 +1,19 @@
+.body(layout='column')
+	p {{ctrl.text}}
+
+	md-input-container
+		label 
+			| Nome de usuário
+		input(ng-model='ctrl.user')
+
+	md-input-container
+		label 
+			| Senha
+		input(ng-model='ctrl.pass')
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-primary(ng-click='ctrl.authorize(ctrl.user, ctrl.pass)')
+		| &nbsp; Autorizar &nbsp;
+
+	md-button.md-primary(ng-click='ctrl._cancel()')
+		| &nbsp; Cancelar &nbsp;

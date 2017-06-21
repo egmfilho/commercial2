@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-21 14:04:41
+* @Last Modified time: 2017-06-21 18:00:45
 */
 
 (function() {
@@ -61,6 +61,7 @@
 		self.setItemVlDiscount  = setItemVlDiscount;
 		self.setTotalAlDiscount = setTotalAlDiscount;
 		self.setTotalVlDiscount = setTotalVlDiscount;
+		self.authorizeDiscount  = authorizeDiscount;
 		self.scrollTo           = scrollTo;
 		self.focusOn            = focusOn;
 		self.savePDF            = savePDF;
@@ -484,15 +485,33 @@
 		 * @param {float} value - O valor do desconto.
 		 */
 		function setItemAlDiscount(value) {
-			var max = parseFloat(Globals.get('user-max-discount') || 0);
+			value = parseFloat(value);
+
+			if (self.internal.tempItemAlDiscount == self.internal.tempItem.order_item_al_discount && 
+				self.internal.tempItemVlDiscount == self.internal.tempItem.order_item_vl_discount)
+				return;
+
+			var max = parseFloat(Globals.get('user-max-discount') || 0),
+				setAl = function(al) {
+					self.internal.tempItem.setAlDiscount(al);
+					self.internal.tempItemAlDiscount = self.internal.tempItem.order_item_al_discount;
+					self.internal.tempItemVlDiscount = self.internal.tempItem.order_item_vl_discount;
+				};
 
 			if (value > max) {
-				value = max;
+				authorizeDiscount(value).then(function(success) {
+					if (value > success) {
+						$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
+						setAl(0);
+					} else {
+						setAl(value);
+					}
+				}, function(error) {
+					setAl(self.internal.tempItem.order_item_al_discount);
+				});
+			} else {
+				setAl(value);
 			}
-
-			self.internal.tempItem.setAlDiscount(value);
-			self.internal.tempItemAlDiscount = self.internal.tempItem.order_item_al_discount;
-			self.internal.tempItemVlDiscount = self.internal.tempItem.order_item_vl_discount;
 		}
 
 		/**
@@ -500,15 +519,8 @@
 		 * @param {float} value - O valor do desconto.
 		 */
 		function setItemVlDiscount(value) {
-			var maxAl = parseFloat(Globals.get('user-max-discount') || 0),
-				currentAl = (parseFloat(value) * 100) / self.internal.tempItem.getValue();
+			var currentAl = self.internal.tempItem.getValue() == 0 ? 0 : (parseFloat(value) * 100) / self.internal.tempItem.getValue();
 
-			if (currentAl > maxAl) {
-				currentAl = maxAl;
-			}
-
-			// self.internal.tempItem.setVlDiscount(value);
-			// self.internal.tempItemAlDiscount = self.internal.tempItem.order_item_al_discount;
 			setItemAlDiscount(currentAl);
 		}
 
@@ -534,6 +546,55 @@
 			} else {
 
 			}
+		}
+
+		/**
+		 * Abre um modal para autorizar o desconto do item.
+		 * @param {float} value - O valor do desconto.
+		 * @param {float} max - O valor maximo de desconto permitido para o usuario.
+		 * @returns {object} - Uma promise com o resultado.
+		 */
+		function authorizeDiscount(value) {
+			var deferred = $q.defer();
+
+			function controller($rootScope, $http, constants) {
+				this.text = 'Desconto acima do permitido: ' + value.toFixed(2) + '%';
+				this.user = null;
+				this.pass = null;
+				this.authorize = authorize;
+
+				function authorize(user, pass) {
+					this._close(15);
+					return;
+
+					$rootScope.loading.load();
+					$http({
+						method: 'POST',
+						url: constants.api + 'config.php',
+						data: {
+							user_user: user,
+							user_pass: pass
+						}
+					}).then(function (success) {
+						$rootScope.loading.unload();
+						this._close();
+					}, function(err) {
+						$rootScope.loading.unload();
+						this._cancel();
+					});
+				}
+			}
+
+			controller.$inject = [ '$rootScope', '$http', 'Constants' ];
+			
+			$rootScope.customDialog().showTemplate('Autorização requerida', './partials/modalAuthorization.html', controller)
+				.then(function(success) {
+					deferred.resolve(success);
+				}, function(error) {
+					deferred.reject();
+				});
+
+			return deferred.promise;
 		}
 
 		/**
