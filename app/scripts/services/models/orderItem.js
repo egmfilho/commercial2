@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-21 18:00:17
+* @Last Modified time: 2017-06-22 10:09:29
 */
 
 (function() {
@@ -70,19 +70,15 @@
 
 			function setAmount(value) {
 				this.order_item_amount = value;
+				this.setAlDiscount(this.order_item_al_discount);
 			}
 
 			function setAlDiscount(value) {
 				if (value == null) return;
 
-				/* para arredonda pra cima */
-				value = parseFloat(value) + 0.0049999;
-				/* arredonda pra 2 casas decimais ou joga o 0 se for negativo */
-				value = Math.max(parseFloat(value.toFixed(2)), 0);
 				this.order_item_al_discount = value;
 
-				var full_value = this.order_item_value_unitary * this.order_item_amount;
-				this.order_item_vl_discount = parseFloat( (full_value * (value / 100)).toFixed(2) );
+				this.order_item_vl_discount = parseFloat( (this.getValue() * (value / 100)).toFixed(2) );
 			}
 
 			function setVlDiscount(value) {
@@ -91,8 +87,10 @@
 				value = Math.max(parseFloat(value), 0);
 				this.order_item_vl_discount = value;
 
-				var full_value = this.order_item_value_unitary * this.order_item_amount;
-				this.order_item_al_discount = parseFloat( full_value && ((value * 100) / full_value).toFixed(2) );
+				var full_value = this.order_item_value_unitary * this.order_item_amount,
+					al = parseFloat(full_value && ((value * 100) / full_value));
+				
+				this.order_item_al_discount = al;
 			}
 
 			function getValue() {
@@ -100,7 +98,7 @@
 			}
 
 			function getValueTotal() {
-				return (this.order_item_amount * this.order_item_value_unitary) - this.order_item_vl_discount;
+				return this.getValue() - this.order_item_vl_discount;
 			}
 
 		}]);

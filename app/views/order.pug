@@ -189,8 +189,10 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							label 
 								| Quantidade
 							input(name='amount' ng-model='order.internal.tempItem.order_item_amount'
+									ng-change='order.internal.tempItem.setAmount(order.internal.tempItem.order_item_amount)'
 									keys-shortcuts enter='order.focusOn("input[name=\'al-discount\']")'
-									currency number-only ng-disabled='!order.internal.tempItem.product.product_code')
+									currency trim min-fraction-size='0' number-only 
+									ng-disabled='!order.internal.tempItem.product.product_code')
 						
 						md-input-container(flex='25')
 							label 
@@ -198,7 +200,8 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							input(name='al-discount' ng-model='order.internal.tempItemAlDiscount' 
 									ng-model-options="{ updateOn: 'default blur' }"
 									ng-blur='order.setItemAlDiscount(order.internal.tempItemAlDiscount)'
-									currency number-only ng-disabled='!order.internal.tempItem.product.product_code'
+									currency trim max-fraction-size='4' number-only 
+									ng-disabled='!order.internal.tempItem.product.product_code'
 									keys-shortcuts enter='order.focusOn("input[name=\'vl-discount\']")')
 						
 						md-input-container(flex='25')

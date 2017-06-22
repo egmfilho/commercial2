@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-21 18:00:45
+* @Last Modified time: 2017-06-22 08:34:43
 */
 
 (function() {
@@ -502,7 +502,7 @@
 				authorizeDiscount(value).then(function(success) {
 					if (value > success) {
 						$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
-						setAl(0);
+						setAl(self.internal.tempItem.order_item_al_discount);
 					} else {
 						setAl(value);
 					}
@@ -519,9 +519,34 @@
 		 * @param {float} value - O valor do desconto.
 		 */
 		function setItemVlDiscount(value) {
-			var currentAl = self.internal.tempItem.getValue() == 0 ? 0 : (parseFloat(value) * 100) / self.internal.tempItem.getValue();
+			var currentAl = self.internal.tempItem.getValue() == 0 ? 0 : (parseFloat(value) * 100) / self.internal.tempItem.getValue(),
+				maxAl = parseFloat(Globals.get('user-max-discount') || 0),
+				setVl = function(vl) {
+					self.internal.tempItem.setVlDiscount(vl);
+					self.internal.tempItemAlDiscount = self.internal.tempItem.order_item_al_discount;
+					self.internal.tempItemVlDiscount = self.internal.tempItem.order_item_vl_discount;
+				};
 
-			setItemAlDiscount(currentAl);
+			if (self.internal.tempItemAlDiscount == self.internal.tempItem.order_item_al_discount && 
+				self.internal.tempItemVlDiscount == self.internal.tempItem.order_item_vl_discount)
+				return;
+
+			if (currentAl > maxAl) {
+				authorizeDiscount(currentAl).then(function(success) {
+					if (currentAl > success) {
+						$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
+						setVl(self.internal.tempItem.order_item_vl_discount);
+					} else {
+						setVl(value);
+					}
+				}, function(error) {
+					setVl(self.internal.tempItem.order_item_vl_discount);
+				});
+			} else {
+				setVl(value);
+			}
+
+			// setItemAlDiscount(currentAl);
 		}
 
 		/**
