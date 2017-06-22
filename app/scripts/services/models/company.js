@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 14:07:56
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-21 08:23:23
+* @Last Modified time: 2017-06-22 11:44:39
 */
 
 (function() {
@@ -33,6 +33,7 @@
 
 			function UserCompany(userCompany) {
 				this.user_company      = null;
+				this.user_company_main = null;
 				this.user_id           = null;
 				this.company_id        = null;
 				this.user_company_date = null;

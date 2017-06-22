@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-19 09:18:11
+* @Last Modified time: 2017-06-22 12:45:44
 */
 'use strict';
 
@@ -161,7 +161,7 @@ angular.module('commercial2', [
 			unload: function() { 
 				this.count--; 
 				this.count = Math.max(this.count, 0); 
-				if (this.count == 0)
+				if (this.count == 0);
 					this.dialog.close();
 			}
 		};

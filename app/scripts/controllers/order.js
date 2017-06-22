@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-22 08:34:43
+* @Last Modified time: 2017-06-22 13:39:42
 */
 
 (function() {
@@ -21,6 +21,7 @@
 		'Cookies',
 		'Constants',
 		'Globals',
+		'ProviderOrder',
 		'Order', 
 		'ProviderPerson', 
 		'Person',
@@ -32,7 +33,7 @@
 		'ElectronWindow' 
 	];
 
-	function OrderCtrl($rootScope, $scope, $timeout, $location, $q, $mdPanel, Cookies, constants, Globals, Order, providerPerson, Person, Address, providerProduct, Product, OrderItem, UserCompany, ElectronWindow) {
+	function OrderCtrl($rootScope, $scope, $timeout, $location, $q, $mdPanel, Cookies, constants, Globals, providerOrder, Order, providerPerson, Person, Address, providerProduct, Product, OrderItem, UserCompany, ElectronWindow) {
 
 		var self = this;
 
@@ -104,7 +105,14 @@
 		};
 
 		$scope.save = function() {
-
+			$rootScope.customDialog().showConfirm('Aviso', 'Deseja salvar o orçamento atual?')
+				.then(function(success) {
+					providerOrder.save(self.budget).then(function(success) {
+						$rootScope.customDialog().showMessage('Sucesso', 'Orçamento salvo!');
+					}, function(error) {
+						$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+					});
+				}, function(error) { });
 		};
 
 		function internalItems() {
@@ -253,6 +261,8 @@
 		function clearProductSearch() {
 			self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() });
 			self.internal.tempProduct = null;
+			self.internal.tempItemAlDiscount = 0;
+			self.internal.tempItemVlDiscount = 0;
 			$scope.productQuery = '';
 		}
 
@@ -500,10 +510,16 @@
 
 			if (value > max) {
 				authorizeDiscount(value).then(function(success) {
-					if (value > success) {
+					if (value > success.user_max_discount) {
 						$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
 						setAl(self.internal.tempItem.order_item_al_discount);
 					} else {
+						self.internal.tempItem.setAudit({
+							user_id: success.user_id,
+							user_name: success.user_name,
+							product_code: self.internal.tempItem.product.product_code,
+							product_name: self.internal.tempItem.product.product_name,
+						});
 						setAl(value);
 					}
 				}, function(error) {
@@ -533,10 +549,16 @@
 
 			if (currentAl > maxAl) {
 				authorizeDiscount(currentAl).then(function(success) {
-					if (currentAl > success) {
+					if (currentAl > success.user_max_discount) {
 						$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
 						setVl(self.internal.tempItem.order_item_vl_discount);
 					} else {
+						self.internal.tempItem.setAudit({
+							user_id: success.user_id,
+							user_name: success.user_name,
+							product_code: self.internal.tempItem.product.product_code,
+							product_name: self.internal.tempItem.product.product_name,
+						});
 						setVl(value);
 					}
 				}, function(error) {
@@ -545,8 +567,6 @@
 			} else {
 				setVl(value);
 			}
-
-			// setItemAlDiscount(currentAl);
 		}
 
 		/**
@@ -580,39 +600,39 @@
 		 * @returns {object} - Uma promise com o resultado.
 		 */
 		function authorizeDiscount(value) {
-			var deferred = $q.defer();
+			var deferred = $q.defer(),
+				options = null;
 
-			function controller($rootScope, $http, constants) {
+			function controller($rootScope, providerPermission, Audit) {
+				var ctrl = this;
+
 				this.text = 'Desconto acima do permitido: ' + value.toFixed(2) + '%';
 				this.user = null;
 				this.pass = null;
 				this.authorize = authorize;
 
-				function authorize(user, pass) {
-					this._close(15);
-					return;
-
+				function authorize(user, pass, callback) {
 					$rootScope.loading.load();
-					$http({
-						method: 'POST',
-						url: constants.api + 'config.php',
-						data: {
-							user_user: user,
-							user_pass: pass
-						}
-					}).then(function (success) {
+					providerPermission.authorize('order', 'user_discount', user, pass).then(function(success) {
 						$rootScope.loading.unload();
-						this._close();
-					}, function(err) {
+						ctrl._close(success.data);
+					}, function(error) {
 						$rootScope.loading.unload();
-						this._cancel();
+						$rootScope.customDialog().showMessage('Aviso', error.data.status.description);
 					});
 				}
 			}
 
-			controller.$inject = [ '$rootScope', '$http', 'Constants' ];
+			controller.$inject = [ '$rootScope', 'ProviderPermission', 'Audit' ];
+
+			options = {
+				hasBackdrop: true,
+				clickOutsideToClose: false,
+				escapeToClose: false,
+				zIndex: 1
+			};
 			
-			$rootScope.customDialog().showTemplate('Autorização requerida', './partials/modalAuthorization.html', controller)
+			$rootScope.customDialog().showTemplate('Autorização requerida', './partials/modalAuthorization.html', controller, options)
 				.then(function(success) {
 					deferred.resolve(success);
 				}, function(error) {
@@ -716,7 +736,10 @@
 					var container = jQuery('.container-table');
 					container.animate({ scrollTop: container.height() });
 				}
+
 				self.internal.tempProduct = null;
+				self.internal.tempItemAlDiscount = 0;
+				self.internal.tempItemVlDiscount = 0;
 				self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() });
 			}
 

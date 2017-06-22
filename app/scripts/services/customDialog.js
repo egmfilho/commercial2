@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-19 10:03:49
+* @Last Modified time: 2017-06-22 12:54:04
 */
 
 (function() {
@@ -16,9 +16,11 @@
 
 	function CustomDialog($q, $mdPanel, CustomDialogManager) {
 
-		var _animationPosition, _animation, _dialog;
+		var _animationPosition, _animation;
 
 		function Dialog() {
+			this._dialog = null;
+
 			_animationPosition = $mdPanel.newPanelPosition().absolute().center();
 			_animation = $mdPanel.newPanelAnimation()
 				.duration(100)
@@ -46,7 +48,7 @@
 				this._showProgress = true;
 			}
 
-			return show(title, message, null, controller, {
+			return show(this, title, message, null, controller, {
 				hasBackdrop: true,
 				trapFocus: true,
 				clickOutsideToClose: false,
@@ -68,7 +70,7 @@
 				this._negativeButtonText = 'Fechar';
 			}
 
-			return show(title, message, null, controller, options);
+			return show(this, title, message, null, controller, options);
 		}
 
 		/**
@@ -86,7 +88,7 @@
 				this._negativeButtonText = 'Não';
 			}
 
-			return show(title, message, null, controller, options);
+			return show(this, title, message, null, controller, options);
 		}
 
 		/**
@@ -97,15 +99,15 @@
 		 * @returns {object} Uma promise com o resultado.
 		 */	
 		function showTemplate(title, templateUrl, controller, options) {
-			return show(title, null, templateUrl, controller, options);
+			return show(this, title, null, templateUrl, controller, options);
 		}
 
 		/**
 		 * Fecha a janela.
 		 */
 		function close() {
-			_dialog.close();
-			CustomDialogManager.removeDialog(_dialog);
+			this._dialog.close();
+			CustomDialogManager.removeDialog(this._dialog);
 		}
 
 		/**
@@ -116,7 +118,7 @@
 		 * @param {(function|string)} controller - (Opcional) Controller usado no template.
 		 * @returns {object} Uma promise com o resultado.
 		 */	
-		function show(title, message, templateUrl, controller, options) {
+		function show(scope, title, message, templateUrl, controller, options) {
 			var _deferred = $q.defer();
 
 			var locals = {
@@ -125,11 +127,11 @@
 				_templateUrl: templateUrl,
 				_close: function(res) {
 					_deferred.resolve(res);
-					_dialog.close();
+					scope._dialog.close();
 				},
 				_cancel: function(res) {
 					_deferred.reject(res);
-					_dialog.close();
+					scope._dialog.close();
 				}
 			};
 
@@ -151,9 +153,9 @@
 				controllerAs: 'ctrl'
 			};
 
-			_dialog = $mdPanel.create(angular.extend({ }, _options, options));
-			_dialog.open();
-			CustomDialogManager.addDialog(_dialog);
+			scope._dialog = $mdPanel.create(angular.extend({ }, _options, options));
+			scope._dialog.open();
+			CustomDialogManager.addDialog(scope._dialog);
 
 			return _deferred.promise;
 		}
