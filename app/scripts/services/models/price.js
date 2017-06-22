@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 14:13:57
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-21 08:32:54
+* @Last Modified time: 2017-06-22 16:47:11
 */
 
 (function() {
@@ -19,7 +19,7 @@
 				this.price_name = null;
 
 				if (priceERP) {
-					angular.extend(this, priceERP);
+					angular.merge(this, priceERP);
 				}
 			}
 
@@ -40,7 +40,7 @@
 				this.price_erp       = new PriceERP();
 
 				if (userPrice) {
-					angular.extend(this, userPrice, {
+					angular.merge(this, userPrice, {
 						user_price_date: new Date(userPrice.user_price_date),
 						price_erp: new PriceERP(userPrice.price_erp)
 					});
@@ -63,7 +63,7 @@
 				this.price_date  = null;
 
 				if (price) {
-					angular.extend(this, price, {
+					angular.merge(this, price, {
 						price_date: new Date(price.price_date)
 					});
 				}

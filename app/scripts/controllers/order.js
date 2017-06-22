@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-22 13:39:42
+* @Last Modified time: 2017-06-22 17:57:39
 */
 
 (function() {
@@ -107,10 +107,20 @@
 		$scope.save = function() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja salvar o orçamento atual?')
 				.then(function(success) {
-					providerOrder.save(self.budget).then(function(success) {
-						$rootScope.customDialog().showMessage('Sucesso', 'Orçamento salvo!');
+					var filtered = angular.merge({ }, self.budget, {
+						order_address: null,
+						order_client: null,
+						order_company: null,
+						order_mail_sent: null,
+						order_seller: null
+					});
+					constants.debug && console.log('salvando orçamento: ', filtered);
+					providerOrder.save({data: JSON.stringify(filtered)}).then(function(success) {
+						console.log(success);
+						// $rootScope.customDialog().showMessage('Sucesso', 'Orçamento salvo!');
 					}, function(error) {
-						$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+						console.log(error);
+						// $rootScope.customDialog().showMessage('Erro', error.data.status.description);
 					});
 				}, function(error) { });
 		};

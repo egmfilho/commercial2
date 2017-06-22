@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:10:12
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-30 12:11:36
+* @Last Modified time: 2017-06-22 16:47:11
 */
 
 (function() {
@@ -13,7 +13,7 @@
 		.factory('UserPermissions', [function() {
 
 			function UserPermissions(userPermissions) {
-				angular.extend(this, convertPermissions(userPermissions));
+				angular.merge(this, convertPermissions(userPermissions));
 			}
 
 			function convertPermissions(p) {

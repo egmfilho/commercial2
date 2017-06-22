@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 16:28:45
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-21 08:36:26
+* @Last Modified time: 2017-06-22 16:47:11
 */
 
 (function() {
@@ -20,7 +20,7 @@
 				this.unit_format   = null;
 
 				if (unit) {
-					angular.extend(this, unit);
+					angular.merge(this, unit);
 				}
 			}
 

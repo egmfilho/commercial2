@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 10:32:39
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-21 08:30:17
+* @Last Modified time: 2017-06-22 16:47:11
 */
 
 (function() {
@@ -22,7 +22,7 @@
 				this.person_address = new Array();
 
 				if (person) {
-					angular.extend(this, person, { 
+					angular.merge(this, person, { 
 						person_address: person.person_address ? person.person_address.map(function(a) { return new Address(a); }) : [ ]
 					});
 				}

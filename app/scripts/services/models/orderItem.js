@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-22 11:47:38
+* @Last Modified time: 2017-06-22 16:47:11
 */
 
 (function() {
@@ -18,7 +18,7 @@
 				this.product_code = null;
 
 				if (audit)
-					angular.extend(this, audit, {
+					angular.merge(this, audit, {
 						date: audit.date ? new Date(audit.date) : null
 					});
 			}
@@ -48,7 +48,7 @@
 				this.user_price               = new UserPrice();
 
 				if (item) {
-					angular.extend(this, item, {
+					angular.merge(this, item, {
 						order_item_update: item.order_item_update ? new Date(order_item_update) : null,
 						order_item_date: item.order_item_date ? new Date(order_item_date) : null,
 						order_item_audit: item.order_item_audit ? new Audit(item.order_item_audit) : new Audit(),

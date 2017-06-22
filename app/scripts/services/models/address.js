@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 09:39:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-21 12:02:11
+* @Last Modified time: 2017-06-22 16:46:28
 */
 
 (function() {
@@ -19,7 +19,7 @@
 				this.public_place      = null;
 				this.public_place_type = null;
 
-				angular.extend(this, cep);
+				angular.merge(this, cep);
 			}
 
 			return Cep;
@@ -34,7 +34,7 @@
 				this.district_code = null;
 				this.district_name = null;
 
-				angular.extend(this, district);
+				angular.merge(this, district);
 			}
 
 			return District;
@@ -52,7 +52,7 @@
 				this.city_ibge = null;
 				this.city_ddd  = null;
 
-				angular.extend(this, city);
+				angular.merge(this, city);
 			}
 
 			return City;
@@ -82,7 +82,7 @@
 				this.person_address_contact              = new Array();
 
 				if (address) {
-					angular.extend(this, address, { 
+					angular.merge(this, address, { 
 						city: new City(address.city), 
 						district: new District(address.district) 
 					});

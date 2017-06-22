@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-21 08:14:35
+* @Last Modified time: 2017-06-22 16:25:54
 */
 
 (function() {
@@ -45,13 +45,13 @@
 			this.order_address               = new Address();
 
 			if (order) {
-				angular.extend(this, order, {
-					order_mail_sent: order.order_mail_sent.split(';').map(function(i) { 
+				angular.merge(this, order, {
+					order_mail_sent: angular.isArray(order.order_mail_sent) ? order.order_mail_sent : order.order_mail_sent.split(';').map(function(i) { 
 						return { name: i.split(':')[0], email: i.split(':')[1] } 
 					}),
 					order_update: order.order_update ? new Date(order.order_update) : null,
 					order_date: order.order_date ? new Date(order.order_date) : null,
-					order_items: order.items.map(function(oi) { return new OrderItem(oi); }),
+					order_items: order.order_items.map(function(oi) { return new OrderItem(oi); }),
 					order_company: new CompanyERP(order.order_company),
 					order_seller: new Person(order.order_selelr),
 					order_client: new Person(order.order_client),

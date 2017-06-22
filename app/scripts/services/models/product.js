@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 16:16:04
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-21 08:35:37
+* @Last Modified time: 2017-06-22 17:38:07
 */
 
 (function() {
@@ -19,7 +19,7 @@
 				this.product_stock_date = null;
 
 				if (stock) {
-					angular.extend(this, stock, {
+					angular.merge(this, stock, {
 						product_stock_date: stock.product_stock_date ? new Date(stock.product_stock_date) : null
 					});
 				}
@@ -35,7 +35,7 @@
 			function Product(product) {
 				this.product_id                  = null;
 				this.product_group_id            = null;
-				this.unity_id                    = null;
+				this.unit_id                     = null;
 				this.icms_id                     = null;
 				this.ncm_id                      = null;
 				this.company_id                  = null;
@@ -52,8 +52,8 @@
 				this.stock                       = new Stock();
 
 				if (product) {
-					angular.extend(this, product, {
-						product_date: new Date(product.product_date),
+					angular.merge(this, product, {
+						product_date: product.product_date && new Date(product.product_date),
 						price: new Price(product.price),
 						unit: new Unit(product.unit),
 						stock: new Stock(product.stock),
