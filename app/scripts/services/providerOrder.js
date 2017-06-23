@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-22 13:23:08
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-22 13:40:09
+* @Last Modified time: 2017-06-23 14:25:21
 */
 
 (function() {
@@ -39,12 +39,19 @@
 						action: 'get'
 					}, {
 						order_id: id,
-						get_order_seller: true,
-						get_order_items: true,
-						get_order_items_product: true,
-						get_order_client: true,
-						get_order_payments: true,
-						get_order_payments_modality: true
+						get_order_company: options && options.getCompany,
+						get_company_address: options && options.getCompanyAddress,
+						get_order_user: options && options.getUser,
+						get_order_client: options && options.getCustomer,
+						get_person_address: options && options.getCustomer,
+						get_order_seller: options && options.getSeller,
+						get_order_items: options && options.getItems,
+						get_order_items_product: options && options.getItems,
+						get_product_unit: options && options.getItems,
+						get_order_payments: options && options.getPayments,
+						get_order_payments_modality: options && options.getPayments,
+						get_order_term: options && options.getTerm,
+						get_order_address_delivery: options && options.getDeliveryAddress
 					}).$promise;
 				}
 
@@ -53,12 +60,19 @@
 						action: 'get'
 					}, {
 						order_code: code,
-						get_order_seller: true,
-						get_order_items: true,
-						get_order_items_product: true,
-						get_order_client: true,
-						get_order_payments: true,
-						get_order_payments_modality: true
+						get_order_company: options && options.getCompany,
+						get_company_address: options && options.getCompanyAddress,
+						get_order_user: options && options.getUser,
+						get_order_client: options && options.getCustomer,
+						get_person_address: options && options.getCustomer,
+						get_order_seller: options && options.getSeller,
+						get_order_items: options && options.getItems,
+						get_order_items_product: options && options.getItems,
+						get_product_unit: options && options.getItems,
+						get_order_payments: options && options.getPayments,
+						get_order_payments_modality: options && options.getPayments,
+						get_order_term: options && options.getTerm,
+						get_order_address_delivery: options && options.getDeliveryAddress
 					}).$promise;
 				}
 
@@ -67,12 +81,19 @@
 						action: 'getList'
 					}, {
 						limit: options && options.limit,
+						get_order_company: options && options.getCompany,
+						get_company_address: options && options.getCompanyAddress,
+						get_order_user: options && options.getUser,
+						get_order_client: options && options.getCustomer,
+						get_person_address: options && options.getCustomer,
 						get_order_seller: options && options.getSeller,
 						get_order_items: options && options.getItems,
 						get_order_items_product: options && options.getItems,
-						get_order_client: options && options.getCustomer,
-						get_order_payments: options && options.getPayment,
-						get_order_payments_modality: options && options.getPayment
+						get_product_unit: options && options.getItems,
+						get_order_payments: options && options.getPayments,
+						get_order_payments_modality: options && options.getPayments,
+						get_order_term: options && options.getTerm,
+						get_order_address_delivery: options && options.getDeliveryAddress
 					}).$promise;
 				}
 

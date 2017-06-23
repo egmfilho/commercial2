@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 16:28:45
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-22 16:47:11
+* @Last Modified time: 2017-06-23 12:45:26
 */
 
 (function() {
@@ -20,7 +20,7 @@
 				this.unit_format   = null;
 
 				if (unit) {
-					angular.merge(this, unit);
+					Object.assign(this, unit);
 				}
 			}
 

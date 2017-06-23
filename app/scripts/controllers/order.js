@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-22 17:57:39
+* @Last Modified time: 2017-06-23 14:24:16
 */
 
 (function() {
@@ -15,7 +15,8 @@
 		'$rootScope', 
 		'$scope', 
 		'$timeout',
-		'$location', 
+		'$location',
+		'$routeParams', 
 		'$q', 
 		'$mdPanel', 
 		'Cookies',
@@ -33,11 +34,12 @@
 		'ElectronWindow' 
 	];
 
-	function OrderCtrl($rootScope, $scope, $timeout, $location, $q, $mdPanel, Cookies, constants, Globals, providerOrder, Order, providerPerson, Person, Address, providerProduct, Product, OrderItem, UserCompany, ElectronWindow) {
+	function OrderCtrl($rootScope, $scope, $timeout, $location, $routeParams, $q, $mdPanel, Cookies, constants, Globals, providerOrder, Order, providerPerson, Person, Address, providerProduct, Product, OrderItem, UserCompany, ElectronWindow) {
 
 		var self = this;
 
 		$scope.debug = constants.debug;
+		$scope.globals = Globals.get;
 		
 		self.selectCompany      = selectCompany;
 		self.internal           = internalItems();
@@ -75,11 +77,34 @@
 		self.removeItem         = removeItem;
 
 		$scope.$on('$viewContentLoaded', function() {
-			if (!self.budget.order_company_id) {
-				selectCompany();
-			}
+			if ($routeParams.action && $routeParams.action == 'edit' && $routeParams.code) {
+				var options = {
+					getCompany: true,
+					getUser: true,
+					getCustomer: true,
+					getSeller: true,
+					getItems: true,
+					getPayments: true,
+					getTerm: true,
+				};
+				$rootScope.loading.load();
+				providerOrder.getByCode($routeParams.code, options).then(function(success) {
+					self.budget = new Order(success.data);
+					self.internal.tempSeller = new Person(self.budget.order_seller);
+					self.internal.tempCustomer = new Person(self.budget.order_client);
+					constants.debug && console.log('orcamento carregado', self.budget);
+					$rootScope.loading.unload();
+				}, function(error) {
+					alert('deu erro no getOrder, falta tratar');
+					$rootScope.loading.unload();
+				});
+			} else {
+				if (!self.budget.order_company_id) {
+					selectCompany();
+				}
 
-			$timeout(function() { $scope.$broadcast('orderViewLoaded'); });
+				$timeout(function() { $scope.$broadcast('orderViewLoaded'); });
+			}
 		});
 
 		$scope.$on('newAddress', function(event, args) {
@@ -95,8 +120,11 @@
 		$scope.newOrder = function() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja descartar o orçamento atual?')
 				.then(function(success) {
-					self.budget = new Order();
+					self.budget = new Order({
+						order_company_id: self.budget.order_company_id
+					});
 					self.internal = internalItems();
+					alert('falta rolar para o topo');
 				}, function(error) { });
 		};
 
@@ -115,11 +143,13 @@
 						order_seller: null
 					});
 					constants.debug && console.log('salvando orçamento: ', filtered);
-					providerOrder.save({data: JSON.stringify(filtered)}).then(function(success) {
+					providerOrder.save(filtered).then(function(success) {
 						console.log(success);
+						alert('salvou, falta tratar');
 						// $rootScope.customDialog().showMessage('Sucesso', 'Orçamento salvo!');
 					}, function(error) {
 						console.log(error);
+						alert('nao salvou, falta tratar');
 						// $rootScope.customDialog().showMessage('Erro', error.data.status.description);
 					});
 				}, function(error) { });
@@ -173,7 +203,7 @@
 
 			controller.prototype = {
 				companies: _companies,
-				companyId: _companies[0].company_id
+				company: _companies[0]
 			};
 
 			options = { 
@@ -185,8 +215,8 @@
 
 			dialog.showTemplate('Informe a empresa', './partials/modalSelectCompany.html', controller, options)
 				.then(function(res) {
-					self.budget.order_company_id = res;
-					constants.debug && console.log('companyId: ', self.budget.order_company_id);
+					self.budget.setCompany(res);
+					constants.debug && console.log('company: ', self.budget.order_company.company_erp.company_name);
 				}, function(error) { });
 		}
 
@@ -735,14 +765,14 @@
 			dialog.showTemplate('Editar', './partials/modalEditItem.html', controller)
 				.then(function(res) {
 					var index = self.budget.order_items.indexOf(item);
-					self.budget.order_items[index] = new OrderItem(res);
+					self.budget.replaceItem(index, res);
 				}, function(error) { });
 		}
 
 		function addItem() {
 			if (self.internal.tempItem.product && self.internal.tempItem.product.product_id) {
 				if (self.internal.tempItem.order_item_amount > 0) {
-					self.budget.order_items.push(new OrderItem(self.internal.tempItem));
+					self.budget.addItem(new OrderItem(self.internal.tempItem));
 					var container = jQuery('.container-table');
 					container.animate({ scrollTop: container.height() });
 				}
@@ -766,12 +796,8 @@
 
 			$rootScope.customDialog().showConfirm('Aviso', message)
 				.then(function(success) {
-					constants.debug && console.log('resolved');
-					var index = self.budget.order_items.indexOf(item);
-					self.budget.order_items.splice(index, 1);
-				}, function(error) { 
-					constants.debug && console.log('rejected');
-				});
+					self.budget.removeItem(item);
+				}, function(error) { });
 		}
 	}
 }());

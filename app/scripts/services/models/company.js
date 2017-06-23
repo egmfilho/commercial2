@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 14:07:56
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-22 16:46:32
+* @Last Modified time: 2017-06-23 12:44:31
 */
 
 (function() {
@@ -20,7 +20,7 @@
 				this.company_phone = null;	
 
 				if (companyERP) {
-					angular.merge(this, companyERP);				
+					Object.assign(this, companyERP);				
 				}
 			}
 
@@ -40,7 +40,7 @@
 				this.company_erp       = new CompanyERP();
 
 				if (userCompany) {
-					angular.merge(this, userCompany, {
+					Object.assign(this, userCompany, {
 						user_company_date: new Date(userCompany.user_company_date)
 					});
 				}

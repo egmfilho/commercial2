@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:07:16
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-22 16:47:11
+* @Last Modified time: 2017-06-23 12:45:41
 */
 
 (function() {
@@ -20,7 +20,7 @@
 				this.user_profile_access = new UserPermissions();
 
 				if (userProfile) {
-					angular.merge(this, userProfile, {
+					Object.assign(this, userProfile, {
 						user_profile_access: new UserPermissions(userProfile.user_profile_access)
 					});
 				}

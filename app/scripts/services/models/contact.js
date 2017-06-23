@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-21 12:20:38
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-22 16:47:11
+* @Last Modified time: 2017-06-23 12:44:39
 */
 
 (function() {
@@ -24,7 +24,7 @@
 			this.person_address_contact_value   = null;
 
 			if (contact)
-				angular.merge(this, contact);
+				Object.assign(this, contact);
 		}
 
 		return _Contact;

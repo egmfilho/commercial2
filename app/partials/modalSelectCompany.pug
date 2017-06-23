@@ -3,10 +3,10 @@
 		md-icon(md-font-set='material-icons' flex='10') info
 		p O usuário possui mais de uma empresa vinculada. Por favor informe qual empresa será usada neste orçamento.
 	md-input-container.md-icon-float
-		md-select(name='type' ng-model='ctrl.companyId')
-			md-option(ng-value='c.company_id' ng-repeat='c in ctrl.companies') 
+		md-select(name='type' ng-model='ctrl.company' ng-model-options='{ trackBy: $value.company_id }')
+			md-option(ng-value='c' ng-repeat='c in ctrl.companies') 
 				| {{c.company_erp.company_name}}
 
 .footer(layout='row' layout-align='end center')
-	md-button.md-primary(ng-click='ctrl._close(ctrl.companyId)')
+	md-button.md-primary(ng-click='ctrl._close(ctrl.company)')
 		| &nbsp; Confirmar &nbsp;

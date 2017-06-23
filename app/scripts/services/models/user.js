@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:06:00
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-22 16:47:11
+* @Last Modified time: 2017-06-23 12:45:30
 */
 
 (function() {
@@ -35,7 +35,7 @@
 				this.user_price           = new Array();
 
 				if (user) {
-					angular.merge(this, user, {
+					Object.assign(this, user, {
 						user_login: user.user_login ? new Date(user.user_login) : null,
 						user_date: user.user_date ? new Date(user.user_date) : null,
 						user_update: user.user_update ? new Date(user.user_update) : null,

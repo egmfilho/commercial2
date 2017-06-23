@@ -172,7 +172,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									div(flex='5')
 									div(style='font-size: 11px;line-height: 1')
 										| Qtd em estoque: 
-										| {{item.stock.product_stock}} ({{item.unit.unit_initials}})
+										| {{item.unit && item.unit.unit_format == "I" ? (item.stock.product_stock | number:'0') : item.stock.product_stock}} ({{item.unit.unit_initials}})
 									div(flex='5')
 									div(style='font-size: 11px;line-height: 1')
 										| Preço: 
@@ -265,13 +265,14 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						div(flex)
 						md-input-container.large-input(flex='15')
 							label Desconto %
-							input(tabindex='-1' readonly value='0,00%')
+							input(tabindex='-1' readonly ng-model='order.budget.order_al_discount'
+									currency trim max-fraction-size='4')
 						md-input-container.large-input(flex='15')
 							label Desconto R$
-							input(tabindex='-1' readonly value='R$ 0,00')
+							input(tabindex='-1' readonly ng-value='order.budget.order_vl_discount | currency: "R$ "')
 						md-input-container.large-input(flex='15')
 							label Total
-							input(tabindex='-1' readonly value='R$ 0,00')
+							input(tabindex='-1' readonly ng-value='order.budget.order_value_total | currency:"R$ "')
 
 		//- Cliente
 		section(name='customer')
@@ -353,6 +354,8 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 											h1.inner-text Nenhum endereço cadastrado.
 											md-button.md-raised.md-primary(ng-click='order.internal.address.selectedTabIndex = 1') 
 												| &nbsp; Cadastrar &nbsp;
+										
+										//- card de endereco
 										div(flex='33' 
 												ng-repeat='a in order.budget.order_client.person_address track by $index'
 												ng-if='order.budget.order_client.person_address.length > 0')
@@ -384,6 +387,8 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 																	ng-click='order.budget.setDeliveryAddress(a)' 
 																	ng-disabled='a.person_address_active == "N" || a.person_address_code == order.budget.order_address_delivery_code')
 																md-icon(md-font-icon='fa fa-check')
+
+										//- card vazio 
 										div(flex='33' ng-if='order.budget.order_client.person_address.length > 0')
 											md-card.dashed-empty-card
 												md-card-content(layout='column' layout-align='center center' layout-fill)
@@ -430,3 +435,10 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						md-input-container(flex)
 							label Observações
 							textarea(ng-model='order.budget.order_note' md-maxlength='150' rows='3')
+
+footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath !== "/loading" && currentPath.indexOf("/order/print/") < 0')
+	md-toolbar
+		div(layout='row' layout-align='start center' flex)
+			| Usuário: {{globals("user")}}
+			| &nbsp;|&nbsp;
+			| Empresa: {{order.budget.order_company.company_erp.company_name}}

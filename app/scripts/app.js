@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-22 12:45:44
+* @Last Modified time: 2017-06-23 13:50:27
 */
 'use strict';
 
@@ -81,11 +81,13 @@ angular.module('commercial2', [
 				controllerAs: 'logout'
 			})
 			.when('/', {
+				module: 'home',
 				templateUrl: 'views/home.html',
 				controller: 'HomeCtrl',
 				controllerAs: 'home'
 			})
-			.when('/order', {
+			.when('/order/:action', {
+				module: 'order',
 				templateUrl: 'views/order.html',
 				controller: 'OrderCtrl',
 				controllerAs: 'order'
@@ -101,6 +103,7 @@ angular.module('commercial2', [
 				controllerAs: 'order'
 			})
 			.when('/about', {
+				module: 'about',
 				templateUrl: 'views/about.html',
 				controller: 'AboutCtrl',
 				controllerAs: 'about'
