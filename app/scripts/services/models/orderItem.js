@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 14:15:57
+* @Last Modified time: 2017-06-23 16:31:16
 */
 
 (function() {
@@ -30,11 +30,7 @@
 	angular.module('commercial2.services')
 		.factory('OrderItem', ['Product', 'UserPrice', 'Audit', function(Product, UserPrice, Audit) {
 
-			var scope;
-
 			function Item(item) {
-				scope = this;
-
 				this.order_item_id            = null;
 				this.order_id                 = null;
 				this.product_id               = null;
@@ -88,7 +84,7 @@
 				this.order_item_value_unitary = this.product.price.price_value;
 				this.order_item_vl_discount = 0;
 				this.order_item_al_discount = 0;
-				updateValues();
+				this.updateValues();
 			}
 
 			function setUserPrice(userPrice) {
@@ -100,7 +96,7 @@
 			function setAmount(value) {
 				this.order_item_amount = value;
 				this.setAlDiscount(this.order_item_al_discount);
-				updateValues();
+				this.updateValues();
 			}
 
 			function setAlDiscount(value) {
@@ -109,7 +105,7 @@
 				this.order_item_al_discount = value;
 
 				this.order_item_vl_discount = parseFloat( (this.getValue() * (value / 100)).toFixed(2) );
-				updateValues();
+				this.updateValues();
 			}
 
 			function setVlDiscount(value) {
@@ -122,7 +118,7 @@
 					al = parseFloat(full_value && ((value * 100) / full_value));
 				
 				this.order_item_al_discount = al;
-				updateValues();
+				this.updateValues();
 			}
 
 			function setAudit(audit) {
@@ -138,8 +134,8 @@
 			}
 
 			function updateValues() {
-				scope.order_item_value = scope.getValue();
-				scope.order_item_value_total = scope.getValueTotal();
+				this.order_item_value = this.getValue();
+				this.order_item_value_total = this.getValueTotal();
 			}
 
 		}]);

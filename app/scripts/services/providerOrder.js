@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-22 13:23:08
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 14:25:21
+* @Last Modified time: 2017-06-23 16:59:27
 */
 
 (function() {
@@ -27,7 +27,8 @@
 					getById: getById,
 					getByCode: getByCode,
 					getAll: getAll,
-					save: save
+					save: save,
+					edit: edit
 				}
 
 				// ******************************
@@ -100,6 +101,12 @@
 				function save(order) {
 					return provider.save({
 						action: 'insert'
+					}, order).$promise;
+				}
+
+				function edit(order) {
+					return provider.save({
+						action: 'edit'
 					}, order).$promise;
 				}
 

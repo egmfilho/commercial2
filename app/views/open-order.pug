@@ -1,0 +1,22 @@
+md-content.open-order
+	table(ng-if='openOrder.orders.length')
+		thead
+			tr
+				th 
+					| CÓDIGO
+				th 
+					| CLIENTE
+				th 
+					| VENDEDOR
+				th
+					| &nbsp;
+		tbody
+			tr(ng-repeat='o in openOrder.orders track by $index')
+				td 
+					| {{o.order_code}}
+				td 
+					| {{o.order_client.person_name}}
+				td 
+					| {{o.order_seller.person_name}}
+				td
+					a(ng-href='#/order/edit?code={{o.order_code}}') ABRIR

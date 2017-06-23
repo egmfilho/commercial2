@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 14:21:27
+* @Last Modified time: 2017-06-23 16:36:54
 */
 
 (function() {
@@ -16,37 +16,33 @@
 
 	function Order(OrderItem, Person, Address, CompanyERP) {
 
-		var scope;
-
 		function _Order(order) {
-			scope = this;
-
-			scope.order_id                    = null;
-			scope.order_company_id            = null;
-			scope.order_user_id               = null;
-			scope.order_status_id             = null; 
-			scope.order_client_id             = null;
-			scope.order_address_delivery_code = null;
-			scope.order_seller_id             = null;
-			scope.order_term_id               = null;
-			scope.order_origin_id             = null;
-			scope.order_code                  = null;
-			scope.order_code_erp              = null;
-			scope.order_code_nfe              = null;
-			scope.order_value                 = 0;
-			scope.order_al_discount           = 0;
-			scope.order_vl_discount           = 0;
-			scope.order_value_total           = 0;
-			scope.order_note                  = null;
-			scope.order_mail_sent             = new Array();
-			scope.order_trash                 = 'N';
-			scope.order_update                = null;
-			scope.order_date                  = null;
-			scope.order_items                 = new Array();
-			scope.order_company               = new CompanyERP();
-			scope.order_seller                = new Person();
-			scope.order_client                = new Person();
-			scope.order_address               = new Address();
+			this.order_id                    = null;
+			this.order_company_id            = null;
+			this.order_user_id               = null;
+			this.order_status_id             = null; 
+			this.order_client_id             = null;
+			this.order_address_delivery_code = null;
+			this.order_seller_id             = null;
+			this.order_term_id               = null;
+			this.order_origin_id             = null;
+			this.order_code                  = null;
+			this.order_code_erp              = null;
+			this.order_code_nfe              = null;
+			this.order_value                 = 0;
+			this.order_al_discount           = 0;
+			this.order_vl_discount           = 0;
+			this.order_value_total           = 0;
+			this.order_note                  = null;
+			this.order_mail_sent             = new Array();
+			this.order_trash                 = 'N';
+			this.order_update                = null;
+			this.order_date                  = null;
+			this.order_items                 = new Array();
+			this.order_company               = new CompanyERP();
+			this.order_seller                = new Person();
+			this.order_client                = new Person();
+			this.order_address               = new Address();
 
 			if (order) {
 				Object.assign(this, order, {
@@ -77,21 +73,9 @@
 			hasItem: hasItem,
 			setDeliveryAddress: setDeliveryAddress,
 			setAlDiscount: setAlDiscount,
-			setVlDiscount: setVlDiscount
+			setVlDiscount: setVlDiscount,
+			updateValues: updateValues
 		};
-
-		function updateValues() {
-			scope.order_value = 0;
-			scope.order_value_total = 0;
-
-			angular.forEach(scope.order_items, function(item) {
-				scope.order_value += item.getValue();
-				scope.order_value_total += item.getValueTotal();
-			});
-
-			scope.order_vl_discount = scope.order_value - scope.order_value_total;
-			scope.order_al_discount = (scope.order_vl_discount * 100) / scope.order_value;
-		}
 
 		return _Order;
 
@@ -104,8 +88,8 @@
 		 * @param {object} company - O objeto da empresa.
 		 */
 		function setCompany(company) {
-			scope.order_company = new CompanyERP(company);
-			scope.order_company_id = scope.order_company.company_id;
+			this.order_company = new CompanyERP(company);
+			this.order_company_id = this.order_company.company_id;
 		}
 
 		/**
@@ -113,16 +97,16 @@
 		 * @param {object} seller - O objeto do vendedor.
 		 */
 		function setSeller(seller) {
-			scope.order_seller = new Person(seller);
-			scope.order_seller_id = scope.order_seller.person_id;
+			this.order_seller = new Person(seller);
+			this.order_seller_id = this.order_seller.person_id;
 		}
 
 		/**
 		 * Remove o vendedor vinculado ao orcamento.
 		 */
 		function removeSeller() {
-			scope.order_seller = new Person();
-			scope.order_seller_id = null;
+			this.order_seller = new Person();
+			this.order_seller_id = null;
 		}
 
 		/**
@@ -130,16 +114,16 @@
 		 * @param {object} customer - O objeto do cliente.
 		 */
 		function setCustomer(customer) {
-			scope.order_client = new Person(customer);
-			scope.order_client_id = scope.order_client.person_id;
+			this.order_client = new Person(customer);
+			this.order_client_id = this.order_client.person_id;
 		}
 
 		/**
 		 * Remove o cliente vinculado ao orcamento.
 		 */
 		function removeCustomer() {
-			scope.order_client = new Person();
-			scope.order_client_id = null;
+			this.order_client = new Person();
+			this.order_client_id = null;
 		}
 
 		/**
@@ -148,19 +132,11 @@
 		 * @returns {boolean} - Retorna true caso o item seja adicionado.
 		 */
 		function addItem(item) {
-			if (hasItem(item) != -1)
+			if (this.hasItem(item) != -1)
 				return false;
 			
-			/* para atualizar o orcamento qd atualizar o item */
-			var item = new OrderItem(item);
-			item.prototype = {
-				updateValues: function() {
-					item.updateValues();
-					updateValues();
-				}
-			};
-			scope.order_items.push(item);
-			updateValues();
+			this.order_items.push(new OrderItem(item));
+			this.updateValues();
 			return true;
 		}
 
@@ -170,8 +146,8 @@
 		 * @param {object} item - O item substituto.
 		 */
 		function replaceItem(index, item) {
-			scope.order_items[index] = new OrderItem(item);
-			updateValues();
+			this.order_items[index] = new OrderItem(item);
+			this.updateValues();
 		}
 
 		/**
@@ -179,9 +155,9 @@
 		 * @param {object} item - O item a ser removido.
 		 */
 		function removeItem(item) {
-			var index = scope.order_items.indexOf(item);
-			scope.order_items.splice(index, 1);
-			updateValues();
+			var index = this.order_items.indexOf(item);
+			this.order_items.splice(index, 1);
+			this.updateValues();
 		}
 
 		/**
@@ -190,8 +166,8 @@
 		 * @returns {int} - Retorna o index do item ou -1 caso nao exista.
 		 */
 		function hasItem(item) {
-			for (var i = 0; i < scope.order_items.length; i++) {
-				if (scope.order_items[i].product_id == item.product_id) {
+			for (var i = 0; i < this.order_items.length; i++) {
+				if (this.order_items[i].product_id == item.product_id) {
 					return i;
 				}
 			}
@@ -204,7 +180,7 @@
 		* @param {float} value - O valor do desconto.
 		*/
 		function setAlDiscount(value) {
-			angular.forEach(scope.order_items, function(item) {
+			angular.forEach(this.order_items, function(item) {
 				item.setAlDiscount(value);
 			});
 		}
@@ -214,7 +190,7 @@
 		* @param {float} value - O valor do desconto.
 		*/
 		function setVlDiscount(value) {
-			angular.forEach(scope.order_items, function(item) {
+			angular.forEach(this.order_items, function(item) {
 				item.setVlDiscount(value);
 			});	
 		}
@@ -224,8 +200,25 @@
 		* @param {object} address - O endereco de entrega.
 		*/
 		function setDeliveryAddress(address) {
-			scope.order_address = new Address(address);
-			scope.order_address_delivery_code = scope.order_address.person_address_code;
+			this.order_address = new Address(address);
+			this.order_address_delivery_code = this.order_address.person_address_code;
+		}
+
+		/**
+		* Recalcula e atualiza os valores do orcamento.
+		*/
+		function updateValues() {
+			this.order_value = 0;
+			this.order_value_total = 0;
+
+			var scope = this;
+			angular.forEach(this.order_items, function(item) {
+				scope.order_value += item.getValue();
+				scope.order_value_total += item.getValueTotal();
+			});
+
+			this.order_vl_discount = this.order_value - this.order_value_total;
+			this.order_al_discount = (this.order_vl_discount * 100) / this.order_value;
 		}
 
 	}

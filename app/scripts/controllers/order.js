@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 14:24:16
+* @Last Modified time: 2017-06-23 17:38:19
 */
 
 (function() {
@@ -90,8 +90,16 @@
 				$rootScope.loading.load();
 				providerOrder.getByCode($routeParams.code, options).then(function(success) {
 					self.budget = new Order(success.data);
-					self.internal.tempSeller = new Person(self.budget.order_seller);
+					
+					/* copia os valores para as variaveis temporarias dos autocompletes */
+					self.internal.tempSeller = new Person(self.budget.order_seller);					
 					self.internal.tempCustomer = new Person(self.budget.order_client);
+
+					/* copia o endereco de entrega para o corpo do orcamento */
+					self.budget.order_address = new Address(self.budget.order_client.person_address.find(function(a) {
+						return a.person_address_code == self.budget.order_address_delivery_code;
+					}));
+
 					constants.debug && console.log('orcamento carregado', self.budget);
 					$rootScope.loading.unload();
 				}, function(error) {
@@ -129,7 +137,7 @@
 		};
 
 		$scope.open = function() {
-
+			$location.path('/open-order');
 		};
 
 		$scope.save = function() {
@@ -143,15 +151,26 @@
 						order_seller: null
 					});
 					constants.debug && console.log('salvando orçamento: ', filtered);
-					providerOrder.save(filtered).then(function(success) {
-						console.log(success);
-						alert('salvou, falta tratar');
-						// $rootScope.customDialog().showMessage('Sucesso', 'Orçamento salvo!');
-					}, function(error) {
-						console.log(error);
-						alert('nao salvou, falta tratar');
-						// $rootScope.customDialog().showMessage('Erro', error.data.status.description);
-					});
+					$rootScope.loading.load();
+					if (self.budget.order_code && self.budget.order_id) {
+						/* Edita o orcamento */
+						providerOrder.edit(filtered).then(function(success) {
+							$rootScope.loading.unload();
+							$rootScope.customDialog().showMessage('Sucesso', 'Orçamento editado!');
+						}, function(error) {
+							$rootScope.loading.unload();
+							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+						});
+					} else {
+						/* Salva o orcamento */
+						providerOrder.save(filtered).then(function(success) {
+							$rootScope.loading.unload();
+							$rootScope.customDialog().showMessage('Sucesso', 'Orçamento salvo!');
+						}, function(error) {
+							$rootScope.loading.unload();
+							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+						});
+					}
 				}, function(error) { });
 		};
 

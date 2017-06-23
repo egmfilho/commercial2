@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 09:39:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 12:44:19
+* @Last Modified time: 2017-06-23 16:22:24
 */
 
 (function() {
@@ -62,11 +62,7 @@
 	angular.module('commercial2.services')
 		.factory('Address', ['District', 'City', function(District, City) {
 
-			var scope;
-
 			function Address(address) {
-				scope = this;
-
 				this.person_id                   = null;
 				this.uf_id                       = null;
 				this.city_id                     = null;
@@ -83,7 +79,7 @@
 				this.icms_type                   = null;
 				this.city                        = new City();
 				this.district                    = new District();
-				this.person_address_contact              = new Array();
+				this.person_address_contact      = new Array();
 
 				if (address) {
 					Object.assign(this, address, { 
@@ -97,7 +93,7 @@
 				toString: toString,
 				setDistrict: setDistrict,
 				setCity: setCity
-			};
+			}
 
 			return Address;
 
@@ -108,29 +104,29 @@
 			function toString() {
 				var string = '';
 				
-				string += scope.person_address_type + ' ';
-				string += scope.person_address_public_place + ' ';
-				string += scope.person_address_number + ' - ';
-				string += scope.district.district_name + ', '; 
-				string += scope.city.city_name + ' - ';
-				string += scope.city.uf_id;
+				string += this.person_address_type + ' ';
+				string += this.person_address_public_place + ' ';
+				string += this.person_address_number + ' - ';
+				string += this.district.district_name + ', '; 
+				string += this.city.city_name + ' - ';
+				string += this.city.uf_id;
 
 				return string.toString();
 			}
 
 			function setDistrict(district) {
 				if (district)
-					scope.district = new District(district);
+					this.district = new District(district);
 
-				// setTimeout(function() { scope.district_id = scope.district.district_id; }, 500);
-				scope.district_id = scope.district.district_id;
+				// setTimeout(function() { this.district_id = this.district.district_id; }, 500);
+				this.district_id = this.district.district_id;
 			}
 
 			function setCity(city) {
 				if (city)
-					scope.city = new City(city);
+					this.city = new City(city);
 
-				scope.city_id = scope.city.city_id;
+				this.city_id = this.city.city_id;
 			}
 
 		}]);

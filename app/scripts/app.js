@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 13:50:27
+* @Last Modified time: 2017-06-23 17:24:06
 */
 'use strict';
 
@@ -91,6 +91,12 @@ angular.module('commercial2', [
 				templateUrl: 'views/order.html',
 				controller: 'OrderCtrl',
 				controllerAs: 'order'
+			})
+			.when('/open-order', {
+				module: 'open-order',
+				templateUrl: 'views/open-order.html',
+				controller: 'OpenOrderCtrl',
+				controllerAs: 'openOrder'
 			})
 			.when('/order/print/:code', {
 				templateUrl: 'views/print-order.html',

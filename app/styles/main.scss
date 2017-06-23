@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-19 14:01:52
+* @Last Modified time: 2017-06-23 17:11:01
 */
 
 @import "../../bower_components/angular-material/angular-material.scss";
@@ -124,4 +124,5 @@ md-toast {
 @import "afterLogin";
 @import "logout";
 @import "order";
+@import "open-order";
 @import "order-tab";
