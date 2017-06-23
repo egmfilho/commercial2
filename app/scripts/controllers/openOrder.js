@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 17:32:22
+* @Last Modified time: 2017-06-23 17:51:59
 */
 
 (function() {
@@ -25,7 +25,8 @@
 			function getOrders() {
 				var options = {
 					getCustomer: true,
-					getSeller: true
+					getSeller: true,
+					getCompany: true
 				};
 
 				self.orders = [];

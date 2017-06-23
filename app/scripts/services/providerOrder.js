@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-22 13:23:08
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 16:59:27
+* @Last Modified time: 2017-06-23 17:53:33
 */
 
 (function() {
@@ -86,7 +86,7 @@
 						get_company_address: options && options.getCompanyAddress,
 						get_order_user: options && options.getUser,
 						get_order_client: options && options.getCustomer,
-						get_person_address: options && options.getCustomer,
+						get_person_address: options && options.getPersonAddress,
 						get_order_seller: options && options.getSeller,
 						get_order_items: options && options.getItems,
 						get_order_items_product: options && options.getItems,
