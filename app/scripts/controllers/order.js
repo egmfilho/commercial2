@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 10:33:35
+* @Last Modified time: 2017-06-26 10:53:55
 */
 
 (function() {
@@ -44,7 +44,7 @@
 		
 		self.selectCompany      = selectCompany;
 		self.internal           = internalItems();
-		self.budget             = new Order();
+		self.budget             = new Order({ order_user: Globals.get('user')});
 		self.newCustomer        = newCustomer;
 		self.setCustomer        = setCustomer;
 		self.clearSeller        = clearSeller;

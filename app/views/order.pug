@@ -5,7 +5,10 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 
 		div
 			.md-toolbar-tools
-				h1 Novo Orçamento
+				h1(ng-if='order.budget.order_code') 
+					| Orçamento código {{order.budget.order_code}} em {{order.budget.order_date | date}}
+				h1(ng-if='!order.budget.order_code') 
+					| Novo Orçamento
 			md-menu-bar.order-menu-bar
 				md-menu
 					button(ng-click='$mdMenu.open()') Arquivo
@@ -58,7 +61,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								md-icon(md-font-set='material-icons') monetization_on
 								| Aplicar desconto geral
 				md-menu
-					button(ng-click='$mdMenu.open()') Ver
+					button(ng-click='$mdMenu.open()') Ir
 					md-menu-content
 						md-menu-item
 							md-button(ng-click='order.scrollTo("section[name=\'seller\']")')
@@ -441,6 +444,6 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath !== "/loading" && currentPath.indexOf("/order/print/") < 0')
 	md-toolbar
 		div(layout='row' layout-align='start center' flex)
-			| &nbsp;Usuário: {{globals("user")}}
+			| &nbsp;Usuário: {{order.budget.order_user.user_name}}
 			| &nbsp;|&nbsp;
 			| Empresa: {{order.budget.order_company.company_name || 'Não informado.'}}

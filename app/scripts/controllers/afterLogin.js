@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-19 08:59:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 13:41:33
+* @Last Modified time: 2017-06-26 10:53:53
 */
 
 (function() {
@@ -60,11 +60,11 @@
 
 			Cookies.get(constants['cookie']).then(function(success) {
 				var u = JSON.parse(window.atob(success));
+				Globals.set('user', u);
 				Globals.set('session-token', u.user_id + ':' + u.user_current_session.user_session_value);
 				Globals.set('user-companies-raw', u.user_company);
 				Globals.set('user-prices-raw', u.user_price);
 				Globals.set('user-max-discount', u.user_max_discount || 0);
-				Globals.set('user', u.user_user);
 				deferred.resolve();
 			}, function(error) {
 				deferred.reject();
