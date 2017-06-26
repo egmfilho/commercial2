@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-05 17:56:31
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 16:54:24
+* @Last Modified time: 2017-06-26 18:21:13
 */
 
 (function() {
@@ -22,6 +22,9 @@
 
 		$scope.now = new Date();
 		$scope.globals = Globals.get;
+
+		constants.debug && console.log('teste: ', require('electron').remote.getGlobal('teste'));
+		constants.debug && console.log('node globals: ', require('electron').remote.getGlobal('globals').shared);
 
 		$scope.$on('$viewContentLoaded', function() {
 			if ($routeParams.code) {
@@ -49,12 +52,14 @@
 				constants.debug && console.log(self.order);
 				$rootScope.loading.unload();
 				
-				$timeout(function() {
-					if ($routeParams.action && $routeParams.action == 'print')
-						ElectronPrinter.print();
-					else if ($routeParams.action && $routeParams.action == 'pdf')
-						ElectronPrinter.savePDF();
-				}, 100);
+				if (constants.isElectron) {
+					$timeout(function() {
+						if ($routeParams.action && $routeParams.action == 'print')
+							ElectronPrinter.print();
+						else if ($routeParams.action && $routeParams.action == 'pdf')
+							ElectronPrinter.savePDF();
+					}, 100);
+				}
 			}, function(error) {
 				constants.debug && console.log('error');
 				$rootScope.loading.unload();

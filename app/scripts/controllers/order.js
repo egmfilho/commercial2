@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 15:59:54
+* @Last Modified time: 2017-06-26 18:01:03
 */
 
 (function() {
@@ -145,7 +145,7 @@
 		};
 
 		$scope.save = function() {
-			if (!self.budget.company_id || !self.budget.order_client_id || !self.budget.order_seller_id || !self.budget.order_items.length || !self.budget.order_address_delivery_code) {
+			if (!self.budget.order_company_id || !self.budget.order_client_id || !self.budget.order_seller_id || !self.budget.order_items.length || !self.budget.order_address_delivery_code) {
 				$rootScope.customDialog().showMessage('Erro!', 'Preencha todos os campos corretamente!');
 				return;
 			}
@@ -739,14 +739,20 @@
 		 * Instancia uma nova janela e chama o dialogo para salvar o PDF.
 		 */
 		function savePDF() {
-			ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + self.budget.order_code + '?action=pdf');
+			if (constants.isElectron)
+				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + self.budget.order_code + '?action=pdf');
+			else
+				location.path('/order/print/self.budget.order_code')
 		}
 
 		/**
 		 * Instancia uma nova janela e chama o dialogo de impressao.
 		 */
 		function print() {
-			ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + self.budget.order_code + '?action=print');
+			if (constants.isElectron)
+				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + self.budget.order_code + '?action=print');
+			else
+				location.path('/order/print/self.budget.order_code')
 		}
 
 		/**

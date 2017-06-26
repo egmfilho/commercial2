@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 16:09:53
+* @Last Modified time: 2017-06-26 17:59:19
 */
 
 (function() {
@@ -200,7 +200,7 @@
 		* @param {object} address - O endereco de entrega.
 		*/
 		function setDeliveryAddress(address) {
-			this.order_address = new Address(address);
+			this.address_delivery = new Address(address);
 			this.order_address_delivery_code = this.address_delivery.person_address_code;
 		}
 
