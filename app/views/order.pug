@@ -27,12 +27,12 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								md-icon(md-font-set='material-icons') save
 								|  Salvar
 						md-menu-item
-							md-button(ng-click='' disabled)
+							md-button(ng-click='order.savePDF()' ng-disabled='!order.budget.order_code')
 								md-icon(md-font-set='material-icons') cloud_upload
 								|  Exportar
 						md-menu-divider
 						md-menu-item
-							md-button(ng-click='order.savePDF("http://github.com")' disabled)
+							md-button(ng-click='order.print()' ng-disabled='!order.budget.order_code')
 								md-icon(md-font-set='material-icons') print
 								|  Imprimir
 						md-menu-item
@@ -49,16 +49,16 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					md-menu-content
 						md-menu-item
 							md-button(ng-click='')
-								md-icon(md-font-set='material-icons') assignment_ind
+								md-icon(md-font-set='material-icons' disabled) assignment_ind
 								| Remover vendedor
 						md-menu-item
-							md-button(ng-click='')
-								md-icon(md-font-set='material-icons') person
+							md-button(ng-click='' disabled)
+								md-icon(md-font-set='material-icons' disabled) person
 								| Remover cliente
 						md-menu-divider
 						md-menu-item
-							md-button(ng-click='')
-								md-icon(md-font-set='material-icons') monetization_on
+							md-button(ng-click='' disabled)
+								md-icon(md-font-set='material-icons' disabled) monetization_on
 								| Aplicar desconto geral
 				md-menu
 					button(ng-click='$mdMenu.open()') Ir
@@ -170,16 +170,20 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								div(md-highlight-text='customerQuery' style='line-height: 2') {{item.product_name}}
 								div(layout='row' style='color: #888')
 									div(style='font-size: 11px;line-height: 1')
-										| Código: 
-										| {{item.product_code}}
+										| Cód: 
+										| {{item.product_code}} 
 									div(flex='5')
 									div(style='font-size: 11px;line-height: 1')
-										| Qtd em estoque: 
-										| {{item.unit && item.unit.unit_format == "I" ? (item.stock.product_stock | number:'0') : item.stock.product_stock}} ({{item.unit.unit_initials}})
+										| Ref: 
+										| {{item.product_classification || 'Sem referência'}} 
+									div(flex='5')
+									div(style='font-size: 11px;line-height: 1')
+										| Estoque: 
+										| {{item.unit && item.unit.unit_format == "I" ? (item.stock.product_stock | number:'0') : item.stock.product_stock}} ({{item.unit.unit_initials}}) 
 									div(flex='5')
 									div(style='font-size: 11px;line-height: 1')
 										| Preço: 
-										| {{item.price.price_value | currency: 'R$ '}}
+										| {{item.price.price_value | currency: 'R$ '}} 
 
 						md-input-container(flex='25')
 							label 

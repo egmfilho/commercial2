@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 10:53:55
+* @Last Modified time: 2017-06-26 15:59:54
 */
 
 (function() {
@@ -145,6 +145,12 @@
 		};
 
 		$scope.save = function() {
+			if (!self.budget.company_id || !self.budget.order_client_id || !self.budget.order_seller_id || !self.budget.order_items.length || !self.budget.order_address_delivery_code) {
+				$rootScope.customDialog().showMessage('Erro!', 'Preencha todos os campos corretamente!');
+				return;
+			}
+				
+
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja salvar o orçamento atual?')
 				.then(function(success) {
 					var filtered = angular.merge({ }, self.budget, {
@@ -733,14 +739,14 @@
 		 * Instancia uma nova janela e chama o dialogo para salvar o PDF.
 		 */
 		function savePDF() {
-			ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/1?action=pdf');
+			ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + self.budget.order_code + '?action=pdf');
 		}
 
 		/**
 		 * Instancia uma nova janela e chama o dialogo de impressao.
 		 */
 		function print() {
-			ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/1?action=print');
+			ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + self.budget.order_code + '?action=print');
 		}
 
 		/**

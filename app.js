@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-12 13:30:54
+* @Last Modified time: 2017-06-26 17:19:54
 */
 
 const electron = require('electron')
@@ -17,6 +17,10 @@ const url = require('url')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+
+global.globals = {
+	shared: { }
+};
 
 function createWindow () {
 	// Create the browser window.

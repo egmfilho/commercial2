@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-05 17:56:31
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 14:27:09
+* @Last Modified time: 2017-06-26 16:54:24
 */
 
 (function() {
@@ -12,23 +12,16 @@
 	angular.module('commercial2.controllers')
 		.controller('PrintOrderCtrl', PrintOrder);
 
-	PrintOrder.$inject = [ '$rootScope', '$scope', '$routeParams', 'ProviderOrder', 'Order', 'Globals', 'Constants', 'ElectronPrinter' ];
+	PrintOrder.$inject = [ '$rootScope', '$scope', '$timeout', '$routeParams', 'ProviderOrder', 'Order', 'Globals', 'Constants', 'ElectronPrinter' ];
 
-	function PrintOrder($rootScope, $scope, $routeParams, provider, Order, Globals, constants, ElectronPrinter) {
+	function PrintOrder($rootScope, $scope, $timeout, $routeParams, provider, Order, Globals, constants, ElectronPrinter) {
 
 		var self = this;
 		self.order = new Order();
+		self.logo = null;
 
 		$scope.now = new Date();
 		$scope.globals = Globals.get;
-		$scope.constants = constants;
-
-		// setTimeout(function() {
-		// 	console.log('carregou orçamento');
-
-		// 	var electron = require('electron');
-		// 	ElectronPrinter.savePDF();
-		// }, 2000);
 
 		$scope.$on('$viewContentLoaded', function() {
 			if ($routeParams.code) {
@@ -51,9 +44,17 @@
 			$rootScope.loading.load();
 			provider.getByCode(code, options).then(function(success) {
 				self.order = new Order(success.data);
+				self.logo = Globals.get("logo")[self.order.order_company_id].company_logo;
+				console.log('logo:', self.logo);
 				constants.debug && console.log(self.order);
 				$rootScope.loading.unload();
-				ElectronPrinter.savePDF();
+				
+				$timeout(function() {
+					if ($routeParams.action && $routeParams.action == 'print')
+						ElectronPrinter.print();
+					else if ($routeParams.action && $routeParams.action == 'pdf')
+						ElectronPrinter.savePDF();
+				}, 100);
 			}, function(error) {
 				constants.debug && console.log('error');
 				$rootScope.loading.unload();

@@ -29,4 +29,9 @@ md-content.open-order-container(layout-fill)
 					span(flex='5')
 
 					span.md-title
-						a(ng-href='#/order/print/{{o.order_code}}') Imprimir
+						a(ng-click='openOrder.print(o.order_code)') Imprimir
+
+					span(flex='5')
+
+					span.md-title
+						a(ng-click='openOrder.savePDF(o.order_code)') Salvar PDF

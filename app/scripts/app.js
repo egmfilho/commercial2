@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 17:24:06
+* @Last Modified time: 2017-06-26 16:33:55
 */
 'use strict';
 
@@ -41,20 +41,20 @@ angular.module('commercial2', [
 		/* https://angular-md-color.com/#/ */
 
 		$mdThemingProvider.definePalette('customAccent', {
-			'50': '#b15206',
-			'100': '#c95d07',
-			'200': '#e26908',
-			'300': '#f6750d',
-			'400': '#f78326',
-			'500': '#f8913e',
-			'600': '#faad70',
-			'700': '#fbbb88',
-			'800': '#fcc9a1',
-			'900': '#fdd7b9',
-			'A100': '#faad70',
-			'A200': '#F99F57',
-			'A400': '#f8913e',
-			'A700': '#fde5d2',
+			'50': '#893e07',
+			'100': '#a24908',
+			'200': '#ba5409',
+			'300': '#d25f0a',
+			'400': '#ea6a0c',
+			'500': '#f4771c',
+			'600': '#f6944c',
+			'700': '#f7a365',
+			'800': '#f9b17d',
+			'900': '#fac095',
+			'A100': '#f6944c',
+			'A200': '#f58634',
+			'A400': '#f4771c',
+			'A700': '#fbcead',
 			'contrastDefaultColor': 'light'
 		});
 

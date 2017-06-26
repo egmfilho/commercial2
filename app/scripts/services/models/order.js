@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 12:38:26
+* @Last Modified time: 2017-06-26 16:09:53
 */
 
 (function() {
@@ -52,7 +52,7 @@
 						}),
 					order_update: order.order_update ? new Date(order.order_update) : null,
 					order_date: order.order_date ? new Date(order.order_date) : null,
-					order_items: order.order_items && order.order_items.map(function(oi) { return new OrderItem(oi); }),
+					order_items: order.order_items ? order.order_items.map(function(oi) { return new OrderItem(oi); }) : new Array(),
 					order_company: new CompanyERP(order.order_company),
 					order_seller: new Person(order.order_seller),
 					order_client: new Person(order.order_client),

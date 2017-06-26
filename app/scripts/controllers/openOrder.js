@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 10:39:32
+* @Last Modified time: 2017-06-26 15:47:00
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.controllers')
 		.controller('OpenOrderCtrl', OpenOrderCtrl);
 
-		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', 'ProviderOrder', 'Order', 'Constants' ];
+		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', 'ProviderOrder', 'Order', 'Constants', 'ElectronWindow' ];
 
-		function OpenOrderCtrl($rootScope, $scope, providerOrder, Order, constants) {
+		function OpenOrderCtrl($rootScope, $scope, providerOrder, Order, constants, ElectronWindow) {
 
 			var self = this;
 
@@ -46,6 +46,14 @@
 					constants.debug && console.log(error);
 					$rootScope.loading.unload();
 				});
+			}
+
+			self.print = function(code) {
+				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + code + '?action=print');
+			}
+
+			self.savePDF = function(code) {
+				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + code + '?action=pdf');
 			}
 
 		}
