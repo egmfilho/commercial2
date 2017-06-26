@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-21 12:39:28
+* @Last Modified time: 2017-06-26 09:43:23
 */
 
 (function() {
@@ -58,6 +58,7 @@
 		$scope.$on('customerAdded', function(event, args) {
 			_personId = args.person_id;
 			self.newAddress.person_id = _personId;
+			clear();
 		});
 
 		$scope.$watch(function() {
@@ -73,10 +74,6 @@
 			if (newValue)
 				searchCity();
 		});
-
-		$scope.testinho = function() {
-			console.log('mudou');
-		};
 
 		// ******************************
 		// Methods declaration

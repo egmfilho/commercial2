@@ -1,0 +1,61 @@
+/*
+* @Author: egmfilho
+* @Date:   2017-06-23 17:10:42
+* @Last Modified by:   egmfilho
+* @Last Modified time: 2017-06-26 09:29:25
+*/
+
+.open-order-container {
+	background-color: #d9d9d9;
+	overflow-y: auto;
+
+	.card {
+		md-card-content {
+			padding: 12px;
+			.icon {
+				margin: -12px;
+				margin-right: 6px;
+				padding: 32px 12px;
+				border-right: 1px solid #e6e6e6;
+
+				md-icon {
+					font-size: 45px;
+				}
+
+				.upload {
+					color: cornflowerblue;
+				}
+
+				.done {
+					color: mediumseagreen;
+				}
+
+				.subtitle {
+					font-size: 12px;
+					color: #777;
+				}
+			}
+
+			.description {
+				font-size: 1.1em;
+				margin-left: 16px;
+
+				.md-title {
+					font-size: .85em;
+					margin-bottom: 5px;
+
+					a {
+						color: $main-color;
+						text-decoration: none;
+					}
+				}
+
+				.md-subhead {
+					font-size: .7em;
+					height: 20px;
+					color: rgba(#000, .8);
+				}
+			}
+		}
+	}
+}

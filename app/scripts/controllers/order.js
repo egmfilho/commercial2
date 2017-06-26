@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 17:38:19
+* @Last Modified time: 2017-06-26 10:33:35
 */
 
 (function() {
@@ -16,6 +16,7 @@
 		'$scope', 
 		'$timeout',
 		'$location',
+		'$route', 
 		'$routeParams', 
 		'$q', 
 		'$mdPanel', 
@@ -34,7 +35,7 @@
 		'ElectronWindow' 
 	];
 
-	function OrderCtrl($rootScope, $scope, $timeout, $location, $routeParams, $q, $mdPanel, Cookies, constants, Globals, providerOrder, Order, providerPerson, Person, Address, providerProduct, Product, OrderItem, UserCompany, ElectronWindow) {
+	function OrderCtrl($rootScope, $scope, $timeout, $location, $route, $routeParams, $q, $mdPanel, Cookies, constants, Globals, providerOrder, Order, providerPerson, Person, Address, providerProduct, Product, OrderItem, UserCompany, ElectronWindow) {
 
 		var self = this;
 
@@ -76,6 +77,11 @@
 		self.addItem            = addItem;
 		self.removeItem         = removeItem;
 
+		$scope.$on('$destroy', function() {
+			$location.search('code', null);
+			$location.search('company', null);
+		});
+
 		$scope.$on('$viewContentLoaded', function() {
 			if ($routeParams.action && $routeParams.action == 'edit' && $routeParams.code) {
 				var options = {
@@ -85,7 +91,7 @@
 					getSeller: true,
 					getItems: true,
 					getPayments: true,
-					getTerm: true,
+					getTerm: true
 				};
 				$rootScope.loading.load();
 				providerOrder.getByCode($routeParams.code, options).then(function(success) {
@@ -103,16 +109,18 @@
 					constants.debug && console.log('orcamento carregado', self.budget);
 					$rootScope.loading.unload();
 				}, function(error) {
-					alert('deu erro no getOrder, falta tratar');
+					alert('Erro no getOrder, falta tratar');
 					$rootScope.loading.unload();
 				});
-			} else {
+			} else if ($routeParams.action && $routeParams.action == 'new') {
 				if (!self.budget.order_company_id) {
 					selectCompany();
 				}
-
-				$timeout(function() { $scope.$broadcast('orderViewLoaded'); });
+			} else {
+				location.path('/');
 			}
+
+			$timeout(function() { $scope.$broadcast('orderViewLoaded'); });
 		});
 
 		$scope.$on('newAddress', function(event, args) {
@@ -128,11 +136,7 @@
 		$scope.newOrder = function() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja descartar o orçamento atual?')
 				.then(function(success) {
-					self.budget = new Order({
-						order_company_id: self.budget.order_company_id
-					});
-					self.internal = internalItems();
-					alert('falta rolar para o topo');
+					$location.path() == '/order/new' ? $route.reload() : $location.path('/order/new');
 				}, function(error) { });
 		};
 
@@ -234,8 +238,8 @@
 
 			dialog.showTemplate('Informe a empresa', './partials/modalSelectCompany.html', controller, options)
 				.then(function(res) {
-					self.budget.setCompany(res);
-					constants.debug && console.log('company: ', self.budget.order_company.company_erp.company_name);
+					self.budget.setCompany(res.company_erp);
+					constants.debug && console.log('company: ', self.budget.order_company.company_name);
 				}, function(error) { });
 		}
 
@@ -721,7 +725,7 @@
 		function focusOn(selector) {
 			$timeout(function() {
 				constants.debug && console.log('focus on', selector);
-				jQuery(selector)[0].focus();
+				jQuery(selector).focus().select();
 			}, 100);
 		}
 
@@ -778,6 +782,7 @@
 
 			controller.prototype = {
 				_showCloseButton: true,
+				focusOn: focusOn,
 				item: new OrderItem(item)
 			};
 
@@ -789,20 +794,22 @@
 		}
 
 		function addItem() {
-			if (self.internal.tempItem.product && self.internal.tempItem.product.product_id) {
-				if (self.internal.tempItem.order_item_amount > 0) {
-					self.budget.addItem(new OrderItem(self.internal.tempItem));
-					var container = jQuery('.container-table');
-					container.animate({ scrollTop: container.height() });
-				}
-
-				self.internal.tempProduct = null;
-				self.internal.tempItemAlDiscount = 0;
-				self.internal.tempItemVlDiscount = 0;
-				self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() });
-			}
-
 			self.focusOn('input[name="autocompleteProduct"]');
+
+			$timeout(function() {
+				if (self.internal.tempItem.product && self.internal.tempItem.product.product_id) {
+					if (self.internal.tempItem.order_item_amount > 0) {
+						self.budget.addItem(new OrderItem(self.internal.tempItem));
+						var container = jQuery('.container-table');
+						container.animate({ scrollTop: container.height() });
+					}
+
+					self.internal.tempProduct = null;
+					self.internal.tempItemAlDiscount = 0;
+					self.internal.tempItemVlDiscount = 0;
+					self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() });
+				}
+			}, 100);
 		}
 
 		function removeItem(item) {

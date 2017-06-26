@@ -1,22 +1,30 @@
-md-content.open-order
-	table(ng-if='openOrder.orders.length')
-		thead
-			tr
-				th 
-					| CÓDIGO
-				th 
-					| CLIENTE
-				th 
-					| VENDEDOR
-				th
-					| &nbsp;
-		tbody
-			tr(ng-repeat='o in openOrder.orders track by $index')
-				td 
-					| {{o.order_code}}
-				td 
-					| {{o.order_client.person_name}}
-				td 
-					| {{o.order_seller.person_name}}
-				td
-					a(ng-href='#/order/edit?code={{o.order_code}}') ABRIR
+md-content.open-order-container
+
+	md-card.card(ng-repeat='o in openOrder.orders')
+		md-card-content(layout='row')
+			.icon(flex='15' layout='column' layout-align='center center')
+				//- md-icon.done(md-font-set='material-icons') cloud_done
+				md-icon.upload(md-font-set='material-icons') cloud_upload
+				span.subtitle Não exportado
+
+			.description(flex layout='column')
+				span.md-title.offset-bottom-5 
+					a(ng-href='#/order/edit?code={{o.order_code}}') {{o.order_code}} - {{o.order_company.company_name}}
+				span.md-subhead 
+					b VENDEDOR: 
+					| &nbsp;{{o.order_seller.person_code}} - {{o.order_seller.person_name}}
+				span.md-subhead 
+					b CLIENTE: 
+					| &nbsp;{{o.order_client.person_code}} - {{o.order_client.person_name}}
+				span.md-subhead 
+					b TOTAL:
+					| &nbsp;{{o.order_value | currency : 'R$ '}} 
+
+				.offset-top-15(layout='row')
+					span.md-title
+						a(ng-href='#/order/edit?code={{o.order_code}}') Recuperar
+
+					span(flex='5')
+
+					span.md-title
+						a(ng-href='#/order/edit?code={{o.order_code}}') Excluir
