@@ -1,4 +1,4 @@
-md-content.open-order-container
+md-content.open-order-container(layout-fill)
 
 	md-card.card(ng-repeat='o in openOrder.orders')
 		md-card-content(layout='row')
@@ -8,23 +8,25 @@ md-content.open-order-container
 				span.subtitle Não exportado
 
 			.description(flex layout='column')
-				span.md-title.offset-bottom-5 
+				span.md-title
 					a(ng-href='#/order/edit?code={{o.order_code}}') {{o.order_code}} - {{o.order_company.company_name}}
-				span.md-subhead 
-					b VENDEDOR: 
-					| &nbsp;{{o.order_seller.person_code}} - {{o.order_seller.person_name}}
-				span.md-subhead 
-					b CLIENTE: 
-					| &nbsp;{{o.order_client.person_code}} - {{o.order_client.person_name}}
-				span.md-subhead 
-					b TOTAL:
-					| &nbsp;{{o.order_value | currency : 'R$ '}} 
 
-				.offset-top-15(layout='row')
+				table
+					tr
+						td Vendedor: 
+						td {{o.order_seller.person_code}} - {{o.order_seller.person_name}}
+					tr
+						td Cliente:
+						td {{o.order_client.person_code}} - {{o.order_client.person_name}}
+					tr
+						td Total:
+						td {{o.order_value | currency : 'R$ '}} 
+
+				div(layout='row')
 					span.md-title
 						a(ng-href='#/order/edit?code={{o.order_code}}') Recuperar
 
 					span(flex='5')
 
 					span.md-title
-						a(ng-href='#/order/edit?code={{o.order_code}}') Excluir
+						a(ng-href='#/order/print/{{o.order_code}}') Imprimir

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-19 08:59:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 10:53:53
+* @Last Modified time: 2017-06-26 14:09:44
 */
 
 (function() {
@@ -41,11 +41,14 @@
 				method: 'GET',
 				url: constants.api + 'config.php?action=getList'
 			}).then(function(success) {
+				Globals.set('api', success.data.data.api);
 				Globals.set('contactTypes', success.data.data.person_address_contact_type);
 				Globals.set('personCategories', { 
 					seller: success.data.data.person_category.seller_category,
 					customer: success.data.data.person_category.client_category
 				});
+				Globals.set('logo', success.data.data.logo);
+				Globals.set('printMessage', success.data.data.order);
 				deferred.resolve();
 			}, function(error) {
 				constants.debug && console.log(error);

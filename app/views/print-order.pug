@@ -1,1 +1,88 @@
-h1 Visualização do orçamento
+md-content.print-order(layout-fill)
+	.header(layout='row')
+		.logo(flex='20' layout='column' layout-align='center center')
+			img(ng-src='{{constants.api + globals("logo")[print.order.order_company_id].company_logo}}')
+		
+		.company(flex layout='row' layout-align='start center')
+			div
+				.md-block 
+					| {{print.order.order_company.company_name}}
+				.md-block 
+					| {{print.order.order_company.company_address.company_address_type}}
+					| {{print.order.order_company.company_address.company_address_public_place}}
+				.md-block 
+					| {{print.order.order_company.company_address.company_address_district}} -
+					| {{print.order.order_company.company_address.company_address_city}} -
+					| {{print.order.order_company.company_address.company_address_uf}}
+				.md-block 
+					| {{print.order.order_company.company_phone}}
+		
+		.info(flex='30' layout='column' layout-align='end')
+			.md-title
+				| Orçamento n&#186;: {{print.order.order_code}}
+			span(flex)
+			.md-subhead
+				| Data da impressão: {{now | date:'dd/MM/yyyy'}}
+			.md-subhead
+				| Hora da impressão: {{now | date:'HH:mm:ss'}}
+
+	.order-info
+		table
+			tr
+				td 
+					b Data da emissão: 
+					| {{print.order.order_date | date:'dd/MM/yyyy'}}
+				td 
+					b Vendedor: 
+					| {{print.order.order_seller.person_code}} - {{print.order.order_seller.person_name}}
+				td 
+					b Cliente: 
+					| {{print.order.order_client.person_code}} - {{print.order.order_client.person_name}}
+			tr
+				td 
+					b CPF/CNPJ: 
+					| {{print.order.order_client.person_type == 'F' ? print.order.order_client.person_cpf : print.order.order_client.person_cnpj}}  
+				td 
+					b Insc. Est.: 
+					| {{print.order.address_delivery.person_address_ie}}
+				td 
+					b Endereço: 
+					| {{print.order.address_delivery.person_address_type}} {{print.order.address_delivery.person_address_public_place}} - {{print.order.address_delivery.person_address_number}}
+			tr
+				td 
+					b Bairro: 
+					| {{print.order.address_delivery.district.district_name}}
+				td 
+					b Cidade: 
+					| {{print.order.address_delivery.city.city_name}} - {{print.order.address_delivery.city.uf_id}}
+				td 
+					b Cep: 
+					| {{print.order.address_delivery.person_address_cep}}
+			tr
+				td(ng-repeat='contact in print.order.address_delivery.person_address_contact|limitTo:3')
+					b {{contact.person_address_contact_label}}: 
+					| {{contact.person_address_contact_value}}
+
+	.message
+		p {{globals('printMessage')[print.order.order_company_id].order_message}}
+
+	table.products
+		thead
+			tr
+				th PRODUTO
+				th UND
+				th QTD
+				th VALOR
+				th(colspan='2') DESCONTO
+				th LÍQUIDO
+				th TOTAL
+		tbody
+			tr(ng-repeat='i in print.order.order_items' layout='row')
+				td {{i.product.product_code}} - {{i.product.product_name}}
+				td {{i.product.unit.unit_initials}}
+				td {{i.order_item_amount}}
+				td {{i.order_item_value_unitary | currency}}
+				td {{i.order_item_al_discount | currency:''}}%
+				td {{i.order_item_vl_discount | currency:'R$ '}}
+				td {{(i.order_item_value_total / i.order_item_amount) | currency:'R$ '}}
+				td {{i.order_item_value_total | currency:'R$ '}}

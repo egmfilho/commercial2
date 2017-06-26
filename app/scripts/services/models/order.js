@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 16:36:54
+* @Last Modified time: 2017-06-26 12:38:26
 */
 
 (function() {
@@ -42,7 +42,7 @@
 			this.order_company               = new CompanyERP();
 			this.order_seller                = new Person();
 			this.order_client                = new Person();
-			this.order_address               = new Address();
+			this.address_delivery            = new Address();
 
 			if (order) {
 				Object.assign(this, order, {
@@ -56,7 +56,7 @@
 					order_company: new CompanyERP(order.order_company),
 					order_seller: new Person(order.order_seller),
 					order_client: new Person(order.order_client),
-					order_address: new Address(order.order_address)
+					address_delivery: new Address(order.address_delivery)
 				});
 			}
 		}
@@ -201,7 +201,7 @@
 		*/
 		function setDeliveryAddress(address) {
 			this.order_address = new Address(address);
-			this.order_address_delivery_code = this.order_address.person_address_code;
+			this.order_address_delivery_code = this.address_delivery.person_address_code;
 		}
 
 		/**

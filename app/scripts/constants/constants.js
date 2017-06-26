@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 10:49:05
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 17:39:19
+* @Last Modified time: 2017-06-26 12:35:55
 */
 
 (function() {
@@ -14,7 +14,7 @@
 			'api': 'http://172.16.0.82/commercial2.api/',
 			'version': '2.0',
 			'cookie': 'commercial.currentUser',
-			'debug': false,
+			'debug': true,
 			'isElectron': window && window.process && window.process.versions['electron'],
 			'default-person-type': 'F'
 		});
