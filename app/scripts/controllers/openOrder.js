@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 17:51:59
+* @Last Modified time: 2017-06-26 10:39:32
 */
 
 (function() {
@@ -38,6 +38,10 @@
 					});
 					constants.debug && console.log(self.orders);
 					$rootScope.loading.unload();
+
+					if (!self.orders.length) {
+						$rootScope.customDialog().showMessage('Aviso', 'Nenhum orçamento encontrado!');
+					}
 				}, function(error) {
 					constants.debug && console.log(error);
 					$rootScope.loading.unload();
