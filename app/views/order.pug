@@ -23,7 +23,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								|  Recuperar
 						md-menu-divider
 						md-menu-item
-							md-button(ng-click='save()')
+							md-button(ng-click='save()' ng-disabled='!order.budget.order_company_id')
 								md-icon(md-font-set='material-icons') save
 								|  Salvar
 						md-menu-item
@@ -79,7 +79,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					button(ng-click='$mdMenu.open()') Ajuda
 					md-menu-content
 						md-menu-item
-							md-button(ng-click='toast("Em breve!")')
+							md-button(ng-click='toast("Em breve!", null, "Fechar")')
 								| Sobre
 
 md-content#order(flex layout-padding style='background-color: #d9d9d9')
@@ -439,7 +439,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								md-button.md-raised(ng-click='order.clearNote()')
 									| Limpar
 				md-card-content
-					div(layout-gt-xs='row')
+					div(layout='row')
 						md-input-container(flex)
 							label Observações
 							textarea(ng-model='order.budget.order_note' md-maxlength='150' rows='3')
@@ -450,3 +450,7 @@ footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPa
 			| &nbsp;Usuário: {{order.budget.order_user.user_name}}
 			| &nbsp;|&nbsp;
 			| Empresa: {{order.budget.order_company.company_name || 'Não informado.'}}
+			span(flex)
+			| Status:&nbsp;
+			i.fa.fa-circle(style='line-height: 1px' ng-style='{ "color": globals("order-status-colors")[order.budget.order_status_id] }')
+			| &nbsp;{{globals('order-status-labels')[order.budget.order_status_id] || 'Novo'}}&nbsp;

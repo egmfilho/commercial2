@@ -64,7 +64,7 @@ md-content.print-order(layout-fill ng-if='print.order.order_code')
 					| {{contact.person_address_contact_value}}
 
 	.message
-		p {{globals('printMessage')[print.order.order_company_id].order_message}}
+		p {{globals('print-message')[print.order.order_company_id].order_message}}
 
 	table.products
 		thead

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 16:33:55
+* @Last Modified time: 2017-06-27 14:02:36
 */
 'use strict';
 
@@ -182,13 +182,14 @@ angular.module('commercial2', [
 		};
 
 		/* Funcao generica para chamar o Toast na tela. */
-		$rootScope.toast = function(message, class) {
-			$mdToast.show(
+		$rootScope.toast = function(message, class, action, delay) {
+			return $mdToast.show(
 				$mdToast.simple()
-					.toastClass(class)
+					.position("top right")
+					.hideDelay(delay || 5000)
 					.textContent(message)
-					.position('bottom right')
-					.hideDelay(3000)
+					.toastClass(class)
+					.action(action)
 			);
 		};
 

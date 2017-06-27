@@ -2,27 +2,27 @@ md-content.login(flex)
 	.cover
 	.picture
 
-	.md-block(layout='row' flex='no-grow' layout-align='center center' layout-fill)
-		div(layout='column' style='width: 300px')
-			h1 Commercial
-			md-card(flex)
-				md-card-content
-					form(name='LoginForm' layout='column' ng-submit='login.submitForm()')
-						md-input-container
-							label Nome de Usuário
-							input(type='text' name='user' ng-model='login.user' keys-shortcuts enter='login.advance()' required)
-							div(ng-messages='LoginForm.user.$error' role='alert' multiple)
-								div(ng-message='required') Informe o nome de usuário.
-						md-input-container
-							label Senha
-							input(type='password' name='pass' ng-model='login.pass' md-maxlength='16' required)
-							div(ng-messages='LoginForm.pass.$error' role='alert' multiple)
-								div(ng-message='required') Informe a senha.
-								div(ng-message='md-maxlength') Senha muito longa.
-						md-button.md-raised.md-primary(ng-disabled='!LoginForm.$valid' type='submit')
-							| &nbsp; Login &nbsp;
-			.lost-pass
-				a(href='#/login') Esqueci a senha
+
+	div(layout='column' layout-align='center center' layout-fill)
+		.logo
+		md-card(style='width: 300px')
+			md-card-content
+				form(name='LoginForm' layout='column' ng-submit='login.submitForm()')
+					md-input-container
+						label Nome de Usuário
+						input(type='text' name='user' ng-model='login.user' keys-shortcuts enter='login.advance()' required)
+						div(ng-messages='LoginForm.user.$error' role='alert' multiple)
+							div(ng-message='required') Informe o nome de usuário.
+					md-input-container
+						label Senha
+						input(type='password' name='pass' ng-model='login.pass' md-maxlength='16' required)
+						div(ng-messages='LoginForm.pass.$error' role='alert' multiple)
+							div(ng-message='required') Informe a senha.
+							div(ng-message='md-maxlength') Senha muito longa.
+					md-button.md-raised.md-primary(ng-disabled='!LoginForm.$valid' type='submit')
+						| &nbsp; Login &nbsp;
+		.lost-pass
+			a(href='#/login') Esqueci a senha
 
 	.ver 
 		span Versão {{version}}

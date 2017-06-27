@@ -2,13 +2,13 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 16:34:31
+* @Last Modified time: 2017-06-27 13:45:56
 */
 
 @import "../../bower_components/angular-material/angular-material.scss";
 
 $error-color: #F44336;
-$success-color: #4CAF50;
+$success-color: limegreen;
 
 $main-color: #607D8B;
 $main-color-darker: darken($main-color, 15%);
@@ -19,7 +19,7 @@ $main-color-lighter: lighten($main-color, 15%);
 $secondary-color: #f58634;
 
 body {
-	min-width: 950px !important;
+	min-width: 840px !important;
 	overflow-x: auto;
 }
 

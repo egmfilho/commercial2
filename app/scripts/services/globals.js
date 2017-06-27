@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-16 17:49:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 17:29:31
+* @Last Modified time: 2017-06-27 08:58:40
 */
 
 (function() {
@@ -16,9 +16,9 @@
 
 	function Globals(constants) {
 
-		var remote = null;
+		var remote;
 
-		if (constants.isElectron)
+		if (constants.isElectron && !remote)
 			remote = require('electron').remote;
 
 		this.set    = set;
@@ -34,7 +34,9 @@
 			if (!constants.isElectron) {
 				window.sessionStorage.setItem('shared.' + key, JSON.stringify(value));
 			} else {
-				remote.getGlobal('globals').shared[key] = value;
+				var temp = JSON.parse(remote.getGlobal('globals').shared);
+				temp[key] = value;
+				remote.getGlobal('globals').shared = JSON.stringify(temp);
 			}
 		}
 
@@ -42,7 +44,7 @@
 			if (!constants.isElectron) {
 				return JSON.parse(window.sessionStorage.getItem('shared.' + key));
 			} else {
-				return remote.getGlobal('globals').shared[key];
+				return (JSON.parse(remote.getGlobal('globals').shared))[key];
 			}
 		}
 
@@ -50,7 +52,9 @@
 			if (!constants.isElectron) {
 				return window.sessionStorage.removeItem('shared.' + key);	
 			} else {
-				delete remote.getGlobal('globals').shared[key];
+				var temp = JSON.parse(remote.getGlobal('globals').shared);
+				delete temp[key];
+				remote.getGlobal('globals').shared = JSON.stringify(temp);
 			}
 		}
 
@@ -61,7 +65,7 @@
 						remove(key);
 				});
 			} else {
-				remote.getGlobal('globals').shared = { };
+				remote.getGlobal('globals').shared = '{ }';
 			}
 		}
 		

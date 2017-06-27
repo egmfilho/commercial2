@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-19 08:59:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 16:58:25
+* @Last Modified time: 2017-06-27 13:35:23
 */
 
 (function() {
@@ -18,6 +18,7 @@
 
 		$scope.$on('$viewContentLoaded', function() {
 			$rootScope.loading.load();
+			setConstants();
 			loadCredentials().then(function(success) {
 				$q.all([
 					loadConfig()
@@ -42,13 +43,13 @@
 				url: constants.api + 'config.php?action=getList'
 			}).then(function(success) {
 				Globals.set('api', success.data.data.api);
-				Globals.set('contactTypes', success.data.data.person_address_contact_type);
-				Globals.set('personCategories', { 
+				Globals.set('contact-types', success.data.data.person_address_contact_type);
+				Globals.set('person-categories', { 
 					seller: success.data.data.person_category.seller_category,
 					customer: success.data.data.person_category.client_category
 				});
 				Globals.set('logo', success.data.data.logo);
-				Globals.set('printMessage', success.data.data.order);
+				Globals.set('print-message', success.data.data.order);
 				deferred.resolve();
 			}, function(error) {
 				constants.debug && console.log(error);
@@ -74,6 +75,26 @@
 			});
 
 			return deferred.promise;
+		}
+
+		function setConstants() {
+			Globals.set('order-status-labels', {
+				'1001': 'Aberto',
+				'1002': 'Exportado',
+				'1003': 'Faturado'
+			});
+
+			Globals.set('order-status-colors', {
+				'1001': 'limegreen',
+				'1002': 'orange',
+				'1003': 'tomato'
+			});
+
+			Globals.set('order-status-values', {
+				'open': 1001,
+				'exported': 1002,
+				'billed': 1003
+			});
 		}
 
 	}

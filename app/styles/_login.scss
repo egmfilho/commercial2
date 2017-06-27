@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 14:15:44
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-05-31 13:00:01
+* @Last Modified time: 2017-06-27 14:27:02
 */
 
 @import url('https://fonts.googleapis.com/css?family=Hind+Siliguri:300');
@@ -14,7 +14,7 @@
 		position: absolute;
 		background-color: $main-color;
 		z-index: 1;
-		opacity: .5;
+		opacity: .2;
 	}
 
 	.picture {
@@ -28,40 +28,36 @@
 		z-index: 0;
 	}
 
-	.md-block {
-		> div {
-			h1 {
-				position: relative;
-				z-index: 3;
-				color: white;
-				margin-bottom: 0;
-				font-size: 36px;
-				font-family: 'Hind Siliguri', sans-serif;
-				font-weight: 300;
-				text-align: center;
-				text-shadow: 1px 1px 1px rgba(#000, .5);
-			}
+	.logo {
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+		background-image: url('../images/logo-login.png');
+		height: 80px;
+		width: 250px;
+		z-index: 1;
+		position: relative;
+	}
 
-			md-card {
-				padding: 24px 12px;
-				z-index: 2;
-			}
 
-			.lost-pass {
-				text-align: center;
+	md-card {
+		padding: 24px 12px;
+		z-index: 2;
+	}
 
-				a {
-					text-decoration: none;
-					position: relative;
-					z-index: 3;
-					color: white;
-					opacity: .7;
-					text-shadow: 1px 1px 1px rgba(#000, .5);
+	.lost-pass {
+		text-align: center;
 
-					&:hover {
-						opacity: 1;
-					}
-				}
+		a {
+			text-decoration: none;
+			position: relative;
+			z-index: 3;
+			color: white;
+			opacity: .7;
+			text-shadow: 1px 1px 1px rgba(#000, .5);
+
+			&:hover {
+				opacity: 1;
 			}
 		}
 	}

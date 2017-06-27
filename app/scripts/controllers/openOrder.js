@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 15:47:00
+* @Last Modified time: 2017-06-27 13:02:30
 */
 
 (function() {
@@ -12,11 +12,13 @@
 	angular.module('commercial2.controllers')
 		.controller('OpenOrderCtrl', OpenOrderCtrl);
 
-		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', 'ProviderOrder', 'Order', 'Constants', 'ElectronWindow' ];
+		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', 'ProviderOrder', 'Order', 'Globals', 'Constants', 'ElectronWindow' ];
 
-		function OpenOrderCtrl($rootScope, $scope, providerOrder, Order, constants, ElectronWindow) {
+		function OpenOrderCtrl($rootScope, $scope, providerOrder, Order, Globals, constants, ElectronWindow) {
 
 			var self = this;
+
+			$scope.globals = Globals.get;
 
 			$scope.$on('$viewContentLoaded', function() {
 				getOrders();

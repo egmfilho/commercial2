@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 09:43:23
+* @Last Modified time: 2017-06-27 12:45:12
 */
 
 (function() {
@@ -117,7 +117,7 @@
 			self.newAddress.person_id = _personId;
 
 			/* Carrega e insere a propriedade key */
-			angular.forEach(Globals.get('contactTypes'), function(value, key) {
+			angular.forEach(Globals.get('contact-types'), function(value, key) {
 				self.newAddress.person_address_contact.push(new Contact({
 					person_address_contact_type_id: value.contact_type_id,
 					person_address_contact_label: value.contact_type_label,

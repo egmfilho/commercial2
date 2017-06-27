@@ -3,9 +3,23 @@ md-content.open-order-container(layout-fill)
 	md-card.card(ng-repeat='o in openOrder.orders')
 		md-card-content(layout='row')
 			.icon(flex='15' layout='column' layout-align='center center')
-				//- md-icon.done(md-font-set='material-icons') cloud_done
-				md-icon.upload(md-font-set='material-icons') cloud_upload
-				span.subtitle Não exportado
+				md-icon(
+					md-font-set='material-icons' 
+					ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+					ng-if='o.order_status_id == globals("order-status-values").open') cloud_queue
+				
+				md-icon(
+					md-font-set='material-icons' 
+					ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+					ng-if='o.order_status_id == globals("order-status-values").exported') cloud
+
+				md-icon(
+					md-font-set='material-icons' 
+					ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+					ng-if='o.order_status_id == globals("order-status-values").billed') cloud_done
+				
+				span.subtitle 
+					| {{globals("order-status-labels")[o.order_status_id]}}
 
 			.description(flex layout='column')
 				span.md-title

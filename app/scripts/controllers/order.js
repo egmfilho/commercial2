@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 18:01:03
+* @Last Modified time: 2017-06-27 13:54:07
 */
 
 (function() {
@@ -35,13 +35,38 @@
 		'ElectronWindow' 
 	];
 
-	function OrderCtrl($rootScope, $scope, $timeout, $location, $route, $routeParams, $q, $mdPanel, Cookies, constants, Globals, providerOrder, Order, providerPerson, Person, Address, providerProduct, Product, OrderItem, UserCompany, ElectronWindow) {
+	function OrderCtrl(
+		$rootScope, 
+		$scope, 
+		$timeout, 
+		$location, 
+		$route, 
+		$routeParams, 
+		$q, 
+		$mdPanel,
+		Cookies, 
+		constants, 
+		Globals, 
+		providerOrder, 
+		Order, 
+		providerPerson, 
+		Person, 
+		Address, 
+		providerProduct, 
+		Product, 
+		OrderItem, 
+		UserCompany, 
+		ElectronWindow) {
 
 		var self = this;
 
 		$scope.debug = constants.debug;
 		$scope.globals = Globals.get;
-		
+
+		function newOrder() {
+			$location.path() == '/order/new' ? $route.reload() : $location.path('/order/new');
+		}
+
 		self.selectCompany      = selectCompany;
 		self.internal           = internalItems();
 		self.budget             = new Order({ order_user: Globals.get('user')});
@@ -71,6 +96,8 @@
 		self.savePDF            = savePDF;
 		self.showNotFound       = showNotFound;
 		self.showAddressContact = showAddressContact;
+		self.exportOrder        = exportOrder;
+		self.exportDAV          = exportDAV;
 
 		self.editItemMenu       = editItemMenu;
 		self.showEditItemModal  = showEditItemModal;
@@ -102,7 +129,7 @@
 					self.internal.tempCustomer = new Person(self.budget.order_client);
 
 					/* copia o endereco de entrega para o corpo do orcamento */
-					self.budget.order_address = new Address(self.budget.order_client.person_address.find(function(a) {
+					self.budget.address_delivery = new Address(self.budget.order_client.person_address.find(function(a) {
 						return a.person_address_code == self.budget.order_address_delivery_code;
 					}));
 
@@ -136,7 +163,7 @@
 		$scope.newOrder = function() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja descartar o orçamento atual?')
 				.then(function(success) {
-					$location.path() == '/order/new' ? $route.reload() : $location.path('/order/new');
+					newOrder();
 				}, function(error) { });
 		};
 
@@ -149,7 +176,6 @@
 				$rootScope.customDialog().showMessage('Erro!', 'Preencha todos os campos corretamente!');
 				return;
 			}
-				
 
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja salvar o orçamento atual?')
 				.then(function(success) {
@@ -160,7 +186,9 @@
 						order_mail_sent: null,
 						order_seller: null
 					});
+
 					constants.debug && console.log('salvando orçamento: ', filtered);
+
 					$rootScope.loading.load();
 					if (self.budget.order_code && self.budget.order_id) {
 						/* Edita o orcamento */
@@ -174,8 +202,53 @@
 					} else {
 						/* Salva o orcamento */
 						providerOrder.save(filtered).then(function(success) {
+							constants.debug && console.log('orcamento salvo', success);
 							$rootScope.loading.unload();
-							$rootScope.customDialog().showMessage('Sucesso', 'Orçamento salvo!');
+
+							var controller = function() {
+								this._showCloseButton = true;
+								this.order_code = success.data.order_code;
+							};
+
+							$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderSaved.html', controller)
+								.then(function(res) {
+									switch (res) {
+										case 'print': {
+											print();
+											newOrder();
+											break;
+										}
+										
+										case 'mail': {
+											alert('ainda nao implementado');
+											break;
+										}
+										
+										case 'order': {
+											exportOrder(success.data.order_id).then(function(success) {
+												$rootScope.toast('Orçamento exportado!', 'success');
+												newOrder();
+											}, function(error) {
+												$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+												newOrder();
+											});
+											break;
+										}
+										
+										case 'dav': {
+											exportDAV(success.data.order_id).then(function(success) {
+												$rootScope.toast('Orçamento exportado!', 'success');
+												newOrder();
+											}, function(error) {
+												$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+												newOrder();
+											});
+											break;
+										}
+									}
+								}, function(res) {
+
+								});
 						}, function(error) {
 							$rootScope.loading.unload();
 							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
@@ -292,7 +365,7 @@
 			dialog.showTemplate('Novo cliente', './partials/modalNewPerson.html', controller)
 				.then(function(res) {
 					$rootScope.loading.load();
-					providerPerson.save(res, Globals.get('personCategories').customer).then(function(success) {
+					providerPerson.save(res, Globals.get('person-categories').customer).then(function(success) {
 						self.setCustomer(angular.extend({ }, res, success.data));
 						$rootScope.loading.unload();
 					}, function(error) {
@@ -414,7 +487,7 @@
 				return;
 
 			$rootScope.loading.load();
-			getPersonByCode(code, Globals.get('personCategories').seller).then(function(success) {
+			getPersonByCode(code, Globals.get('person-categories').seller).then(function(success) {
 				self.budget.setSeller(new Person(success.data));
 				self.internal.tempSeller = new Person(success.data);
 				$timeout(function() {
@@ -437,7 +510,7 @@
 		 * @returns {object} - Uma promise com o resultado.
 		 */
 		function getSellerByName(name) {
-			return getPersonByName(name, Globals.get('personCategories').seller);
+			return getPersonByName(name, Globals.get('person-categories').seller);
 		}
 
 		/**
@@ -456,7 +529,7 @@
 			var options = { getAddress: true, getContact: true };
 			
 			$rootScope.loading.load();
-			getPersonByCode(code, Globals.get('personCategories').customer, options).then(function(success) {
+			getPersonByCode(code, Globals.get('person-categories').customer, options).then(function(success) {
 				setCustomer(success.data);
 				$rootScope.loading.unload();
 			}, function(error) {
@@ -474,7 +547,7 @@
 		 * @returns {object} - Uma promise com o resultado.
 		 */
 		function getCustomerByName(name) {
-			return getPersonByName(name, Globals.get('personCategories').customer);
+			return getPersonByName(name, Globals.get('person-categories').customer);
 		}
 
 		/**
@@ -781,6 +854,50 @@
 
 			$rootScope.customDialog().showMessage('Contatos', html);
 		}
+
+		/**
+		 * Exporta o orcamento para pedido.
+		 * @param (id) - O id do orcamento.
+		 */
+		function exportOrder(id) {
+			var deferred = $q.defer();
+
+			constants.debug && console.log('exportando pedido: ' + id);
+			$rootScope.loading.load();
+			providerOrder.exportOrder(id).then(function(success) {
+				$rootScope.loading.unload();
+				deferred.resolve(success);
+			}, function(error) {
+				constants.debug && console.log(error);
+				$rootScope.loading.unload();
+				deferred.reject(error);
+			});
+
+			return deferred.promise;
+		}
+
+		/**
+		 * Exporta o orcamento para DAV.
+		 * @param (id) - O id do orcamento.
+		 */
+		function exportDAV(id) {
+			var deferred = $q.defer();
+
+			constants.debug && console.log('exportando DAV: ' + id);
+			$rootScope.loading.load();
+			providerOrder.exportDAV(id).then(function(success) {
+				$rootScope.loading.unload(success);
+				deferred.resolve(success);
+			}, function(error) {
+				constants.debug && console.log(error);
+				$rootScope.loading.unload();
+				deferred.reject(error);
+			});
+
+			return deferred.promise;
+		}
+
+
 
 
 

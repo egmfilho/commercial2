@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-05 17:56:31
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 18:21:13
+* @Last Modified time: 2017-06-27 09:00:28
 */
 
 (function() {
@@ -22,9 +22,6 @@
 
 		$scope.now = new Date();
 		$scope.globals = Globals.get;
-
-		constants.debug && console.log('teste: ', require('electron').remote.getGlobal('teste'));
-		constants.debug && console.log('node globals: ', require('electron').remote.getGlobal('globals').shared);
 
 		$scope.$on('$viewContentLoaded', function() {
 			if ($routeParams.code) {

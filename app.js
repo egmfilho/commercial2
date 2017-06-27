@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 18:26:08
+* @Last Modified time: 2017-06-27 09:00:42
 */
 
 const electron = require('electron')
@@ -19,12 +19,8 @@ const url = require('url')
 let mainWindow
 
 global.globals = {
-	'shared': { 
-
-	}
-};
-
-global.teste = { 'prop': 'teste doido global node' };
+	shared: '{ }'
+}
 
 function createWindow () {
 	// Create the browser window.

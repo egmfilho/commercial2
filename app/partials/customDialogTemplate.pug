@@ -1,4 +1,4 @@
-div(role='dialog' layout='column' layout-align='center center')
+div(role='dialog' layout='column')
 	md-toolbar
 		.md-toolbar-tools
 			h2 {{ctrl._title}}
@@ -6,7 +6,7 @@ div(role='dialog' layout='column' layout-align='center center')
 			md-button.md-icon-button(ng-if='ctrl._showCloseButton')
 				md-icon(md-font-icon='fa fa-times' ng-click='ctrl._cancel()')
 	
-	.body(flex ng-if='!ctrl._templateUrl')
+	.body(flex ng-if='!ctrl._templateUrl' layout-fill)
 		.dialog-content(layout='column')
 			div(layout='row' layout-align='start center')
 				md-progress-circular(md-mode='indeterminate' md-diameter='30px' ng-if='ctrl._showProgress')

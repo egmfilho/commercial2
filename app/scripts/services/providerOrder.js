@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-22 13:23:08
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 17:53:33
+* @Last Modified time: 2017-06-27 12:14:03
 */
 
 (function() {
@@ -28,7 +28,9 @@
 					getByCode: getByCode,
 					getAll: getAll,
 					save: save,
-					edit: edit
+					edit: edit,
+					exportDAV: exportDAV,
+					exportOrder: exportOrder
 				}
 
 				// ******************************
@@ -108,6 +110,22 @@
 					return provider.save({
 						action: 'edit'
 					}, order).$promise;
+				}
+
+				function exportDAV(id) {
+					return provider.save({
+						action: 'exportDav'
+					}, {
+						order_id: id
+					}).$promise;
+				}
+
+				function exportOrder(id) {
+					return provider.save({
+						action: 'exportOrder'
+					}, {
+						order_id: id
+					}).$promise;
 				}
 
 			}];
