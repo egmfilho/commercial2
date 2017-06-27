@@ -26,15 +26,15 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 							md-button(ng-click='save()' ng-disabled='!order.budget.order_company_id')
 								md-icon(md-font-set='material-icons') save
 								|  Salvar
-						md-menu-item
-							md-button(ng-click='order.savePDF()' ng-disabled='!order.budget.order_code')
-								md-icon(md-font-set='material-icons') cloud_upload
-								|  Exportar
 						md-menu-divider
 						md-menu-item
 							md-button(ng-click='order.print()' ng-disabled='!order.budget.order_code')
 								md-icon(md-font-set='material-icons') print
 								|  Imprimir
+						md-menu-item
+							md-button(ng-click='order.savePDF()' ng-disabled='!order.budget.order_code')
+								md-icon(md-font-set='material-icons') picture_as_pdf
+								|  Exportar PDF
 						md-menu-item
 							md-button(ng-click='' disabled)
 								md-icon(md-font-set='material-icons') mail
@@ -449,7 +449,7 @@ footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPa
 		div(layout='row' layout-align='start center' flex)
 			| &nbsp;Usuário: {{order.budget.order_user.user_name}}
 			| &nbsp;|&nbsp;
-			| Empresa: {{order.budget.order_company.company_name || 'Não informado.'}}
+			| Empresa: {{order.budget.order_company_id ? (order.budget.order_company.company_code + ' - ' + order.budget.order_company.company_name) : 'Não informado.'}}
 			span(flex)
 			| Status:&nbsp;
 			i.fa.fa-circle(style='line-height: 1px' ng-style='{ "color": globals("order-status-colors")[order.budget.order_status_id] }')

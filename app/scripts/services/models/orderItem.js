@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 16:31:16
+* @Last Modified time: 2017-06-27 17:01:49
 */
 
 (function() {
@@ -19,7 +19,7 @@
 
 				if (audit)
 					Object.assign(this, audit, {
-						date: audit.date ? new Date(audit.date) : null
+						date: audit.date ? new Date(audit.date) : new Date()
 					});
 			}
 

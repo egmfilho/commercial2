@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-27 16:02:56
+* @Last Modified time: 2017-06-27 16:11:09
 */
 'use strict';
 
@@ -40,23 +40,23 @@ angular.module('commercial2', [
 
 		/* https://angular-md-color.com/#/ */
 
-		$mdThemingProvider.definePalette('customPrimary', {
-			'50': '#8a8a8d',
-			'100': '#7d7d81',
-			'200': '#717174',
-			'300': '#646467',
-			'400': '#58585a',
-			'500': '#4b4b4d',
-			'600': '#3e3e40',
-			'700': '#323233',
-			'800': '#252526',
-			'900': '#191919',
-			'A100': '#97979a',
-			'A200': '#a4a4a6',
-			'A400': '#b1b1b3',
-			'A700': '#0c0c0c',
-			'contrastDefaultColor': 'light'
-		});
+		// $mdThemingProvider.definePalette('customPrimary', {
+		// 	'50': '#8a8a8d',
+		// 	'100': '#7d7d81',
+		// 	'200': '#717174',
+		// 	'300': '#646467',
+		// 	'400': '#58585a',
+		// 	'500': '#4b4b4d',
+		// 	'600': '#3e3e40',
+		// 	'700': '#323233',
+		// 	'800': '#252526',
+		// 	'900': '#191919',
+		// 	'A100': '#97979a',
+		// 	'A200': '#a4a4a6',
+		// 	'A400': '#b1b1b3',
+		// 	'A700': '#0c0c0c',
+		// 	'contrastDefaultColor': 'light'
+		// });
 
 		$mdThemingProvider.definePalette('customAccent', {
 			'50': '#893e07',

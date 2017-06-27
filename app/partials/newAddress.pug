@@ -12,12 +12,13 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 			| CEP
 		input(ng-model='address.newAddress.person_address_cep' 
 				ui-mask='99999-999' model-view-value='true'
+				keys-shortcuts enter='address.focusOn("select[name=\'address-type\']")'
 				ng-blur='address.getCep(address.newAddress.person_address_cep)')
 
 	md-input-container(flex='10')
 		label 
 			| Tipo
-		md-select(ng-model='address.newAddress.person_address_type')
+		md-select(name='address-type' ng-model='address.newAddress.person_address_type')
 			md-option(ng-value='t' ng-repeat='t in address.types')
 				| {{t}} 
 

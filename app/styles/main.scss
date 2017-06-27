@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-27 15:53:54
+* @Last Modified time: 2017-06-27 16:15:54
 */
 
 @import "../../bower_components/angular-material/angular-material.scss";
@@ -10,13 +10,14 @@
 $error-color: #F44336;
 $success-color: limegreen;
 
-$main-color: #4b4b4d;
+$main-color: #607d8b;
 $main-color-darker: darken($main-color, 15%);
 $main-color-dark: darken($main-color, 10%);
 $main-color-light: lighten($main-color, 10%);
-$main-color-lighter: lighten($main-color, 25%);
+$main-color-lighter: lighten($main-color, 15%);
 
-$secondary-color: #f58634;
+$secondary-color: #F99F57;
+// $secondary-color: #f58634;
 
 body {
 	min-width: 840px !important;

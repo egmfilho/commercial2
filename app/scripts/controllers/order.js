@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-27 13:54:07
+* @Last Modified time: 2017-06-27 16:57:23
 */
 
 (function() {
@@ -128,6 +128,9 @@
 					self.internal.tempSeller = new Person(self.budget.order_seller);					
 					self.internal.tempCustomer = new Person(self.budget.order_client);
 
+					/* manda o cliente para o controller do cadastro de endereco */
+					$scope.$broadcast('customerAdded', self.budget.order_client);
+
 					/* copia o endereco de entrega para o corpo do orcamento */
 					self.budget.address_delivery = new Address(self.budget.order_client.person_address.find(function(a) {
 						return a.person_address_code == self.budget.order_address_delivery_code;
@@ -172,6 +175,11 @@
 		};
 
 		$scope.save = function() {
+			// if (self.budget.order_status_id != 1001) {
+			// 	$rootScope.customDialog().showMessage('Erro!', 'Este orçamento não pode mais ser editado!');
+			// 	return;
+			// }
+
 			if (!self.budget.order_company_id || !self.budget.order_client_id || !self.budget.order_seller_id || !self.budget.order_items.length || !self.budget.order_address_delivery_code) {
 				$rootScope.customDialog().showMessage('Erro!', 'Preencha todos os campos corretamente!');
 				return;

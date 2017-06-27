@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-27 12:45:12
+* @Last Modified time: 2017-06-27 16:44:46
 */
 
 (function() {
@@ -47,12 +47,11 @@
 		self.districtChanged     = districtChanged;
 		self.cityChanged         = cityChanged;
 		self.icmsChanged         = icmsChanged;
+		self.focusOn             = focusOn;
 
 		$scope.$on('orderViewLoaded', function() {
 			constants.debug && console.log('new address controller loaded!');
 			clear();
-			searchDistrict();
-			searchCity();
 		});
 
 		$scope.$on('customerAdded', function(event, args) {
@@ -113,7 +112,7 @@
 		}
 
 		function clear() {
-			self.newAddress = new Address();
+			self.newAddress           = new Address();
 			self.newAddress.person_id = _personId;
 
 			/* Carrega e insere a propriedade key */
@@ -193,6 +192,10 @@
 				if (self.newAddress.person_address_ie == 'ISENTO')
 					self.newAddress.person_address_ie = null;
 			}
+		}
+
+		function focusOn(selector) {
+			jQuery(selector).focus().select();
 		}
 
 	}

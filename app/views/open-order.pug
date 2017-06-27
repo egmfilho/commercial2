@@ -25,16 +25,28 @@ md-content.open-order-container(layout-fill)
 				span.md-title
 					a(ng-href='#/order/edit?code={{o.order_code}}') {{o.order_code}} - {{o.order_company.company_name}}
 
-				table
-					tr
-						td Vendedor: 
-						td {{o.order_seller.person_code}} - {{o.order_seller.person_name}}
-					tr
-						td Cliente:
-						td {{o.order_client.person_code}} - {{o.order_client.person_name}}
-					tr
-						td Total:
-						td {{o.order_value | currency : 'R$ '}} 
+				div(layout='row')
+					table(flex='70')
+						tr
+							td Vendedor: 
+							td {{o.order_seller.person_code}} - {{o.order_seller.person_name}}
+						tr
+							td Cliente:
+							td {{o.order_client.person_code}} - {{o.order_client.person_name}}
+						tr
+							td Total:
+							td {{o.order_value | currency : 'R$ '}} 
+
+					table.well(flex='30')
+						tr
+							td Status: 
+							td {{globals('order-status-labels')[o.order_status_id]}}
+						tr
+							td Cód. ERP: 
+							td {{o.order_code_erp || 'Indisponível'}}
+						tr
+							td Cód. NFE: 
+							td {{o.order_code_nfe || 'Indisponível'}}
 
 				div(layout='row')
 					span.md-title

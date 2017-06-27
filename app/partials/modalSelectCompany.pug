@@ -5,7 +5,7 @@
 	md-input-container.md-icon-float
 		md-select(name='type' ng-model='ctrl.company' ng-model-options='{ trackBy: $value.company_id }')
 			md-option(ng-value='c' ng-repeat='c in ctrl.companies') 
-				| {{c.company_erp.company_name}}
+				| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
 
 .footer(layout='row' layout-align='end center')
 	md-button.md-primary(ng-click='ctrl._close(ctrl.company)')
