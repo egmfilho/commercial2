@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-28 12:27:57
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-28 12:30:51
+* @Last Modified time: 2017-06-28 17:05:53
 */
 
 (function() {
@@ -25,7 +25,7 @@
 
 				return {
 					getByCode: getByCode,
-					getByName: getByDescription,
+					getByDescription: getByDescription,
 					getAll:    getAll
 				}
 
@@ -33,19 +33,21 @@
 				// Methods declaration
 				// ******************************
 
-				function getByCode(code) {
+				function getByCode(code, options) {
 					return provider.get({
 						action: 'get'
 					}, {
-						modality_code: code
+						term_code: code,
+						get_term_modality: options && options.getModality
 					}).$promise;
 				}
 
-				function getByName(description, options) {
+				function getByDescription(description, options) {
 					return provider.query({
 						action: 'getList'
 					}, {
-						modality_description: description,
+						term_description: description,
+						get_term_modality: options && options.getModality,
 						limit: options && options.limit,
 						page: options && options.page
 					}).$promise;
@@ -55,6 +57,7 @@
 					return provider.query({
 						action: 'getList'
 					}, {
+						get_term_modality: options && options.getModality,
 						limit: options && options.limit,
 						page: options && options.page
 					}).$promise;

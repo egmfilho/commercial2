@@ -458,52 +458,51 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									| Limpar
 				md-card-content
 					div(layout='row')
-						div(flex='40' layout='column' layout-padding)
+						div(flex='40' layout='column')
 							div(layout='row')
 								md-input-container(flex)
 									label 
 										| Informe o prazo
-									md-select(ng-model='x'
+									md-select(ng-model='order.internal.term.tempTerm'
 											data-md-container-class='query-select-container'
 											ng-model-options='{ trackBy: "$value.term_id" }')
 										md-select-header.select-header
-											input.md-text(ng-model='x.queryTerm' 
+											input.md-text(ng-model='order.internal.term.queryTerm' 
 													type='search' placeholder='Digite o prazo'
-													ng-keydown="x.updateSearch($event)")
+													ng-keydown="order.internal.term.updateSearch($event)")
 										md-opt-group(label='Prazos')
 											md-option(ng-value='t' 
-													ng-repeat='t in x.queryTermResult' 
-													ng-click='x.termChanged(t.term_id)')
+													ng-repeat='t in order.internal.term.queryResult track by t.term_id' 
+													ng-click='order.getTermByCode(t.term_code)')
 												| {{t.term_description}}
 
-								md-button.md-primary(ng-click='order.clearPayment()')
+								md-button.md-primary(ng-click='order.clearTermSearch()')
 									| Limpar
 
-							div(flex style='{max-height: 200px; overflow: auto}')
-								md-list.md-dense
-									md-list-item(ng-click='teste()' ng-repeat='n in getNumber(5) track by $index')
-										p {{$index + 1}} - Nada além do óbvio
+							div.chule(flex)
+								md-list
+									md-list-item(ng-click='order.addModality(m)' ng-repeat='m in order.internal.term.tempTerm.modality track by $index')
+										p(flex) {{m.modality_description}}
+										i.fa.fa-angle-right.text-primary
 
 						div(flex='60')
-							.payment-table-header-container.offset-top-30
+							.payment-table-header-container
 								table.payment-table
 									thead
 										tr
-											th &nbsp;
 											th FORMA
 											th VENCIMENTO
 											th VALOR
 											th PARCELAS
 											th &nbsp;
-							.container-table.short
+							.container-table
 								table.payment-table
 									tbody
 										tr(ng-repeat='p in order.budget.order_payments track by $index' layout='row')
-											td {{$index}}
-											td {{i.product.unit.unit_initials}}
-											td {{i.order_item_amount}}
-											td {{i.order_item_value | currency}}
-											td
+											td {{p.modality.modality_description}}
+											td {{p.order_payment_deadline | date:'dd/MM/yyyy'}}
+											td {{p.order_payment_value_total | currency}}
+											td {{p.order_payment_installment}}x
 											td
 												md-menu
 													md-button.md-icon-button(tabindex='-1' ng-click='order.editItemMenu($mdMenu, $event)')

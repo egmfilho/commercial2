@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-28 10:09:08
+* @Last Modified time: 2017-06-28 18:09:35
 */
 
 (function() {
@@ -32,6 +32,10 @@
 		'Product', 
 		'OrderItem',
 		'UserCompany',
+		'ProviderTerm',
+		'Term',
+		'PaymentModality',
+		'OrderPayment',
 		'ElectronWindow' 
 	];
 
@@ -56,6 +60,10 @@
 		Product, 
 		OrderItem, 
 		UserCompany, 
+		providerTerm,
+		Term,
+		PaymentModality,
+		OrderPayment,
 		ElectronWindow) {
 
 		var self = this;
@@ -104,6 +112,9 @@
 		self.showAddressContact = showAddressContact;
 		self.exportOrder        = exportOrder;
 		self.exportDAV          = exportDAV;
+		self.searchTerm         = searchTerm;
+		self.getTermByCode      = getTermByCode;
+		self.addModality        = addModality;
 
 		self.editItemMenu       = editItemMenu;
 		self.showEditItemModal  = showEditItemModal;
@@ -273,6 +284,13 @@
 				}, function(error) { });
 		};
 
+		$scope.$watch(function() {
+			return self.internal.term.queryTerm;
+		}, function(newValue, oldValue) {
+			if (newValue)
+				searchTerm();
+		});
+
 		function internalItems() {
 			return {
 				userPrices: Globals.get('user-prices-raw'),
@@ -288,7 +306,16 @@
 				blurItem: blurItem,
 				address: {
 					selectedTabIndex: 0
+				},
+				term: {
+					tempTerm: new Term(),
+					queryTerm: null,
+					queryResult: new Array(),
+					updateSearch: function(e) {
+						e.stopPropagation();
+					}
 				}
+
 			};
 		}
 
@@ -913,6 +940,52 @@
 			return deferred.promise;
 		}
 
+		/**
+		 * Atualiza o resultado da pesquisa de prazo.
+		 */
+		function searchTerm() {
+			var options = {
+				limit: 10
+			};
+
+			providerTerm.getByDescription(self.internal.term.queryTerm).then(function(success) {
+				self.internal.term.queryResult = success.data.map(function(t) { return new Term(t) });
+			}, function(error) {
+				constants.debug && console.log(error);
+			});
+		}		
+
+		/**
+		 * Atualiza o resultado da pesquisa de prazo.
+		 */
+		function getTermByCode(code) {
+			var options = {
+				getModality: true
+			};
+
+			$rootScope.loading.load();
+			providerTerm.getByCode(code, options).then(function(success) {
+			self.internal.term.tempTerm = new Term(success.data);
+			$rootScope.loading.unload();
+			}, function(error) {
+				constants.debug && console.log(error);
+				$rootScope.loading.unload();
+			});
+		}
+
+		/**
+		 * Atualiza o resultado da pesquisa de prazo.
+		 */
+		function addModality(modality) {
+			self.budget.order_payments.push(new OrderPayment({
+				order_id: self.budget.order_id,
+				order_payment_value_total: '<valor>',
+				order_payment_deadline: new Date(),
+				order_payment_installment: self.internal.term.tempTerm.term_installment,
+				modality_id: modality.modality_id,
+				modality: new PaymentModality(modality)
+			}));
+		}
 
 
 

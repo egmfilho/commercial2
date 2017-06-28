@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-28 14:27:11
+* @Last Modified time: 2017-06-28 18:06:53
 */
 
 .order-toolbar {
@@ -300,14 +300,14 @@
 			display: table-cell;
 
 			&:nth-child(1) {
-				width: 40px;
-			}
-
-			&:nth-child(2), &:nth-child(3), &:nth-child(4), &:nth-child(5) {
 				width: auto;
 			}
 
-			&:nth-child(6) {
+			&:nth-child(2), &:nth-child(3), &:nth-child(4) {
+				width: 20%;
+			}
+
+			&:nth-child(5) {
 				width: 40px;
 				padding: 0;
 
@@ -352,6 +352,20 @@
 				vertical-align: middle;
 			}
 		}		
+	}
+}
+
+.chule {
+	height: 100%; 
+	overflow: auto;
+	border: 1px solid #d6d6d6;
+	padding: 0 !important;
+	background-color: whitesmoke;
+	margin-right: 8px;
+
+	md-list {
+		padding: 0;
+		background-color: white;
 	}
 }
 

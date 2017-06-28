@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-28 12:18:27
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-28 12:30:51
+* @Last Modified time: 2017-06-28 17:04:28
 */
 
 (function() {
@@ -25,8 +25,8 @@
 
 				return {
 					getByCode: getByCode,
-					getByName: getByDescription,
-					getAll:    getAll
+					getByDescription: getByDescription,
+					getAll: getAll
 				}
 
 				// ******************************
@@ -41,7 +41,7 @@
 					}).$promise;
 				}
 
-				function getByName(description, options) {
+				function getByDescription(description, options) {
 					return provider.query({
 						action: 'getList'
 					}, {
