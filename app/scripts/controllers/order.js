@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-27 16:57:23
+* @Last Modified time: 2017-06-28 10:09:08
 */
 
 (function() {
@@ -62,6 +62,12 @@
 
 		$scope.debug = constants.debug;
 		$scope.globals = Globals.get;
+
+		$scope.fab = {
+			isOpen: false,
+			in: function() { jQuery('.order-fab').addClass('in') },
+			out: function() { jQuery('.order-fab').removeClass('in'); $scope.fab.isOpen = false; },
+		}
 
 		function newOrder() {
 			$location.path() == '/order/new' ? $route.reload() : $location.path('/order/new');
@@ -211,6 +217,8 @@
 						/* Salva o orcamento */
 						providerOrder.save(filtered).then(function(success) {
 							constants.debug && console.log('orcamento salvo', success);
+							self.budget.order_id = success.data.order_id;
+							self.budget.order_code = success.data.order_code;
 							$rootScope.loading.unload();
 
 							var controller = function() {

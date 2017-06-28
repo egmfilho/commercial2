@@ -1,0 +1,9 @@
+md-toast.custom-toast(layout='row')
+	.logo(flex='30')
+		div
+	.info(flex layout='column')
+		span.md-title {{ctrl.title}}
+		span.md-subhead {{ctrl.message}}
+
+		.offset-top-15(layout='row' layout-align='end end')
+			md-button.md-primary(ng-click='ctrl.close()') Fechar

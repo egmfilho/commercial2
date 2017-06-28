@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-27 16:11:09
+* @Last Modified time: 2017-06-28 10:21:04
 */
 'use strict';
 
@@ -58,7 +58,7 @@ angular.module('commercial2', [
 		// 	'contrastDefaultColor': 'light'
 		// });
 
-		$mdThemingProvider.definePalette('customAccent', {
+		$mdThemingProvider.definePalette('custom-accent', {
 			'50': '#893e07',
 			'100': '#a24908',
 			'200': '#ba5409',
@@ -78,7 +78,7 @@ angular.module('commercial2', [
 
 		$mdThemingProvider.theme('default')
 			.primaryPalette('blue-grey')
-			.accentPalette('customAccent');
+			.accentPalette('custom-accent');
 	}])
 	.config(['$routeProvider', function($routeProvider) {
 
@@ -200,15 +200,20 @@ angular.module('commercial2', [
 		};
 
 		/* Funcao generica para chamar o Toast na tela. */
-		$rootScope.toast = function(message, class, action, delay) {
-			return $mdToast.show(
-				$mdToast.simple()
-					.position("top right")
-					.hideDelay(delay || 5000)
-					.textContent(message)
-					.toastClass(class)
-					.action(action)
-			);
+		$rootScope.toast = function(title, message, delay) {
+			var controller = function() {
+				this.title = title,
+				this.message = message,
+				this.close = $mdToast.cancel;
+			}
+
+			return $mdToast.show({
+				hideDelay: delay || 5000,
+				position: 'bottom right',
+				controller: controller,
+				controllerAs: 'ctrl',
+				templateUrl: './partials/toastTemplate.html'
+			});
 		};
 
 		/* Exibe o menu principal */

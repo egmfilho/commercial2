@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-26 17:59:19
+* @Last Modified time: 2017-06-28 12:33:47
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('Order', Order);
 
-	Order.$inject = [ 'OrderItem', 'Person', 'Address', 'CompanyERP' ];
+	Order.$inject = [ 'OrderItem', 'Person', 'Address', 'CompanyERP', 'OrderPayment' ];
 
-	function Order(OrderItem, Person, Address, CompanyERP) {
+	function Order(OrderItem, Person, Address, CompanyERP, OrderPayment) {
 
 		function _Order(order) {
 			this.order_id                    = null;
@@ -43,6 +43,7 @@
 			this.order_seller                = new Person();
 			this.order_client                = new Person();
 			this.address_delivery            = new Address();
+			this.order_payments              = new Array();
 
 			if (order) {
 				Object.assign(this, order, {
@@ -52,11 +53,12 @@
 						}),
 					order_update: order.order_update ? new Date(order.order_update) : null,
 					order_date: order.order_date ? new Date(order.order_date) : null,
-					order_items: order.order_items ? order.order_items.map(function(oi) { return new OrderItem(oi); }) : new Array(),
+					order_items: order.order_items ? order.order_items.map(function(oi) { return new OrderItem(oi) }) : new Array(),
 					order_company: new CompanyERP(order.order_company),
 					order_seller: new Person(order.order_seller),
 					order_client: new Person(order.order_client),
-					address_delivery: new Address(order.address_delivery)
+					address_delivery: new Address(order.address_delivery),
+					order_payments: order.order_payments ? order.order_payments.map(function(op) { return new OrderPayment(op) }) : new Array()
 				});
 			}
 		}

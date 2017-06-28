@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-16 17:31:55
+* @Last Modified time: 2017-06-28 14:27:11
 */
 
 .order-toolbar {
@@ -25,8 +25,37 @@
 }
 
 .order-container {
-	max-width: 1024px;
+	max-width: $max-document-width;
 	margin: 0 auto;
+
+	.order-fab {
+		position: fixed;
+		left: 15px;
+		bottom: 30px;
+		transition: left .25s ease;
+		
+		@media(max-width: 1100px) {
+			left: -35px;
+		}
+
+		&.in {
+			@media(max-width: 1100px) {
+				left: 0px;
+			}
+		}
+
+		&.hidden {
+			left: -100px;
+		}
+
+		.md-button.md-fab {
+			font-size: 26px;		
+
+			&.md-mini {
+				font-size: 20px;
+			}
+		}
+	}
 
 	md-card {	
 		font-size: .9em;
@@ -171,12 +200,16 @@
 	overflow-y: scroll;
 	border: 1px solid rgba(#000, .12);
 	background-color: #f5f5f5;
+
+	&.short {
+		height: 120px;
+	}
 }
 
-.products-table-header-container {
+.products-table-header-container, .payment-table-header-container {
 	padding-top: 14px;
 	padding-right: 10px;
-	border: 1px solid #e6e6e6;
+	border: 1px solid #d7d7d7;
 	border-bottom: none;
 }
 
@@ -208,6 +241,73 @@
 			}
 
 			&:nth-child(8) {
+				width: 40px;
+				padding: 0;
+
+				button {
+					margin: 0;
+				}
+			}
+		}
+	}
+
+	thead {		
+		tr {
+			// border-bottom: 1px solid rgba(#000, .12);			
+
+			th {
+				text-align: left;
+				color: rgba(#000, .4); //rgba(#000, .38);
+				font-size: 12px;
+				font-weight: bold;
+				padding: 1px 1px 12px 1px;
+			}
+		}
+	}
+
+	tbody {
+		tr {
+			transition: background-color .5s ease; 
+
+			/* Para evitar delay nos updates dos itens */
+			&.ng-animate {
+				transition: 0s none;
+			}
+
+			&:hover {
+				background-color: #e7e7e7;
+			}
+
+			td {
+				color: rgba(#000, .6);
+				padding: 0 5px;
+				font-size: 12px;
+				vertical-align: middle;
+			}
+		}		
+	}
+}
+
+.payment-table {
+	width: 100%;
+	border-collapse: collapse;
+
+	tr {
+		display: table-row;
+		background-color: white;
+
+		th, td {
+			display: table-cell;
+
+			&:nth-child(1) {
+				width: 40px;
+			}
+
+			&:nth-child(2), &:nth-child(3), &:nth-child(4), &:nth-child(5) {
+				width: auto;
+			}
+
+			&:nth-child(6) {
 				width: 40px;
 				padding: 0;
 

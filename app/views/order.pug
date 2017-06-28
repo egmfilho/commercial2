@@ -79,7 +79,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					button(ng-click='$mdMenu.open()') Ajuda
 					md-menu-content
 						md-menu-item
-							md-button(ng-click='toast("Em breve!", null, "Fechar")')
+							md-button(ng-click='toast("Aviso!", "Lorem ipsum dolor sit amet.")')
 								| Sobre
 
 md-content#order(flex layout-padding style='background-color: #d9d9d9')
@@ -266,7 +266,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 													md-menu-item
 														md-button(ng-click='order.removeItem(i)')
 															md-icon(md-font-set='material-icons' md-menu-align-target) delete_forever
-															|  Excluir
+															|  Remover
 
 					div(layout='row' style='margin-top: 30px')
 						div(flex)
@@ -443,6 +443,111 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						md-input-container(flex)
 							label Observações
 							textarea(ng-model='order.budget.order_note' md-maxlength='150' rows='3')
+
+		//- Pagamento
+		section(name='payment')
+			md-card(layout-align='center')
+				md-card-header
+					md-card-header-text
+						div(layout='row')
+							div(flex='90' layout='column')
+								span.md-title Pagamento
+								span.md-subhead Informe as formas de pagamento
+							div(layout='column' layout-align='center end' layout-fill)
+								md-button.md-raised(ng-click='order.clearPayment()')
+									| Limpar
+				md-card-content
+					div(layout='row')
+						div(flex='40' layout='column' layout-padding)
+							div(layout='row')
+								md-input-container(flex)
+									label 
+										| Informe o prazo
+									md-select(ng-model='x'
+											data-md-container-class='query-select-container'
+											ng-model-options='{ trackBy: "$value.term_id" }')
+										md-select-header.select-header
+											input.md-text(ng-model='x.queryTerm' 
+													type='search' placeholder='Digite o prazo'
+													ng-keydown="x.updateSearch($event)")
+										md-opt-group(label='Prazos')
+											md-option(ng-value='t' 
+													ng-repeat='t in x.queryTermResult' 
+													ng-click='x.termChanged(t.term_id)')
+												| {{t.term_description}}
+
+								md-button.md-primary(ng-click='order.clearPayment()')
+									| Limpar
+
+							div(flex style='{max-height: 200px; overflow: auto}')
+								md-list.md-dense
+									md-list-item(ng-click='teste()' ng-repeat='n in getNumber(5) track by $index')
+										p {{$index + 1}} - Nada além do óbvio
+
+						div(flex='60')
+							.payment-table-header-container.offset-top-30
+								table.payment-table
+									thead
+										tr
+											th &nbsp;
+											th FORMA
+											th VENCIMENTO
+											th VALOR
+											th PARCELAS
+											th &nbsp;
+							.container-table.short
+								table.payment-table
+									tbody
+										tr(ng-repeat='p in order.budget.order_payments track by $index' layout='row')
+											td {{$index}}
+											td {{i.product.unit.unit_initials}}
+											td {{i.order_item_amount}}
+											td {{i.order_item_value | currency}}
+											td
+											td
+												md-menu
+													md-button.md-icon-button(tabindex='-1' ng-click='order.editItemMenu($mdMenu, $event)')
+														md-icon(md-font-icon='fa fa-ellipsis-v')
+													md-menu-content(width='2')
+														md-menu-item
+															md-button(ng-click='order.showEditItemModal(i)') 
+																md-icon(md-font-set='material-icons' md-menu-align-target) create
+																|  Editar
+														md-menu-divider
+														md-menu-item
+															md-button(ng-click='order.removeItem(i)')
+																md-icon(md-font-set='material-icons' md-menu-align-target) delete_forever
+																|  Remover
+
+		//- FAB
+		md-fab-speed-dial.order-fab(class='md-scale' 
+				md-open='fab.isOpen' md-direction='up' 
+				ng-mouseenter='fab.in()' ng-mouseleave='fab.out()'
+				ng-class='{ "hidden": !order.budget.order_company_id }')
+			md-fab-trigger
+				md-button.md-fab(md-colors="{background: 'customAccent'}")
+					md-icon(md-font-set='material-icons') menu
+
+			md-fab-actions
+				md-button.md-fab.md-raised.md-mini
+					md-tooltip(md-direction='right') Exportar DAV
+					md-icon(md-font-icon='fa fa-upload' md-colors="{color: 'green'}")
+
+				md-button.md-fab.md-raised.md-mini
+					md-tooltip(md-direction='right') Exportar pedido
+					md-icon(md-font-icon='fa fa-cloud-upload' md-colors="{color: 'blue'}")
+
+				md-button.md-fab.md-raised.md-mini
+					md-tooltip(md-direction='right') Enviar por email
+					md-icon(md-font-icon='fa fa-envelope' md-colors="{color: 'teal'}")
+
+				md-button.md-fab.md-raised.md-mini(ng-click='order.print()')
+					md-tooltip(md-direction='right') Imprimir
+					md-icon(md-font-set='material-icons' md-colors="{color: 'orange'}") print
+
+				md-button.md-fab.md-raised.md-mini(ng-click='save()')
+					md-tooltip(md-direction='right') Salvar
+					md-icon(md-font-set='material-icons' md-colors="{color: 'indigo'}") save
 
 footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath !== "/loading" && currentPath.indexOf("/order/print/") < 0')
 	md-toolbar
