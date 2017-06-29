@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-28 12:33:47
+* @Last Modified time: 2017-06-29 10:41:19
 */
 
 (function() {
@@ -76,7 +76,9 @@
 			setDeliveryAddress: setDeliveryAddress,
 			setAlDiscount: setAlDiscount,
 			setVlDiscount: setVlDiscount,
-			updateValues: updateValues
+			updateValues: updateValues,
+			getPaymentValueTotal: getPaymentValueTotal,
+			getChange: getChange
 		};
 
 		return _Order;
@@ -178,9 +180,9 @@
 		}
 
 		/**
-		* Aplica uma aliquota de desconto igual para todos os items.
-		* @param {float} value - O valor do desconto.
-		*/
+		 * Aplica uma aliquota de desconto igual para todos os items.
+		 * @param {float} value - O valor do desconto.
+		 */
 		function setAlDiscount(value) {
 			angular.forEach(this.order_items, function(item) {
 				item.setAlDiscount(value);
@@ -188,9 +190,9 @@
 		}
 
 		/**
-		* Aplica um valor de desconto igual para todos os items.
-		* @param {float} value - O valor do desconto.
-		*/
+		 * Aplica um valor de desconto igual para todos os items.
+		 * @param {float} value - O valor do desconto.
+		 */
 		function setVlDiscount(value) {
 			angular.forEach(this.order_items, function(item) {
 				item.setVlDiscount(value);
@@ -198,17 +200,17 @@
 		}
 
 		/**
-		* Adiciona o endereco de entrega do pedido.
-		* @param {object} address - O endereco de entrega.
-		*/
+		 * Adiciona o endereco de entrega do pedido.
+		 * @param {object} address - O endereco de entrega.
+		 */
 		function setDeliveryAddress(address) {
 			this.address_delivery = new Address(address);
 			this.order_address_delivery_code = this.address_delivery.person_address_code;
 		}
 
 		/**
-		* Recalcula e atualiza os valores do orcamento.
-		*/
+		 * Recalcula e atualiza os valores do orcamento.
+		 */
 		function updateValues() {
 			this.order_value = 0;
 			this.order_value_total = 0;
@@ -221,6 +223,26 @@
 
 			this.order_vl_discount = this.order_value - this.order_value_total;
 			this.order_al_discount = (this.order_vl_discount * 100) / this.order_value;
+		}
+
+		/**
+		 * Calcula a soma de todos os pagamentos do orcamento.
+		 */
+		function getPaymentValueTotal() {
+			var total = 0;
+
+			angular.forEach(this.order_payments, function(item, index) {
+				total += item.order_payment_value_total;
+			});
+
+			return total;
+		}
+
+		/**
+		 * Calcula o troco do orcamento.
+		 */
+		function getChange() {
+			return Math.max(0, this.order_value_total - this.getPaymentValueTotal());
 		}
 
 	}

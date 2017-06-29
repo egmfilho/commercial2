@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-28 12:18:27
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-28 17:04:28
+* @Last Modified time: 2017-06-29 17:26:28
 */
 
 (function() {
@@ -24,20 +24,32 @@
 				});
 
 				return {
+					getById: getById,
 					getByCode: getByCode,
-					getByDescription: getByDescription,
-					getAll: getAll
+					getByDescription: getByDescription
 				}
 
 				// ******************************
 				// Methods declaration
 				// ******************************
 
+				function getById(id, options) {
+					return provider.get({
+						action: 'get'
+					}, {
+						modality_id: id,
+						company_id: options && options.companyId,
+						get_modality_item: options && options.getInstallments
+					}).$promise;
+				}
+
 				function getByCode(code) {
 					return provider.get({
 						action: 'get'
 					}, {
-						modality_code: code
+						modality_code: code,
+						company_id: options && options.companyId,
+						get_modality_item: options && options.getInstallments
 					}).$promise;
 				}
 
@@ -46,15 +58,8 @@
 						action: 'getList'
 					}, {
 						modality_description: description,
-						limit: options && options.limit,
-						page: options && options.page
-					}).$promise;
-				}
-
-				function getAll(options) {
-					return provider.query({
-						action: 'getList'
-					}, {
+						company_id: options && options.companyId,
+						get_modality_item: options && options.getInstallments,
 						limit: options && options.limit,
 						page: options && options.page
 					}).$promise;

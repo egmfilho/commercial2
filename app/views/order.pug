@@ -249,10 +249,10 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										td {{i.product.product_code}} - {{i.product.product_name}}
 										td {{i.product.unit.unit_initials}}
 										td {{i.order_item_amount}}
-										td {{i.order_item_value | currency}}
+										td {{i.order_item_value_unitary | currency:'R$ '}}
 										td {{i.order_item_al_discount | currency:''}}%
-										td {{i.order_item_vl_discount | currency}}
-										td {{i.getValueTotal() | currency}}
+										td {{i.order_item_vl_discount | currency:'R$ '}}
+										td {{i.getValueTotal() | currency:'R$ '}}
 										td
 											md-menu
 												md-button.md-icon-button(tabindex='-1' ng-click='order.editItemMenu($mdMenu, $event)')
@@ -476,10 +476,10 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 													ng-click='order.getTermByCode(t.term_code)')
 												| {{t.term_description}}
 
-								md-button.md-primary(ng-click='order.clearTermSearch()')
+								md-button.md-primary(ng-click='order.clearTerm()')
 									| Limpar
 
-							div.chule(flex)
+							div.chule
 								md-list
 									md-list-item(ng-click='order.addModality(m)' ng-repeat='m in order.internal.term.tempTerm.modality track by $index')
 										p(flex) {{m.modality_description}}
@@ -501,7 +501,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										tr(ng-repeat='p in order.budget.order_payments track by $index' layout='row')
 											td {{p.modality.modality_description}}
 											td {{p.order_payment_deadline | date:'dd/MM/yyyy'}}
-											td {{p.order_payment_value_total | currency}}
+											td {{p.order_payment_value | currency:'R$ '}}
 											td {{p.order_payment_installment}}x
 											td
 												md-menu
@@ -509,14 +509,17 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 														md-icon(md-font-icon='fa fa-ellipsis-v')
 													md-menu-content(width='2')
 														md-menu-item
-															md-button(ng-click='order.showEditItemModal(i)') 
+															md-button(ng-click='order.editPayment(p)') 
 																md-icon(md-font-set='material-icons' md-menu-align-target) create
 																|  Editar
 														md-menu-divider
 														md-menu-item
-															md-button(ng-click='order.removeItem(i)')
+															md-button(ng-click='order.removePayment(p)')
 																md-icon(md-font-set='material-icons' md-menu-align-target) delete_forever
 																|  Remover
+
+					pre(ng-if='debug')
+						| {{order.internal.term.tempTerm | json}}
 
 		//- FAB
 		md-fab-speed-dial.order-fab(class='md-scale' 

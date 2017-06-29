@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-28 18:09:35
+* @Last Modified time: 2017-06-29 18:16:13
 */
 
 (function() {
@@ -34,6 +34,7 @@
 		'UserCompany',
 		'ProviderTerm',
 		'Term',
+		'ProviderModality',
 		'PaymentModality',
 		'OrderPayment',
 		'ElectronWindow' 
@@ -62,6 +63,7 @@
 		UserCompany, 
 		providerTerm,
 		Term,
+		providerModality,
 		PaymentModality,
 		OrderPayment,
 		ElectronWindow) {
@@ -91,6 +93,8 @@
 		self.clearItems         = clearItems;
 		self.clearCustomer      = clearCustomer;
 		self.clearNote          = clearNote;
+		self.clearPayments      = clearPayments;
+		self.clearTerm          = clearTerm;
 		self.getPersonByCode    = getPersonByCode;
 		self.getPersonByName    = getPersonByName;
 		self.getSellerByCode    = getSellerByCode;
@@ -115,6 +119,8 @@
 		self.searchTerm         = searchTerm;
 		self.getTermByCode      = getTermByCode;
 		self.addModality        = addModality;
+		self.editPayment        = editPayment;
+		self.removePayment      = removePayment;
 
 		self.editItemMenu       = editItemMenu;
 		self.showEditItemModal  = showEditItemModal;
@@ -127,6 +133,8 @@
 		});
 
 		$scope.$on('$viewContentLoaded', function() {
+			self.searchTerm();
+
 			if ($routeParams.action && $routeParams.action == 'edit' && $routeParams.code) {
 				var options = {
 					getCompany: true,
@@ -313,6 +321,11 @@
 					queryResult: new Array(),
 					updateSearch: function(e) {
 						e.stopPropagation();
+					},
+					clear: function() {
+						self.internal.term.tempTerm = new Term();
+						self.internal.term.queryTerm = null;
+						self.searchTerm();
 					}
 				}
 
@@ -480,6 +493,22 @@
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar o campo?').then(function() {
 				
 			}, function() { });
+		}
+
+		/**
+		 * Limpa o campo de pagamento.
+		 */
+		function clearPayments() {
+			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar o campo?').then(function() {
+				
+			}, function() { });
+		}
+
+		/**
+		 * Limpa a pesquisa de prazo do campo de pagamento.
+		 */
+		function clearTerm() {
+			self.internal.term.clear();	
 		}
 
 		/**
@@ -977,14 +1006,94 @@
 		 * Atualiza o resultado da pesquisa de prazo.
 		 */
 		function addModality(modality) {
-			self.budget.order_payments.push(new OrderPayment({
-				order_id: self.budget.order_id,
-				order_payment_value_total: '<valor>',
-				order_payment_deadline: new Date(),
-				order_payment_installment: self.internal.term.tempTerm.term_installment,
-				modality_id: modality.modality_id,
-				modality: new PaymentModality(modality)
-			}));
+			$rootScope.customDialog().showConfirm('Confirmação', 'Adicionar forma de pagamento: <b>' + modality.modality_description + '</b>?')
+				.then(function(success) {
+					var i,
+						dateCalc,
+						term = self.internal.term.tempTerm,
+						payments = [ ];
+
+					/* Calcula os vencimentos das parcelas */
+					dateCalc = function(installment, delay, interval) {
+						var date = new Date(),
+							today = new Date(),
+							installment_delay = installment * interval;
+
+						date.setDate(today.getDate() + delay + installment_delay);
+
+						return date;
+					}
+
+					/* Trata primeiro para quando for cartao de credito */
+					if (modality.modality_type == Globals.get('modality-types')['credit-card']) {
+						payments.push(new OrderPayment({
+								order_id: self.budget.order_id,
+								order_payment_value: self.budget.getChange(),
+								order_payment_deadline: dateCalc(0, term.term_delay, 0),
+								order_payment_installment: term.term_installment,
+								modality_id: modality.modality_id,
+								modality: new PaymentModality(modality)
+							}));
+					} else {
+						for (i = 0; i < term.term_installment; i++) {
+							payments.push(new OrderPayment({
+								order_id: self.budget.order_id,
+								order_payment_value: self.budget.getChange() / term.term_installment,
+								order_payment_deadline: dateCalc(i, term.term_delay, term.term_interval),
+								order_payment_installment: 1,
+								modality_id: modality.modality_id,
+								modality: new PaymentModality(modality)
+							}));
+						}
+					}
+
+					self.budget.order_payments = self.budget.order_payments.concat(payments);
+
+				}, function(error) { });
+		}
+
+		/**
+		 * Edita o pagamento informado.
+		 * @param (id) - O pagamento a ser editado.
+		 */
+		function editPayment(payment) {
+			var options = {
+				companyId: self.budget.order_company_id,
+				getInstallments: true
+			};
+
+			$rootScope.loading.load();
+			providerModality.getById(payment.modality_id, options).then(function(success) {
+				var controller = function() {
+					this.isCalendarOpen = false;
+					this.minDate = new Date();
+					this.term = self.internal.term.tempTerm;
+					this.payment = new OrderPayment(payment);
+					this.payment.modality = new PaymentModality(success.data);
+
+					this.setDeadline = function(delay) {
+						this.payment.order_payment_deadline = new Date(new Date().getDate() + delay);
+					};
+				};
+
+				$rootScope.customDialog().showTemplate('Editar pagamento', './partials/modalEditPayment.html', controller)
+				.then(function(success) {
+					self.budget.order_payments[self.budget.order_payments.indexOf(payment)] = new OrderPayment(success);
+				}, function(error) { });
+
+				$rootScope.loading.unload();
+			}, function(error) {
+				constants.debug && console.log(error);
+				$rootScope.loading.unload();
+			});
+		}
+
+		/**
+		 * Remove o pagamento informado.
+		 * @param (id) - O pagamento a ser removido.
+		 */
+		function removePayment(payment) {
+
 		}
 
 

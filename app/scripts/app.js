@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-28 10:21:04
+* @Last Modified time: 2017-06-29 12:50:32
 */
 'use strict';
 
@@ -31,7 +31,18 @@ angular.module('commercial2', [
 		$httpProvider.interceptors.push('Interceptor');
 		$locationProvider.hashPrefix('');
 	}])
-	.config(['uiMask.ConfigProvider', function(uiMaskConfigProvider) {
+	.config(['$mdDateLocaleProvider', 'uiMask.ConfigProvider', function($mdDateLocaleProvider, uiMaskConfigProvider) {
+		/* Formata com leading 0 as datas selecionadas no datepicker */
+		$mdDateLocaleProvider.formatDate = function(date) {
+			var m = moment(date);
+			return m.isValid() ? m.format('L') : '';
+		};
+
+		$mdDateLocaleProvider.parseDate = function(dateString) {
+			var m = moment(dateString, 'L', true);
+			return m.isValid() ? m.toDate() : new Date(NaN);
+		}
+
 		/* Esconde a mascara quando o input nao esta focado para evitar */
 		/* provlemas com os labels do Angularjs Material */
 		uiMaskConfigProvider.addDefaultPlaceholder(false);

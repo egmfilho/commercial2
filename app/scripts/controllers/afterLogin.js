@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-19 08:59:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-27 15:55:56
+* @Last Modified time: 2017-06-29 08:47:41
 */
 
 (function() {
@@ -18,7 +18,9 @@
 
 		$scope.$on('$viewContentLoaded', function() {
 			$rootScope.loading.load();
+
 			setConstants();
+			
 			loadCredentials().then(function(success) {
 				$q.all([
 					loadConfig()
@@ -94,6 +96,10 @@
 				'open': 1001,
 				'exported': 1002,
 				'billed': 1003
+			});
+
+			Globals.set('modality-types', {
+				'credit-card': 'A'
 			});
 		}
 

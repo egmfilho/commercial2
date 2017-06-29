@@ -10,8 +10,8 @@ div(role='dialog' layout='column')
 		.dialog-content(layout='column')
 			div(layout='row' layout-align='start center')
 				md-progress-circular(md-mode='indeterminate' md-diameter='30px' ng-if='ctrl._showProgress')
-				md-icon(md-font-set='material-icons' ng-if='ctrl._showConfirmSign') help
-				md-icon(md-font-set='material-icons' ng-if='ctrl._showInfoSign') info
+				md-icon.sign(md-font-set='material-icons' ng-if='ctrl._showConfirmSign') help
+				md-icon.sign(md-font-set='material-icons' ng-if='ctrl._showInfoSign') info
 				div(flex='5')
 				p(ng-bind-html='ctrl._message')
 

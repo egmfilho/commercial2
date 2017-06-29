@@ -29,9 +29,16 @@
     "angular-cookies": "^1.6.4",
     "egmfilho-input-filters": "https://github.com/egmfilho/input-filters.git",
     "angular-ui-mask": "^1.8.7",
-    "font-awesome": "^4.7.0"
+    "font-awesome": "^4.7.0",
+    "moment": "^2.18.1"
   },
   "overrides": {
+    "moment": {
+      "main": [
+        "moment.js",
+        "locale/pt-br.js"
+      ]
+    },
     "angular-i18n": {
       "main": [
         "angular-locale_pt-br.js"

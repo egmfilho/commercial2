@@ -1,0 +1,46 @@
+.body(layout='column' layout-fill)
+	//- p
+		| Deseja adicionar a modalidade?
+
+	.md-inline-form(layout='row' layout-wrap)
+		md-input-container(flex='40')
+			label Valor
+			input(ng-model='ctrl.payment.order_payment_value' currency symbol='"R$ "' number-only)
+
+		span(flex)
+
+		md-input-container
+			label Vencimento
+			md-datepicker(ng-model='ctrl.payment.order_payment_deadline' md-hide-icons='all' md-is-open='ctrl.isCalendarOpen' md-min-date='ctrl.minDate')
+
+		md-button.md-icon-button.md-raised.md-primary(ng-click='ctrl.isCalendarOpen = true')
+			md-icon(md-font-icon='fa fa-calendar')
+
+	div
+		md-input-container
+			label
+				span Parcelas
+			md-select(name='type' ng-model='ctrl.payment.order_payment_installment')
+				md-option(ng-value='i.modality_item_installment' ng-repeat='i in ctrl.payment.modality.modality_item' ng-click='ctrl.setDeadline(i.modality_item_delay)') 
+					| {{i.modality_item_installment}}x ({{ctrl.payment.order_payment_value / i.modality_item_installment | currency:'R$ '}})
+
+	.offset-top-15.well
+		table
+			//- tr
+				td.text-right Prazo: 
+				td {{ctrl.term.term_description}}
+			tr
+				td.text-right Modalidade:
+				td {{ctrl.payment.modality.modality_description}}
+			tr
+				td.text-right Valor das parcelas:
+				td 
+					span.label.label-success
+						| {{ctrl.payment.order_payment_value / ctrl.payment.order_payment_installment | currency: 'R$ '}}
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-primary(name='positive' ng-click='ctrl._close(ctrl.payment)')
+		| &nbsp; Confirmar &nbsp;
+
+	md-button.md-primary(name='positive' ng-click='ctrl._cancel()')
+		| &nbsp; Fechar &nbsp;

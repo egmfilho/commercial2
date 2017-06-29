@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-28 12:02:16
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-28 17:03:52
+* @Last Modified time: 2017-06-29 09:42:23
 */
 
 (function() {
@@ -20,7 +20,7 @@
 			this.term_id           = null;
 			this.term_code         = null;
 			this.term_description  = null;
-			this.term_installments = null;
+			this.term_installment  = null;
 			this.term_delay        = null;
 			this.term_interval     = null;
 			this.term_active       = null;
