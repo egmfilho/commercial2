@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-29 10:41:19
+* @Last Modified time: 2017-06-30 08:52:32
 */
 
 (function() {
@@ -77,7 +77,7 @@
 			setAlDiscount: setAlDiscount,
 			setVlDiscount: setVlDiscount,
 			updateValues: updateValues,
-			getPaymentValueTotal: getPaymentValueTotal,
+			getPaymentValue: getPaymentValue,
 			getChange: getChange
 		};
 
@@ -228,11 +228,11 @@
 		/**
 		 * Calcula a soma de todos os pagamentos do orcamento.
 		 */
-		function getPaymentValueTotal() {
+		function getPaymentValue() {
 			var total = 0;
 
 			angular.forEach(this.order_payments, function(item, index) {
-				total += item.order_payment_value_total;
+				total += item.order_payment_value;
 			});
 
 			return total;
@@ -242,7 +242,8 @@
 		 * Calcula o troco do orcamento.
 		 */
 		function getChange() {
-			return Math.max(0, this.order_value_total - this.getPaymentValueTotal());
+			// return Math.max(0, this.order_value_total - this.getPaymentValueTotal());
+			return this.order_value_total - this.getPaymentValue();
 		}
 
 	}

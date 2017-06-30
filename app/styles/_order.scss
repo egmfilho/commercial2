@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-29 14:25:23
+* @Last Modified time: 2017-06-30 09:40:53
 */
 
 .order-toolbar {
@@ -298,12 +298,17 @@
 
 		th, td {
 			display: table-cell;
+			padding: 1px 5px;
 
 			&:nth-child(1) {
+				width: 30px;
+			}
+
+			&:nth-child(2) {
 				width: auto;
 			}
 
-			&:nth-child(2), &:nth-child(3), &:nth-child(4) {
+			&:nth-child(3), &:nth-child(4) {
 				width: 20%;
 			}
 
@@ -327,7 +332,7 @@
 				color: rgba(#000, .4); //rgba(#000, .38);
 				font-size: 12px;
 				font-weight: bold;
-				padding: 1px 1px 12px 1px;
+				padding-bottom: 12px;
 			}
 		}
 	}
@@ -347,16 +352,29 @@
 
 			td {
 				color: rgba(#000, .6);
-				padding: 0 5px;
 				font-size: 12px;
 				vertical-align: middle;
+
+				&:first-child {
+					text-align: right;
+				}
 			}
 		}		
 	}
 }
 
+.payment-table-footer {
+	border: 1px solid #d7d7d7;
+	margin-top: -1px;
+	padding: 1px;
+
+	button {
+		margin: 4px;
+	}
+}
+
 .chule {
-	height: 193px;
+	height: 240px;
 	overflow-y: auto;
 	border: 1px solid #d6d6d6;
 	padding: 0 !important;

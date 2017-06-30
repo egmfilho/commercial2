@@ -268,8 +268,8 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 															md-icon(md-font-set='material-icons' md-menu-align-target) delete_forever
 															|  Remover
 
-					div(layout='row' style='margin-top: 30px')
-						div(flex)
+					.offset-top-30(layout='row')
+						span(flex)
 						md-input-container.large-input(flex='15')
 							label Desconto %
 							input(tabindex='-1' readonly ng-model='order.budget.order_al_discount'
@@ -490,19 +490,19 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								table.payment-table
 									thead
 										tr
+											th &nbsp;
 											th FORMA
 											th VENCIMENTO
 											th VALOR
-											th PARCELAS
 											th &nbsp;
 							.container-table
 								table.payment-table
 									tbody
 										tr(ng-repeat='p in order.budget.order_payments track by $index' layout='row')
+											td {{p.order_payment_installment}}x
 											td {{p.modality.modality_description}}
 											td {{p.order_payment_deadline | date:'dd/MM/yyyy'}}
 											td {{p.order_payment_value | currency:'R$ '}}
-											td {{p.order_payment_installment}}x
 											td
 												md-menu
 													md-button.md-icon-button(tabindex='-1' ng-click='order.editItemMenu($mdMenu, $event)')
@@ -518,8 +518,34 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 																md-icon(md-font-set='material-icons' md-menu-align-target) delete_forever
 																|  Remover
 
-					pre(ng-if='debug')
-						| {{order.internal.term.tempTerm | json}}
+							.payment-table-footer(layout='row')
+								md-button.md-primary(ng-click='order.addPayment()')
+									| Adicionar pagamento
+								md-button.md-primary
+									| Utilizar crédito
+
+								span(flex)
+
+								md-button.md-primary
+									| Recalcular
+
+					.offset-top-30(layout='row')
+						span(flex)
+						
+						md-input-container.large-input(flex='15')
+							label Total
+							input(tabindex='-1' readonly ng-value='order.budget.getPaymentValue() | currency:"R$ "')
+						
+						md-input-container.large-input(flex='15')
+							label Troco
+							input(tabindex='-1' readonly ng-value='order.budget.getChange() | currency: "R$ "')
+
+					div(layout='row')
+						pre(flex='40' ng-if='debug')
+							| {{order.internal.term.tempTerm | json}}
+
+						pre(flex='60' ng-if='debug')
+							| {{order.budget.order_payments | json}}
 
 		//- FAB
 		md-fab-speed-dial.order-fab(class='md-scale' 

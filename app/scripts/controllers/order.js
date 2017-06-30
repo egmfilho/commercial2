@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-29 18:16:13
+* @Last Modified time: 2017-06-30 11:52:02
 */
 
 (function() {
@@ -119,6 +119,7 @@
 		self.searchTerm         = searchTerm;
 		self.getTermByCode      = getTermByCode;
 		self.addModality        = addModality;
+		self.addPayment         = addPayment;
 		self.editPayment        = editPayment;
 		self.removePayment      = removePayment;
 
@@ -1003,14 +1004,20 @@
 		}
 
 		/**
-		 * Atualiza o resultado da pesquisa de prazo.
+		 * Adiciona uma forma a partir do resultado da busca de prazo.
 		 */
 		function addModality(modality) {
-			$rootScope.customDialog().showConfirm('Confirmação', 'Adicionar forma de pagamento: <b>' + modality.modality_description + '</b>?')
+			var term = self.internal.term.tempTerm,
+				message = '';
+
+			message += 'Adicionar forma de pagamento: <b>['; 
+			message += term.term_installment + 'x] ';
+			message += modality.modality_description + '</b>?';
+
+			$rootScope.customDialog().showConfirm('Confirmação', message)
 				.then(function(success) {
 					var i,
 						dateCalc,
-						term = self.internal.term.tempTerm,
 						payments = [ ];
 
 					/* Calcula os vencimentos das parcelas */
@@ -1050,6 +1057,72 @@
 					self.budget.order_payments = self.budget.order_payments.concat(payments);
 
 				}, function(error) { });
+		}
+
+		/**
+		 * Abre um modal de pesquisa de modalidades que retorna 
+		 * um pagamento para ser adicionado ao orcamento.
+		 */
+		function addPayment() {
+			var controller = function($s) {
+				var scope = this;
+
+				$s.$watch(function() {
+					return scope.queryModality;
+				}, function(newValue, oldValue) {
+					if (newValue)
+						scope.searchModality();
+				});
+
+				this._showCloseButton = true;
+				this.minDate = new Date();
+				this.modality = null;
+				this.payment = new OrderPayment({
+					order_payment_value: self.budget.getChange()
+				});
+				this.queryModality = null;
+				this.queryResult = null;
+				this.searchModality = function() {
+					providerModality.getByDescription(this.queryModality).then(function(success) {
+						scope.queryResult = success.data.map(function(m) { return new PaymentModality(m) });
+					}, function(error) {
+						constants.debug && console.log(error);
+					});
+				}
+				this.updateSearch = function(e) {
+					e.stopPropagation();
+				};
+				this.getModalityById = function(id) {
+					var options = {
+						companyId: self.budget.order_company_id,
+						getInstallments: true
+					};
+
+					$rootScope.loading.load();
+					providerModality.getById(id, options).then(function(success) {
+						scope.payment.setModality(new PaymentModality(success.data));
+						scope.setDeadline(scope.payment.modality.modality_item[0].modality_item_delay);
+						$rootScope.loading.unload();
+					}, function(error) {
+						constants.debug && console.log(error);
+						$rootScope.loading.unload();
+					});
+				};
+				this.setDeadline = function(delay) {
+					var date = new Date();
+					date.setDate(this.minDate.getDate() + delay);
+					this.payment.order_payment_deadline = date;
+				};
+			};
+
+			controller.$inject = [ '$scope' ];
+
+			$rootScope.customDialog().showTemplate('Adicionar forma de pagamento', './partials/modalAddModality.html', controller)
+				.then(function(success) {
+
+				}, function(error) {
+					
+				});
 		}
 
 		/**
