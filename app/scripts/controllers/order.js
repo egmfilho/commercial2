@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-30 11:52:02
+* @Last Modified time: 2017-06-30 17:33:03
 */
 
 (function() {
@@ -122,6 +122,7 @@
 		self.addPayment         = addPayment;
 		self.editPayment        = editPayment;
 		self.removePayment      = removePayment;
+		self.paymentDialog      = paymentDialog;
 
 		self.editItemMenu       = editItemMenu;
 		self.showEditItemModal  = showEditItemModal;
@@ -599,7 +600,7 @@
 			if (code == self.budget.order_client.person_code || !parseInt(code))
 				return;
 
-			var options = { getAddress: true, getContact: true };
+			var options = { getAddress: true, getContact: true, getCredit: true };
 			
 			$rootScope.loading.load();
 			getPersonByCode(code, Globals.get('person-categories').customer, options).then(function(success) {
@@ -1064,65 +1065,9 @@
 		 * um pagamento para ser adicionado ao orcamento.
 		 */
 		function addPayment() {
-			var controller = function($s) {
-				var scope = this;
-
-				$s.$watch(function() {
-					return scope.queryModality;
-				}, function(newValue, oldValue) {
-					if (newValue)
-						scope.searchModality();
-				});
-
-				this._showCloseButton = true;
-				this.minDate = new Date();
-				this.modality = null;
-				this.payment = new OrderPayment({
-					order_payment_value: self.budget.getChange()
-				});
-				this.queryModality = null;
-				this.queryResult = null;
-				this.searchModality = function() {
-					providerModality.getByDescription(this.queryModality).then(function(success) {
-						scope.queryResult = success.data.map(function(m) { return new PaymentModality(m) });
-					}, function(error) {
-						constants.debug && console.log(error);
-					});
-				}
-				this.updateSearch = function(e) {
-					e.stopPropagation();
-				};
-				this.getModalityById = function(id) {
-					var options = {
-						companyId: self.budget.order_company_id,
-						getInstallments: true
-					};
-
-					$rootScope.loading.load();
-					providerModality.getById(id, options).then(function(success) {
-						scope.payment.setModality(new PaymentModality(success.data));
-						scope.setDeadline(scope.payment.modality.modality_item[0].modality_item_delay);
-						$rootScope.loading.unload();
-					}, function(error) {
-						constants.debug && console.log(error);
-						$rootScope.loading.unload();
-					});
-				};
-				this.setDeadline = function(delay) {
-					var date = new Date();
-					date.setDate(this.minDate.getDate() + delay);
-					this.payment.order_payment_deadline = date;
-				};
-			};
-
-			controller.$inject = [ '$scope' ];
-
-			$rootScope.customDialog().showTemplate('Adicionar forma de pagamento', './partials/modalAddModality.html', controller)
-				.then(function(success) {
-
-				}, function(error) {
-					
-				});
+			self.paymentDialog('Adicionar pagamento').then(function(success) {
+				self.budget.order_payments.push(new OrderPayment(success));
+			}, function(error) { });
 		}
 
 		/**
@@ -1130,31 +1075,22 @@
 		 * @param (id) - O pagamento a ser editado.
 		 */
 		function editPayment(payment) {
-			var options = {
-				companyId: self.budget.order_company_id,
-				getInstallments: true
-			};
-
-			$rootScope.loading.load();
-			providerModality.getById(payment.modality_id, options).then(function(success) {
-				var controller = function() {
-					this.isCalendarOpen = false;
-					this.minDate = new Date();
-					this.term = self.internal.term.tempTerm;
-					this.payment = new OrderPayment(payment);
-					this.payment.modality = new PaymentModality(success.data);
-
-					this.setDeadline = function(delay) {
-						this.payment.order_payment_deadline = new Date(new Date().getDate() + delay);
-					};
+			var temp = new OrderPayment(payment),
+				options = {
+					companyId: self.budget.order_company_id,
+					getInstallments: true
 				};
 
-				$rootScope.customDialog().showTemplate('Editar pagamento', './partials/modalEditPayment.html', controller)
-				.then(function(success) {
-					self.budget.order_payments[self.budget.order_payments.indexOf(payment)] = new OrderPayment(success);
-				}, function(error) { });
-
+			$rootScope.loading.load();
+			/* primeiro pega todos os prazos vinculados a modalidade */
+			providerModality.getById(payment.modality_id, options).then(function(success) {
 				$rootScope.loading.unload();
+				/* coloca no pagamento e manda pro modal */
+				temp.modality = new PaymentModality(success.data);
+				self.paymentDialog('Editar pagamento', temp).then(function(success) {
+					var index = self.budget.order_payments.indexOf(payment);
+					self.budget.order_payments[index] = new OrderPayment(success);
+				}, function(error) { });
 			}, function(error) {
 				constants.debug && console.log(error);
 				$rootScope.loading.unload();
@@ -1166,7 +1102,94 @@
 		 * @param (id) - O pagamento a ser removido.
 		 */
 		function removePayment(payment) {
+			var index = self.budget.order_payments.indexOf(payment);
+			self.budget.order_payments.splice(index, 1);
+		}
 
+		/**
+		 * Abre uma janela para a insercao ou edicao de uma forma de pagamento.
+		 * @param (id) - O titulo do modal.
+		 * @param (object) - O pagamento a ser editado.
+		 * @returns (object) - Uma promise com o resultado.
+		 */
+		function paymentDialog(title, payment) {
+			var deferred = $q.defer(),
+				controller = function($s) {
+					var scope = this;
+
+					$s.$watch(function() {
+						return scope.queryModality;
+					}, function(newValue, oldValue) {
+						if (newValue)
+							scope.searchModality();
+					});
+
+					this.searchModality();
+				};
+
+			controller.$inject = [ '$scope' ];
+
+			controller.prototype = {
+				_showCloseButton: true,
+				
+				minDate: new Date(),
+				
+				modality: payment ? new PaymentModality(payment.modality) : null,
+				
+				payment: payment ? new OrderPayment(payment) : new OrderPayment({
+					order_payment_value: self.budget.getChange()
+				}),
+				
+				queryModality: payment ? payment.modality.modality_description : null,
+				
+				queryResult: null,
+				
+				searchModality: function() {
+					var scope = this;
+					providerModality.getByDescription(this.queryModality).then(function(success) {
+						scope.queryResult = success.data.map(function(m) { return new PaymentModality(m) });
+					}, function(error) {
+						constants.debug && console.log(error);
+					});
+				},
+				
+				updateSearch: function(e) {
+					e.stopPropagation();
+				},
+
+				getModalityById: function(id) {
+					var scope = this,
+						options = {
+							companyId: self.budget.order_company_id,
+							getInstallments: true
+						};
+
+					$rootScope.loading.load();
+					providerModality.getById(id, options).then(function(success) {
+						scope.payment.setModality(new PaymentModality(success.data));
+						scope.setDeadline(scope.payment.modality.modality_item[0].modality_item_delay);
+						$rootScope.loading.unload();
+					}, function(error) {
+						constants.debug && console.log(error);
+						$rootScope.loading.unload();
+					});
+				},
+
+				setDeadline: function(delay) {
+					var date = new Date();
+					date.setDate(this.minDate.getDate() + delay);
+					this.payment.order_payment_deadline = date;
+				}
+			}
+
+			$rootScope.customDialog().showTemplate(title, './partials/modalPayment.html', controller)
+				.then(function(success) {
+					deferred.resolve(success);
+				}, function(error) {
+					deferred.reject(error);
+				});
+
+			return deferred.promise;
 		}
 
 

@@ -520,13 +520,19 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
 							.payment-table-footer(layout='row')
 								md-button.md-primary(ng-click='order.addPayment()')
-									| Adicionar pagamento
-								md-button.md-primary
-									| Utilizar crédito
+									md-tooltip(md-direction='top') Adicionar forma de pagamento
+									i.fa.fa-plus-square-o &nbsp;
+									| Pagamento
+
+								md-button.md-primary(ng-disabled='!order.budget.order_client.person_credit.length || true')
+									md-tooltip(md-direction='top') Utilizar crédito do cliente
+									i.fa.fa-plus-square-o &nbsp;
+									| Crédito
 
 								span(flex)
 
 								md-button.md-primary
+									md-tooltip(md-direction='top') Recalcular valor das parcelas
 									| Recalcular
 
 					.offset-top-30(layout='row')

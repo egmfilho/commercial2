@@ -1,6 +1,6 @@
 .body(layout='column' layout-fill style='min-width: 450px')
 	div(layout='row')
-		md-input-container(flex='60')
+		md-input-container(flex='55')
 			label Modalidade
 			md-select(ng-model='ctrl.modality'
 					data-md-container-class='query-select-container'
@@ -15,7 +15,7 @@
 							ng-click='ctrl.getModalityById(m.modality_id)')
 						| {{m.modality_description}}
 
-		div(flex='40' layout='row')
+		div(flex='45' layout='row')
 			md-input-container(flex)
 				label Vencimento
 				md-datepicker(ng-model='ctrl.payment.order_payment_deadline' md-hide-icons='all' md-is-open='ctrl.isCalendarOpen' md-min-date='ctrl.minDate')
@@ -25,19 +25,19 @@
 					md-icon(md-font-icon='fa fa-calendar')
 
 	div(layout='row')
-		md-input-container(flex='60')
+		md-input-container(flex='55')
 			label Parcelas
 			md-select(name='type' ng-model='ctrl.payment.order_payment_installment')
 				md-option(ng-value='i.modality_item_installment' ng-repeat='i in ctrl.payment.modality.modality_item' ng-click='ctrl.setDeadline(i.modality_item_delay)') 
 					| {{i.modality_item_installment}}x ({{ctrl.payment.order_payment_value / i.modality_item_installment | currency:'R$ '}})
 
-		md-input-container(flex='40')
+		md-input-container(flex='45')
 			label Valor
-			input(ng-model='ctrl.payment.order_payment_value' currency symbol='R$ ')
+			input(ng-model='ctrl.payment.order_payment_value' currency symbol='"R$ "')
 	
 .footer(layout='row' layout-align='end center')
 	md-button.md-primary(name='positive' ng-click='ctrl._close(ctrl.payment)')
-		| &nbsp; Adicionar &nbsp;
+		| &nbsp; Confirmar &nbsp;
 
 	md-button.md-primary(name='positive' ng-click='ctrl._cancel()')
 		| &nbsp; Fechar &nbsp;
