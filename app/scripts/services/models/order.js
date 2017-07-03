@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-30 08:52:32
+* @Last Modified time: 2017-07-03 14:04:28
 */
 
 (function() {
@@ -12,15 +12,15 @@
 	angular.module('commercial2.services')
 		.factory('Order', Order);
 
-	Order.$inject = [ 'OrderItem', 'Person', 'Address', 'CompanyERP', 'OrderPayment' ];
+	Order.$inject = [ 'OrderItem', 'Person', 'Address', 'CompanyERP', 'OrderPayment', 'Globals' ];
 
-	function Order(OrderItem, Person, Address, CompanyERP, OrderPayment) {
+	function Order(OrderItem, Person, Address, CompanyERP, OrderPayment, Globals) {
 
 		function _Order(order) {
 			this.order_id                    = null;
 			this.order_company_id            = null;
 			this.order_user_id               = null;
-			this.order_status_id             = null; 
+			this.order_status_id             = Globals.get('order-status-values')['open']; 
 			this.order_client_id             = null;
 			this.order_address_delivery_code = null;
 			this.order_seller_id             = null;
@@ -34,6 +34,7 @@
 			this.order_vl_discount           = 0;
 			this.order_value_total           = 0;
 			this.order_note                  = null;
+			this.order_note_doc              = null;
 			this.order_mail_sent             = new Array();
 			this.order_trash                 = 'N';
 			this.order_update                = null;

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-30 17:33:03
+* @Last Modified time: 2017-07-03 14:13:38
 */
 
 (function() {
@@ -123,6 +123,7 @@
 		self.editPayment        = editPayment;
 		self.removePayment      = removePayment;
 		self.paymentDialog      = paymentDialog;
+		self.recalcPayments     = recalcPayments;
 
 		self.editItemMenu       = editItemMenu;
 		self.showEditItemModal  = showEditItemModal;
@@ -191,10 +192,14 @@
 		});
 
 		$scope.newOrder = function() {
-			$rootScope.customDialog().showConfirm('Aviso', 'Deseja descartar o orçamento atual?')
-				.then(function(success) {
-					newOrder();
-				}, function(error) { });
+			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
+				newOrder();
+			} else {
+				$rootScope.customDialog().showConfirm('Aviso', 'Deseja descartar o orçamento atual?')
+					.then(function(success) {
+						newOrder();
+					}, function(error) { });
+			}
 		};
 
 		$scope.open = function() {
@@ -202,10 +207,10 @@
 		};
 
 		$scope.save = function() {
-			// if (self.budget.order_status_id != 1001) {
-			// 	$rootScope.customDialog().showMessage('Erro!', 'Este orçamento não pode mais ser editado!');
-			// 	return;
-			// }
+			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
+				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado e não pode mais ser editado!');
+				return;
+			}
 
 			if (!self.budget.order_company_id || !self.budget.order_client_id || !self.budget.order_seller_id || !self.budget.order_items.length || !self.budget.order_address_delivery_code) {
 				$rootScope.customDialog().showMessage('Erro!', 'Preencha todos os campos corretamente!');
@@ -592,8 +597,25 @@
 		 * @param {string} code - O codio do cliente.
 		 */
 		function getCustomerByCode(code) {
-			if (!code) {
-				self.focusOn('input[name="autocompleteCustomer"]');
+			if (!code) {								
+				var defaultCustomer = Globals.get('default-customer'),
+					message = '';
+
+				if (defaultCustomer) {
+					message = 'Aplicar perfil: <b>' + defaultCustomer.code + ' - ' + defaultCustomer.name + '</b>';
+				} else {
+					self.focusOn('input[name="autocompleteCustomer"]');
+					return;
+				}
+
+				$rootScope.customDialog().showConfirm('Confirmação', message)
+					.then(function(success) {
+						constants.debug && console.log('Aplicando cliente padrao: ' + defaultCustomer.code);
+						self.getCustomerByCode(defaultCustomer.code);
+					}, function(error) {
+						self.focusOn('input[name="autocompleteCustomer"]');
+					});
+
 				return;
 			}
 
@@ -1011,9 +1033,19 @@
 			var term = self.internal.term.tempTerm,
 				message = '';
 
-			message += 'Adicionar forma de pagamento: <b>['; 
-			message += term.term_installment + 'x] ';
-			message += modality.modality_description + '</b>?';
+			if (self.budget.order_payments.length) {
+				message = 'Ao adicionar um prazo, todos os pagamentos previamente informados serão removidos. ';
+				message += 'Deseja Continuar?';
+				$rootScope.customDialog().showConfirm('Aviso', message).then(function(success) {
+					self.budget.order_payments = new Array();
+					self.addModality(modality);
+				}, function(error){ });
+				return;
+			} else {
+				message = 'Adicionar forma de pagamento: <b>['; 
+				message += term.term_installment + 'x] ';
+				message += modality.modality_description + '</b>?';
+			}
 
 			$rootScope.customDialog().showConfirm('Confirmação', message)
 				.then(function(success) {
@@ -1037,25 +1069,33 @@
 						payments.push(new OrderPayment({
 								order_id: self.budget.order_id,
 								order_payment_value: self.budget.getChange(),
+								order_payment_value_total: self.budget.getChange(),
 								order_payment_deadline: dateCalc(0, term.term_delay, 0),
 								order_payment_installment: term.term_installment,
 								modality_id: modality.modality_id,
 								modality: new PaymentModality(modality)
 							}));
 					} else {
+						var total = 0;
 						for (i = 0; i < term.term_installment; i++) {
 							payments.push(new OrderPayment({
 								order_id: self.budget.order_id,
-								order_payment_value: self.budget.getChange() / term.term_installment,
+								order_payment_value: parseFloat((self.budget.getChange() / term.term_installment).toFixed(2)),
+								order_payment_value_total: parseFloat((self.budget.getChange() / term.term_installment).toFixed(2)),
 								order_payment_deadline: dateCalc(i, term.term_delay, term.term_interval),
 								order_payment_installment: 1,
 								modality_id: modality.modality_id,
 								modality: new PaymentModality(modality)
 							}));
+
+							total += payments[i].order_payment_value;
 						}
+						payments[payments.length - 1].order_payment_value += self.budget.order_value_total - total;
+						payments[payments.length - 1].order_payment_value_total += self.budget.order_value_total - total;
 					}
 
 					self.budget.order_payments = self.budget.order_payments.concat(payments);
+					self.budget.term_id = term.term_id;
 
 				}, function(error) { });
 		}
@@ -1065,6 +1105,15 @@
 		 * um pagamento para ser adicionado ao orcamento.
 		 */
 		function addPayment() {
+			if (self.budget.term_id) {
+				$rootScope.customDialog().showConfirm('Aviso', 'Ao adicionar um pagamento o prazo será removido do orçamento. Deseja continuar?')
+					.then(function(success) {
+						self.budget.term_id = null;
+						self.addPayment();
+					}, function(error) { });
+				return;
+			}
+
 			self.paymentDialog('Adicionar pagamento').then(function(success) {
 				self.budget.order_payments.push(new OrderPayment(success));
 			}, function(error) { });
@@ -1075,6 +1124,15 @@
 		 * @param (id) - O pagamento a ser editado.
 		 */
 		function editPayment(payment) {
+			if (self.budget.term_id) {
+				$rootScope.customDialog().showConfirm('Aviso', 'Ao editar um pagamento o prazo será removido do orçamento. Deseja continuar?')
+					.then(function(success) {
+						self.budget.term_id = null;
+						self.editPayment(payment);
+					}, function(error) { });
+				return;
+			}
+
 			var temp = new OrderPayment(payment),
 				options = {
 					companyId: self.budget.order_company_id,
@@ -1102,8 +1160,14 @@
 		 * @param (id) - O pagamento a ser removido.
 		 */
 		function removePayment(payment) {
-			var index = self.budget.order_payments.indexOf(payment);
-			self.budget.order_payments.splice(index, 1);
+			var msg = 'Deseja remover o pagamento: <b>[';
+			msg += payment.order_payment_installment + 'x] ';
+			msg += payment.modality.modality_description + '</b>';
+
+			$rootScope.customDialog().showConfirm('Aviso', msg).then(function(success) {
+				var index = self.budget.order_payments.indexOf(payment);
+				self.budget.order_payments.splice(index, 1);
+			}, function(error) { });
 		}
 
 		/**
@@ -1190,6 +1254,25 @@
 				});
 
 			return deferred.promise;
+		}
+
+		/**
+		 * Recalcula o valor dos pagamentos/parcelas.
+		 */
+		function recalcPayments() {
+			var slice = self.budget.order_value_total / self.budget.order_payments.length,
+				total = 0;
+
+			angular.forEach(self.budget.order_payments, function(item, index) {
+				item.order_payment_value = parseFloat(slice.toFixed(2));
+				item.order_payment_value_total = parseFloat(slice.toFixed(2));
+				item.order_payment_al_discount = 0;
+				item.order_payment_vl_discount = 0;
+				total += item.order_payment_value;
+			});
+			console.log(total);
+
+			self.budget.order_payments[self.budget.order_payments.length - 1].order_payment_value += self.budget.order_value_total - total;
 		}
 
 

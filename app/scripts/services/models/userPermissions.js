@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:10:12
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 12:45:35
+* @Last Modified time: 2017-07-03 08:53:36
 */
 
 (function() {
@@ -17,7 +17,6 @@
 			}
 
 			function convertPermissions(p) {
-				console.log(p);
 				var modules = { }, module = { }, permissions = { }, permission = { };
 
 				angular.forEach(p, function(_module, _keyModule) {

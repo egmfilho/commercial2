@@ -79,7 +79,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					button(ng-click='$mdMenu.open()') Ajuda
 					md-menu-content
 						md-menu-item
-							md-button(ng-click='toast("Aviso!", "Lorem ipsum dolor sit amet.")')
+							md-button(ng-click='toast("Aviso!", "Em breve.")')
 								| Sobre
 
 md-content#order(flex layout-padding style='background-color: #d9d9d9')
@@ -441,8 +441,14 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 				md-card-content
 					div(layout='row')
 						md-input-container(flex)
-							label Observações
+							label Observações do orçamento
 							textarea(ng-model='order.budget.order_note' md-maxlength='150' rows='3')
+
+						span(flex='5')
+
+						md-input-container(flex)
+							label Observações da Nota
+							textarea(ng-model='order.budget.order_note_doc' md-maxlength='150' rows='3')
 
 		//- Pagamento
 		section(name='payment')
@@ -465,7 +471,8 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										| Informe o prazo
 									md-select(ng-model='order.internal.term.tempTerm'
 											data-md-container-class='query-select-container'
-											ng-model-options='{ trackBy: "$value.term_id" }')
+											ng-model-options='{ trackBy: "$value.term_id" }'
+											ng-disabled='!order.budget.order_items.length')
 										md-select-header.select-header
 											input.md-text(ng-model='order.internal.term.queryTerm' 
 													type='search' placeholder='Digite o prazo'
@@ -476,7 +483,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 													ng-click='order.getTermByCode(t.term_code)')
 												| {{t.term_description}}
 
-								md-button.md-primary(ng-click='order.clearTerm()')
+								md-button.md-primary(ng-click='order.clearTerm()' ng-disabled='!order.budget.order_items.length')
 									| Limpar
 
 							div.chule
@@ -499,10 +506,12 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								table.payment-table
 									tbody
 										tr(ng-repeat='p in order.budget.order_payments track by $index' layout='row')
-											td {{p.order_payment_installment}}x
+											td 
+												i.fa.fa-check-circle(ng-if='p.order_payment_initial == "Y"') &nbsp;
+												| {{p.order_payment_installment}}x
 											td {{p.modality.modality_description}}
 											td {{p.order_payment_deadline | date:'dd/MM/yyyy'}}
-											td {{p.order_payment_value | currency:'R$ '}}
+											td {{p.order_payment_value_total | currency:'R$ '}}
 											td
 												md-menu
 													md-button.md-icon-button(tabindex='-1' ng-click='order.editItemMenu($mdMenu, $event)')
@@ -519,19 +528,19 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 																|  Remover
 
 							.payment-table-footer(layout='row')
-								md-button.md-primary(ng-click='order.addPayment()')
+								md-button.md-primary(ng-click='order.addPayment()' ng-disabled='!order.budget.order_items.length')
 									md-tooltip(md-direction='top') Adicionar forma de pagamento
 									i.fa.fa-plus-square-o &nbsp;
 									| Pagamento
 
-								md-button.md-primary(ng-disabled='!order.budget.order_client.person_credit.length || true')
+								md-button.md-primary(ng-disabled='!order.budget.order_client.person_credit.length || !order.budget.order_items.length || true')
 									md-tooltip(md-direction='top') Utilizar crédito do cliente
 									i.fa.fa-plus-square-o &nbsp;
 									| Crédito
 
 								span(flex)
 
-								md-button.md-primary
+								md-button.md-primary(ng-click='order.recalcPayments()' ng-disabled='!order.budget.order_items.length || !order.budget.order_payments.length')
 									md-tooltip(md-direction='top') Recalcular valor das parcelas
 									| Recalcular
 
@@ -586,7 +595,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath !== "/loading" && currentPath.indexOf("/order/print/") < 0')
 	md-toolbar
 		div(layout='row' layout-align='start center' flex)
-			| &nbsp;Usuário: {{order.budget.order_user.user_name}}
+			| &nbsp;Autor: {{order.budget.order_user.user_name}}
 			| &nbsp;|&nbsp;
 			| Empresa: {{order.budget.order_company_id ? (order.budget.order_company.company_code + ' - ' + order.budget.order_company.company_name) : 'Não informado.'}}
 			span(flex)

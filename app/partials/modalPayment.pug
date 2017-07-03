@@ -25,18 +25,24 @@
 					md-icon(md-font-icon='fa fa-calendar')
 
 	div(layout='row')
-		md-input-container(flex='55')
+		md-input-container(flex='35')
 			label Parcelas
 			md-select(name='type' ng-model='ctrl.payment.order_payment_installment')
 				md-option(ng-value='i.modality_item_installment' ng-repeat='i in ctrl.payment.modality.modality_item' ng-click='ctrl.setDeadline(i.modality_item_delay)') 
 					| {{i.modality_item_installment}}x ({{ctrl.payment.order_payment_value / i.modality_item_installment | currency:'R$ '}})
 
-		md-input-container(flex='45')
+		md-input-container(flex='20')
 			label Valor
-			input(ng-model='ctrl.payment.order_payment_value' currency symbol='"R$ "')
+			input(ng-model='ctrl.payment.order_payment_value' ng-change='ctrl.payment.setValue()' currency='"R$ "')
+
+		span(flex)
+		md-input-container
+			md-switch(name='initial' style='margin: 0' ng-true-value='"Y"' ng-false-value='"N"'
+					ng-model='ctrl.payment.order_payment_initial')
+				| Parcela de entrada
 	
 .footer(layout='row' layout-align='end center')
-	md-button.md-primary(name='positive' ng-click='ctrl._close(ctrl.payment)')
+	md-button.md-primary(name='positive' ng-click='ctrl._close(ctrl.payment)' ng-disabled='!ctrl.payment.modality_id')
 		| &nbsp; Confirmar &nbsp;
 
 	md-button.md-primary(name='positive' ng-click='ctrl._cancel()')

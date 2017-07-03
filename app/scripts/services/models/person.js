@@ -2,14 +2,14 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 10:32:39
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-30 17:07:12
+* @Last Modified time: 2017-07-03 08:31:29
 */
 
 (function() {
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('Person', ['Constants', 'Address', 'PersonCredit', function(constants, Address, PersonCredit) {
+		.factory('Person', ['Globals', 'Address', 'PersonCredit', function(Globals, Address, PersonCredit) {
 
 			function Person(person) {
 				this.person_id      = null;
@@ -17,7 +17,7 @@
 				this.person_name    = null;
 				this.person_cpf     = null;
 				this.person_cnpj    = null;
-				this.person_type    = constants['default-person-type'];
+				this.person_type    = Globals.get('default-person-type');
 				this.person_active  = null;
 				this.person_address = new Array();
 				this.person_credit  = new Array();

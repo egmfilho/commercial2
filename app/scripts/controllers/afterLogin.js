@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-19 08:59:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-29 08:47:41
+* @Last Modified time: 2017-07-03 08:43:34
 */
 
 (function() {
@@ -80,6 +80,13 @@
 		}
 
 		function setConstants() {
+			Globals.set('default-person-type', 'F');
+
+			Globals.set('default-customer', {
+				'name': 'CONSUMIDOR',
+				'code': 3354
+			});
+
 			Globals.set('order-status-labels', {
 				'1001': 'Aberto',
 				'1002': 'Exportado',
