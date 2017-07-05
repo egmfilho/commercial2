@@ -45,7 +45,6 @@
 			provider.getByCode(code, options).then(function(success) {
 				self.order = new Order(success.data);
 				self.logo = Globals.get("logo")[self.order.order_company_id].company_logo;
-				console.log('logo:', self.logo);
 				constants.debug && console.log(self.order);
 				$rootScope.loading.unload();
 				

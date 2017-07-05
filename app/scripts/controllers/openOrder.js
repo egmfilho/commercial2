@@ -12,9 +12,9 @@
 	angular.module('commercial2.controllers')
 		.controller('OpenOrderCtrl', OpenOrderCtrl);
 
-		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', 'ProviderOrder', 'Order', 'Globals', 'Constants', 'ElectronWindow' ];
+		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', '$location', 'ProviderOrder', 'Order', 'Globals', 'Constants', 'ElectronWindow' ];
 
-		function OpenOrderCtrl($rootScope, $scope, providerOrder, Order, Globals, constants, ElectronWindow) {
+		function OpenOrderCtrl($rootScope, $scope, $location, providerOrder, Order, Globals, constants, ElectronWindow) {
 
 			var self = this;
 
@@ -51,11 +51,17 @@
 			}
 
 			self.print = function(code) {
-				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + code + '?action=print');
+				if (constants.isElectron)
+					ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + code + '?action=print');
+				else
+					$location.path('/order/print/'+code)
 			}
 
 			self.savePDF = function(code) {
-				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + code + '?action=pdf');
+				if (constants.isElectron)
+					ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + code + '?action=pdf');
+				else
+					$location.path('/order/print/'+code)
 			}
 
 		}

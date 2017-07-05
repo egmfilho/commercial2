@@ -572,15 +572,15 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					md-icon(md-font-set='material-icons') menu
 
 			md-fab-actions
-				md-button.md-fab.md-raised.md-mini
+				md-button.md-fab.md-raised.md-mini(ng-click='order.exportDAV(order.budget.order_id)')
 					md-tooltip(md-direction='right') Exportar DAV
 					md-icon(md-font-icon='fa fa-upload' md-colors="{color: 'green'}")
 
-				md-button.md-fab.md-raised.md-mini
+				md-button.md-fab.md-raised.md-mini(ng-click='order.exportOrder(order.budget.order_id)')
 					md-tooltip(md-direction='right') Exportar pedido
 					md-icon(md-font-icon='fa fa-cloud-upload' md-colors="{color: 'blue'}")
 
-				md-button.md-fab.md-raised.md-mini
+				md-button.md-fab.md-raised.md-mini(ng-click='order.mail()')
 					md-tooltip(md-direction='right') Enviar por email
 					md-icon(md-font-icon='fa fa-envelope' md-colors="{color: 'teal'}")
 

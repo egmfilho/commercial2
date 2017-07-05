@@ -60,7 +60,7 @@
 		margin: 25px 10%;
 	}
 
-	.products {
+	.products{
 		width: 100%;
 		border-collapse: collapse;
 
@@ -98,6 +98,25 @@
 			}
 
 			td:first-child {
+				text-align: left;
+			}
+		}
+	}
+
+	.payments{
+		width: 320px;
+		border-collapse: collapse;
+		float: right;
+		margin-top: 20px;
+
+		tr {
+			display: table-row;
+
+			th, td {
+				display: table-cell;
+				vertical-align: middle;
+				padding: 3px;
+				font-size: 12px;
 				text-align: left;
 			}
 		}
