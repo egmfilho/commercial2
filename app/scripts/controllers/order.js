@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-10 17:23:53
+* @Last Modified time: 2017-07-10 17:45:36
 */
 
 (function() {
@@ -1046,11 +1046,17 @@
 		 * @param (id) - O id do orcamento.
 		 */
 		function exportOrder(id) {
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
 			if (!self.canPrint) return;
+
+			if (self.budget.order_id == null) {
+				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento ainda não foi salvo!');
+				return;
+			}
+			
+			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
+				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado!');
+				return;
+			}
 
 			var deferred = $q.defer();
 
@@ -1067,34 +1073,6 @@
 						deferred.reject(error);
 					});
 				}, function(error) { });
-=======
-=======
->>>>>>> origin/master
->>>>>>> Stashed changes
-			if (self.budget.order_id == null) {
-				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento ainda não foi salvo!');
-				return;
-			}
-			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
-				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado!');
-				return;
-			}
-
-			var deferred = $q.defer();
-
-			constants.debug && console.log('exportando pedido: ' + id);
-			$rootScope.loading.load();
-			providerOrder.exportOrder(id).then(function(success) {
-				self.budget.order_status_id = 1002;
-				$rootScope.toast('Orçamento exportado!', 'Código gerado: '+success.data.order_code);
-				$rootScope.loading.unload();
-				deferred.resolve(success);
-			}, function(error) {
-				constants.debug && console.log(error);
-				$rootScope.loading.unload();
-				deferred.reject(error);
-			});
->>>>>>> origin/master
 
 			return deferred.promise;
 		}
@@ -1104,11 +1082,17 @@
 		 * @param (id) - O id do orcamento.
 		 */
 		function exportDAV(id) {
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
 			if (!self.canPrint) return;
+
+			if (self.budget.order_id == null) {
+				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento ainda não foi salvo!');
+				return;
+			}
+
+			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
+				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado!');
+				return;
+			}
 
 			var deferred = $q.defer();
 
@@ -1125,34 +1109,6 @@
 						deferred.reject(error);
 					});
 				}, function(error) { });
-=======
-=======
->>>>>>> origin/master
->>>>>>> Stashed changes
-			if (self.budget.order_id == null) {
-				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento ainda não foi salvo!');
-				return;
-			}
-			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
-				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado!');
-				return;
-			}
-
-			var deferred = $q.defer();
-
-			constants.debug && console.log('exportando DAV: ' + id);
-			$rootScope.loading.load();
-			providerOrder.exportDAV(id).then(function(success) {
-				self.budget.order_status_id = 1002;
-				$rootScope.toast('Orçamento exportado!', 'Código gerado: '+success.data.dav_code);
-				$rootScope.loading.unload(success);
-				deferred.resolve(success);
-			}, function(error) {
-				constants.debug && console.log(error);
-				$rootScope.loading.unload();
-				deferred.reject(error);
-			});
->>>>>>> origin/master
 
 			return deferred.promise;
 		}
