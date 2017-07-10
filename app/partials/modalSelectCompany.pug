@@ -1,7 +1,7 @@
 .body(layout='column')
 	div(layout='row' layout-align='start center')
 		md-icon.sign(md-font-set='material-icons' flex='10') info
-		p O usuário possui mais de uma empresa vinculada. Por favor informe qual empresa será usada neste orçamento.
+		p Por favor informe qual empresa será utilizada neste orçamento.
 	md-input-container.md-icon-float
 		md-select(name='type' ng-model='ctrl.company' ng-model-options='{ trackBy: $value.company_id }')
 			md-option(ng-value='c' ng-repeat='c in ctrl.companies') 

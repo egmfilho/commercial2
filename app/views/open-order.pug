@@ -1,63 +1,74 @@
-md-content.open-order-container(layout-fill)
+div(layout='column' layout-fill)
+	md-toolbar.open-order-container-nav
+		.md-toolbar-tools
+			md-truncate
+				| Lista de orçamentos
 
-	md-card.card(ng-repeat='o in openOrder.orders')
-		md-card-content(layout='row')
-			.icon(flex='15' layout='column' layout-align='center center')
-				md-icon(
-					md-font-set='material-icons' 
-					ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
-					ng-if='o.order_status_id == globals("order-status-values").open') cloud_queue
-				
-				md-icon(
-					md-font-set='material-icons' 
-					ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
-					ng-if='o.order_status_id == globals("order-status-values").exported') cloud
+			span(flex)
 
-				md-icon(
-					md-font-set='material-icons' 
-					ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
-					ng-if='o.order_status_id == globals("order-status-values").billed') cloud_done
-				
-				span.subtitle 
-					| {{globals("order-status-labels")[o.order_status_id]}}
+			md-button.md-raised(redirect-to='/order/new')
+				| Novo
 
-			.description(flex layout='column')
-				span.md-title
-					a(ng-href='#/order/edit?code={{o.order_code}}') {{o.order_code}} - {{o.order_company.company_name}}
+	md-content.open-order-container(flex)
 
-				div(layout='row')
-					table(flex='70')
-						tr
-							td Vendedor: 
-							td {{o.order_seller.person_code}} - {{o.order_seller.person_name}}
-						tr
-							td Cliente:
-							td {{o.order_client.person_code}} - {{o.order_client.person_name}}
-						tr
-							td Total:
-							td {{o.order_value | currency : 'R$ '}} 
+		md-card.card(ng-repeat='o in openOrder.orders')
+			md-card-content(layout='row')
+				.icon(flex='15' layout='column' layout-align='center center')
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+						ng-if='o.order_status_id == globals("order-status-values").open') cloud_queue
+					
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+						ng-if='o.order_status_id == globals("order-status-values").exported') cloud
 
-					table.well(flex='30')
-						tr
-							td Status: 
-							td {{globals('order-status-labels')[o.order_status_id]}}
-						tr
-							td Cód. ERP: 
-							td {{o.order_code_erp || 'Indisponível'}}
-						tr
-							td Cód. NFE: 
-							td {{o.order_code_nfe || 'Indisponível'}}
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+						ng-if='o.order_status_id == globals("order-status-values").billed') cloud_done
+					
+					span.subtitle 
+						| {{globals("order-status-labels")[o.order_status_id]}}
 
-				div(layout='row')
+				.description(flex layout='column')
 					span.md-title
-						a(ng-href='#/order/edit?code={{o.order_code}}') Recuperar
+						a(ng-href='#/order/edit?code={{o.order_code}}') {{o.order_code}} - {{o.order_company.company_name}}
 
-					span(flex='5')
+					div(layout='row')
+						table(flex='70')
+							tr
+								td Vendedor: 
+								td {{o.order_seller.person_code}} - {{o.order_seller.person_name}}
+							tr
+								td Cliente:
+								td {{o.order_client.person_code}} - {{o.order_client.person_name}}
+							tr
+								td Total:
+								td {{o.order_value_total | currency : 'R$ '}} 
 
-					span.md-title
-						a(ng-click='openOrder.print(o.order_code)') Imprimir
+						table.well(flex='30')
+							tr
+								td Status: 
+								td {{globals('order-status-labels')[o.order_status_id]}}
+							tr
+								td Cód. ERP: 
+								td {{o.order_code_erp || 'Indisponível'}}
+							tr
+								td Cód. NFE: 
+								td {{o.order_code_nfe || 'Indisponível'}}
 
-					span(flex='5')
+					div(layout='row')
+						span.md-title
+							a(ng-href='#/order/edit?code={{o.order_code}}') Recuperar
 
-					span.md-title
-						a(ng-click='openOrder.savePDF(o.order_code)') Salvar PDF
+						span(flex='5')
+
+						span.md-title
+							a(ng-click='openOrder.print(o.order_code)') Imprimir
+
+						span(flex='5')
+
+						span.md-title
+							a(ng-click='openOrder.savePDF(o.order_code)') Salvar PDF

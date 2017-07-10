@@ -2,11 +2,12 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-29 12:50:32
+* @Last Modified time: 2017-07-10 16:26:50
 */
 'use strict';
 
 angular.module('commercial2.constants', [ ]);
+angular.module('commercial2.filters', [ ]);
 angular.module('commercial2.services', [ ]);
 angular.module('commercial2.directives', [ ]);
 angular.module('commercial2.controllers', [ ]);
@@ -23,6 +24,7 @@ angular.module('commercial2', [
 		'egmfilho.inputFilters',
 		'ui.mask',
 		'commercial2.constants',
+		'commercial2.filters',
 		'commercial2.services',
 		'commercial2.directives',
 		'commercial2.controllers'
@@ -131,11 +133,6 @@ angular.module('commercial2', [
 				templateUrl: 'views/print-order.html',
 				controller: 'PrintOrderCtrl',
 				controllerAs: 'print'
-			})
-			.when('/order-tab', {
-				templateUrl: 'views/order-tab.html',
-				controller: 'OrderCtrl',
-				controllerAs: 'order'
 			})
 			.when('/about', {
 				module: 'about',

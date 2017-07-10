@@ -13,7 +13,7 @@
 					md-option(ng-value='m' 
 							ng-repeat='m in ctrl.queryResult track by m.modality_id' 
 							ng-click='ctrl.getModalityById(m.modality_id)')
-						| {{m.modality_description}}
+						| {{m.modality_code}} - {{m.modality_description}}
 
 		div(flex='45' layout='row')
 			md-input-container(flex)

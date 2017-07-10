@@ -28,5 +28,7 @@
     "main-bower-files": "^2.13.1",
     "merge-stream": "^1.0.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "mousetrap": "^1.6.1"
+  }
 }

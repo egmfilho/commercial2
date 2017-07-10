@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-03 14:04:28
+* @Last Modified time: 2017-07-10 08:32:29
 */
 
 (function() {
@@ -75,6 +75,7 @@
 			removeItem: removeItem,
 			hasItem: hasItem,
 			setDeliveryAddress: setDeliveryAddress,
+			removeDeliveryAddress: removeDeliveryAddress,
 			setAlDiscount: setAlDiscount,
 			setVlDiscount: setVlDiscount,
 			updateValues: updateValues,
@@ -207,6 +208,14 @@
 		function setDeliveryAddress(address) {
 			this.address_delivery = new Address(address);
 			this.order_address_delivery_code = this.address_delivery.person_address_code;
+		}
+
+		/**
+		 * Remove o endereco de entrega do pedido.
+		 */
+		function removeDeliveryAddress() {
+			this.address_delivery = new Address();
+			this.order_address_delivery_code = null;
 		}
 
 		/**

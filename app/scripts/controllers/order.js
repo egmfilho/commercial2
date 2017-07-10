@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-03 14:13:38
+* @Last Modified time: 2017-07-10 17:23:53
 */
 
 (function() {
@@ -73,16 +73,43 @@
 		$scope.debug = constants.debug;
 		$scope.globals = Globals.get;
 
-		$scope.fab = {
-			isOpen: false,
-			in: function() { jQuery('.order-fab').addClass('in') },
-			out: function() { jQuery('.order-fab').removeClass('in'); $scope.fab.isOpen = false; },
+		if (constants.isElectron) {
+			var Mousetrap = require('mousetrap');
+
+			Mousetrap.bind(['command+n', 'ctrl+n'], function() {
+				$scope.newOrder();
+				return false;
+			});
+
+			Mousetrap.bind(['command+a', 'ctrl+a'], function() {
+				$scope.open();
+				return false;
+			});
+
+			Mousetrap.bind(['command+s', 'ctrl+s'], function() {
+				$scope.save();
+				return false;
+			});
+
+			Mousetrap.bind(['command+p', 'ctrl+p'], function() {
+				self.print();
+				return false;
+			});
+
+			Mousetrap.bind(['command+e', 'ctrl+e'], function() {
+				self.selectCompany();
+				return false;
+			});
 		}
 
 		function newOrder() {
 			$location.path() == '/order/new' ? $route.reload() : $location.path('/order/new');
 		}
 
+		self.canSave            = canSave;
+		self.canExport          = canExport;
+		self.canPrint           = canPrint;
+		self.canChangeCompany   = canChangeCompany;
 		self.selectCompany      = selectCompany;
 		self.internal           = internalItems();
 		self.budget             = new Order({ order_user: Globals.get('user')});
@@ -111,6 +138,7 @@
 		self.authorizeDiscount  = authorizeDiscount;
 		self.scrollTo           = scrollTo;
 		self.focusOn            = focusOn;
+		self.print              = print;
 		self.savePDF            = savePDF;
 		self.showNotFound       = showNotFound;
 		self.showAddressContact = showAddressContact;
@@ -167,12 +195,21 @@
 					constants.debug && console.log('orcamento carregado', self.budget);
 					$rootScope.loading.unload();
 				}, function(error) {
-					alert('Erro no getOrder, falta tratar');
+					$rootScope.customDialog().showMessage('Erro', 'Não foi possível abrir o orçamento, tente novamente mais tarde.')
+						.then(function(success) {
+							$location.path('/order/new');
+						}, function(error) {
+							$location.path('/order/new');
+						});
 					$rootScope.loading.unload();
 				});
 			} else if ($routeParams.action && $routeParams.action == 'new') {
 				if (!self.budget.order_company_id) {
-					selectCompany();
+					/* Seleciona a empresa principal */
+					var company = Globals.get('user-companies-raw').find(function(company) {
+						return company.user_company_main == 'Y';
+					});
+					self.budget.setCompany(new UserCompany(company).company_erp);
 				}
 			} else {
 				$location.path('/');
@@ -215,6 +252,19 @@
 			if (!self.budget.order_company_id || !self.budget.order_client_id || !self.budget.order_seller_id || !self.budget.order_items.length || !self.budget.order_address_delivery_code) {
 				$rootScope.customDialog().showMessage('Erro!', 'Preencha todos os campos corretamente!');
 				return;
+			}
+
+			if (self.budget.getChange() != 0 && self.budget.order_payments.length) {
+				$rootScope.customDialog().showMessage('Erro!', 'Reveja os valores dos pagamentos!');
+				return;	
+			}
+
+			var today = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+			for (var i = 0; i < self.budget.order_payments.length; i++) {
+				if (moment(self.budget.order_payments[i].order_payment_deadline).isBefore(today)) {
+					$rootScope.customDialog().showMessage('Erro', 'Não é possível salvar o orçamento pois o mesmo contém ao menos uma forma de pagamento com data anterior à data de hoje.');
+					return;
+				}
 			}
 
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja salvar o orçamento atual?')
@@ -355,10 +405,40 @@
 		// ******************************
 
 		/**
+		 * Verifica se o orcamento pode ser salvo.
+		 */
+		function canSave() {
+			return self.budget.order_company_id && self.budget.order_status_id == Globals.get('order-status-values').open;
+		}
+
+		/**
+		 * Verifica se o orcamento pode ser exportado.
+		 */
+		function canExport() {
+			return self.budget.order_code && self.budget.order_status_id == Globals.get('order-status-values').open;
+		}
+
+		/**
+		 * Verifica se o orcamento pode ser impresso.
+		 */
+		function canPrint() {
+			return !!self.budget.order_code;
+		}
+
+		/**
+		 * Verifica se o orcamento pode ter a empresa trocada.
+		 */
+		function canChangeCompany() {
+			return self.budget.order_status_id == Globals.get('order-status-values').open;
+		}
+
+		/**
 		 * Abre uma janela para informar a loja quando 
 		 * o usuario possui mais de uma loja vinculada.
 		 */
 		function selectCompany() {
+			if (!self.canChangeCompany()) return;
+
 			var dialog = $rootScope.customDialog(),
 				controller = function() { },
 				options,
@@ -367,16 +447,16 @@
 				});
 
 			controller.prototype = {
+				_showCloseButton: true,
 				companies: _companies,
 				company: _companies[0]
 			};
 
-			options = { 
-				hasBackdrop: true,
-				clickOutsideToClose: false,
-				escapeToClose: false,
-				zIndex: 1
-			};
+			// options = { 
+			// 	hasBackdrop: true,
+			// 	clickOutsideToClose: false,
+			// 	zIndex: 1
+			// };
 
 			dialog.showTemplate('Informe a empresa', './partials/modalSelectCompany.html', controller, options)
 				.then(function(res) {
@@ -487,6 +567,7 @@
 		function clearCustomer() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
 				self.budget.removeCustomer();
+				self.budget.removeDeliveryAddress();
 				self.internal.tempCustomer = null;	
 				self.internal.tempAddress = new Address();
 				jQuery('input[ng-value="order.budget.order_client.person_code"]').val('');
@@ -497,8 +578,9 @@
 		 * Limpa o campo de observacoes.
 		 */
 		function clearNote() {
-			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar o campo?').then(function() {
-				
+			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
+				self.budget.order_note = null;
+				self.budget.order_note_doc = null;
 			}, function() { });
 		}
 
@@ -506,8 +588,10 @@
 		 * Limpa o campo de pagamento.
 		 */
 		function clearPayments() {
-			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar o campo?').then(function() {
-				
+			$rootScope.customDialog().showConfirm('Aviso', 'Deseja remover todos os pagamentos?').then(function() {
+				self.budget.term_id = null;
+				self.budget.order_payments = new Array();
+				self.clearTerm();
 			}, function() { });
 		}
 
@@ -627,6 +711,8 @@
 			$rootScope.loading.load();
 			getPersonByCode(code, Globals.get('person-categories').customer, options).then(function(success) {
 				setCustomer(success.data);
+				if (code == Globals.get('default-customer').code && self.budget.order_client.person_address.length)
+					self.budget.setDeliveryAddress(self.budget.order_client.person_address[0])
 				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);
@@ -908,6 +994,8 @@
 		 * Instancia uma nova janela e chama o dialogo para salvar o PDF.
 		 */
 		function savePDF() {
+			if (!self.canPrint) return;
+
 			if (constants.isElectron)
 				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + self.budget.order_code + '?action=pdf');
 			else
@@ -918,6 +1006,8 @@
 		 * Instancia uma nova janela e chama o dialogo de impressao.
 		 */
 		function print() {
+			if (!self.canPrint) return;
+
 			if (constants.isElectron)
 				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + self.budget.order_code + '?action=print');
 			else
@@ -956,6 +1046,31 @@
 		 * @param (id) - O id do orcamento.
 		 */
 		function exportOrder(id) {
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+			if (!self.canPrint) return;
+
+			var deferred = $q.defer();
+
+			$rootScope.customDialog().showConfirm('Aviso', 'Exportar pedido?')
+				.then(function(success) {
+					constants.debug && console.log('exportando pedido: ' + id);
+					$rootScope.loading.load();
+					providerOrder.exportOrder(id).then(function(success) {
+						$rootScope.loading.unload();
+						deferred.resolve(success);
+					}, function(error) {
+						constants.debug && console.log(error);
+						$rootScope.loading.unload();
+						deferred.reject(error);
+					});
+				}, function(error) { });
+=======
+=======
+>>>>>>> origin/master
+>>>>>>> Stashed changes
 			if (self.budget.order_id == null) {
 				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento ainda não foi salvo!');
 				return;
@@ -979,6 +1094,7 @@
 				$rootScope.loading.unload();
 				deferred.reject(error);
 			});
+>>>>>>> origin/master
 
 			return deferred.promise;
 		}
@@ -988,6 +1104,31 @@
 		 * @param (id) - O id do orcamento.
 		 */
 		function exportDAV(id) {
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+			if (!self.canPrint) return;
+
+			var deferred = $q.defer();
+
+			$rootScope.customDialog().showConfirm('Aviso', 'Exportar DAV?')
+				.then(function(success) {
+					constants.debug && console.log('exportando DAV: ' + id);
+					$rootScope.loading.load();
+					providerOrder.exportDAV(id).then(function(success) {
+						$rootScope.loading.unload(success);
+						deferred.resolve(success);
+					}, function(error) {
+						constants.debug && console.log(error);
+						$rootScope.loading.unload();
+						deferred.reject(error);
+					});
+				}, function(error) { });
+=======
+=======
+>>>>>>> origin/master
+>>>>>>> Stashed changes
 			if (self.budget.order_id == null) {
 				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento ainda não foi salvo!');
 				return;
@@ -1011,6 +1152,7 @@
 				$rootScope.loading.unload();
 				deferred.reject(error);
 			});
+>>>>>>> origin/master
 
 			return deferred.promise;
 		}
@@ -1055,71 +1197,68 @@
 			var term = self.internal.term.tempTerm,
 				message = '';
 
+			function add() {
+				var i,
+					dateCalc,
+					payments = [ ];
+
+				/* Calcula os vencimentos das parcelas */
+				dateCalc = function(installment, delay, interval) {
+					var date = new Date(),
+						today = new Date(),
+						installment_delay = installment * interval;
+
+					date.setDate(today.getDate() + delay + installment_delay);
+
+					return date;
+				}
+
+				/* Trata primeiro para quando for cartao de credito */
+				if (modality.modality_type == Globals.get('modality-types')['credit-card']) {
+					payments.push(new OrderPayment({
+							order_id: self.budget.order_id,
+							order_payment_value: self.budget.getChange(),
+							order_payment_value_total: self.budget.getChange(),
+							order_payment_deadline: dateCalc(0, term.term_delay, 0),
+							order_payment_installment: term.term_installment,
+							modality_id: modality.modality_id,
+							modality: new PaymentModality(modality)
+						}));
+				} else {
+					var total = 0;
+					for (i = 0; i < term.term_installment; i++) {
+						payments.push(new OrderPayment({
+							order_id: self.budget.order_id,
+							order_payment_value: parseFloat((self.budget.getChange() / term.term_installment).toFixed(2)),
+							order_payment_value_total: parseFloat((self.budget.getChange() / term.term_installment).toFixed(2)),
+							order_payment_deadline: dateCalc(i, term.term_delay, term.term_interval),
+							order_payment_installment: 1,
+							order_payment_initial: i == 0 ? 'Y' : 'N',
+							modality_id: modality.modality_id,
+							modality: new PaymentModality(modality)
+						}));
+
+						total += payments[i].order_payment_value;
+					}
+					payments[payments.length - 1].order_payment_value += self.budget.order_value_total - total;
+					payments[payments.length - 1].order_payment_value_total += self.budget.order_value_total - total;
+				}
+
+				self.budget.order_payments = self.budget.order_payments.concat(payments);
+				self.budget.term_id = term.term_id;
+			}
+
+
 			if (self.budget.order_payments.length) {
-				message = 'Ao adicionar um prazo, todos os pagamentos previamente informados serão removidos. ';
+				message = 'Ao adicionar um prazo, todos os pagamentos já informados serão removidos. ';
 				message += 'Deseja Continuar?';
 				$rootScope.customDialog().showConfirm('Aviso', message).then(function(success) {
 					self.budget.order_payments = new Array();
-					self.addModality(modality);
+					add();
 				}, function(error){ });
-				return;
 			} else {
-				message = 'Adicionar forma de pagamento: <b>['; 
-				message += term.term_installment + 'x] ';
-				message += modality.modality_description + '</b>?';
+				add();
 			}
-
-			$rootScope.customDialog().showConfirm('Confirmação', message)
-				.then(function(success) {
-					var i,
-						dateCalc,
-						payments = [ ];
-
-					/* Calcula os vencimentos das parcelas */
-					dateCalc = function(installment, delay, interval) {
-						var date = new Date(),
-							today = new Date(),
-							installment_delay = installment * interval;
-
-						date.setDate(today.getDate() + delay + installment_delay);
-
-						return date;
-					}
-
-					/* Trata primeiro para quando for cartao de credito */
-					if (modality.modality_type == Globals.get('modality-types')['credit-card']) {
-						payments.push(new OrderPayment({
-								order_id: self.budget.order_id,
-								order_payment_value: self.budget.getChange(),
-								order_payment_value_total: self.budget.getChange(),
-								order_payment_deadline: dateCalc(0, term.term_delay, 0),
-								order_payment_installment: term.term_installment,
-								modality_id: modality.modality_id,
-								modality: new PaymentModality(modality)
-							}));
-					} else {
-						var total = 0;
-						for (i = 0; i < term.term_installment; i++) {
-							payments.push(new OrderPayment({
-								order_id: self.budget.order_id,
-								order_payment_value: parseFloat((self.budget.getChange() / term.term_installment).toFixed(2)),
-								order_payment_value_total: parseFloat((self.budget.getChange() / term.term_installment).toFixed(2)),
-								order_payment_deadline: dateCalc(i, term.term_delay, term.term_interval),
-								order_payment_installment: 1,
-								modality_id: modality.modality_id,
-								modality: new PaymentModality(modality)
-							}));
-
-							total += payments[i].order_payment_value;
-						}
-						payments[payments.length - 1].order_payment_value += self.budget.order_value_total - total;
-						payments[payments.length - 1].order_payment_value_total += self.budget.order_value_total - total;
-					}
-
-					self.budget.order_payments = self.budget.order_payments.concat(payments);
-					self.budget.term_id = term.term_id;
-
-				}, function(error) { });
 		}
 
 		/**
@@ -1128,7 +1267,7 @@
 		 */
 		function addPayment() {
 			if (self.budget.term_id) {
-				$rootScope.customDialog().showConfirm('Aviso', 'Ao adicionar um pagamento o prazo será removido do orçamento. Deseja continuar?')
+				$rootScope.customDialog().showConfirm('Aviso', 'Para adicionar um pagamento o prazo deve ser removido do orçamento. Deseja remover o prazo?')
 					.then(function(success) {
 						self.budget.term_id = null;
 						self.addPayment();
@@ -1137,7 +1276,29 @@
 			}
 
 			self.paymentDialog('Adicionar pagamento').then(function(success) {
-				self.budget.order_payments.push(new OrderPayment(success));
+				var payment = new OrderPayment(success);
+
+				/* Se for selecionado como parcela inicial verifica se existe algum pagamento com data inferior. */
+				if (payment.order_payment_initial == 'Y') {
+					var i, flag;
+
+					for (i = 0; i < self.budget.order_payments.length; i++) {
+						if (self.budget.order_payments[i].order_payment_deadline.getTime() < payment.order_payment_deadline.getTime()) {
+							flag = true;
+							break;
+						}
+					}
+
+					if (flag) {
+						$rootScope.customDialog().showMessage('Aviso', 'Não foi possível colocar o pagamento como parcela inicial pois já existe um pagamento com uma data inferior.');
+						payment.order_payment_initial = 'N';
+					} else {
+						/* Desmarca o atual incial. */
+						angular.forEach(self.budget.order_payments, function(item) { item.order_payment_initial = 'N' });
+					}
+				}
+
+				self.budget.order_payments.push(payment);
 			}, function(error) { });
 		}
 
@@ -1147,7 +1308,7 @@
 		 */
 		function editPayment(payment) {
 			if (self.budget.term_id) {
-				$rootScope.customDialog().showConfirm('Aviso', 'Ao editar um pagamento o prazo será removido do orçamento. Deseja continuar?')
+				$rootScope.customDialog().showConfirm('Aviso', 'Para editar um pagamento o prazo deve ser removido do orçamento. Deseja remover o prazo?')
 					.then(function(success) {
 						self.budget.term_id = null;
 						self.editPayment(payment);
@@ -1168,8 +1329,30 @@
 				/* coloca no pagamento e manda pro modal */
 				temp.modality = new PaymentModality(success.data);
 				self.paymentDialog('Editar pagamento', temp).then(function(success) {
-					var index = self.budget.order_payments.indexOf(payment);
-					self.budget.order_payments[index] = new OrderPayment(success);
+					var index = self.budget.order_payments.indexOf(payment),
+						payment = new OrderPayment(success);
+
+					/* Copiado do addPayment(). */
+					if (payment.order_payment_initial == 'Y') {
+						var i, flag;
+
+						for (i = 0; i < self.budget.order_payments.length; i++) {
+							if (self.budget.order_payments[i].order_payment_deadline.getTime() < payment.order_payment_deadline.getTime()) {
+								flag = true;
+								break;
+							}
+						}
+
+						if (flag) {
+							$rootScope.customDialog().showMessage('Aviso', 'Não foi possível colocar o pagamento como parcela inicial pois já existe um pagamento com uma data inferior.');
+							payment.order_payment_initial = 'N';
+						} else {
+							/* Desmarca o atual incial. */
+							angular.forEach(self.budget.order_payments, function(item) { item.order_payment_initial = 'N' });
+						}
+					}
+
+					self.budget.order_payments[index] = payment;
 				}, function(error) { });
 			}, function(error) {
 				constants.debug && console.log(error);
@@ -1182,6 +1365,15 @@
 		 * @param (id) - O pagamento a ser removido.
 		 */
 		function removePayment(payment) {
+			if (self.budget.term_id) {
+				$rootScope.customDialog().showConfirm('Aviso', 'Para remover um pagamento o prazo deve ser removido do orçamento. Deseja remover o prazo?')
+					.then(function(success) {
+						self.budget.term_id = null;
+						self.removePayment(payment);
+					}, function(error) { });
+				return;
+			}
+
 			var msg = 'Deseja remover o pagamento: <b>[';
 			msg += payment.order_payment_installment + 'x] ';
 			msg += payment.modality.modality_description + '</b>';
@@ -1223,7 +1415,8 @@
 				modality: payment ? new PaymentModality(payment.modality) : null,
 				
 				payment: payment ? new OrderPayment(payment) : new OrderPayment({
-					order_payment_value: self.budget.getChange()
+					order_payment_value: self.budget.getChange(),
+					order_payment_value_total: self.budget.getChange()
 				}),
 				
 				queryModality: payment ? payment.modality.modality_description : null,
@@ -1306,15 +1499,88 @@
 
 		function showEditItemModal(item) {
 			var dialog = $rootScope.customDialog(),
-				controller = function() { };
+				controller;
 
-			controller.prototype = {
-				_showCloseButton: true,
-				focusOn: focusOn,
-				item: new OrderItem(item)
-			};
+			controller = function() {
+				var scope = this;
 
-			dialog.showTemplate('Editar', './partials/modalEditItem.html', controller)
+				this._showCloseButton = true;
+				this.focusOn = focusOn;
+				this.item = new OrderItem(item);
+				this.tempAl = item.order_item_al_discount;
+				this.tempVl = item.order_item_vl_discount;
+
+				this.setItemAlDiscount = function(value) {
+					value = parseFloat(value);
+
+					var max = parseFloat(Globals.get('user-max-discount') || 0),
+						setAl = function(al) {
+							scope.item.setAlDiscount(al);
+							scope.tempAl = scope.item.order_item_al_discount;
+							scope.tempVl = scope.item.order_item_vl_discount;
+						};
+
+					if (scope.tempAl == scope.item.order_item_al_discount && scope.tempVl == scope.item.order_item_vl_discount)
+						return;
+
+					if (value > max) {
+						authorizeDiscount(value).then(function(success) {
+							if (value > success.user_max_discount) {
+								$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
+								setAl(scope.item.order_item_al_discount);
+							} else {
+								scope.item.setAudit({
+									user_id: success.user_id,
+									user_name: success.user_name,
+									product_code: scope.item.product.product_code,
+									product_name: scope.item.product.product_name
+								});
+								setAl(value);
+							}
+						}, function(error) {
+							setAl(scope.item.order_item_al_discount);
+						});
+					} else {
+						setAl(value);
+					}
+				}
+
+				this.setItemVlDiscount = function(value) {
+					var currentAl = scope.item.getValue() == 0 ? 0 : (parseFloat(value) * 100) / scope.item.getValue(),
+						maxAl = parseFloat(Globals.get('user-max-discount') || 0),
+						setVl = function(vl) {
+							scope.item.setVlDiscount(vl);
+							scope.tempAl = scope.item.order_item_al_discount;
+							scope.tempVl = scope.item.order_item_vl_discount;
+						};
+
+					if (scope.tempAl == scope.item.order_item_al_discount && scope.tempVl == scope.item.order_item_vl_discount)
+						return;
+
+					if (currentAl > maxAl) {
+						authorizeDiscount(currentAl).then(function(success) {
+							if (currentAl > success.user_max_discount) {
+								$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
+								setVl(scope.item.order_item_vl_discount);
+							} else {
+								scope.item.setAudit({
+									user_id: success.user_id,
+									user_name: success.user_name,
+									product_code: scope.item.product.product_code,
+									product_name: scope.item.product.product_name,
+								});
+								setVl(value);
+							}
+						}, function(error) {
+							setVl(scope.item.order_item_vl_discount);
+						});
+					} else {
+						setVl(value);
+					}
+				};
+			}
+
+			dialog.showTemplate('Editar', './partials/modalEditItem.html', controller, { zIndex: 1 })
 				.then(function(res) {
 					var index = self.budget.order_items.indexOf(item);
 					self.budget.replaceItem(index, res);

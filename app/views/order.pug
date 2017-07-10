@@ -6,9 +6,11 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 		div
 			.md-toolbar-tools
 				h1(ng-if='order.budget.order_code') 
-					| Orçamento código {{order.budget.order_code}} em {{order.budget.order_date | date}}
+					| {{order.budget.order_code}} ({{order.budget.order_date | date:'short'}})
+					span(md-colors="{color: 'orange'}") &nbsp;[{{order.budget.order_company.company_name}}]
 				h1(ng-if='!order.budget.order_code') 
 					| Novo Orçamento
+					span(md-colors="{color: 'orange'}") &nbsp;[{{order.budget.order_company.company_name}}]
 			md-menu-bar.order-menu-bar
 				md-menu
 					button(ng-click='$mdMenu.open()') Arquivo
@@ -17,24 +19,28 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 							md-button(ng-click='newOrder()')
 								md-icon(md-font-set='material-icons') insert_drive_file
 								|  Novo
+								span.md-alt-text {{ 'M-N' | keyboardShortcut }}
 						md-menu-item
 							md-button(ng-click='open()')
 								md-icon(md-font-set='material-icons') restore_page
-								|  Recuperar
+								|  Abrir
+								span.md-alt-text {{ 'M-A' | keyboardShortcut }}
 						md-menu-divider
 						md-menu-item
-							md-button(ng-click='save()' ng-disabled='!order.budget.order_company_id')
+							md-button(ng-click='save()' ng-disabled='!order.canSave()')
 								md-icon(md-font-set='material-icons') save
 								|  Salvar
+								span.md-alt-text {{ 'M-S' | keyboardShortcut }}
 						md-menu-divider
 						md-menu-item
-							md-button(ng-click='order.print()' ng-disabled='!order.budget.order_code')
+							md-button(ng-click='order.print()' ng-disabled='!order.canPrint()')
 								md-icon(md-font-set='material-icons') print
 								|  Imprimir
+								span.md-alt-text {{ 'M-P' | keyboardShortcut }}
 						md-menu-item
-							md-button(ng-click='order.savePDF()' ng-disabled='!order.budget.order_code')
+							md-button(ng-click='order.savePDF()' ng-disabled='!order.canPrint()')
 								md-icon(md-font-set='material-icons') picture_as_pdf
-								|  Exportar PDF
+								|  Salvar PDF
 						md-menu-item
 							md-button(ng-click='' disabled)
 								md-icon(md-font-set='material-icons') mail
@@ -48,13 +54,10 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					button(ng-click='$mdMenu.open()') Orçamento
 					md-menu-content
 						md-menu-item
-							md-button(ng-click='' disabled)
-								md-icon(md-font-set='material-icons') assignment_ind
-								| Remover vendedor
-						md-menu-item
-							md-button(ng-click='' disabled)
-								md-icon(md-font-set='material-icons') person
-								| Remover cliente
+							md-button(ng-click='order.selectCompany()' ng-disabled='!order.canChangeCompany()')
+								md-icon(md-font-set='material-icons') business
+								| Informar empresa
+								span.md-alt-text {{ 'M-E' | keyboardShortcut }}
 						md-menu-divider
 						md-menu-item
 							md-button(ng-click='' disabled)
@@ -75,6 +78,9 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 						md-menu-item
 							md-button(ng-click='order.scrollTo("section[name=\'notes\']")')
 								| Observações
+						md-menu-item
+							md-button(ng-click='order.scrollTo("section[name=\'payment\']")')
+								| Pagamento
 				md-menu
 					button(ng-click='$mdMenu.open()') Ajuda
 					md-menu-content
@@ -85,6 +91,20 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
 	.order-container
+		//- Info
+		section(name='control' ng-if='!order.canExport()' ng-cloak)
+			md-card(layout-align='center')
+				md-card-content.offset-top-5
+					.offset-top-5(layout='row' layout-align='center center')
+						p 
+							b &nbsp;Status: 
+							| exportado.
+							b &nbsp;Cód. ERP: 
+							| {{order.budget.order_code_erp || 'Indisponível'}}
+							b &nbsp;Cód. NFE: 
+							| {{order.budget.order_code_nfe || 'Indisponível'}}
+
+
 		//- Vendedor
 		section(name='seller')
 			md-card
@@ -365,7 +385,8 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										//- card de endereco
 										div(flex='33' 
 												ng-repeat='a in order.budget.order_client.person_address track by $index'
-												ng-if='order.budget.order_client.person_address.length > 0')
+												ng-if='order.budget.order_client.person_address.length > 0 && globals("default-customer").code != order.budget.order_client.person_code' 
+												ng-show='a.person_address_active == "Y"')
 											md-card(ng-class='{"active": a.person_address_code == order.budget.order_address_delivery_code}')
 												md-card-content(layout='column' layout-fill) 
 													div(flex='15' layout='row')
@@ -397,7 +418,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 																md-icon(md-font-icon='fa fa-check')
 
 										//- card vazio 
-										div(flex='33' ng-if='order.budget.order_client.person_address.length > 0')
+										div(flex='33' ng-if='order.budget.order_client.person_address.length > 0 && globals("default-customer").code != order.budget.order_client.person_code')
 											md-card.dashed-empty-card
 												md-card-content(layout='column' layout-align='center center' layout-fill)
 													div
@@ -417,7 +438,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 														| Código: {{order.budget.order_address_delivery_code}}
 													span {{order.budget.address_delivery.toString()}}
 
-							md-tab(label='Novo endereço' ng-disabled='!order.budget.order_client.person_id')
+							md-tab(label='Novo endereço' ng-disabled='!order.budget.order_client.person_id || globals("default-customer").code == order.budget.order_client.person_code')
 								md-content
 									form(layout='row' name='newAddressForm')
 										md-card.new-address-card(flex)
@@ -460,7 +481,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								span.md-title Pagamento
 								span.md-subhead Informe as formas de pagamento
 							div(layout='column' layout-align='center end' layout-fill)
-								md-button.md-raised(ng-click='order.clearPayment()')
+								md-button.md-raised(ng-click='order.clearPayments()')
 									| Limpar
 				md-card-content
 					div(layout='row')
@@ -507,6 +528,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									tbody
 										tr(ng-repeat='p in order.budget.order_payments track by $index' layout='row')
 											td 
+												md-tooltip(md-direction='top' ng-if='p.order_payment_initial == "Y"') Parcela de entrada
 												i.fa.fa-check-circle(ng-if='p.order_payment_initial == "Y"') &nbsp;
 												| {{p.order_payment_installment}}x
 											td {{p.modality.modality_description}}
@@ -562,6 +584,24 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						pre(flex='60' ng-if='debug')
 							| {{order.budget.order_payments | json}}
 
+<<<<<<< HEAD
+		//- Controle
+		section(name='control')
+			md-card(layout-align='center')
+				md-card-content.offset-top-5
+					.offset-top-5(layout='row')
+						md-button.md-raised.md-primary(flex='25' ng-click='' disabled)
+							| Excluir
+						
+						md-button.md-raised.md-primary(flex='25' ng-click='order.exportDAV()' ng-disabled='!order.canExport()')
+							| Exportar DAV
+						
+						md-button.md-raised.md-primary(flex='25' ng-click='order.exportOrder()' ng-disabled='!order.canExport()')
+							| Exportar Pedido
+						
+						md-button.md-raised.md-primary(flex='25' ng-click='save()' ng-disabled='!order.canSave()')
+							| Salvar
+=======
 		//- FAB
 		md-fab-speed-dial.order-fab(class='md-scale' 
 				md-open='fab.isOpen' md-direction='up' 
@@ -591,6 +631,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 				md-button.md-fab.md-raised.md-mini(ng-click='save()')
 					md-tooltip(md-direction='right') Salvar
 					md-icon(md-font-set='material-icons' md-colors="{color: 'indigo'}") save
+>>>>>>> origin/master
 
 footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath !== "/loading" && currentPath.indexOf("/order/print/") < 0')
 	md-toolbar

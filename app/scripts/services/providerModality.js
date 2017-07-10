@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-28 12:18:27
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-29 17:26:28
+* @Last Modified time: 2017-07-10 08:59:30
 */
 
 (function() {
@@ -43,7 +43,7 @@
 					}).$promise;
 				}
 
-				function getByCode(code) {
+				function getByCode(code, options) {
 					return provider.get({
 						action: 'get'
 					}, {

@@ -19,18 +19,17 @@
 		md-input-container(flex='25')
 			label 
 				| Desconto %
-			input(name='edit.al-discount' ng-model='ctrl.item.order_item_al_discount' 
-					ng-model-options="{ updateOn: 'default blur' }"
-					ng-blur='ctrl.item.setAlDiscount(ctrl.item.order_item_al_discount)'
+			input(name='edit.al-discount' ng-model='ctrl.tempAl' 
+					ng-blur='ctrl.setItemAlDiscount(ctrl.tempAl)'
 					keys-shortcuts enter='ctrl.focusOn("input[name=\'edit.vl-discount\']")'
 					currency trim max-fraction-size='4' number-only)
 		
 		md-input-container(flex='25')
 			label 
 				| Desconto R$
-			input(name='edit.vl-discount' ng-model='ctrl.item.order_item_vl_discount' 
+			input(name='edit.vl-discount' ng-model='ctrl.tempVl' 
 					ng-model-options="{ updateOn: 'default blur' }"
-					ng-blur='ctrl.item.setVlDiscount(ctrl.item.order_item_vl_discount)'
+					ng-blur='ctrl.setItemVlDiscount(ctrl.tempVl)'
 					keys-shortcuts enter='ctrl.focusOn("button[name=\'positive\']")'
 					currency number-only)
 
