@@ -36,5 +36,5 @@ Cria o app dentro da pasta `<projeto>/releases/Commercial-win32-x64`
 
 ```sh
 # gera o app para Windows
-npm run build-win
+npm run build-win32
 ```

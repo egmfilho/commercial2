@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-10 13:20:17
+* @Last Modified time: 2017-07-11 13:14:48
 */
 
 const electron = require('electron');
@@ -29,6 +29,8 @@ function createWindow() {
 		height: 768,
 		devTools: false
 	});
+
+	mainWindow.maximize();
 
 	// and load the index.html of the app.
 	mainWindow.loadURL(url.format({

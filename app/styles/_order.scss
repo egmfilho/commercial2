@@ -2,8 +2,88 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-11 10:21:41
+* @Last Modified time: 2017-07-11 12:52:41
 */
+
+.customer-credit-modal {
+	.credit-table-header-container {
+		padding-top: 14px;
+		padding-right: 10px;
+		border: 1px solid #d7d7d7;
+		border-bottom: none;
+	}
+
+	.credit-table {
+		width: 100%;
+		border-collapse: collapse;
+
+		tr {
+			display: table-row;
+			background-color: white;
+
+			th, td {
+				display: table-cell;
+				padding: 1px 5px;
+
+				&:nth-child(1) {
+					// width: 32px;
+				}
+
+				&:nth-child(2) {
+					// width: auto;
+				}
+
+				&:nth-child(3), &:nth-child(4) {
+					// width: 20%;
+				}
+
+				&:nth-child(5) {
+					// width: 40px;
+					// padding: 0;
+
+					button {
+						// margin: 0;
+						// font-size: 20px;
+						// padding-top: 10px;
+					}
+				}
+			}
+		}
+
+		thead {		
+			tr {		
+				th {
+					text-align: left;
+					color: rgba(#000, .4);
+					font-size: 12px;
+					font-weight: bold;
+					padding-bottom: 12px;
+				}
+			}
+		}
+
+		tbody {
+			tr {
+				transition: background-color .5s ease; 
+
+				/* Para evitar delay nos updates dos itens */
+				&.ng-animate {
+					transition: 0s none;
+				}
+
+				&:hover {
+					background-color: #e7e7e7;
+				}
+
+				td {
+					color: rgba(#000, .6);
+					font-size: 12px;
+					vertical-align: middle;
+				}
+			}		
+		}
+	}
+}
 
 .modal-saved {
 	md-icon {

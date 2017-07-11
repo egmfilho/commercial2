@@ -1,0 +1,9 @@
+.customer-credit-modal
+	.body(layout='column')
+		
+
+	.footer(layout='row' layout-align='end center' style='border-top: 1px solid #d7d7d7;')
+		md-button.md-primary(name='positive' ng-click='ctrl._close()')
+			| &nbsp; Ok &nbsp;
+		md-button.md-primary(name='negative' ng-click='ctrl._cancel()')
+			| &nbsp; Cancelar &nbsp;

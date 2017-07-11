@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-11 10:26:01
+* @Last Modified time: 2017-07-11 14:01:34
 */
 
 (function() {
@@ -68,7 +68,7 @@
 		OrderPayment,
 		ElectronWindow) {
 
-		var self = this;
+		var self = this, _focusOn;
 
 		$scope.debug = constants.debug;
 		$scope.globals = Globals.get;
@@ -115,6 +115,9 @@
 		self.setTotalAlDiscount = setTotalAlDiscount;
 		self.setTotalVlDiscount = setTotalVlDiscount;
 		self.authorizeDiscount  = authorizeDiscount;
+		self.editItem           = editItem;
+		self.addItem            = addItem;
+		self.removeItem         = removeItem;
 		self.scrollTo           = scrollTo;
 		self.focusOn            = focusOn;
 		self.print              = print;
@@ -133,9 +136,6 @@
 		self.addCredit          = addCredit;
 		self.recalcPayments     = recalcPayments;
 
-		self.showEditItemModal  = showEditItemModal;
-		self.addItem            = addItem;
-		self.removeItem         = removeItem;
 
 		$scope.$on('$destroy', function() {
 			if (constants.isElectron)
@@ -146,6 +146,14 @@
 		});
 
 		$scope.$on('$viewContentLoaded', function() {
+			$timeout(function() {
+				jQuery('section[name="seller"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'seller' });
+				jQuery('section[name="products"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'products' });
+				jQuery('section[name="customer"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'customer' });
+				jQuery('section[name="notes"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'notes' });
+				jQuery('section[name="payment"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'customer' });
+			}, 200);
+
 			self.searchTerm();
 
 			if ($routeParams.action && $routeParams.action == 'edit' && $routeParams.code) {
@@ -966,6 +974,59 @@
 		}
 
 		/**
+		 * Edita um item da tabela de items do orcamento.
+		 * @param {object} item - O item a ser editado.
+		 */
+		function editItem(item) {
+			self.internal.tempItem = new OrderItem(item);
+			self.internal.tempItemAlDiscount = item.order_item_al_discount;
+			self.internal.tempItemVlDiscount = item.order_item_vl_discount;
+			self.internal.tempProduct = new Product(item.product);
+			
+			self.budget.removeItem(item);
+		}
+
+		/**
+		 * Adiciona o item temporario a lista de items do orcamento.
+		 */
+		function addItem() {
+			self.focusOn('input[name="autocompleteProduct"]');
+
+			$timeout(function() {
+				if (self.internal.tempItem.product && self.internal.tempItem.product.product_id) {
+					if (self.internal.tempItem.order_item_amount > 0) {
+						self.budget.addItem(new OrderItem(self.internal.tempItem));
+						var container = jQuery('.container-table');
+						container.animate({ scrollTop: container.height() });
+					}
+
+					self.internal.tempProduct = null;
+					self.internal.tempItemAlDiscount = 0;
+					self.internal.tempItemVlDiscount = 0;
+					self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() });
+				}
+			}, 100);
+		}
+
+		/**
+		 * Remove um item da tabela de items do orcamento.
+		 * @param {object} item - O item a ser removido.
+		 */
+		function removeItem(item) {
+			if (!item)
+				return;
+
+			var message = 'Deseja remover o item? <br><br><b>';
+			message += item.product.product_code + ' - ';
+			message += item.product.product_name + '</b>';
+
+			$rootScope.customDialog().showConfirm('Aviso', message)
+				.then(function(success) {
+					self.budget.removeItem(item);
+				}, function(error) { });
+		}
+
+		/**
 		 * Rola a tela ate o elemento informado.
 		 * @param {(string|object)} selector - O elemento para qual o scroll vai rolar.
 		 */
@@ -1022,7 +1083,7 @@
 
 		/**
 		 * Exibe um modal com os contatos do endereco.
-		 * @param (object) - um array com os contatos.
+		 * @param {object} array - um array com os contatos.
 		 */
 		function showAddressContact(array) {
 			var html = '';
@@ -1042,7 +1103,7 @@
 
 		/**
 		 * Exporta o orcamento para pedido.
-		 * @param (id) - O id do orcamento.
+		 * @param {string} id - O id do orcamento.
 		 */
 		function exportOrder(id) {
 			if (!self.canPrint) return;
@@ -1078,7 +1139,7 @@
 
 		/**
 		 * Exporta o orcamento para DAV.
-		 * @param (id) - O id do orcamento.
+		 * @param {string} id - O id do orcamento.
 		 */
 		function exportDAV(id) {
 			if (!self.canPrint) return;
@@ -1259,7 +1320,7 @@
 
 		/**
 		 * Edita o pagamento informado.
-		 * @param (id) - O pagamento a ser editado.
+		 * @param {object} payment - O pagamento a ser editado.
 		 */
 		function editPayment(payment) {
 			if (self.budget.term_id) {
@@ -1317,7 +1378,7 @@
 
 		/**
 		 * Remove o pagamento informado.
-		 * @param (id) - O pagamento a ser removido.
+		 * @param {string} id - O pagamento a ser removido.
 		 */
 		function removePayment(payment) {
 			if (self.budget.term_id) {
@@ -1341,9 +1402,9 @@
 
 		/**
 		 * Abre uma janela para a insercao ou edicao de uma forma de pagamento.
-		 * @param (id) - O titulo do modal.
-		 * @param (object) - O pagamento a ser editado.
-		 * @returns (object) - Uma promise com o resultado.
+		 * @param {string} title - O titulo do modal.
+		 * @param {object} payment - O pagamento a ser editado.
+		 * @returns {object} - Uma promise com o resultado.
 		 */
 		function paymentDialog(title, payment) {
 			var deferred = $q.defer(),
@@ -1430,7 +1491,7 @@
 		 * Abre uma janela para selecionar o credito.
 		 */
 		function addCredit() {
-				
+			constants.debug && console.log('creditos:', self.budget.order_client.person_credit);
 		}
 
 		/**
@@ -1458,6 +1519,31 @@
 
 		function bindKeys() {
 			var Mousetrap = require('mousetrap');
+
+			/* Avancar sessao */
+			Mousetrap.bind('shift+enter', function(e, combo) {
+				switch(_focusOn) {
+					case 'seller':
+						self.focusOn('input[name="autocompleteProduct"]');
+						break;
+
+					case 'products':
+						self.focusOn('input[name="customer-code"]');
+						break;
+
+					case 'customer':
+						self.focusOn('textarea[name="order-note"]');
+						break;
+
+					case 'notes':
+						break;
+
+					case 'payment':
+						break;
+				}
+
+				return false;
+			});
 
 			/* Novo orcamento */
 			Mousetrap.bind(['command+n', 'ctrl+n'], function() {
@@ -1497,19 +1583,19 @@
 
 			/* Ir para produtos */
 			Mousetrap.bind(['command+2', 'ctrl+2'], function() {
-				self.scrollTo("section[name=\'products\']")
+				self.focusOn('input[name="autocompleteProduct"]');
 				return false;
 			});
 
 			/* Ir para cliente */
 			Mousetrap.bind(['command+3', 'ctrl+3'], function() {
-				self.scrollTo("section[name=\'customer\']")
+				self.focusOn('input[name="customer-code"]');
 				return false;
 			});
 
 			/* Ir para observacoes */
 			Mousetrap.bind(['command+4', 'ctrl+4'], function() {
-				self.scrollTo("section[name=\'notes\']")
+				self.focusOn('textarea[name="order-note"]');
 				return false;
 			});
 
@@ -1523,6 +1609,7 @@
 		function unbindKeys() {
 			var Mousetrap = require('mousetrap');
 
+			Mousetrap.unbind('shift+enter');
 			Mousetrap.unbind(['command+n', 'ctrl+n']);
 			Mousetrap.unbind(['command+a', 'ctrl+a']);
 			Mousetrap.unbind(['command+s', 'ctrl+s']);
@@ -1533,129 +1620,6 @@
 			Mousetrap.unbind(['command+3', 'ctrl+3']);
 			Mousetrap.unbind(['command+4', 'ctrl+4']);
 			Mousetrap.unbind(['command+5', 'ctrl+5']);
-		}
-
-		function showEditItemModal(item) {
-			var dialog = $rootScope.customDialog(),
-				controller;
-
-			controller = function() {
-				var scope = this;
-
-				this._showCloseButton = true;
-				this.focusOn = focusOn;
-				this.item = new OrderItem(item);
-				this.tempAl = item.order_item_al_discount;
-				this.tempVl = item.order_item_vl_discount;
-
-				this.setItemAlDiscount = function(value) {
-					value = parseFloat(value);
-
-					var max = parseFloat(Globals.get('user-max-discount') || 0),
-						setAl = function(al) {
-							scope.item.setAlDiscount(al);
-							scope.tempAl = scope.item.order_item_al_discount;
-							scope.tempVl = scope.item.order_item_vl_discount;
-						};
-
-					if (scope.tempAl == scope.item.order_item_al_discount && scope.tempVl == scope.item.order_item_vl_discount)
-						return;
-
-					if (value > max) {
-						authorizeDiscount(value).then(function(success) {
-							if (value > success.user_max_discount) {
-								$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
-								setAl(scope.item.order_item_al_discount);
-							} else {
-								scope.item.setAudit({
-									user_id: success.user_id,
-									user_name: success.user_name,
-									product_code: scope.item.product.product_code,
-									product_name: scope.item.product.product_name
-								});
-								setAl(value);
-							}
-						}, function(error) {
-							setAl(scope.item.order_item_al_discount);
-						});
-					} else {
-						setAl(value);
-					}
-				}
-
-				this.setItemVlDiscount = function(value) {
-					var currentAl = scope.item.getValue() == 0 ? 0 : (parseFloat(value) * 100) / scope.item.getValue(),
-						maxAl = parseFloat(Globals.get('user-max-discount') || 0),
-						setVl = function(vl) {
-							scope.item.setVlDiscount(vl);
-							scope.tempAl = scope.item.order_item_al_discount;
-							scope.tempVl = scope.item.order_item_vl_discount;
-						};
-
-					if (scope.tempAl == scope.item.order_item_al_discount && scope.tempVl == scope.item.order_item_vl_discount)
-						return;
-
-					if (currentAl > maxAl) {
-						authorizeDiscount(currentAl).then(function(success) {
-							if (currentAl > success.user_max_discount) {
-								$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
-								setVl(scope.item.order_item_vl_discount);
-							} else {
-								scope.item.setAudit({
-									user_id: success.user_id,
-									user_name: success.user_name,
-									product_code: scope.item.product.product_code,
-									product_name: scope.item.product.product_name,
-								});
-								setVl(value);
-							}
-						}, function(error) {
-							setVl(scope.item.order_item_vl_discount);
-						});
-					} else {
-						setVl(value);
-					}
-				};
-			}
-
-			dialog.showTemplate('Editar', './partials/modalEditItem.html', controller, { zIndex: 1 })
-				.then(function(res) {
-					var index = self.budget.order_items.indexOf(item);
-					self.budget.replaceItem(index, res);
-				}, function(error) { });
-		}
-
-		function addItem() {
-			self.focusOn('input[name="autocompleteProduct"]');
-
-			$timeout(function() {
-				if (self.internal.tempItem.product && self.internal.tempItem.product.product_id) {
-					if (self.internal.tempItem.order_item_amount > 0) {
-						self.budget.addItem(new OrderItem(self.internal.tempItem));
-						var container = jQuery('.container-table');
-						container.animate({ scrollTop: container.height() });
-					}
-
-					self.internal.tempProduct = null;
-					self.internal.tempItemAlDiscount = 0;
-					self.internal.tempItemVlDiscount = 0;
-					self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() });
-				}
-			}, 100);
-		}
-
-		function removeItem(item) {
-			if (!item)
-				return;
-
-			var message = 'Deseja remover o item? <br><br><b>';
-			message += item.product.product_code + ' - ';
-			message += item.product.product_name + '</b>';
-
-			$rootScope.customDialog().showConfirm('Aviso', message)
-				.then(function(success) {
-					self.budget.removeItem(item);
-				}, function(error) { });
 		}
 	}
 }());

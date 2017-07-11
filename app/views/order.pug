@@ -127,11 +127,10 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					div(layout-gt-xs='row')
 						md-input-container
 							label Código
-							input(ng-value='order.budget.order_seller.person_code' 
+							input.mousetrap(name='seller-code'
+									ng-value='order.budget.order_seller.person_code' 
 									blur-to='order.budget.order_seller.person_code'
-									keys-shortcuts 
-									enter='order.getSellerByCode($event.target.value)' 
-									shift-enter='order.scrollTo("section[name=\'customer\']")')
+									keys-shortcuts enter='order.getSellerByCode($event.target.value)')
 						md-autocomplete(flex 
 										md-input-name='autocompleteSeller'
 										md-no-cache='true'
@@ -272,7 +271,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						.container-table
 							table.products-table
 								tbody
-									tr(ng-repeat='i in order.budget.order_items' layout='row' ng-dblclick='order.showEditItemModal(i)')
+									tr(ng-repeat='i in order.budget.order_items' layout='row' ng-dblclick='order.editItem(i)')
 										td {{i.product.product_code}} - {{i.product.product_name}}
 										td {{i.product.unit.unit_initials}}
 										td {{i.order_item_amount}}
@@ -317,11 +316,11 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					div(layout-gt-xs='row' layout-wrap)
 						md-input-container(flex='25')
 							label Código
-							input(ng-value='order.budget.order_client.person_code' 
+							input(name='customer-code'
+									ng-value='order.budget.order_client.person_code' 
 									blur-to='order.budget.order_client.person_code'
-									keys-shortcuts 
-									enter='order.getCustomerByCode($event.target.value)' 
-									shift-enter='')
+									keys-shortcuts shift-enter='null'
+									enter='order.getCustomerByCode($event.target.value)')
 						md-autocomplete(flex='75'
 										md-input-name='autocompleteCustomer'
 										md-no-cache='true'
@@ -461,7 +460,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					div(layout='row')
 						md-input-container(flex)
 							label Observações do orçamento
-							textarea(ng-model='order.budget.order_note' md-maxlength='150' rows='3')
+							textarea(name='order-note' ng-model='order.budget.order_note' md-maxlength='150' rows='3')
 
 						span(flex='5')
 
