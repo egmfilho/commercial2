@@ -127,7 +127,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 					div(layout-gt-xs='row')
 						md-input-container
 							label Código
-							input.mousetrap(name='seller-code'
+							input(name='seller-code'
 									ng-value='order.budget.order_seller.person_code' 
 									blur-to='order.budget.order_seller.person_code'
 									keys-shortcuts enter='order.getSellerByCode($event.target.value)')
@@ -511,7 +511,36 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										p(flex) {{m.modality_description}}
 										i.fa.fa-angle-right.text-primary
 
-						div(flex='60')
+						div(flex='60' layout='column')
+							div(layout='row')
+								md-input-container(flex='25')
+									label 
+										| Código
+									input(name='amount' 
+											ng-value='order.internal.term.tempTerm.term_code'
+											blur-to='order.internal.term.tempTerm.term_code'
+											ng-disabled='!order.budget.order_items.length'
+											keys-shortcuts enter='order.getTermByCode($event.target.value)')
+
+								md-input-container(flex)
+									label 
+										| Descrição
+									md-select(ng-model='order.internal.term.tempTerm'
+											data-md-container-class='query-select-container'
+											ng-model-options='{ trackBy: "$value.term_id" }'
+											ng-disabled='!order.budget.order_items.length')
+										md-select-header.select-header
+											input.md-text(ng-model='order.internal.term.queryTerm' 
+													type='search' placeholder='Buscar prazo'
+													ng-keydown="order.internal.term.updateSearch($event)")
+										md-opt-group(label='Prazos')
+											md-option(ng-value='t' 
+													ng-repeat='t in order.internal.term.queryResult track by t.term_id')
+												| {{t.term_description}}
+
+								md-button.md-primary(ng-click='' ng-disabled='!order.budget.order_items.length')
+									| Adicionar
+
 							.payment-table-header-container
 								table.payment-table
 									thead
@@ -541,7 +570,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								md-button.md-primary(ng-click='order.addPayment()' ng-disabled='!order.budget.order_items.length')
 									md-tooltip(md-direction='top') Adicionar forma de pagamento
 									i.fa.fa-plus-square-o &nbsp;
-									| Pagamento
+									| Parcela
 
 								md-button.md-primary(ng-click='order.addCredit()' ng-disabled='!order.budget.order_client.person_credit.length || !order.budget.order_items.length')
 									md-tooltip(md-direction='top') Utilizar crédito do cliente
