@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-11 12:52:41
+* @Last Modified time: 2017-07-11 15:46:20
 */
 
 .customer-credit-modal {
@@ -14,17 +14,8 @@
 	}
 
 	.credit-table {
-		width: 100%;
-		border-collapse: collapse;
-
 		tr {
-			display: table-row;
-			background-color: white;
-
 			th, td {
-				display: table-cell;
-				padding: 1px 5px;
-
 				&:nth-child(1) {
 					// width: 32px;
 				}
@@ -48,39 +39,6 @@
 					}
 				}
 			}
-		}
-
-		thead {		
-			tr {		
-				th {
-					text-align: left;
-					color: rgba(#000, .4);
-					font-size: 12px;
-					font-weight: bold;
-					padding-bottom: 12px;
-				}
-			}
-		}
-
-		tbody {
-			tr {
-				transition: background-color .5s ease; 
-
-				/* Para evitar delay nos updates dos itens */
-				&.ng-animate {
-					transition: 0s none;
-				}
-
-				&:hover {
-					background-color: #e7e7e7;
-				}
-
-				td {
-					color: rgba(#000, .6);
-					font-size: 12px;
-					vertical-align: middle;
-				}
-			}		
 		}
 	}
 }
@@ -300,16 +258,8 @@
 }
 
 .products-table {
-	width: 100%;
-	border-collapse: collapse;
-
 	tr {
-		display: table-row;
-		background-color: white;
-
 		th, td {
-			display: table-cell;
-
 			&:nth-child(1) {
 				width: 42%;
 			}
@@ -338,56 +288,11 @@
 			}
 		}
 	}
-
-	thead {		
-		tr {
-			// border-bottom: 1px solid rgba(#000, .12);			
-
-			th {
-				text-align: left;
-				color: rgba(#000, .4); //rgba(#000, .38);
-				font-size: 12px;
-				font-weight: bold;
-				padding: 1px 1px 12px 1px;
-			}
-		}
-	}
-
-	tbody {
-		tr {
-			transition: background-color .5s ease; 
-
-			/* Para evitar delay nos updates dos itens */
-			&.ng-animate {
-				transition: 0s none;
-			}
-
-			&:hover {
-				background-color: #e7e7e7;
-			}
-
-			td {
-				color: rgba(#000, .6);
-				padding: 0 5px;
-				font-size: 12px;
-				vertical-align: middle;
-			}
-		}		
-	}
 }
 
 .payment-table {
-	width: 100%;
-	border-collapse: collapse;
-
 	tr {
-		display: table-row;
-		background-color: white;
-
 		th, td {
-			display: table-cell;
-			padding: 1px 5px;
-
 			&:nth-child(1) {
 				width: 30px;
 			}
@@ -411,45 +316,10 @@
 				}
 			}
 		}
-	}
 
-	thead {		
-		tr {
-			// border-bottom: 1px solid rgba(#000, .12);			
-
-			th {
-				text-align: left;
-				color: rgba(#000, .4); //rgba(#000, .38);
-				font-size: 12px;
-				font-weight: bold;
-				padding-bottom: 12px;
-			}
+		td:first-child {
+			text-align: right;
 		}
-	}
-
-	tbody {
-		tr {
-			transition: background-color .5s ease; 
-
-			/* Para evitar delay nos updates dos itens */
-			&.ng-animate {
-				transition: 0s none;
-			}
-
-			&:hover {
-				background-color: #e7e7e7;
-			}
-
-			td {
-				color: rgba(#000, .6);
-				font-size: 12px;
-				vertical-align: middle;
-
-				&:first-child {
-					text-align: right;
-				}
-			}
-		}		
 	}
 }
 

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-10 16:29:45
+* @Last Modified time: 2017-07-11 15:45:26
 */
 
 @import "../../bower_components/angular-material/angular-material.scss";
@@ -60,6 +60,47 @@ footer {
 	md-toolbar {
 		min-height: 24px;
 		font-size: .8em;
+	}
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+
+	tr {
+		display: table-row !important;
+		background-color: white;
+
+		th, td {
+			display: table-cell !important;
+			padding: 1px 5px;
+		}
+	}
+
+	thead tr th {
+		text-align: left;
+		color: rgba(#000, .4);
+		font-size: 12px;
+		font-weight: bold;
+		padding-bottom: 12px;
+	}
+
+	tbody tr {
+		transition: background-color .5s ease;
+
+		&.ng-animate {
+			transition: 0s none;
+		}
+
+		&:hover {
+			background-color: #e7e7e7;
+		}
+
+		td {
+			color: rgba(#000, .6);
+			font-size: 12px;
+			vertical-align: middle !important;
+		}
 	}
 }
 
