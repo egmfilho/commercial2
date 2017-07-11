@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-10 16:26:50
+* @Last Modified time: 2017-07-11 09:58:13
 */
 'use strict';
 
@@ -125,7 +125,7 @@ angular.module('commercial2', [
 			})
 			.when('/open-order', {
 				module: 'open-order',
-				templateUrl: 'views/open-order.html',
+				templateUrl: 'views/open-order-dense.html',
 				controller: 'OpenOrderCtrl',
 				controllerAs: 'openOrder'
 			})

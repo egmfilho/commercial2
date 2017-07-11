@@ -1,0 +1,41 @@
+div(layout='column' layout-fill)
+	md-toolbar.open-order-container-nav
+		.md-toolbar-tools
+			md-truncate
+				| Lista de orçamentos
+
+			span(flex)
+
+			md-button.md-raised(redirect-to='/order/new')
+				| Novo
+
+	md-content.open-order-dense-container(flex)
+
+		md-list.md-dense(flex)
+			md-list-item.md-2-line(ng-repeat='o in openOrder.orders' ng-click="open(o.order_code)")
+				.icon(layout-align='center center')
+					md-tooltip(md-direction='top') {{globals("order-status-labels")[o.order_status_id]}}
+					md-icon(					
+						md-font-set='material-icons' 
+						ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+						ng-if='o.order_status_id == globals("order-status-values").open') cloud_queue
+					
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+						ng-if='o.order_status_id == globals("order-status-values").exported') cloud
+
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+						ng-if='o.order_status_id == globals("order-status-values").billed') cloud_done
+
+				.md-list-item-text
+					h3 
+						| {{o.order_code}} - {{o.order_company.company_name}}
+					h4
+						| Cliente: {{o.order_client.person_code}} - {{o.order_client.person_name}}
+					h4
+						| Vendedor: {{o.order_seller.person_code}} - {{o.order_seller.person_name}}
+
+				md-divider

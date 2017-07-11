@@ -7,10 +7,10 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 			.md-toolbar-tools
 				h1(ng-if='order.budget.order_code') 
 					| {{order.budget.order_code}} ({{order.budget.order_date | date:'short'}})
-					span(md-colors="{color: 'orange'}") &nbsp;[{{order.budget.order_company.company_name}}]
+					span.md-subhead(md-colors="{color: 'orange'}") &nbsp;[{{order.budget.order_company.company_code}} {{order.budget.order_company.company_name}}]
 				h1(ng-if='!order.budget.order_code') 
 					| Novo Orçamento
-					span(md-colors="{color: 'orange'}") &nbsp;[{{order.budget.order_company.company_name}}]
+					span.md-subhead(md-colors="{color: 'orange'}") &nbsp;[{{order.budget.order_company.company_code}} {{order.budget.order_company.company_name}}]
 			md-menu-bar.order-menu-bar
 				md-menu
 					button(ng-click='$mdMenu.open()') Arquivo
@@ -69,18 +69,23 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 						md-menu-item
 							md-button(ng-click='order.scrollTo("section[name=\'seller\']")')
 								| Vendedor
+								span.md-alt-text {{ 'M-1' | keyboardShortcut }}
 						md-menu-item
 							md-button(ng-click='order.scrollTo("section[name=\'products\']")')
 								| Produtos
+								span.md-alt-text {{ 'M-2' | keyboardShortcut }}
 						md-menu-item
 							md-button(ng-click='order.scrollTo("section[name=\'customer\']")')
 								| Cliente
+								span.md-alt-text {{ 'M-3' | keyboardShortcut }}
 						md-menu-item
 							md-button(ng-click='order.scrollTo("section[name=\'notes\']")')
 								| Observações
+								span.md-alt-text {{ 'M-4' | keyboardShortcut }}
 						md-menu-item
 							md-button(ng-click='order.scrollTo("section[name=\'payment\']")')
 								| Pagamento
+								span.md-alt-text {{ 'M-5' | keyboardShortcut }}
 				md-menu
 					button(ng-click='$mdMenu.open()') Ajuda
 					md-menu-content
@@ -92,7 +97,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
 	.order-container
 		//- Info
-		section(name='control' ng-if='!order.canExport()' ng-cloak)
+		section(name='control' ng-if='order.isExported()' ng-cloak)
 			md-card(layout-align='center')
 				md-card-content.offset-top-5
 					.offset-top-5(layout='row' layout-align='center center')
@@ -113,6 +118,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						div(layout='row')
 							div(flex='90' layout='column')
 								span.md-title Vendedor
+									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-1' | keyboardShortcut }})
 								span.md-subhead Informe o vendedor
 							div(layout='column' layout-align='center end' layout-fill)
 								md-button.md-raised(ng-click='order.clearSeller()')
@@ -157,6 +163,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						div(layout='row')
 							div(flex='90' layout='column')
 								span.md-title Produtos
+									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-2' | keyboardShortcut }})
 								span.md-subhead Adicione ou remova produtos
 							div(layout='column' layout-align='center end' layout-fill)
 								md-button.md-raised(ng-click='order.clearItems()')
@@ -265,7 +272,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						.container-table
 							table.products-table
 								tbody
-									tr(ng-repeat='i in order.budget.order_items' layout='row')
+									tr(ng-repeat='i in order.budget.order_items' layout='row' ng-dblclick='order.showEditItemModal(i)')
 										td {{i.product.product_code}} - {{i.product.product_name}}
 										td {{i.product.unit.unit_initials}}
 										td {{i.order_item_amount}}
@@ -274,19 +281,8 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										td {{i.order_item_vl_discount | currency:'R$ '}}
 										td {{i.getValueTotal() | currency:'R$ '}}
 										td
-											md-menu
-												md-button.md-icon-button(tabindex='-1' ng-click='order.editItemMenu($mdMenu, $event)')
-													md-icon(md-font-icon='fa fa-ellipsis-v')
-												md-menu-content(width='2')
-													md-menu-item
-														md-button(ng-click='order.showEditItemModal(i)') 
-															md-icon(md-font-set='material-icons' md-menu-align-target) create
-															|  Editar
-													md-menu-divider
-													md-menu-item
-														md-button(ng-click='order.removeItem(i)')
-															md-icon(md-font-set='material-icons' md-menu-align-target) delete_forever
-															|  Remover
+											md-button.md-icon-button(tabindex='-1' ng-click='order.removeItem(i)')
+												md-icon(md-font-set='material-icons' md-menu-align-target) delete_forever
 
 					.offset-top-30(layout='row')
 						span(flex)
@@ -309,6 +305,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						div(layout='row')
 							div(flex='90' layout='column')
 								span.md-title Cliente
+									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-3' | keyboardShortcut }})
 								span.md-subhead Informe o cliente e seu endereço de entrega
 							div(layout='row' layout-align='end center' layout-fill)
 								md-button.md-raised(ng-click='order.newCustomer()')
@@ -455,6 +452,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						div(layout='row')
 							div(flex='90' layout='column')
 								span.md-title Observações
+									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-4' | keyboardShortcut }})
 								span.md-subhead Aqui você pode inserir informações adicionais sobre o orçamento
 							div(layout='column' layout-align='center end' layout-fill)
 								md-button.md-raised(ng-click='order.clearNote()')
@@ -479,6 +477,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						div(layout='row')
 							div(flex='90' layout='column')
 								span.md-title Pagamento
+									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-5' | keyboardShortcut }})
 								span.md-subhead Informe as formas de pagamento
 							div(layout='column' layout-align='center end' layout-fill)
 								md-button.md-raised(ng-click='order.clearPayments()')
@@ -526,7 +525,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							.container-table
 								table.payment-table
 									tbody
-										tr(ng-repeat='p in order.budget.order_payments track by $index' layout='row')
+										tr(ng-repeat='p in order.budget.order_payments track by $index' layout='row' ng-dblclick='order.editPayment(p)')
 											td 
 												md-tooltip(md-direction='top' ng-if='p.order_payment_initial == "Y"') Parcela de entrada
 												i.fa.fa-check-circle(ng-if='p.order_payment_initial == "Y"') &nbsp;
@@ -535,19 +534,9 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 											td {{p.order_payment_deadline | date:'dd/MM/yyyy'}}
 											td {{p.order_payment_value_total | currency:'R$ '}}
 											td
-												md-menu
-													md-button.md-icon-button(tabindex='-1' ng-click='order.editItemMenu($mdMenu, $event)')
-														md-icon(md-font-icon='fa fa-ellipsis-v')
-													md-menu-content(width='2')
-														md-menu-item
-															md-button(ng-click='order.editPayment(p)') 
-																md-icon(md-font-set='material-icons' md-menu-align-target) create
-																|  Editar
-														md-menu-divider
-														md-menu-item
-															md-button(ng-click='order.removePayment(p)')
-																md-icon(md-font-set='material-icons' md-menu-align-target) delete_forever
-																|  Remover
+												md-button.md-icon-button(ng-click='order.removePayment(p)')
+													md-icon(md-font-set='material-icons' md-menu-align-target) delete_forever
+															
 
 							.payment-table-footer(layout='row')
 								md-button.md-primary(ng-click='order.addPayment()' ng-disabled='!order.budget.order_items.length')
@@ -555,7 +544,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									i.fa.fa-plus-square-o &nbsp;
 									| Pagamento
 
-								md-button.md-primary(ng-disabled='!order.budget.order_client.person_credit.length || !order.budget.order_items.length || true')
+								md-button.md-primary(ng-click='order.addCredit()' ng-disabled='!order.budget.order_client.person_credit.length || !order.budget.order_items.length')
 									md-tooltip(md-direction='top') Utilizar crédito do cliente
 									i.fa.fa-plus-square-o &nbsp;
 									| Crédito

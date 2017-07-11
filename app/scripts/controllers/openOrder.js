@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-27 13:02:30
+* @Last Modified time: 2017-07-11 10:12:25
 */
 
 (function() {
@@ -23,6 +23,10 @@
 			$scope.$on('$viewContentLoaded', function() {
 				getOrders();
 			});
+
+			$scope.open = function(code) {
+				$location.path('/order/edit').search('code', code);
+			};
 
 			function getOrders() {
 				var options = {

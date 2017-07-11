@@ -1,30 +1,27 @@
-.body(layout='column' layout-fill layout-align='center center')
-	div
-		span.md-title
-			| Cód: {{ctrl.order_code}}
-		
-		br
+.body.modal-saved(layout='column' layout-fill layout-align='center center')
+	span.md-title
+		| Cód: {{ctrl.order_code}}
 
-		span.md-subhead 
-			| Orçamento salvo!
+	span.md-subhead.offset-top-5
+		| {{ctrl.msg}}
 	
 	.offset-top-15(layout='row')
 		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("print")' md-colors="{background: 'orange'}")
 			md-tooltip(md-direction='bottom') Imprimir
-			md-icon(md-font-icon='fa fa-print')
+			md-icon(md-font-icon='fa fa-2x fa-print')
 		
 		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("mail")' md-colors="{background: 'teal'}")
 			md-tooltip(md-direction='bottom') Enviar por email
-			md-icon(md-font-icon='fa fa-envelope-o')
+			md-icon(md-font-icon='fa fa-2x fa-envelope-o')
 	
 		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("order")' md-colors="{background: 'blue'}")
 			md-tooltip(md-direction='bottom') Exportar Pedido
-			md-icon(md-font-icon='fa fa-cloud-upload')
+			md-icon(md-font-icon='fa fa-2x fa-cloud-upload')
 	
 		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("dav")' md-colors="{background: 'green'}")
 			md-tooltip(md-direction='bottom') Exportar DAV
-			md-icon(md-font-icon='fa fa-upload')
+			md-icon(md-font-icon='fa fa-2x fa-upload')
 
-.footer(layout='row' layout-align='end center' style='border-top: 1px solid #d7d7d7')
+.footer(layout='row' layout-align='end center' style='border-top: 1px solid #d7d7d7;')
 	md-button.md-primary(name='positive' ng-click='ctrl._cancel()')
 		| &nbsp; Fechar &nbsp;

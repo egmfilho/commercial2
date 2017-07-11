@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-10 17:45:36
+* @Last Modified time: 2017-07-11 10:26:01
 */
 
 (function() {
@@ -73,33 +73,11 @@
 		$scope.debug = constants.debug;
 		$scope.globals = Globals.get;
 
+		$scope.teste = function() { console.log('oi') };
+
+		/* Cria os atalhos do teclado */
 		if (constants.isElectron) {
-			var Mousetrap = require('mousetrap');
-
-			Mousetrap.bind(['command+n', 'ctrl+n'], function() {
-				$scope.newOrder();
-				return false;
-			});
-
-			Mousetrap.bind(['command+a', 'ctrl+a'], function() {
-				$scope.open();
-				return false;
-			});
-
-			Mousetrap.bind(['command+s', 'ctrl+s'], function() {
-				$scope.save();
-				return false;
-			});
-
-			Mousetrap.bind(['command+p', 'ctrl+p'], function() {
-				self.print();
-				return false;
-			});
-
-			Mousetrap.bind(['command+e', 'ctrl+e'], function() {
-				self.selectCompany();
-				return false;
-			});
+			bindKeys();
 		}
 
 		function newOrder() {
@@ -110,6 +88,7 @@
 		self.canExport          = canExport;
 		self.canPrint           = canPrint;
 		self.canChangeCompany   = canChangeCompany;
+		self.isExported         = isExported;
 		self.selectCompany      = selectCompany;
 		self.internal           = internalItems();
 		self.budget             = new Order({ order_user: Globals.get('user')});
@@ -151,14 +130,17 @@
 		self.editPayment        = editPayment;
 		self.removePayment      = removePayment;
 		self.paymentDialog      = paymentDialog;
+		self.addCredit          = addCredit;
 		self.recalcPayments     = recalcPayments;
 
-		self.editItemMenu       = editItemMenu;
 		self.showEditItemModal  = showEditItemModal;
 		self.addItem            = addItem;
 		self.removeItem         = removeItem;
 
 		$scope.$on('$destroy', function() {
+			if (constants.isElectron)
+				unbindKeys();
+			
 			$location.search('code', null);
 			$location.search('company', null);
 		});
@@ -279,12 +261,63 @@
 
 					constants.debug && console.log('salvando orçamento: ', filtered);
 
+					function afterSave(msg) {
+						var controller = function() {
+								this._showCloseButton = true;
+								this.order_code = self.budget.order_code;
+								this.msg = msg;
+							};
+
+						$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderSaved.html', controller)
+							.then(function(res) {
+								switch (res) {
+									case 'print': {
+										print();
+										newOrder();
+										break;
+									}
+									
+									case 'mail': {
+										alert('ainda nao implementado');
+										break;
+									}
+									
+									case 'order': {
+										exportOrder(self.budget.order_id).then(function(success) {
+											$rootScope.toast('Orçamento exportado!', 'Código gerado: ' + success.data.order_code);
+											newOrder();
+										}, function(error) {
+											$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+											newOrder();
+										});
+										break;
+									}
+									
+									case 'dav': {
+										exportDAV(self.budget.order_id).then(function(success) {
+											$rootScope.toast('Orçamento exportado!', 'Código gerado: ' + success.data.order_code);
+											newOrder();
+										}, function(error) {
+											$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+											newOrder();
+										});
+										break;
+									}
+								}
+							}, function(res) {
+								newOrder();
+							});
+					}
+
 					$rootScope.loading.load();
 					if (self.budget.order_code && self.budget.order_id) {
 						/* Edita o orcamento */
 						providerOrder.edit(filtered).then(function(success) {
 							$rootScope.loading.unload();
 							$rootScope.customDialog().showMessage('Sucesso', 'Orçamento editado!');
+
+							/* Modal de confirmacao */
+							afterSave('Orçamento editado!');
 						}, function(error) {
 							$rootScope.loading.unload();
 							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
@@ -295,52 +328,11 @@
 							constants.debug && console.log('orcamento salvo', success);
 							self.budget.order_id = success.data.order_id;
 							self.budget.order_code = success.data.order_code;
+							self.budget.order_date = moment().toDate();
 							$rootScope.loading.unload();
 
-							var controller = function() {
-								this._showCloseButton = true;
-								this.order_code = success.data.order_code;
-							};
-
-							$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderSaved.html', controller)
-								.then(function(res) {
-									switch (res) {
-										case 'print': {
-											print();
-											newOrder();
-											break;
-										}
-										
-										case 'mail': {
-											alert('ainda nao implementado');
-											break;
-										}
-										
-										case 'order': {
-											exportOrder(success.data.order_id).then(function(success) {
-												//$rootScope.toast('Orçamento exportado!', 'Código gerado: '+success.data.order_code);
-												newOrder();
-											}, function(error) {
-												$rootScope.customDialog().showMessage('Erro', error.data.status.description);
-												newOrder();
-											});
-											break;
-										}
-										
-										case 'dav': {
-											exportDAV(success.data.order_id).then(function(success) {
-												//$rootScope.toast('Orçamento exportado!', 'Código gerado: '+success.data.order_code);
-												newOrder();
-											}, function(error) {
-												$rootScope.customDialog().showMessage('Erro', error.data.status.description);
-												newOrder();
-											});
-											break;
-										}
-									}
-								}, function(res) {
-
-								});
+							/* Modal de confirmacao */
+							afterSave('Orçamento salvo!');
 						}, function(error) {
 							$rootScope.loading.unload();
 							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
@@ -430,6 +422,13 @@
 		 */
 		function canChangeCompany() {
 			return self.budget.order_status_id == Globals.get('order-status-values').open;
+		}
+
+		/**
+		 * Diz se o orcamento ja foi exportado.
+		 */
+		function isExported() {
+			return self.budget.order_status_id != Globals.get('order-status-values').open;
 		}
 
 		/**
@@ -1428,6 +1427,13 @@
 		}
 
 		/**
+		 * Abre uma janela para selecionar o credito.
+		 */
+		function addCredit() {
+				
+		}
+
+		/**
 		 * Recalcula o valor dos pagamentos/parcelas.
 		 */
 		function recalcPayments() {
@@ -1449,8 +1455,84 @@
 
 
 
-		function editItemMenu($mdMenu, event) {
-			$mdMenu.open(event);
+
+		function bindKeys() {
+			var Mousetrap = require('mousetrap');
+
+			/* Novo orcamento */
+			Mousetrap.bind(['command+n', 'ctrl+n'], function() {
+				$scope.newOrder();
+				return false;
+			});
+
+			/* Abrir orcamento */
+			Mousetrap.bind(['command+a', 'ctrl+a'], function() {
+				$scope.open();
+				return false;
+			});
+
+			/* Salvar orcamento */
+			Mousetrap.bind(['command+s', 'ctrl+s'], function() {
+				$scope.save();
+				return false;
+			});
+
+			/* Imprimir orcamento */
+			Mousetrap.bind(['command+p', 'ctrl+p'], function() {
+				self.print();
+				return false;
+			});
+
+			/* Mudar empresa do orcamento */
+			Mousetrap.bind(['command+e', 'ctrl+e'], function() {
+				self.selectCompany();
+				return false;
+			});
+
+			/* Ir para vendedor */
+			Mousetrap.bind(['command+1', 'ctrl+1'], function() {
+				self.scrollTo("section[name=\'seller\']")
+				return false;
+			});
+
+			/* Ir para produtos */
+			Mousetrap.bind(['command+2', 'ctrl+2'], function() {
+				self.scrollTo("section[name=\'products\']")
+				return false;
+			});
+
+			/* Ir para cliente */
+			Mousetrap.bind(['command+3', 'ctrl+3'], function() {
+				self.scrollTo("section[name=\'customer\']")
+				return false;
+			});
+
+			/* Ir para observacoes */
+			Mousetrap.bind(['command+4', 'ctrl+4'], function() {
+				self.scrollTo("section[name=\'notes\']")
+				return false;
+			});
+
+			/* Ir para pagamento */
+			Mousetrap.bind(['command+5', 'ctrl+5'], function() {
+				self.scrollTo("section[name=\'payment\']")
+				return false;
+			});
+		}
+
+		function unbindKeys() {
+			var Mousetrap = require('mousetrap');
+
+			Mousetrap.unbind(['command+n', 'ctrl+n']);
+			Mousetrap.unbind(['command+a', 'ctrl+a']);
+			Mousetrap.unbind(['command+s', 'ctrl+s']);
+			Mousetrap.unbind(['command+p', 'ctrl+p']);
+			Mousetrap.unbind(['command+e', 'ctrl+e']);
+			Mousetrap.unbind(['command+1', 'ctrl+1']);
+			Mousetrap.unbind(['command+2', 'ctrl+2']);
+			Mousetrap.unbind(['command+3', 'ctrl+3']);
+			Mousetrap.unbind(['command+4', 'ctrl+4']);
+			Mousetrap.unbind(['command+5', 'ctrl+5']);
 		}
 
 		function showEditItemModal(item) {

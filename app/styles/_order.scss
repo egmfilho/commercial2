@@ -2,8 +2,14 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-03 13:50:34
+* @Last Modified time: 2017-07-11 10:21:41
 */
+
+.modal-saved {
+	md-icon {
+		font-size: 20px;
+	}
+}
 
 .order-toolbar {
 	> div {
@@ -246,6 +252,8 @@
 
 				button {
 					margin: 0;
+					font-size: 20px;
+					padding-top: 10px;
 				}
 			}
 		}
@@ -318,6 +326,8 @@
 
 				button {
 					margin: 0;
+					font-size: 20px;
+					padding-top: 10px;
 				}
 			}
 		}
