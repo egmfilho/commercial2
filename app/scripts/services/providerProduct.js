@@ -25,7 +25,8 @@
 
 				return {
 					getByCode: getByCode,
-					getByName: getByName
+					getByName: getByName,
+					getByFilter: getByFilter
 				}
 
 				// ******************************
@@ -50,6 +51,21 @@
 						action: 'getList'
 					}, {
 						product_name: name,
+						company_id: companyId,
+						price_id: userPriceId,
+						limit: options && options.limit,
+						get_product_unit: options && options.getUnit,
+						get_product_price: options && options.getPrice,
+						get_product_stock: options && options.getStock
+					}).$promise;
+				}
+
+				function getByFilter(filter, companyId, userPriceId, options) {
+					return provider.query({
+						action: 'getList'
+					}, {
+						product_name: filter && filter.name,
+						product_active: filter && filter.active,
 						company_id: companyId,
 						price_id: userPriceId,
 						limit: options && options.limit,

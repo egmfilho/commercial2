@@ -1,0 +1,54 @@
+.product-table-header-container{
+	padding-top: 14px;
+	padding-right: 10px;
+	border: 1px solid #d7d7d7;
+	border-bottom: none;
+}
+
+.product-table {
+	
+	tbody{
+		tr{
+			&:nth-child(odd){
+				
+			}
+		}
+	}
+
+	tr {
+		th{
+			padding: 0 5px 10px;
+		}
+
+		td{
+			padding: 10px 5px;
+		}
+
+		th, td {
+			
+			&:nth-child(1){
+				width: 12%;
+				text-align: center;
+			}
+
+			&:nth-child(2){
+				width: 18%;
+				text-align: center;
+			}
+
+			&:nth-child(3){
+				width: auto;
+			}
+
+			&:nth-child(4){
+				width: 15%;
+				text-align: center;
+			}
+
+			&:nth-child(5){
+				width: 15%;
+				text-align: center;
+			}
+		}
+	}
+}

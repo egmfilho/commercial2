@@ -130,7 +130,8 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							input.mousetrap(name='seller-code'
 									ng-value='order.budget.order_seller.person_code' 
 									blur-to='order.budget.order_seller.person_code'
-									keys-shortcuts enter='order.getSellerByCode($event.target.value)')
+									keys-shortcuts f1='order.showModalSeller(globals(\'person-categories\').seller)' prevent-default
+									enter='order.getSellerByCode($event.target.value)')
 						md-autocomplete(flex 
 										md-input-name='autocompleteSeller'
 										md-no-cache='true'
@@ -179,6 +180,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									| {{p.price_erp.price_name}} 
 						
 						md-autocomplete(flex='75'
+										keys-shortcuts f1='order.showModalProduct()' prevent-default
 										md-input-name='autocompleteProduct'
 										md-no-cache='true'
 										md-autoselect='true'
@@ -319,7 +321,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							input(name='customer-code'
 									ng-value='order.budget.order_client.person_code' 
 									blur-to='order.budget.order_client.person_code'
-									keys-shortcuts shift-enter='null'
+									keys-shortcuts prevent-default shift-enter='null' f1='order.showModalCustomer(globals(\'person-categories\').customer)'
 									enter='order.getCustomerByCode($event.target.value)')
 						md-autocomplete(flex='75'
 										md-input-name='autocompleteCustomer'

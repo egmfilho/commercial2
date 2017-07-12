@@ -1,0 +1,37 @@
+.body(layout='column' style='width:740px;')
+	
+	div(layout="row" flex="100")
+		md-input-container(flex="80")
+			label Nome ou Classificação
+			input(ng-model="ctrl.filter.name" keys-shortcuts enter="ctrl.search()")
+		
+		md-input-container
+			md-switch(ng-model='ctrl.filter.active' style="margin: 0;")
+				| Somente Ativos
+
+		md-button.md-primary(ng-click='ctrl.search()' flex="16")
+			| Buscar
+
+	div(layout='column' style='margin-top: 20px')
+		.product-table-header-container
+			table.product-table.table
+				thead
+					tr
+						th CÓDIGO
+						th CLASS.
+						th NOME
+						th PREÇO
+						th ESTOQUE
+		.container-table
+			table.product-table.table
+				tbody
+					tr(ng-repeat='p in ctrl.result' layout='row' ng-dblclick='ctrl._close(p)')
+						td {{p.product_code}}
+						td {{p.product_classification}}
+						td {{p.product_name}}
+						td {{p.price.price_value | currency: 'R$ '}}
+						td {{p.unit && p.unit.unit_format == "I" ? (p.stock.product_stock | number:'0') : p.stock.product_stock}} ({{p.unit.unit_initials}}) 
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-primary(ng-click='ctrl._cancel()')
+		| &nbsp; Fechar &nbsp;

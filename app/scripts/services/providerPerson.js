@@ -23,11 +23,12 @@
 				});
 
 				return {
-					getById:   getById,
-					getByCode: getByCode,
-					getByName: getByName,
-					getByType: getByType,
-					save:      save
+					getById:     getById,
+					getByCode:   getByCode,
+					getByName:   getByName,
+					getByFilter: getByFilter,
+					getByType:   getByType,
+					save:        save
 				}
 
 				// ******************************
@@ -68,6 +69,22 @@
 					}, {
 						person_name: name,
 						person_category: category,
+						get_person_address: options && options.getAddress,
+						get_person_address_city: options && options.getAddress,
+						get_person_address_district: options && options.getAddress,
+						get_person_address_contact: options && options.getContact,
+						limit: options && options.limit,
+						page: options && options.page
+					}).$promise;
+				}
+
+				function getByFilter(filter, options) {
+					return provider.query({
+						action: 'getList'
+					}, {
+						person_doc: filter && filter.doc,
+						person_name: filter && filter.name,
+						person_category: filter && filter.category,
 						get_person_address: options && options.getAddress,
 						get_person_address_city: options && options.getAddress,
 						get_person_address_district: options && options.getAddress,

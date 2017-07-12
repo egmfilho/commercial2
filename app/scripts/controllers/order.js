@@ -37,7 +37,9 @@
 		'ProviderModality',
 		'PaymentModality',
 		'OrderPayment',
-		'ElectronWindow' 
+		'ElectronWindow',
+		'ModalPerson',
+		'ModalProduct' 
 	];
 
 	function OrderCtrl(
@@ -66,7 +68,9 @@
 		providerModality,
 		PaymentModality,
 		OrderPayment,
-		ElectronWindow) {
+		ElectronWindow,
+		ModalPerson,
+		ModalProduct) {
 
 		var self = this, _focusOn;
 
@@ -135,6 +139,10 @@
 		self.paymentDialog      = paymentDialog;
 		self.addCredit          = addCredit;
 		self.recalcPayments     = recalcPayments;
+
+		self.showModalSeller    = showModalSeller;
+		self.showModalCustomer  = showModalCustomer;
+		self.showModalProduct   = showModalProduct;
 
 
 		$scope.$on('$destroy', function() {
@@ -1620,6 +1628,38 @@
 			Mousetrap.unbind(['command+3', 'ctrl+3']);
 			Mousetrap.unbind(['command+4', 'ctrl+4']);
 			Mousetrap.unbind(['command+5', 'ctrl+5']);
+		}
+
+		function showModalSeller(category) {
+			var options = {
+				limit: 100
+			};
+			ModalPerson.show('Localizar Vendedor',category.toString(),options).then(function(success){
+				self.budget.setSeller(new Person(success));
+				self.internal.tempSeller = new Person(success);
+				self.focusOn('input[name="autocompleteProduct"]');
+			},function(error){});
+		}
+
+		function showModalCustomer(category) {
+			var options = {
+				limit: 100
+			};
+			ModalPerson.show('Localizar Cliente',category.toString(),options).then(function(success){
+				self.getCustomerByCode(success.person_code);
+			},function(error){});
+		}
+
+		function showModalProduct() {
+			var options = {
+				getUnit: 1,
+				getPrice: 1,
+				getStock: 1,
+				limit: 200
+			};
+			ModalProduct.show('Localizar Produto',self.budget.order_company_id,self.internal.tempItem.price_id,options).then(function(success){
+				self.getProductByCode(success.product_code);
+			},function(error){});
 		}
 	}
 }());

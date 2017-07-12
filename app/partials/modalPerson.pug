@@ -1,0 +1,35 @@
+.body(layout='column' style='width:600px;')
+	
+	div(layout="row" flex="100")
+		md-input-container(flex="25")
+			label CNPJ/CPF
+			input(ng-model="ctrl.filter.doc" keys-shortcuts enter="ctrl.search()")
+	
+		md-input-container(flex="55")
+			label Nome
+			input(ng-model="ctrl.filter.name" keys-shortcuts enter="ctrl.search()")
+		
+		md-button.md-primary(ng-click='ctrl.search()' flex="20")
+			| Buscar
+
+	div(layout='column' style='margin-top: 20px')
+		.person-table-header-container
+			table.person-table.table
+				thead
+					tr
+						th CÓDIGO
+						th NOME
+						th TIPO
+						th CNPJ/CPF
+		.container-table
+			table.person-table.table
+				tbody
+					tr(ng-repeat='p in ctrl.result' layout='row' ng-dblclick='ctrl._close(p)')
+						td {{p.person_code}}
+						td {{p.person_name}}
+						td {{p.person_type}}
+						td {{p.person_type == 'F' ? p.person_cpf : p.person_cnpj}}
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-primary(ng-click='ctrl._cancel()')
+		| &nbsp; Fechar &nbsp;
