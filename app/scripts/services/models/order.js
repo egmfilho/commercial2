@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-10 08:32:29
+* @Last Modified time: 2017-07-13 17:39:06
 */
 
 (function() {
@@ -45,6 +45,7 @@
 			this.order_client                = new Person();
 			this.address_delivery            = new Address();
 			this.order_payments              = new Array();
+			this.credit                      = null;
 
 			if (order) {
 				Object.assign(this, order, {

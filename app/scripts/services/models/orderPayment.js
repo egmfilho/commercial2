@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-28 12:11:57
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-03 13:20:57
+* @Last Modified time: 2017-07-13 17:02:27
 */
 
 (function() {
@@ -31,6 +31,7 @@
 			this.order_payment_update      = null;
 			this.modality_id               = null;
 			this.modality                  = new PaymentModality();
+			this.payable_id                = new Array();
 
 			if (payment) {
 				Object.assign(this, payment, {

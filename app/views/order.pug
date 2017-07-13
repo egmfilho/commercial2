@@ -519,7 +519,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									label 
 										//- i.fa.fa-lock &nbsp;
 										| Carta de crédito
-									input(readonly)
+									input.text-center.text-primary(ng-value='order.budget.credit.order_payment_value_total | currency:"R$ "' readonly)
 
 								md-button.md-primary(ng-click='order.addCredit()' 
 										ng-disabled='!order.budget.order_client.person_credit.length || !order.budget.order_items.length')
@@ -580,7 +580,6 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 											td
 												md-button.md-icon-button(ng-click='order.removePayment(p)')
 													md-icon(md-font-set='material-icons' md-menu-align-target) delete_forever
-															
 
 							.payment-table-footer(layout='row')
 								md-button.md-primary(ng-click='order.addPayment()' ng-disabled='!order.budget.order_items.length')
@@ -595,7 +594,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
 								span(flex)
 
-								md-button.md-primary(ng-click='order.recalcPayments()' ng-disabled='!order.budget.order_items.length || !order.budget.order_payments.length')
+								md-button.md-primary(ng-click='order.recalcPayments()' ng-disabled='!order.budget.order_items.length || !order.budget.order_payments.length || true')
 									md-tooltip(md-direction='top') Recalcular valor das parcelas
 									i.fa.fa-calculator &nbsp;
 									| Recalcular

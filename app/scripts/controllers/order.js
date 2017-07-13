@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-13 14:32:36
+* @Last Modified time: 2017-07-13 18:05:15
 */
 
 (function() {
@@ -27,6 +27,7 @@
 		'Order', 
 		'ProviderPerson', 
 		'Person',
+		'PersonCredit',
 		'Address', 
 		'ProviderProduct', 
 		'Product', 
@@ -59,6 +60,7 @@
 		Order, 
 		providerPerson, 
 		Person, 
+		PersonCredit, 
 		Address, 
 		providerProduct, 
 		Product,
@@ -258,9 +260,14 @@
 				return;
 			}
 
-			if (self.budget.getChange() != 0 && self.budget.order_payments.length) {
+			if (self.budget.getChange() > 0 && self.budget.order_payments.length) {
 				$rootScope.customDialog().showMessage('Erro!', 'Reveja os valores dos pagamentos!');
 				return;	
+			}
+
+			if (self.budget.credit) {
+				$rootScope.customDialog().showConfirm('Erro!', 'Este orçamento está utilizando uma Carta de Crédito como forma de pagamento e por isso não é mais possível salvá-lo, você ainda pode exportá-lo. Deseja exportar o orçamento?');
+				return;		
 			}
 
 			var today = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
@@ -1290,8 +1297,8 @@
 
 				/* Calcula os vencimentos das parcelas */
 				dateCalc = function(installment, delay, interval) {
-					var date = new Date(),
-						today = new Date(),
+					var date = moment().toDate(),
+						today = moment().toDate(),
 						installment_delay = installment * interval;
 
 					date.setDate(today.getDate() + delay + installment_delay);
@@ -1401,6 +1408,11 @@
 			// 		}, function(error) { });
 			// 	return;
 			// }
+
+			if (payment.order_payment_credit == 'Y') {
+				self.addCredit();
+				return;
+			}
 
 			var temp = new OrderPayment(payment),
 				options = {
@@ -1579,17 +1591,67 @@
 			var controller = function() {
 				this._showCloseButton = true;
 				this.person = self.budget.order_client;
+
+				this.creditArray = this.person.person_credit.map(function(c) { 
+					c.checked = self.budget.credit && self.budget.credit.payable_id.indexOf(c.payable_id) >= 0; 
+					return c; 
+				});
+
 				this.activeRow = null;
 				this.tempNote = null;
+
 				this.setActive = function(credit) {
 					this.activeRow = this.person.person_credit.indexOf(credit);
 					this.tempNote = credit.payable_note;
 				};
+
+				this.close = function() {
+					var result = new Array();
+
+					angular.forEach(this.creditArray, function(item, index) {
+						item.checked && result.push(new PersonCredit(item));
+					});
+
+					this._close(result);
+				}
 			};
 
 			$rootScope.customDialog().showTemplate('Cartas de crédito', './partials/modalCustomerCredit.html', controller)
-				.then(function(success) {
+				.then(function(res) {
+					constants.debug && console.log('creditos selecionados: ', res);
 
+					$rootScope.loading.load();
+					/* Primeiro pega a modalidade carta de credito */
+					providerModality.getByCode(Globals.get('modality-types')['credit'], { getInstallments: true })
+						.then(function(success) {
+							var payment = new OrderPayment(),
+								modality = new PaymentModality(success.data); console.log(modality);
+
+							payment.setModality(modality);
+							payment.order_payment_deadline = moment().add(modality.modality_item[0].modality_item_installment, 'days').toDate();
+							payment.order_payment_credit = 'Y';
+
+							angular.forEach(res, function(pc) {
+								payment.payable_id.push(pc.payable_id);
+								payment.order_payment_value += pc.credit_value_available;
+								payment.order_payment_value_total += pc.credit_value_available;
+							});
+
+							/* Checa se o orcamento ja possui um pagamento credito e o remove */
+							if (self.budget.credit)
+								self.budget.order_payments.splice(self.budget.order_payments.indexOf(self.budget.credit), 1);
+
+							/* Adiciona o credito como forma de pagamento */
+							self.budget.order_payments.push(payment);
+							/* Adiciona uma referencia do credito no corpo do objecto orcamento */
+							self.budget.credit = payment;
+
+							$rootScope.loading.unload();
+						}, function(error) { 
+							constants.debug && console.log(error);
+							$rootScope.loading.load();
+						});					
+					
 				}, function(error) { });
 		}
 

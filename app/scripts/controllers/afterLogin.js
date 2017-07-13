@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-19 08:59:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-13 11:41:15
+* @Last Modified time: 2017-07-13 17:02:27
 */
 
 (function() {
@@ -109,7 +109,8 @@
 			});
 
 			Globals.set('modality-types', {
-				'credit-card': 'A'
+				'credit-card': 'A',
+				'credit': '000011'
 			});
 		}
 
