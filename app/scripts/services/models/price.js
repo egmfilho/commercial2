@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 14:13:57
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 12:45:09
+* @Last Modified time: 2017-07-13 13:42:54
 */
 
 (function() {
@@ -29,7 +29,7 @@
 
 	/* Vinculo do usuario com a tabela de precos */
 	angular.module('commercial2.services')
-		.factory('UserPrice', ['PriceERP', function(PriceERP) {
+		.factory('UserPrice', [function() {
 
 			function UserPrice(userPrice) {
 				this.user_price_id   = null;
@@ -37,12 +37,11 @@
 				this.price_id        = null;
 				this.user_price_date = null;
 				this.user_price_main = 'N';
-				this.price_erp       = new PriceERP();
+				this.price_name      = null;
 
 				if (userPrice) {
 					Object.assign(this, userPrice, {
 						user_price_date: new Date(userPrice.user_price_date),
-						price_erp: new PriceERP(userPrice.price_erp)
 					});
 				}
 			}
@@ -53,18 +52,20 @@
 
 	/* Preco do produto */
 	angular.module('commercial2.services')
-		.factory('Price', [function() {
+		.factory('Price', ['PriceERP', function(PriceERP) {
 
 			function Price(price) {
-				this.product_id  = null;
-				this.price_id    = null;
-				this.company_id  = null;
-				this.price_value = null;
-				this.price_date  = null;
+				this.product_id     = null;
+				this.price_id       = null;
+				this.company_id     = null;
+				this.price_value    = null;
+				this.price_date     = null;
+				this.price_erp       = new PriceERP();
 
 				if (price) {
 					Object.assign(this, price, {
-						price_date: new Date(price.price_date)
+						price_date: price.price_date ? new Date(price.price_date) : null,
+						price_erp: new PriceERP(price.price_erp)
 					});
 				}
 			}

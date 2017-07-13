@@ -124,15 +124,6 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									| Limpar
 				md-card-content
 					div(layout='row')
-						//- md-input-container.md-icon-float(flex='25')
-							label
-								span Tabela de preços
-							md-select(ng-model='order.internal.tempItem.user_price'
-									ng-model-options='{ trackBy: "$value.price_id" }')
-								md-option(ng-value='p' ng-repeat='p in order.internal.userPrices' 
-										ng-click='order.priceTableChanged(p.price_id)')
-									| {{p.price_erp.price_name}} 
-
 						md-input-container(flex='25')
 							label Código
 							input(name='product-code' ng-value='order.internal.tempItem.product.product_code'
@@ -171,20 +162,24 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									div(flex='5')
 									div(style='font-size: 11px;line-height: 1')
 										| Preço: 
-										| {{item.price.price_value | currency: 'R$ '}} 
+										| {{item.product_prices[0].price_value | currency: 'R$ '}} 
 
-						md-input-container(flex='25')
-							label 
-								i.fa.fa-lock &nbsp;
-								| Valor unitário
-							input(ng-value='order.internal.tempItem.product.price.price_value | currency:"R$ "' tabindex='-1' readonly)
+						md-input-container.md-icon-float(flex='25')
+							label
+								span Tabela de preços
+							md-select(ng-model='order.internal.tempPrice'
+									ng-disabled='!order.internal.tempItem.product.product_code'
+									ng-model-options='{ trackBy: "$value.price_id" }')
+								md-option(ng-value='p' ng-repeat='p in order.internal.tempProduct.product_prices' 
+										ng-click='order.priceTableChanged()')
+									| {{p.price_name}} ({{p.price_value | currency:'R$ '}})
 					
 					div(layout='row')
 						md-input-container(flex='25')
 							label 
 								| Quantidade
 							input(name='amount' ng-model='order.internal.tempItem.order_item_amount'
-									ng-change='order.internal.tempItem.setAmount(order.internal.tempItem.order_item_amount)'
+									ng-change='order.setItemAmount(order.internal.tempItem.order_item_amount)'
 									keys-shortcuts enter='order.focusOn("input[name=\'al-discount\']")'
 									currency trim min-fraction-size='0' number-only 
 									ng-disabled='!order.internal.tempItem.product.product_code')
@@ -386,7 +381,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										//- card de endereco
 										div(flex='33' 
 												ng-repeat='a in order.budget.order_client.person_address track by $index'
-												ng-if='order.budget.order_client.person_address.length > 0 && globals("default-customer").code != order.budget.order_client.person_code' 
+												ng-if='order.budget.order_client.person_address.length > 0' 
 												ng-show='a.person_address_active == "Y"')
 											md-card(ng-class='{"active": a.person_address_code == order.budget.order_address_delivery_code}')
 												md-card-content(layout='column' layout-fill) 

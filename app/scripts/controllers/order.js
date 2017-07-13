@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-13 10:02:17
+* @Last Modified time: 2017-07-13 14:32:36
 */
 
 (function() {
@@ -30,6 +30,7 @@
 		'Address', 
 		'ProviderProduct', 
 		'Product', 
+		'Price', 
 		'OrderItem',
 		'UserCompany',
 		'ProviderTerm',
@@ -60,7 +61,8 @@
 		Person, 
 		Address, 
 		providerProduct, 
-		Product, 
+		Product,
+		Price, 
 		OrderItem, 
 		UserCompany, 
 		providerTerm,
@@ -114,6 +116,7 @@
 		self.getProductByCode   = getProductByCode;
 		self.getProductByName   = getProductByName;
 		self.priceTableChanged  = priceTableChanged;
+		self.setItemAmount      = setItemAmount;
 		self.setItemAlDiscount  = setItemAlDiscount;
 		self.setItemVlDiscount  = setItemVlDiscount;
 		self.setTotalAlDiscount = setTotalAlDiscount;
@@ -174,7 +177,8 @@
 					getSeller: true,
 					getItems: true,
 					getPayments: true,
-					getTerm: true
+					getTerm: true,
+					getProductPrice: true
 				};
 				$rootScope.loading.load();
 				providerOrder.getByCode($routeParams.code, options).then(function(success) {
@@ -373,6 +377,7 @@
 				tempCustomer: null,
 				tempAddress: new Address(),
 				tempProduct: null,
+				tempPrice: null,
 				tempItem: new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() }),
 				tempItemAlDiscount: 0,
 				tempItemVlDiscount: 0,
@@ -562,6 +567,7 @@
 		 */
 		function clearProductSearch() {
 			self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() });
+			self.internal.tempPrice = new Price();
 			self.internal.tempProduct = null;
 			self.internal.tempItemAlDiscount = 0;
 			self.internal.tempItemVlDiscount = 0;
@@ -699,25 +705,7 @@
 		 */
 		function getCustomerByCode(code) {
 			if (!code) {								
-				var defaultCustomer = Globals.get('default-customer'),
-					message = '';
-
-				if (defaultCustomer) {
-					message = 'Aplicar perfil: <b>' + defaultCustomer.code + ' - ' + defaultCustomer.name + '</b>';
-				} else {
-					self.focusOn('input[name="autocompleteCustomer"]');
-					return;
-				}
-
-				$rootScope.customDialog().showConfirm('Confirmação', message)
-					.then(function(success) {
-						constants.debug && console.log('Aplicando cliente padrao: ' + defaultCustomer.code);
-						self.getCustomerByCode(defaultCustomer.code);
-					}, function(error) {
-						self.focusOn('input[name="autocompleteCustomer"]');
-					});
-
-				return;
+				code = Globals.get('default-customer').code;
 			}
 
 			if (code == self.budget.order_client.person_code || !parseInt(code))
@@ -776,6 +764,7 @@
 			providerProduct.getByCode(code, self.budget.order_company_id, self.internal.tempItem.price_id, options).then(function(success) {
 				self.internal.tempProduct = new Product(success.data);
 				self.internal.tempItem.setProduct(new Product(success.data));
+				self.internal.tempPrice = new Price(self.internal.tempItem.price);
 				self.focusOn('input[name="amount"]');
 				$rootScope.loading.unload();
 			}, function(error) {
@@ -805,31 +794,50 @@
 					getUnit: true
 				};
 
-			if (!isNaN(name) && angular.isNumber(+name)) {
-				providerProduct.getByCode(name, self.budget.order_company_id, self.internal.tempItem.price_id, options).then(function(success) {
-					deferred.resolve([ new Product(success.data) ]);
-				}, function(error) {
-					deferred.resolve([ ]);
-				});
-			} else {
-				providerProduct.getByName(name, self.budget.order_company_id, self.internal.tempItem.price_id, options).then(function(success) {
+			providerProduct.getByName(name, self.budget.order_company_id, self.internal.tempItem.price_id, options)
+				.then(function(success) {
 					deferred.resolve(success.data.map(function(p) { return new Product(p); }));
 				}, function(error) {
 					constants.debug && console.log(error);
 					deferred.resolve([ ]);
 				});
-			}
 
 			return deferred.promise;
 		}
 
 		/**
-		 * Adiciona a tabela de precos em um item.
-		 * @param {string} priceId - O id da tabela.
+		 * Seleciona a tabela de precos do item.
+		 * @param {object} price - A tabela de precos.
 		 */
-		function priceTableChanged(priceId) {
-			clearProductSearch();
-			self.internal.tempItem.price_id = priceId;
+		function priceTableChanged() {
+			if (self.internal.tempItem.order_item_al_discount > 0) {
+				var msg = 'Ao trocar a tabela de preços o desconto será removido do item. Deseja continuar?';
+
+				$rootScope.customDialog().showConfirm('Aviso', msg)
+					.then(function(success) {
+						self.internal.tempItem.setAlDiscount(0);
+						self.internal.tempItem.removeAudit();
+						self.internal.tempItemAlDiscount = self.internal.tempItem.order_item_al_discount;
+						self.internal.tempItemVlDiscount = self.internal.tempItem.order_item_vl_discount;
+						
+						self.priceTableChanged();
+					}, function(error) { 
+						self.internal.tempPrice = new Price(self.internal.tempItem.price); 
+					});
+
+				return;
+			}
+
+			self.internal.tempItem.setPrice(self.internal.tempPrice);
+		}
+
+		/**
+		 * Adiciona a quantidade de items e recalcula o desconto.
+		 * @param {int} amount - A quantidade de itens.
+		 */
+		function setItemAmount(amount) {
+			self.internal.tempItem.setAmount(amount);
+			self.internal.tempItemVlDiscount = self.internal.tempItem.order_item_vl_discount;
 		}
 
 		/**
@@ -874,7 +882,8 @@
 				});
 			} else {
 				setAl(value);
-				self.focusOn("input[name=\'al-discount\']");
+				self.internal.tempItem.removeAudit();
+				self.focusOn("input[name=\'vl-discount\']");
 			}
 		}
 
@@ -1001,9 +1010,26 @@
 		 * @param {object} item - O item a ser editado.
 		 */
 		function editItem(item) {
+
+			if (!item.product.product_prices.find(function(p) { return p.price_id == item.price_id })) {
+				var msg = 'Este item está usando uma tabela de preços restrita, ';
+				msg += 'editá-lo fará com que a tabela de preços e o desconto sejam removidos. Deseja continuar?';
+
+				$rootScope.customDialog().showConfirm('Aviso', msg)
+					.then(function(success) {
+						item.setPrice(item.product.getDefaultPriceTable());
+						item.setAlDiscount(0);
+						item.removeAudit();
+						self.editItem(item);
+					}, function(error) { });
+
+				return;
+			}
+
 			self.internal.tempItem = new OrderItem(item);
 			self.internal.tempItemAlDiscount = item.order_item_al_discount;
 			self.internal.tempItemVlDiscount = item.order_item_vl_discount;
+			self.internal.tempPrice = new Price(self.internal.tempItem.price);
 			self.internal.tempProduct = new Product(item.product);
 			
 			self.budget.removeItem(item);
@@ -1026,6 +1052,7 @@
 					self.internal.tempProduct = null;
 					self.internal.tempItemAlDiscount = 0;
 					self.internal.tempItemVlDiscount = 0;
+					self.internal.tempPrice = new Price();
 					self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() });
 				}
 			}, 100);

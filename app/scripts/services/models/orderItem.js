@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-27 17:01:49
+* @Last Modified time: 2017-07-13 12:15:11
 */
 
 (function() {
@@ -28,7 +28,7 @@
 		}]);
 
 	angular.module('commercial2.services')
-		.factory('OrderItem', ['Product', 'UserPrice', 'Audit', function(Product, UserPrice, Audit) {
+		.factory('OrderItem', ['Product', 'Price', 'Audit', function(Product, Price, Audit) {
 
 			function Item(item) {
 				this.order_item_id            = null;
@@ -36,16 +36,16 @@
 				this.product_id               = null;
 				this.price_id                 = null;
 				this.order_item_amount        = 1;
+				this.order_item_value_unitary = null;
 				this.order_item_value         = 0;
 				this.order_item_al_discount   = 0;
 				this.order_item_vl_discount   = 0;
 				this.order_item_value_total   = 0;
 				this.order_item_update        = null;
 				this.order_item_date          = null;
-				this.order_item_value_unitary = null;
-				this.order_item_audit         = new Object();
+				this.order_item_audit         = new Audit();
 				this.product                  = new Product();
-				this.user_price               = new UserPrice();
+				this.price                    = new Price();
 
 				if (item) {
 					Object.assign(this, item, {
@@ -53,18 +53,19 @@
 						order_item_date: item.order_item_date ? new Date(item.order_item_date) : null,
 						order_item_audit: item.order_item_audit ? new Audit(item.order_item_audit) : new Audit(),
 						product: item.product ? new Product(item.product) : new Product(),
-						user_price: item.user_price ? new UserPrice(item.user_price) : new UserPrice()
+						price: item.price ? new Price(item.price) : new Price()
 					});
 				}
 			}
 
 			Item.prototype = {
 				setProduct: setProduct,
-				setUserPrice: setUserPrice,
+				setPrice: setPrice,
 				setAmount: setAmount,
 				setAlDiscount: setAlDiscount,
 				setVlDiscount: setVlDiscount,
 				setAudit: setAudit,
+				removeAudit: removeAudit,
 				getValue: getValue,
 				getValueTotal: getValueTotal,
 				updateValues: updateValues
@@ -81,16 +82,21 @@
 
 				this.product = new Product(product);
 				this.product_id = this.product.product_id;
-				this.order_item_value_unitary = this.product.price.price_value;
+				this.order_item_value_unitary = this.product.getDefaultPriceTable().price_value;
+				this.price = new Price(this.product.getDefaultPriceTable());
+				this.price_id = this.price.price_id;
 				this.order_item_vl_discount = 0;
 				this.order_item_al_discount = 0;
 				this.updateValues();
 			}
 
-			function setUserPrice(userPrice) {
-				if (userPrice)
-					this.user_price = new UserPrice(userPrice);
-				this.price_id = this.user_price.price_id;
+			function setPrice(price) {
+				if (price)
+					this.price = new Price(price);
+
+				this.price_id = this.price.price_id;
+				this.order_item_value_unitary = this.price.price_value;
+				this.updateValues();
 			}
 
 			function setAmount(value) {
@@ -123,6 +129,10 @@
 
 			function setAudit(audit) {
 				this.order_item_audit = new Audit(audit);
+			}
+
+			function removeAudit() {
+				this.order_item_audit = new Audit();	
 			}
 
 			function getValue() {

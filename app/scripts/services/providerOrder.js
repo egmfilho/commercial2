@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-22 13:23:08
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-27 12:14:03
+* @Last Modified time: 2017-07-13 13:39:41
 */
 
 (function() {
@@ -54,7 +54,8 @@
 						get_order_payments: options && options.getPayments,
 						get_order_payments_modality: options && options.getPayments,
 						get_order_term: options && options.getTerm,
-						get_order_address_delivery: options && options.getDeliveryAddress
+						get_order_address_delivery: options && options.getDeliveryAddress,
+						get_product_price: options && options.getProductPrice
 					}).$promise;
 				}
 
@@ -75,7 +76,8 @@
 						get_order_payments: options && options.getPayments,
 						get_order_payments_modality: options && options.getPayments,
 						get_order_term: options && options.getTerm,
-						get_order_address_delivery: options && options.getDeliveryAddress
+						get_order_address_delivery: options && options.getDeliveryAddress,
+						get_product_price: options && options.getProductPrice
 					}).$promise;
 				}
 
@@ -96,7 +98,8 @@
 						get_order_payments: options && options.getPayments,
 						get_order_payments_modality: options && options.getPayments,
 						get_order_term: options && options.getTerm,
-						get_order_address_delivery: options && options.getDeliveryAddress
+						get_order_address_delivery: options && options.getDeliveryAddress,
+						get_product_price: options && options.getProductPrice
 					}).$promise;
 				}
 

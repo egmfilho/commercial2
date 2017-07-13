@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 16:16:04
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-23 12:55:05
+* @Last Modified time: 2017-07-13 11:41:15
 */
 
 (function() {
@@ -30,7 +30,7 @@
 		}]);
 
 	angular.module('commercial2.services')
-		.factory('Product', ['Price', 'Unit', 'Stock', function(Price, Unit, Stock) {
+		.factory('Product', ['Price', 'Unit', 'Stock', 'Globals', function(Price, Unit, Stock, Globals) {
 
 			function Product(product) {
 				this.product_id                 = null;
@@ -48,16 +48,24 @@
 				this.product_duplicated_aliquot = null;
 				this.product_cfop               = null;
 				this.product_date               = null;
+				this.product_prices             = new Array();
 				this.unit                       = new Unit();
-				this.price                      = new Price();
 				this.stock                      = new Stock();
 
 				if (product) {
 					Object.assign(this, product, {
 						product_date: product.product_date && new Date(product.product_date),
-						price: new Price(product.price),
+						product_prices: product.product_prices ? product.product_prices.map(function(p) { return new Price(p) }) : new Array(),
 						unit: new Unit(product.unit),
 						stock: new Stock(product.stock)
+					});
+				}
+			}
+
+			Product.prototype = {
+				getDefaultPriceTable: function() {
+					return this.product_prices.find(function(p) {
+						return p.price_id == Globals.get('default-price-table');
 					});
 				}
 			}
