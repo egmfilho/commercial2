@@ -3,7 +3,7 @@ div(role='dialog' layout='column')
 		.md-toolbar-tools
 			h2 {{ctrl._title}}
 			span(flex)
-			md-button.md-icon-button(ng-if='ctrl._showCloseButton')
+			md-button.md-icon-button(ng-if='ctrl._showCloseButton' tabindex='-1')
 				md-icon(md-font-icon='fa fa-times' ng-click='ctrl._cancel()')
 	
 	.body(flex ng-if='!ctrl._templateUrl' layout-fill)

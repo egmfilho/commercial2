@@ -67,12 +67,12 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					button(ng-click='$mdMenu.open()') Ir
 					md-menu-content
 						md-menu-item
-							md-button(ng-click='order.scrollTo("section[name=\'seller\']")')
-								| Vendedor
-								span.md-alt-text {{ 'M-1' | keyboardShortcut }}
-						md-menu-item
 							md-button(ng-click='order.scrollTo("section[name=\'products\']")')
 								| Produtos
+								span.md-alt-text {{ 'M-1' | keyboardShortcut }}
+						md-menu-item
+							md-button(ng-click='order.scrollTo("section[name=\'seller\']")')
+								| Vendedor
 								span.md-alt-text {{ 'M-2' | keyboardShortcut }}
 						md-menu-item
 							md-button(ng-click='order.scrollTo("section[name=\'customer\']")')
@@ -109,52 +109,6 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							b &nbsp;Cód. NFE: 
 							| {{order.budget.order_code_nfe || 'Indisponível'}}
 
-
-		//- Vendedor
-		section(name='seller')
-			md-card
-				md-card-header
-					md-card-header-text
-						div(layout='row')
-							div(flex='90' layout='column')
-								span.md-title Vendedor
-									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-1' | keyboardShortcut }})
-								span.md-subhead Informe o vendedor
-							div(layout='column' layout-align='center end' layout-fill)
-								md-button.md-raised(ng-click='order.clearSeller()')
-									| Limpar
-				md-card-content
-					div(layout-gt-xs='row')
-						md-input-container
-							label Código
-							input(name='seller-code'
-									ng-value='order.budget.order_seller.person_code' 
-									blur-to='order.budget.order_seller.person_code'
-									keys-shortcuts f1='order.showModalSeller(globals(\'person-categories\').seller)' prevent-default
-									enter='order.getSellerByCode($event.target.value)')
-						md-autocomplete(flex 
-										md-input-name='autocompleteSeller'
-										md-no-cache='true'
-										md-autoselect='true'
-										md-escape-options='none'
-										md-selected-item='order.internal.tempSeller'
-										md-search-text='sellerQuery'
-										md-selected-item-change='item.person_code && order.getSellerByCode(item.person_code)'
-										md-items='item in order.getSellerByName(sellerQuery)'
-										md-item-text='item.person_name'
-										md-min-length='3'
-										md-require-match='true'
-										md-floating-label='Nome'
-										ng-blur='order.internal.blurSeller()')
-							md-item-template
-								div(md-highlight-text='sellerQuery' style='line-height: 2') {{item.person_name}}
-								div(style='font-size: 11px;line-height: 1')
-									| Código: 
-									| {{item.person_code}}
-
-					pre(ng-if='debug')
-						| {{order.budget.order_seller | json}}
-
 		//- Produtos					
 		section(name='products')
 			md-card
@@ -163,14 +117,14 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						div(layout='row')
 							div(flex='90' layout='column')
 								span.md-title Produtos
-									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-2' | keyboardShortcut }})
+									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-1' | keyboardShortcut }})
 								span.md-subhead Adicione ou remova produtos
 							div(layout='column' layout-align='center end' layout-fill)
 								md-button.md-raised(ng-click='order.clearItems()')
 									| Limpar
 				md-card-content
-					div(layout-gt-xs='row')
-						md-input-container.md-icon-float(flex='25')
+					div(layout='row')
+						//- md-input-container.md-icon-float(flex='25')
 							label
 								span Tabela de preços
 							md-select(ng-model='order.internal.tempItem.user_price'
@@ -178,9 +132,15 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								md-option(ng-value='p' ng-repeat='p in order.internal.userPrices' 
 										ng-click='order.priceTableChanged(p.price_id)')
 									| {{p.price_erp.price_name}} 
+
+						md-input-container(flex='25')
+							label Código
+							input(name='product-code' ng-value='order.internal.tempItem.product.product_code'
+									blur-to='order.internal.tempItem.product.product_code' 
+									keys-shortcuts enter='order.getProductByCode($event.target.value)')
 						
 						md-autocomplete(flex='75'
-										keys-shortcuts f1='order.showModalProduct()' prevent-default
+										keys-shortcuts f1='order.showModalProduct()' prevent-default enter='order.focusOn("input[name=\'amount\']")'
 										md-input-name='autocompleteProduct'
 										md-no-cache='true'
 										md-autoselect='true'
@@ -233,20 +193,18 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							label 
 								| Desconto %
 							input(name='al-discount' ng-model='order.internal.tempItemAlDiscount' 
-									ng-model-options="{ updateOn: 'default blur' }"
-									ng-blur='order.setItemAlDiscount(order.internal.tempItemAlDiscount)'
+									ng-blur='order.internal.tempItemAlDiscount = order.internal.tempItem.order_item_al_discount.toString()'
 									currency trim max-fraction-size='4' number-only 
 									ng-disabled='!order.internal.tempItem.product.product_code'
-									keys-shortcuts enter='order.focusOn("input[name=\'vl-discount\']")')
+									keys-shortcuts enter='order.setItemAlDiscount(order.internal.tempItemAlDiscount)')
 						
 						md-input-container(flex='25')
 							label 
 								| Desconto R$
 							input(name='vl-discount' ng-model='order.internal.tempItemVlDiscount' 
-									ng-model-options="{ updateOn: 'default blur' }"
-									ng-blur='order.setItemVlDiscount(order.internal.tempItemVlDiscount)'
+									ng-blur='order.internal.tempItemVlDiscount = order.internal.tempItem.order_item_vl_discount'
 									currency number-only ng-disabled='!order.internal.tempItem.product.product_code'
-									keys-shortcuts enter='order.addItem()')
+									keys-shortcuts enter='order.setItemVlDiscount(order.internal.tempItemVlDiscount, order.addItem)')
 						
 						md-input-container(flex='25')
 							label 
@@ -297,6 +255,51 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						md-input-container.large-input(flex='15')
 							label Total
 							input(tabindex='-1' readonly ng-value='order.budget.order_value_total | currency:"R$ "')
+
+		//- Vendedor
+		section(name='seller')
+			md-card
+				md-card-header
+					md-card-header-text
+						div(layout='row')
+							div(flex='90' layout='column')
+								span.md-title Vendedor
+									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-2' | keyboardShortcut }})
+								span.md-subhead Informe o vendedor
+							div(layout='column' layout-align='center end' layout-fill)
+								md-button.md-raised(ng-click='order.clearSeller()')
+									| Limpar
+				md-card-content
+					div(layout-gt-xs='row')
+						md-input-container
+							label Código
+							input(name='seller-code'
+									ng-value='order.budget.order_seller.person_code' 
+									blur-to='order.budget.order_seller.person_code'
+									keys-shortcuts f1='order.showModalSeller(globals(\'person-categories\').seller)' prevent-default
+									enter='order.getSellerByCode($event.target.value)')
+						md-autocomplete(flex 
+										md-input-name='autocompleteSeller'
+										md-no-cache='true'
+										md-autoselect='true'
+										md-escape-options='none'
+										md-selected-item='order.internal.tempSeller'
+										md-search-text='sellerQuery'
+										md-selected-item-change='item.person_code && order.getSellerByCode(item.person_code)'
+										md-items='item in order.getSellerByName(sellerQuery)'
+										md-item-text='item.person_name'
+										md-min-length='3'
+										md-require-match='true'
+										md-floating-label='Nome'
+										ng-blur='order.internal.blurSeller()')
+							md-item-template
+								div(md-highlight-text='sellerQuery' style='line-height: 2') {{item.person_name}}
+								div(style='font-size: 11px;line-height: 1')
+									| Código: 
+									| {{item.person_code}}
+
+					pre(ng-if='debug')
+						| {{order.budget.order_seller | json}}
 
 		//- Cliente
 		section(name='customer')
@@ -533,7 +536,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								md-input-container(flex='25')
 									label
 										| Código do prazo
-									input(name='amount' 
+									input(name='term-code' 
 											ng-value='order.internal.term.tempTerm.term_code'
 											blur-to='order.internal.term.tempTerm.term_code'
 											ng-disabled='!order.budget.order_items.length'

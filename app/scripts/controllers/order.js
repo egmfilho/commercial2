@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-12 17:12:57
+* @Last Modified time: 2017-07-13 10:02:17
 */
 
 (function() {
@@ -754,13 +754,14 @@
 		 * @param {string} code - O codio do produto.
 		 */
 		function getProductByCode(code) {
-			if (!code) {
+			if (!code || !parseInt(code)) {
 				constants.debug && console.log('Sem codigo informado');
 				self.focusOn('input[name="autocompleteProduct"]');
 				return;
 			}
 
-			if (code == self.internal.tempItem.product.product_code || !parseInt(code)) {
+			if (code == self.internal.tempItem.product.product_code) {
+				self.focusOn('input[name="amount"]');
 				return;
 			}
 
@@ -839,8 +840,10 @@
 			value = parseFloat(value);
 
 			if (self.internal.tempItemAlDiscount == self.internal.tempItem.order_item_al_discount && 
-				self.internal.tempItemVlDiscount == self.internal.tempItem.order_item_vl_discount)
+				self.internal.tempItemVlDiscount == self.internal.tempItem.order_item_vl_discount) {				
+				self.focusOn("input[name=\'vl-discount\']");
 				return;
+			}
 
 			var max = parseFloat(Globals.get('user-max-discount') || 0),
 				setAl = function(al) {
@@ -854,6 +857,7 @@
 					if (value > success.user_max_discount) {
 						$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
 						setAl(self.internal.tempItem.order_item_al_discount);
+						self.focusOn("input[name=\'al-discount\']");
 					} else {
 						self.internal.tempItem.setAudit({
 							user_id: success.user_id,
@@ -862,12 +866,15 @@
 							product_name: self.internal.tempItem.product.product_name,
 						});
 						setAl(value);
+						self.focusOn("input[name=\'vl-discount\']");
 					}
 				}, function(error) {
 					setAl(self.internal.tempItem.order_item_al_discount);
+					self.focusOn("input[name=\'al-discount\']");
 				});
 			} else {
 				setAl(value);
+				self.focusOn("input[name=\'al-discount\']");
 			}
 		}
 
@@ -875,7 +882,7 @@
 		 * Aplica um valor de desconto no item atual.
 		 * @param {float} value - O valor do desconto.
 		 */
-		function setItemVlDiscount(value) {
+		function setItemVlDiscount(value, callback) {
 			var currentAl = self.internal.tempItem.getValue() == 0 ? 0 : (parseFloat(value) * 100) / self.internal.tempItem.getValue(),
 				maxAl = parseFloat(Globals.get('user-max-discount') || 0),
 				setVl = function(vl) {
@@ -885,14 +892,17 @@
 				};
 
 			if (self.internal.tempItemAlDiscount == self.internal.tempItem.order_item_al_discount && 
-				self.internal.tempItemVlDiscount == self.internal.tempItem.order_item_vl_discount)
+				self.internal.tempItemVlDiscount == self.internal.tempItem.order_item_vl_discount) {
+				callback && callback();
 				return;
+			}
 
 			if (currentAl > maxAl) {
 				authorizeDiscount(currentAl).then(function(success) {
 					if (currentAl > success.user_max_discount) {
 						$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
 						setVl(self.internal.tempItem.order_item_vl_discount);
+						self.focusOn("input[name=\'vl-discount\']");
 					} else {
 						self.internal.tempItem.setAudit({
 							user_id: success.user_id,
@@ -901,12 +911,15 @@
 							product_name: self.internal.tempItem.product.product_name,
 						});
 						setVl(value);
+						callback && callback();
 					}
 				}, function(error) {
 					setVl(self.internal.tempItem.order_item_vl_discount);
+					self.focusOn("input[name=\'vl-discount\']");
 				});
 			} else {
 				setVl(value);
+				self.focusOn("input[name=\'vl-discount\']");
 			}
 		}
 
@@ -1000,7 +1013,7 @@
 		 * Adiciona o item temporario a lista de items do orcamento.
 		 */
 		function addItem() {
-			self.focusOn('input[name="autocompleteProduct"]');
+			self.focusOn('input[name="product-code"]');
 
 			$timeout(function() {
 				if (self.internal.tempItem.product && self.internal.tempItem.product.product_id) {
@@ -1636,13 +1649,13 @@
 
 			/* Ir para vendedor */
 			Mousetrap.bind(['command+1', 'ctrl+1'], function() {
-				self.scrollTo("section[name=\'seller\']")
+				self.focusOn('input[name="autocompleteProduct"]');
 				return false;
 			});
 
 			/* Ir para produtos */
 			Mousetrap.bind(['command+2', 'ctrl+2'], function() {
-				self.focusOn('input[name="autocompleteProduct"]');
+				self.scrollTo("section[name=\'seller\']")
 				return false;
 			});
 
