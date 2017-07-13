@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-11 17:42:24
+* @Last Modified time: 2017-07-12 17:12:57
 */
 
 (function() {
@@ -132,10 +132,12 @@
 		self.exportDAV          = exportDAV;
 		self.searchTerm         = searchTerm;
 		self.getTermByCode      = getTermByCode;
+		self.selectTerm         = selectTerm;
 		self.addModality        = addModality;
 		self.addPayment         = addPayment;
 		self.editPayment        = editPayment;
 		self.removePayment      = removePayment;
+		self.removeAllPayments  = removeAllPayments;
 		self.paymentDialog      = paymentDialog;
 		self.addCredit          = addCredit;
 		self.recalcPayments     = recalcPayments;
@@ -1186,10 +1188,11 @@
 		 */
 		function searchTerm() {
 			var options = {
-				limit: 10
+				limit: 10,
+				getModality: true
 			};
 
-			providerTerm.getByDescription(self.internal.term.queryTerm).then(function(success) {
+			providerTerm.getByDescription(self.internal.term.queryTerm, options).then(function(success) {
 				self.internal.term.queryResult = success.data.map(function(t) { return new Term(t) });
 			}, function(error) {
 				constants.debug && console.log(error);
@@ -1206,12 +1209,31 @@
 
 			$rootScope.loading.load();
 			providerTerm.getByCode(code, options).then(function(success) {
-			self.internal.term.tempTerm = new Term(success.data);
-			$rootScope.loading.unload();
+				self.internal.term.tempTerm = new Term(success.data);
+				self.internal.term.queryResult = [ new Term(success.data) ];
+				self.internal.term.queryTerm = self.internal.term.tempTerm.term_description;
+				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);
 				$rootScope.loading.unload();
 			});
+		}
+
+		/**
+		 * Abre uma janela com as modalidades do termo selecionado.
+		 * @returns {object} - Uma promise com o resultado.
+		 */
+		function selectTerm() {
+			var controller = function() {
+				this._showCloseButton = true;
+				this.term = new Term(self.internal.term.tempTerm);
+				this.value_total = self.budget.order_value_total;
+			};
+
+			$rootScope.customDialog().showTemplate('Selecionar modalidade', './partials/modalTerm.html', controller)
+				.then(function(success) {
+					self.addModality(success);
+				}, function(error) { });
 		}
 
 		/**
@@ -1290,19 +1312,19 @@
 		 * um pagamento para ser adicionado ao orcamento.
 		 */
 		function addPayment() {
-			if (self.budget.term_id) {
-				$rootScope.customDialog().showConfirm('Aviso', 'Para adicionar um pagamento o prazo deve ser removido do orçamento. Deseja remover o prazo?')
-					.then(function(success) {
+			// if (self.budget.term_id) {
+			// 	$rootScope.customDialog().showConfirm('Aviso', 'Para adicionar um pagamento o prazo deve ser removido do orçamento. Deseja remover o prazo?')
+			// 		.then(function(success) {
 						self.budget.term_id = null;
-						self.addPayment();
-					}, function(error) { });
-				return;
-			}
+			//			self.addPayment();
+			// 		}, function(error) { });
+			// 	return;
+			// }
 
 			self.paymentDialog('Adicionar pagamento').then(function(success) {
 				var payment = new OrderPayment(success);
 
-				/* Se for selecionado como parcela inicial verifica se existe algum pagamento com data inferior. */
+				/* Se for selecionado como parcela inicial verifica se existe algum pagamento com data anterior. */
 				if (payment.order_payment_initial == 'Y') {
 					var i, flag;
 
@@ -1314,7 +1336,7 @@
 					}
 
 					if (flag) {
-						$rootScope.customDialog().showMessage('Aviso', 'Não foi possível colocar o pagamento como parcela inicial pois já existe um pagamento com uma data inferior.');
+						$rootScope.customDialog().showMessage('Aviso', 'Não foi possível colocar o pagamento como parcela inicial pois já existe um pagamento com uma data anterior.');
 						payment.order_payment_initial = 'N';
 					} else {
 						/* Desmarca o atual incial. */
@@ -1331,14 +1353,14 @@
 		 * @param {object} payment - O pagamento a ser editado.
 		 */
 		function editPayment(payment) {
-			if (self.budget.term_id) {
-				$rootScope.customDialog().showConfirm('Aviso', 'Para editar um pagamento o prazo deve ser removido do orçamento. Deseja remover o prazo?')
-					.then(function(success) {
+			// if (self.budget.term_id) {
+			// 	$rootScope.customDialog().showConfirm('Aviso', 'Para editar um pagamento o prazo deve ser removido do orçamento. Deseja remover o prazo?')
+			// 		.then(function(success) {
 						self.budget.term_id = null;
-						self.editPayment(payment);
-					}, function(error) { });
-				return;
-			}
+			//			self.editPayment(payment);
+			// 		}, function(error) { });
+			// 	return;
+			// }
 
 			var temp = new OrderPayment(payment),
 				options = {
@@ -1354,14 +1376,14 @@
 				temp.modality = new PaymentModality(success.data);
 				self.paymentDialog('Editar pagamento', temp).then(function(success) {
 					var index = self.budget.order_payments.indexOf(payment),
-						payment = new OrderPayment(success);
+						newPayment = new OrderPayment(success);
 
 					/* Copiado do addPayment(). */
-					if (payment.order_payment_initial == 'Y') {
+					if (newPayment.order_payment_initial == 'Y') {
 						var i, flag;
 
 						for (i = 0; i < self.budget.order_payments.length; i++) {
-							if (self.budget.order_payments[i].order_payment_deadline.getTime() < payment.order_payment_deadline.getTime()) {
+							if (self.budget.order_payments[i].order_payment_deadline.getTime() < newPayment.order_payment_deadline.getTime()) {
 								flag = true;
 								break;
 							}
@@ -1369,14 +1391,14 @@
 
 						if (flag) {
 							$rootScope.customDialog().showMessage('Aviso', 'Não foi possível colocar o pagamento como parcela inicial pois já existe um pagamento com uma data inferior.');
-							payment.order_payment_initial = 'N';
+							newPayment.order_payment_initial = 'N';
 						} else {
 							/* Desmarca o atual incial. */
 							angular.forEach(self.budget.order_payments, function(item) { item.order_payment_initial = 'N' });
 						}
 					}
 
-					self.budget.order_payments[index] = payment;
+					self.budget.order_payments[index] = newPayment;
 				}, function(error) { });
 			}, function(error) {
 				constants.debug && console.log(error);
@@ -1389,14 +1411,14 @@
 		 * @param {string} id - O pagamento a ser removido.
 		 */
 		function removePayment(payment) {
-			if (self.budget.term_id) {
-				$rootScope.customDialog().showConfirm('Aviso', 'Para remover um pagamento o prazo deve ser removido do orçamento. Deseja remover o prazo?')
-					.then(function(success) {
+			// if (self.budget.term_id) {
+			// 	$rootScope.customDialog().showConfirm('Aviso', 'Para remover um pagamento o prazo deve ser removido do orçamento. Deseja remover o prazo?')
+			// 		.then(function(success) {
 						self.budget.term_id = null;
-						self.removePayment(payment);
-					}, function(error) { });
-				return;
-			}
+			//			self.removePayment(payment);
+			// 		}, function(error) { });
+			// 	return;
+			// }
 
 			var msg = 'Deseja remover o pagamento: <b>[';
 			msg += payment.order_payment_installment + 'x] ';
@@ -1405,6 +1427,19 @@
 			$rootScope.customDialog().showConfirm('Aviso', msg).then(function(success) {
 				var index = self.budget.order_payments.indexOf(payment);
 				self.budget.order_payments.splice(index, 1);
+			}, function(error) { });
+		}
+
+		/**
+		 * Remove todos os pagamentos do orcamento
+		 */
+		function removeAllPayments() {
+			self.budget.term_id = null;
+			
+			var msg = 'Deseja remover todos os pagamentos?';
+
+			$rootScope.customDialog().showConfirm('Aviso', msg).then(function(success) {
+				self.budget.order_payments = new Array();
 			}, function(error) { });
 		}
 
@@ -1500,6 +1535,22 @@
 		 */
 		function addCredit() {
 			constants.debug && console.log('creditos:', self.budget.order_client.person_credit);
+
+			var controller = function() {
+				this._showCloseButton = true;
+				this.person = self.budget.order_client;
+				this.activeRow = null;
+				this.tempNote = null;
+				this.setActive = function(credit) {
+					this.activeRow = this.person.person_credit.indexOf(credit);
+					this.tempNote = credit.payable_note;
+				};
+			};
+
+			$rootScope.customDialog().showTemplate('Cartas de crédito', './partials/modalCustomerCredit.html', controller)
+				.then(function(success) {
+
+				}, function(error) { });
 		}
 
 		/**

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-30 16:47:19
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-30 17:07:43
+* @Last Modified time: 2017-07-12 16:36:34
 */
 
 (function() {
@@ -22,6 +22,8 @@
 				this.modality_description   = null;
 				this.payable_code           = null;
 				this.payable_id             = null;
+				this.payable_date           = null;
+				this.payable_note           = null;
 				this.person_id              = null;
 
 				if (personCredit) {

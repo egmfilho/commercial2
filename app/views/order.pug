@@ -259,7 +259,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
 					div(layout='column' style='margin-top: 45px')
 						.products-table-header-container
-							table.products-table
+							table.table.products-table
 								thead
 									tr
 										th &nbsp; PRODUTO
@@ -271,7 +271,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										th VALOR TOTAL
 										th &nbsp;
 						.container-table
-							table.products-table
+							table.table.products-table
 								tbody
 									tr(ng-repeat='i in order.budget.order_items' layout='row' ng-dblclick='order.editItem(i)')
 										td {{i.product.product_code}} - {{i.product.product_name}}
@@ -397,7 +397,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 														.label.label-error(ng-if='a.person_address_active == "N"') 
 															| Inativo
 													div(flex layout='row' layout-align='start center')
-														p.text-light
+														p.text-primary
 															| {{a.toString()}}
 															//- | {{a.person_address_public_place}}
 													div(flex layout='row')
@@ -424,7 +424,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 																ng-click='order.internal.address.selectedTabIndex = 1')
 															md-icon(md-font-icon='fa fa-plus')
 													div.offset-top-15
-														p.text-primary.text-center Novo Endereço
+														p.text-light.text-center Novo Endereço
 
 									.delivery-address
 										md-toolbar
@@ -486,38 +486,53 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 				md-card-content
 					div(layout='row')
 						div(flex='40' layout='column')
-							div(layout='row')
+							
+							.summary(layout='column')
+								md-toolbar.md-toolbar-tools
+									h2 Resumo
+
+								table.md-subhead
+									tr
+										td.text-right.text-light
+											b Total de items:
+										td.text-primary
+											| {{order.budget.order_items.length}}&nbsp;
+											| {{order.budget.order_items.length == 1 ? 'item' : 'itens'}}
+									tr
+										td.text-right.text-light
+											b Valor total:
+										td.text-primary
+											| {{order.budget.order_value | currency:'R$ '}}
+									tr
+										td.text-right.text-light
+											b Desconto total:
+										td.text-primary
+											| {{order.budget.order_al_discount | number:'2'}}%
+											| &nbsp;/&nbsp;
+											| {{order.budget.order_vl_discount | currency:'R$ '}}
+									tr
+										td.text-right.text-light
+											b Valor total líquido:
+										td.text-primary
+											| {{order.budget.order_value_total | currency:'R$ '}}
+
+							.offset-top-5(layout='row')
 								md-input-container(flex)
 									label 
-										| Informe o prazo
-									md-select(ng-model='order.internal.term.tempTerm'
-											data-md-container-class='query-select-container'
-											ng-model-options='{ trackBy: "$value.term_id" }'
-											ng-disabled='!order.budget.order_items.length')
-										md-select-header.select-header
-											input.md-text(ng-model='order.internal.term.queryTerm' 
-													type='search' placeholder='Digite o prazo'
-													ng-keydown="order.internal.term.updateSearch($event)")
-										md-opt-group(label='Prazos')
-											md-option(ng-value='t' 
-													ng-repeat='t in order.internal.term.queryResult track by t.term_id' 
-													ng-click='order.getTermByCode(t.term_code)')
-												| {{t.term_description}}
+										//- i.fa.fa-lock &nbsp;
+										| Carta de crédito
+									input(readonly)
 
-								md-button.md-primary(ng-click='order.clearTerm()' ng-disabled='!order.budget.order_items.length')
-									| Limpar
+								md-button.md-primary(ng-click='order.addCredit()' 
+										ng-disabled='!order.budget.order_client.person_credit.length || !order.budget.order_items.length')
+									| Adicionar
 
-							div.chule
-								md-list
-									md-list-item(ng-click='order.addModality(m)' ng-repeat='m in order.internal.term.tempTerm.modality track by $index')
-										p(flex) {{m.modality_description}}
-										i.fa.fa-angle-right.text-primary
 
 						div(flex='60' layout='column')
 							div(layout='row')
 								md-input-container(flex='25')
-									label 
-										| Código
+									label
+										| Código do prazo
 									input(name='amount' 
 											ng-value='order.internal.term.tempTerm.term_code'
 											blur-to='order.internal.term.tempTerm.term_code'
@@ -526,7 +541,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
 								md-input-container(flex)
 									label 
-										| Descrição
+										| Descrição do prazo
 									md-select(ng-model='order.internal.term.tempTerm'
 											data-md-container-class='query-select-container'
 											ng-model-options='{ trackBy: "$value.term_id" }'
@@ -540,20 +555,21 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 													ng-repeat='t in order.internal.term.queryResult track by t.term_id')
 												| {{t.term_description}}
 
-								md-button.md-primary(ng-click='' ng-disabled='!order.budget.order_items.length')
-									| Adicionar
+								md-button.md-primary(ng-click='order.selectTerm()' 
+										ng-disabled='!order.budget.order_items.length || !order.internal.term.tempTerm.term_id || !order.internal.term.tempTerm.modality.length')
+									| Selecionar
 
 							.payment-table-header-container
-								table.payment-table
+								table.table.payment-table
 									thead
 										tr
 											th &nbsp;
-											th FORMA
-											th VENCIMENTO
+											th PAGAMENTO
+											th DATA
 											th VALOR
 											th &nbsp;
 							.container-table
-								table.payment-table
+								table.table.payment-table
 									tbody
 										tr(ng-repeat='p in order.budget.order_payments track by $index' layout='row' ng-dblclick='order.editPayment(p)')
 											td 
@@ -570,22 +586,23 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
 							.payment-table-footer(layout='row')
 								md-button.md-primary(ng-click='order.addPayment()' ng-disabled='!order.budget.order_items.length')
-									md-tooltip(md-direction='top') Adicionar forma de pagamento
+									md-tooltip(md-direction='top') Adiciona forma de pagamento
 									i.fa.fa-plus-square-o &nbsp;
 									| Parcela
 
-								md-button.md-primary(ng-click='order.addCredit()' ng-disabled='!order.budget.order_client.person_credit.length || !order.budget.order_items.length')
-									md-tooltip(md-direction='top') Utilizar crédito do cliente
-									i.fa.fa-plus-square-o &nbsp;
-									| Crédito
+								md-button.md-primary(ng-click='order.removeAllPayments()' ng-disabled='!order.budget.order_payments.length')
+									md-tooltip(md-direction='top') Remove todas as parcelas
+									i.fa.fa-minus-square-o &nbsp;
+									| Remover todos
 
 								span(flex)
 
 								md-button.md-primary(ng-click='order.recalcPayments()' ng-disabled='!order.budget.order_items.length || !order.budget.order_payments.length')
 									md-tooltip(md-direction='top') Recalcular valor das parcelas
+									i.fa.fa-calculator &nbsp;
 									| Recalcular
 
-					.offset-top-30(layout='row')
+					.offset-top-15(layout='row')
 						span(flex)
 						
 						md-input-container.large-input(flex='15')

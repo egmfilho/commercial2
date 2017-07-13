@@ -1,6 +1,37 @@
 .customer-credit-modal
 	.body(layout='column')
-		
+		.credit-table-header-container
+			table.table.credit-table
+				thead
+					tr
+						th &nbsp;
+						th EMPRESA
+						th PESSOA
+						th TÍTULO
+						th VALOR
+						th UTILIZADO
+						th DISPONÍVEL
+						th EMISSÃO
+						th EMPENHADO
+
+		.container-table
+			table.table.credit-table
+				tbody
+					tr(ng-repeat='c in ctrl.person.person_credit track by $index' ng-click='ctrl.setActive(c)' ng-dblclick='' ng-class='{"active": $index == ctrl.activeRow}')
+						td 
+							md-checkbox(ng-model='x')
+						td.text-right {{c.company_id}}
+						td {{ctrl.person.person_name}}
+						td {{c.payable_code}}
+						td {{c.credit_value | currency:'R$ '}}
+						td {{c.credit_value_utilized | currency:'R$ '}}
+						td {{c.credit_value_available | currency:'R$ '}}
+						td {{c.payable_date | date:'dd/MM/yyyy'}}
+						td {{'0'}}
+		.note
+			p.text-primary Observação do título
+			.well
+				| {{ctrl.tempNote}}
 
 	.footer(layout='row' layout-align='end center' style='border-top: 1px solid #d7d7d7;')
 		md-button.md-primary(name='positive' ng-click='ctrl._close()')

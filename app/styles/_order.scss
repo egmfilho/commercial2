@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-11 15:46:20
+* @Last Modified time: 2017-07-12 17:29:04
 */
 
 .customer-credit-modal {
@@ -14,31 +14,43 @@
 	}
 
 	.credit-table {
+		width: 850px;
+
 		tr {
 			th, td {
 				&:nth-child(1) {
-					// width: 32px;
+					width: 16px;
+
+					md-checkbox {
+						margin: 0;
+						width: 20px;
+					}
 				}
 
 				&:nth-child(2) {
-					// width: auto;
+					width: 60px;
 				}
 
-				&:nth-child(3), &:nth-child(4) {
-					// width: 20%;
+				&:nth-child(3) {
+					width: auto;
 				}
 
-				&:nth-child(5) {
-					// width: 40px;
-					// padding: 0;
+				&:nth-child(4), &:nth-child(5), &:nth-child(6) {
+					width: 70px;
+				}
 
-					button {
-						// margin: 0;
-						// font-size: 20px;
-						// padding-top: 10px;
-					}
+				&:nth-child(7), &:nth-child(8), &:nth-child(9) {
+					width: 11%;
 				}
 			}
+		}
+	}
+
+	.note {
+		.well {
+			height: 60px;
+			max-height: 60px;
+			overflow-y: scroll;
 		}
 	}
 }
@@ -333,20 +345,6 @@
 	}
 }
 
-.chule {
-	height: 240px;
-	overflow-y: auto;
-	border: 1px solid #d6d6d6;
-	padding: 0 !important;
-	background-color: whitesmoke;
-	margin-right: 8px;
-
-	md-list {
-		padding: 0;
-		background-color: white;
-	}
-}
-
 md-menu-content {
 	$height: 30px;
 
@@ -368,6 +366,30 @@ md-menu-content {
 			div {
 				min-height: $height;
 				height: $height;				
+			}
+		}
+	}
+}
+
+section[name="payment"] {
+
+	div[flex="40"] {
+		padding-right: 16px;
+
+		.summary {
+			border: 1px solid #d7d7d7;
+			margin-top: 50px;
+
+			.md-toolbar-tools {
+				background-color: $main-color-lighter;
+			}
+
+			table {
+				margin: 9px;
+
+				tr td {
+					padding: 7px;
+				}
 			}
 		}
 	}

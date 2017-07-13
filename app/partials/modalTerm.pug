@@ -1,0 +1,19 @@
+.body(layout='column')
+	.well.text-light.offset-bottom-15
+		b Código: &nbsp;
+		| {{ctrl.term.term_code}} 
+		br
+		b Descrição: &nbsp;
+		| {{ctrl.term.term_description}}
+
+	.container-table
+		table.table
+			tbody
+				tr(ng-repeat='m in ctrl.term.modality track by m.modality_id' ng-click='ctrl._close(m)')
+					td {{m.modality_code}}
+					td {{m.modality_description}}
+					td {{ctrl.term.term_installment}}x ({{ctrl.value_total / ctrl.term.term_installment | currency:'R$ '}})
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-primary(ng-click='ctrl._cancel()')
+		| &nbsp; Fechar &nbsp;
