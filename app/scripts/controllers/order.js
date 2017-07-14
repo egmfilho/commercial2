@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-14 14:02:53
+* @Last Modified time: 2017-07-14 14:24:30
 */
 
 (function() {
@@ -39,6 +39,8 @@
 		'ProviderModality',
 		'PaymentModality',
 		'OrderPayment',
+		'ProviderBank',
+		'Bank',
 		'ElectronWindow',
 		'ModalPerson',
 		'ModalProduct' 
@@ -72,6 +74,8 @@
 		providerModality,
 		PaymentModality,
 		OrderPayment,
+		providerBank,
+		Bank,
 		ElectronWindow,
 		ModalPerson,
 		ModalProduct) {
@@ -1502,8 +1506,43 @@
 		 * @returns {object} - Uma promise com o resultado.
 		 */
 		function paymentDialog(title, payment) {
+
+			function getModalities() {
+				var deferred = $q.defer();
+
+				$rootScope.loading.load();
+				providerModality.getByDescription(null, { limit: 1000 }).then(function(success) {
+					$rootScope.loading.unload();
+					deferred.resolve( success.data.map(function(m) { return new PaymentModality(m) }) );
+				}, function(error) {
+					constants.debug && console.log(error);
+					$rootScope.loading.unload();
+					deferred.reject();
+				});
+
+				return deferred.promise;
+			};
+
+			function getBanks() {
+				var deferred = $q.defer();
+
+				$rootScope.loading.load();
+				providerBank.getByName(null, { limit: 1000 }).then(function(success) {
+					$rootScope.loading.unload();
+					deferred.resolve( success.data.map(function(b) { return new Bank(b) }) );
+				}, function(error) {
+					constants.debug && console.log(error);
+					$rootScope.loading.unload();
+					deferred.reject();
+				});
+
+				return deferred.promise;
+			};
+
 			var deferred = $q.defer(),
-				controller = function(providerBank, Bank) {
+				_modalities = [], 
+				_banks = [],
+				controller = function() {
 					var scope = this;
 
 					this._showCloseButton= true;
@@ -1519,19 +1558,7 @@
 
 					/* Modalidade */
 					this.queryModality = payment ? payment.modality.modality_description : '';
-					this.queryModalityResult = null;
-					
-					this.getModalities = function() {
-						var scope = this;
-						$rootScope.loading.load();
-						providerModality.getByDescription(null, { limit: 1000 }).then(function(success) {
-							scope.queryModalityResult = success.data.map(function(m) { return new PaymentModality(m) });
-							$rootScope.loading.unload();
-						}, function(error) {
-							constants.debug && console.log(error);
-							$rootScope.loading.unload();
-						});
-					};
+					this.queryModalityResult = _modalities;
 
 					this.getModalityById = function(id) {
 						var scope = this,
@@ -1564,19 +1591,8 @@
 					};
 
 					/* Banco */
-					this.queryBankResult = null;
+					this.queryBankResult = _banks;
 					this.tempBank = new Bank();
-
-					this.getBanks = function() {
-						$rootScope.loading.load();
-						providerBank.getByName(null, { limit: 1000 }).then(function(success) {
-							scope.queryBankResult = success.data.map(function(b) { return new Bank(b) });
-							$rootScope.loading.unload();
-						}, function(error) {
-							constants.debug && console.log(error);
-							$rootScope.loading.unload();
-						});
-					};
 
 					this.getBankById = function(id) {
 						$rootScope.loading.load();
@@ -1591,20 +1607,21 @@
 					};
 
 					/* Starters */
-					this.getModalities();
-					this.getBanks();
 					if (this.payment.order_payment_bank_id)
 						this.getBankById(this.payment.order_payment_bank_id);
 				};
 
-			controller.$inject = [ 'ProviderBank', 'Bank' ];
+			$q.all([getModalities(), getBanks()]).then(function(res) {
+				_modalities = res[0]; 
+				_banks = res[1];
 
-			$rootScope.customDialog().showTemplate(title, './partials/modalPayment.html', controller)
-				.then(function(success) {
-					deferred.resolve(success);
-				}, function(error) {
-					deferred.reject(error);
-				});
+				$rootScope.customDialog().showTemplate(title, './partials/modalPayment.html', controller)
+					.then(function(success) {
+						deferred.resolve(success);
+					}, function(error) {
+						deferred.reject(error);
+					});
+			});
 
 			return deferred.promise;
 		}
