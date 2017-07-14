@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-14 09:08:08
+* @Last Modified time: 2017-07-14 16:21:34
 */
 
 @import "../../bower_components/angular-material/angular-material.scss";
@@ -20,6 +20,10 @@ $main-color-light: lighten($main-color, 8%);
 $main-color-lighter: lighten($main-color, 13%);
 
 $secondary-color: #F99F57;
+$secondary-color-darker: darken($secondary-color, 15%);
+$secondary-color-dark: darken($secondary-color, 10%);
+$secondary-color-light: lighten($secondary-color, 10%);;
+$secondary-color-lighter: lighten($secondary-color, 15%);;
 // $secondary-color: #f58634;
 
 body {

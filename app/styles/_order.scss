@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-12 17:29:04
+* @Last Modified time: 2017-07-14 16:21:59
 */
 
 .customer-credit-modal {
@@ -304,6 +304,17 @@
 
 .payment-table {
 	tr {
+		&.credit {
+			// background-color: $secondary-color;
+			td, td md-icon {
+				color: $secondary-color-dark;
+			}
+
+			&:hover {
+				// background-color: $secondary-color-light;
+			}
+		}
+
 		th, td {
 			&:nth-child(1) {
 				width: 30px;

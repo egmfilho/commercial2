@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-14 14:24:30
+* @Last Modified time: 2017-07-14 17:19:27
 */
 
 (function() {
@@ -1668,27 +1668,32 @@
 					/* Primeiro pega a modalidade carta de credito */
 					providerModality.getByCode(Globals.get('modalities')['credit'].code, { getInstallments: true })
 						.then(function(success) {
-							var payment = new OrderPayment(),
-								modality = new PaymentModality(success.data); console.log(modality);
-
-							payment.setModality(modality);
-							payment.order_payment_deadline = moment().add(modality.modality_item[0].modality_item_installment, 'days').toDate();
-							payment.order_payment_credit = 'Y';
-
-							angular.forEach(res, function(pc) {
-								payment.payable_id.push(pc.payable_id);
-								payment.order_payment_value += pc.credit_value_available;
-								payment.order_payment_value_total += pc.credit_value_available;
-							});
-
 							/* Checa se o orcamento ja possui um pagamento credito e o remove */
-							if (self.budget.credit)
-								self.budget.order_payments.splice(self.budget.order_payments.indexOf(self.budget.credit), 1);
+							if (self.budget.credit) {
+								self.budget.order_payments.shift();
+								self.budget.credit = null;
+							}
 
-							/* Adiciona o credito como forma de pagamento */
-							self.budget.order_payments.push(payment);
-							/* Adiciona uma referencia do credito no corpo do objecto orcamento */
-							self.budget.credit = payment;
+							/* Checa se creditos foram retornados.*/
+							if (res.length) {
+								var payment = new OrderPayment(),
+									modality = new PaymentModality(success.data); console.log(modality);
+
+								payment.setModality(modality);
+								payment.order_payment_deadline = moment().add(modality.modality_item[0].modality_item_installment, 'days').toDate();
+								payment.order_payment_credit = 'Y';
+
+								angular.forEach(res, function(pc) {
+									payment.payable_id.push(pc.payable_id);
+									payment.order_payment_value += pc.credit_value_available;
+									payment.order_payment_value_total += pc.credit_value_available;
+								});
+
+								/* Adiciona o credito, no inicio do array, como forma de pagamento */
+								self.budget.order_payments.unshift(payment);
+								/* Adiciona uma referencia do credito no corpo do objecto orcamento */
+								self.budget.credit = payment;
+							}
 
 							$rootScope.loading.unload();
 						}, function(error) { 
@@ -1703,19 +1708,23 @@
 		 * Recalcula o valor dos pagamentos/parcelas.
 		 */
 		function recalcPayments() {
-			var slice = self.budget.order_value_total / self.budget.order_payments.length,
-				total = 0;
+			var paymentLen = self.budget.order_payments.length - (self.budget.credit ? 1 : 0),
+				slice = (self.budget.order_value_total - (self.budget.credit ? self.budget.credit.order_payment_value_total : 0)) / paymentLen,
+				total = self.budget.credit ? self.budget.credit.order_payment_value_total : 0,
+				diff = 0;
 
-			angular.forEach(self.budget.order_payments, function(item, index) {
-				item.order_payment_value = parseFloat(slice.toFixed(2));
-				item.order_payment_value_total = parseFloat(slice.toFixed(2));
-				item.order_payment_al_discount = 0;
-				item.order_payment_vl_discount = 0;
-				total += item.order_payment_value;
-			});
-			console.log(total);
+			for (var i = (self.budget.credit ? 1 : 0); i < self.budget.order_payments.length; i++) {
+				self.budget.order_payments[i].order_payment_value = parseFloat(slice.toFixed(2));
+				self.budget.order_payments[i].order_payment_value_total = parseFloat(slice.toFixed(2));
+				self.budget.order_payments[i].order_payment_al_discount = 0;
+				self.budget.order_payments[i].order_payment_vl_discount = 0;
+				total += self.budget.order_payments[i].order_payment_value_total;
+			}
 
-			self.budget.order_payments[self.budget.order_payments.length - 1].order_payment_value += self.budget.order_value_total - total;
+			diff = parseFloat((self.budget.order_value_total - total).toFixed(2));
+
+			self.budget.order_payments[self.budget.order_payments.length - 1].order_payment_value += diff;
+			self.budget.order_payments[self.budget.order_payments.length - 1].order_payment_value_total += diff;
 		}
 
 

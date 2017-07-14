@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-22 12:54:04
+* @Last Modified time: 2017-07-14 15:58:03
 */
 
 (function() {
@@ -52,7 +52,8 @@
 				hasBackdrop: true,
 				trapFocus: true,
 				clickOutsideToClose: false,
-				escapeToClose: false
+				escapeToClose: false,
+				zIndex: 2000
 			});
 		}
 

@@ -569,7 +569,8 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							.container-table
 								table.table.payment-table
 									tbody
-										tr(ng-repeat='p in order.budget.order_payments track by $index' layout='row' ng-dblclick='order.editPayment(p)')
+										tr(ng-repeat='p in order.budget.order_payments track by $index' layout='row' 
+												ng-dblclick='order.editPayment(p)' ng-class='{"credit": p.order_payment_credit == "Y"}')
 											td 
 												md-tooltip(md-direction='top' ng-if='p.order_payment_initial == "Y"') Parcela de entrada
 												i.fa.fa-check-circle(ng-if='p.order_payment_initial == "Y"') &nbsp;
@@ -594,7 +595,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
 								span(flex)
 
-								md-button.md-primary(ng-click='order.recalcPayments()' ng-disabled='!order.budget.order_items.length || !order.budget.order_payments.length || true')
+								md-button.md-primary(ng-click='order.recalcPayments()' ng-disabled='!order.budget.order_items.length || !order.budget.order_payments.length')
 									md-tooltip(md-direction='top') Recalcular valor das parcelas
 									i.fa.fa-calculator &nbsp;
 									| Recalcular

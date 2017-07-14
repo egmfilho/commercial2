@@ -42,7 +42,7 @@
 
 		md-input-container(flex='20')
 			label Valor
-			input(ng-model='ctrl.payment.order_payment_value' ng-change='ctrl.payment.setValue()' currency='"R$ "')
+			input.text-right(ng-model='ctrl.payment.order_payment_value' ng-change='ctrl.payment.setValue()' currency='"R$ "' number-only)
 
 	div(layout='row')
 		md-input-container(flex='50')
