@@ -1,5 +1,24 @@
 .body(layout='column' layout-fill style='min-width: 450px')
 	div(layout='row')
+
+		div(flex='45' layout='row')
+			div(flex='25')
+				md-button.md-icon-button.md-raised.md-primary(style='margin-left: 0' ng-click='ctrl.isCalendarOpen = true')
+					md-icon(md-font-icon='fa fa-calendar')
+
+			md-input-container(flex)
+				label Vencimento
+				md-datepicker(ng-model='ctrl.payment.order_payment_deadline' md-hide-icons='all' md-is-open='ctrl.isCalendarOpen' md-min-date='ctrl.minDate')
+
+		span(flex)
+
+		md-input-container
+			md-switch(name='initial' style='margin: 0' ng-true-value='"Y"' ng-false-value='"N"'
+					ng-model='ctrl.payment.order_payment_initial')
+				| Parcela de entrada
+
+	.offset-top-15(layout='row')
+
 		md-input-container(flex='55')
 			label Modalidade
 			md-select(ng-model='ctrl.modality'
@@ -11,20 +30,10 @@
 							ng-keydown="ctrl.updateSearch($event)")
 				md-opt-group(label='Modalidades')
 					md-option(ng-value='m' 
-							ng-repeat='m in ctrl.queryResult track by m.modality_id' 
+							ng-repeat='m in ctrl.queryModalityResult | filter: { queryable: ctrl.queryModality }' 
 							ng-click='ctrl.getModalityById(m.modality_id)')
 						| {{m.modality_code}} - {{m.modality_description}}
 
-		div(flex='45' layout='row')
-			md-input-container(flex)
-				label Vencimento
-				md-datepicker(ng-model='ctrl.payment.order_payment_deadline' md-hide-icons='all' md-is-open='ctrl.isCalendarOpen' md-min-date='ctrl.minDate')
-
-			div(flex='25')
-				md-button.md-icon-button.md-raised.md-primary(ng-click='ctrl.isCalendarOpen = true')
-					md-icon(md-font-icon='fa fa-calendar')
-
-	div(layout='row')
 		md-input-container(flex='35')
 			label Parcelas
 			md-select(name='type' ng-model='ctrl.payment.order_payment_installment')
@@ -35,11 +44,36 @@
 			label Valor
 			input(ng-model='ctrl.payment.order_payment_value' ng-change='ctrl.payment.setValue()' currency='"R$ "')
 
-		span(flex)
-		md-input-container
-			md-switch(name='initial' style='margin: 0' ng-true-value='"Y"' ng-false-value='"N"'
-					ng-model='ctrl.payment.order_payment_initial')
-				| Parcela de entrada
+	div(layout='row')
+		md-input-container(flex='50')
+			label Banco
+			md-select(ng-model='ctrl.payment.order_payment_bank_id'
+					data-md-container-class='query-select-container'
+					ng-disabled='!ctrl.isCheck()')
+				md-select-header.select-header
+					input.md-text(ng-model='ctrl.queryBank' 
+							type='search' placeholder='Buscar banco'
+							ng-keydown="ctrl.updateSearch($event)")
+				md-opt-group(label='Bancos')
+					md-option(ng-value='b.bank_id' 
+							ng-repeat='b in ctrl.queryBankResult | filter: { queryable: ctrl.queryBank }'
+							ng-click='ctrl.getBankById(b.bank_id)')
+						| {{b.bank_id}} - {{b.bank_name}}
+
+		md-input-container(flex='50')
+			label Agência
+			md-select(ng-model='ctrl.payment.order_payment_agency_id' data-md-container-class='query-select-container' 
+					ng-disabled='!ctrl.tempBank.bank_agencies.length || !ctrl.isCheck()')
+				md-select-header.select-header
+					input.md-text(ng-model='ctrl.queryAgency' type='search' placeholder='Buscar agência' ng-keydown="ctrl.updateSearch($event)")
+				md-opt-group(label='Agências')
+					md-option(ng-value='a.bank_agency_id' ng-repeat='a in ctrl.tempBank.bank_agencies | filter: { queryable: ctrl.queryAgency }')
+						| {{a.bank_agency_number}} - {{a.bank_agency_name}}
+
+	div(layout='row')
+		md-input-container(flex)
+			label Número do cheque
+			input.text-right(ng-model='ctrl.payment.order_payment_check_number' ng-disabled='!ctrl.isCheck()')
 	
 .footer(layout='row' layout-align='end center')
 	md-button.md-primary(name='positive' ng-click='ctrl._close(ctrl.payment)' ng-disabled='!ctrl.payment.modality_id')

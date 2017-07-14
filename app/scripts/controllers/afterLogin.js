@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-19 08:59:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-13 17:02:27
+* @Last Modified time: 2017-07-14 09:17:33
 */
 
 (function() {
@@ -108,9 +108,10 @@
 				'billed': 1003
 			});
 
-			Globals.set('modality-types', {
-				'credit-card': 'A',
-				'credit': '000011'
+			Globals.set('modalities', {
+				'credit-card': { type: 'A', code: null },
+				'check': { type: 'C', code: null },
+				'credit': { type: 'D', code: '000011'}
 			});
 		}
 

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-13 18:05:15
+* @Last Modified time: 2017-07-14 14:02:53
 */
 
 (function() {
@@ -749,7 +749,7 @@
 		 * @param {string} code - O codio do produto.
 		 */
 		function getProductByCode(code) {
-			if (!code || !parseInt(code)) {
+			if (!code) {
 				constants.debug && console.log('Sem codigo informado');
 				self.focusOn('input[name="autocompleteProduct"]');
 				return;
@@ -1020,7 +1020,7 @@
 
 			if (!item.product.product_prices.find(function(p) { return p.price_id == item.price_id })) {
 				var msg = 'Este item está usando uma tabela de preços restrita, ';
-				msg += 'editá-lo fará com que a tabela de preços e o desconto sejam removidos. Deseja continuar?';
+				msg += 'editá-lo fará com que tanto a tabela de preços quanto o desconto sejam removidos. Deseja continuar?';
 
 				$rootScope.customDialog().showConfirm('Aviso', msg)
 					.then(function(success) {
@@ -1307,7 +1307,7 @@
 				}
 
 				/* Trata primeiro para quando for cartao de credito */
-				if (modality.modality_type == Globals.get('modality-types')['credit-card']) {
+				if (modality.modality_type == Globals.get('modalities')['credit-card'].type) {
 					payments.push(new OrderPayment({
 							order_id: self.budget.order_id,
 							order_payment_value: self.budget.getChange(),
@@ -1368,7 +1368,7 @@
 			// 	return;
 			// }
 
-			self.paymentDialog('Adicionar pagamento').then(function(success) {
+			self.paymentDialog('Adicionar parcela').then(function(success) {
 				var payment = new OrderPayment(success);
 
 				/* Se for selecionado como parcela inicial verifica se existe algum pagamento com data anterior. */
@@ -1426,7 +1426,7 @@
 				$rootScope.loading.unload();
 				/* coloca no pagamento e manda pro modal */
 				temp.modality = new PaymentModality(success.data);
-				self.paymentDialog('Editar pagamento', temp).then(function(success) {
+				self.paymentDialog('Editar parcela', temp).then(function(success) {
 					var index = self.budget.order_payments.indexOf(payment),
 						newPayment = new OrderPayment(success);
 
@@ -1503,74 +1503,101 @@
 		 */
 		function paymentDialog(title, payment) {
 			var deferred = $q.defer(),
-				controller = function($s) {
+				controller = function(providerBank, Bank) {
 					var scope = this;
 
-					$s.$watch(function() {
-						return scope.queryModality;
-					}, function(newValue, oldValue) {
-						if (newValue)
-							scope.searchModality();
+					this._showCloseButton= true;
+					this.modality = payment ? new PaymentModality(payment.modality) : null;
+					this.payment = payment ? new OrderPayment(payment) : new OrderPayment({
+						order_payment_value: self.budget.getChange(),
+						order_payment_value_total: self.budget.getChange()
 					});
+					
+					this.updateSearch = function(e) {
+						e.stopPropagation();
+					};
 
-					this.searchModality();
+					/* Modalidade */
+					this.queryModality = payment ? payment.modality.modality_description : '';
+					this.queryModalityResult = null;
+					
+					this.getModalities = function() {
+						var scope = this;
+						$rootScope.loading.load();
+						providerModality.getByDescription(null, { limit: 1000 }).then(function(success) {
+							scope.queryModalityResult = success.data.map(function(m) { return new PaymentModality(m) });
+							$rootScope.loading.unload();
+						}, function(error) {
+							constants.debug && console.log(error);
+							$rootScope.loading.unload();
+						});
+					};
+
+					this.getModalityById = function(id) {
+						var scope = this,
+							options = {
+								companyId: self.budget.order_company_id,
+								getInstallments: true
+							};
+
+						$rootScope.loading.load();
+						providerModality.getById(id, options).then(function(success) {
+							scope.payment.setModality(new PaymentModality(success.data));
+							scope.payment.order_payment_deadline = moment().add(scope.payment.modality.modality_item[0].modality_item_delay, 'days').toDate();
+							
+							/* Limpa os campos exclusivos do cheque quando troca o tipo da modalidade*/
+							if (!scope.isCheck()) {
+								scope.payment.order_payment_bank_id = null;
+								scope.payment.order_payment_agency_id = null;
+								scope.payment.order_payment_check_number = null;
+							}
+
+							$rootScope.loading.unload();
+						}, function(error) {
+							constants.debug && console.log(error);
+							$rootScope.loading.unload();
+						});
+					};
+
+					this.isCheck = function() {
+						return this.modality && this.modality.modality_type == Globals.get('modalities')['check'].type;
+					};
+
+					/* Banco */
+					this.queryBankResult = null;
+					this.tempBank = new Bank();
+
+					this.getBanks = function() {
+						$rootScope.loading.load();
+						providerBank.getByName(null, { limit: 1000 }).then(function(success) {
+							scope.queryBankResult = success.data.map(function(b) { return new Bank(b) });
+							$rootScope.loading.unload();
+						}, function(error) {
+							constants.debug && console.log(error);
+							$rootScope.loading.unload();
+						});
+					};
+
+					this.getBankById = function(id) {
+						$rootScope.loading.load();
+						providerBank.getById(id, { getAgencies: true }).then(function(success) {
+							scope.tempBank = new Bank(success.data);
+							scope.payment.order_payment_agency_id = null;
+							$rootScope.loading.unload();
+						}, function(error) {
+							constants.debug && console.log(error);
+							$rootScope.loading.unload();
+						});
+					};
+
+					/* Starters */
+					this.getModalities();
+					this.getBanks();
+					if (this.payment.order_payment_bank_id)
+						this.getBankById(this.payment.order_payment_bank_id);
 				};
 
-			controller.$inject = [ '$scope' ];
-
-			controller.prototype = {
-				_showCloseButton: true,
-				
-				minDate: new Date(),
-				
-				modality: payment ? new PaymentModality(payment.modality) : null,
-				
-				payment: payment ? new OrderPayment(payment) : new OrderPayment({
-					order_payment_value: self.budget.getChange(),
-					order_payment_value_total: self.budget.getChange()
-				}),
-				
-				queryModality: payment ? payment.modality.modality_description : null,
-				
-				queryResult: null,
-				
-				searchModality: function() {
-					var scope = this;
-					providerModality.getByDescription(this.queryModality).then(function(success) {
-						scope.queryResult = success.data.map(function(m) { return new PaymentModality(m) });
-					}, function(error) {
-						constants.debug && console.log(error);
-					});
-				},
-				
-				updateSearch: function(e) {
-					e.stopPropagation();
-				},
-
-				getModalityById: function(id) {
-					var scope = this,
-						options = {
-							companyId: self.budget.order_company_id,
-							getInstallments: true
-						};
-
-					$rootScope.loading.load();
-					providerModality.getById(id, options).then(function(success) {
-						scope.payment.setModality(new PaymentModality(success.data));
-						scope.setDeadline(scope.payment.modality.modality_item[0].modality_item_delay);
-						$rootScope.loading.unload();
-					}, function(error) {
-						constants.debug && console.log(error);
-						$rootScope.loading.unload();
-					});
-				},
-
-				setDeadline: function(delay) {
-					var date = new Date();
-					date.setDate(this.minDate.getDate() + delay);
-					this.payment.order_payment_deadline = date;
-				}
-			}
+			controller.$inject = [ 'ProviderBank', 'Bank' ];
 
 			$rootScope.customDialog().showTemplate(title, './partials/modalPayment.html', controller)
 				.then(function(success) {
@@ -1616,13 +1643,13 @@
 				}
 			};
 
-			$rootScope.customDialog().showTemplate('Cartas de crédito', './partials/modalCustomerCredit.html', controller)
+			$rootScope.customDialog().showTemplate('Cartas de crédito', './partials/modalCustomerCredit.html', controller, { hasBackdrop: true })
 				.then(function(res) {
 					constants.debug && console.log('creditos selecionados: ', res);
 
 					$rootScope.loading.load();
 					/* Primeiro pega a modalidade carta de credito */
-					providerModality.getByCode(Globals.get('modality-types')['credit'], { getInstallments: true })
+					providerModality.getByCode(Globals.get('modalities')['credit'].code, { getInstallments: true })
 						.then(function(success) {
 							var payment = new OrderPayment(),
 								modality = new PaymentModality(success.data); console.log(modality);

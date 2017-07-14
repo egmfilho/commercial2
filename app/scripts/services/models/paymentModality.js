@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-28 12:09:10
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-29 18:05:25
+* @Last Modified time: 2017-07-14 13:26:59
 */
 
 (function() {
@@ -58,11 +58,13 @@
 					modality_item_interval: 0,
 					modality_item_al_card: 0
 				})];
+				this.queryable            = '';
 
 				if (modality) {
 					Object.assign(this, modality, {
 						modality_config: new ModalityConfig(modality.modality_config),
-						modality_item: modality.modality_item && modality.modality_item.length ? modality.modality_item.map(function(mi) { return new ModalityItem(mi) }) : this.modality_item
+						modality_item: modality.modality_item && modality.modality_item.length ? modality.modality_item.map(function(mi) { return new ModalityItem(mi) }) : this.modality_item,
+						queryable: modality ? modality.modality_code + ' ' + modality.modality_description : ''
 					});
 				}
 			}

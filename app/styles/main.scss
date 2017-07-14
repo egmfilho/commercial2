@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-12 17:14:40
+* @Last Modified time: 2017-07-14 09:08:08
 */
 
 @import "../../bower_components/angular-material/angular-material.scss";
@@ -25,6 +25,10 @@ $secondary-color: #F99F57;
 body {
 	min-width: $min-width !important;
 	overflow-x: auto;
+}
+
+* {
+	-webkit-font-smoothing: aliased;
 }
 
 .material-icons {
