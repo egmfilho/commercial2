@@ -128,10 +128,13 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							label Código
 							input(name='product-code' ng-value='order.internal.tempItem.product.product_code'
 									blur-to='order.internal.tempItem.product.product_code' 
-									keys-shortcuts enter='order.getProductByCode($event.target.value)')
+									keys-shortcuts prevent-default shift-enter='null'
+									f1='order.showModalProduct()' enter='order.getProductByCode($event.target.value)')
 						
 						md-autocomplete(flex='75'
-										keys-shortcuts f1='order.showModalProduct()' prevent-default enter='order.focusOn("input[name=\'amount\']")'
+										keys-shortcuts prevent-default 
+										f1='order.showModalProduct()' 
+										enter='order.focusOn("input[name=\'amount\']")'
 										md-input-name='autocompleteProduct'
 										md-no-cache='true'
 										md-autoselect='true'
@@ -271,7 +274,9 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							input(name='seller-code'
 									ng-value='order.budget.order_seller.person_code' 
 									blur-to='order.budget.order_seller.person_code'
-									keys-shortcuts f1='order.showModalSeller(globals(\'person-categories\').seller)' prevent-default
+									keys-shortcuts prevent-default
+									shift-enter='null'
+									f1='order.showModalSeller(globals(\'person-categories\').seller)'
 									enter='order.getSellerByCode($event.target.value)')
 						md-autocomplete(flex 
 										md-input-name='autocompleteSeller'
@@ -319,9 +324,13 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							input(name='customer-code'
 									ng-value='order.budget.order_client.person_code' 
 									blur-to='order.budget.order_client.person_code'
-									keys-shortcuts prevent-default shift-enter='null' f1='order.showModalCustomer(globals(\'person-categories\').customer)'
+									keys-shortcuts prevent-default 
+									shift-enter='null' f1='order.showModalCustomer(globals(\'person-categories\').customer)'
 									enter='order.getCustomerByCode($event.target.value)')
 						md-autocomplete(flex='75'
+										keys-shortcuts 
+										prevent-default 
+										f1='order.showModalCustomer(globals(\'person-categories\').customer)'
 										md-input-name='autocompleteCustomer'
 										md-no-cache='true'
 										md-autoselect='true'

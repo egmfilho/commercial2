@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-17 13:31:17
+* @Last Modified time: 2017-07-17 17:57:41
 */
 
 (function() {
@@ -1244,6 +1244,8 @@
 		 * Atualiza o resultado da pesquisa de prazo.
 		 */
 		function getTermByCode(code) {
+			if (!code) return;
+
 			var options = {
 				getModality: true
 			};
@@ -1644,7 +1646,9 @@
 				var scope = this;
 				providerCredit.get(this.person.person_id).then(function(success) {
 					scope.creditArray = success.data.map(function(c) {
-						return new PersonCredit(c, { checked: self.budget.credit && self.budget.credit.payable_id.indexOf(c.payable_id) >= 0 });
+						var newC = new PersonCredit(c);
+						newC.checked = self.budget.credit && self.budget.credit.payable_id.indexOf(c.payable_id) >= 0;
+						return newC;
 					});
 					$rootScope.loading.unload();
 				}, function(err) {
@@ -1679,7 +1683,15 @@
 						item.checked && result.push(new PersonCredit(item));
 					});
 
-					this._close(result);
+					// var scope = this;
+					// $rootScope.loading.load();
+					// providerCredit.send(result, 'oi').then(function(success) {
+						this._close(result);
+					// 	$rootScope.loading.unload();
+					// }, function(err) {
+					// 	constants.debug && console.log(err);
+					// 	$rootScope.loading.unload();
+					// });
 				}
 			};
 
