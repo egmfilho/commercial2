@@ -2,8 +2,10 @@
 * @Author: egmfilho
 * @Date:   2017-06-07 13:57:12
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-29 13:26:23
+* @Last Modified time: 2017-07-17 11:42:16
 */
+
+$danger-color: #F44336;
 
 .offset-top-5 {
 	margin-top: 5px !important;
@@ -46,7 +48,13 @@
 }
 
 .text-primary {
-	color: $main-color;
+	color: $main-color !important;
+}
+
+.text-danger {
+	&, * {
+		color: $danger-color !important;
+	}
 }
 
 .text-light {

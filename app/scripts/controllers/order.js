@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-17 11:23:35
+* @Last Modified time: 2017-07-17 13:31:17
 */
 
 (function() {
@@ -1629,14 +1629,40 @@
 		function addCredit() {
 			constants.debug && console.log('creditos:', self.budget.order_client.person_credit);
 
-			var controller = function() {
+			var controller = function(providerCredit, PersonCredit) {
 				this._showCloseButton = true;
 				this.person = self.budget.order_client;
 
-				this.creditArray = this.person.person_credit.map(function(c) { 
-					c.checked = self.budget.credit && self.budget.credit.payable_id.indexOf(c.payable_id) >= 0; 
-					return c; 
+				// this.creditArray = this.person.person_credit.map(function(c) { 
+				// 	c.checked = self.budget.credit && self.budget.credit.payable_id.indexOf(c.payable_id) >= 0; 
+				// 	return c; 
+				// });
+
+				this.creditArray = new Array();
+
+				$rootScope.loading.load();
+				var scope = this;
+				providerCredit.get(this.person.person_id).then(function(success) {
+					scope.creditArray = success.data.map(function(c) {
+						return new PersonCredit(c, { checked: self.budget.credit && self.budget.credit.payable_id.indexOf(c.payable_id) >= 0 });
+					});
+					$rootScope.loading.unload();
+				}, function(err) {
+					constants.debug && console.log(err);
+					$rootScope.loading.unload();
 				});
+
+				this.selectCredit = function(c) {
+					if (!c.pawn) {
+						c.checked = !c.checked;
+					} else {
+						var msg = 'Carta de crédito em uso por: <br><br>';
+						msg += '<b>Usuário: </b>' + c.pawn.user_name + '<br>';
+						msg += '<b>Módulo: </b>' + c.pawn.system_name + '<br>';
+						msg += '<b>Descrição: </b>' + c.pawn.description;
+						$rootScope.customDialog().showMessage('Aviso', msg);
+					}
+				};
 
 				this.activeRow = null;
 				this.tempNote = null;
@@ -1656,6 +1682,8 @@
 					this._close(result);
 				}
 			};
+
+			controller.$inject = [ 'ProviderPersonCredit', 'PersonCredit' ];
 
 			$rootScope.customDialog().showTemplate('Cartas de crédito', './partials/modalCustomerCredit.html', controller, { hasBackdrop: true })
 				.then(function(res) {

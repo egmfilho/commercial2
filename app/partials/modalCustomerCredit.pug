@@ -17,9 +17,9 @@
 		.container-table
 			table.table.credit-table
 				tbody
-					tr(ng-repeat='c in ctrl.creditArray track by $index' ng-click='ctrl.setActive(c)' ng-dblclick='c.checked = !c.checked' ng-class='{"active": $index == ctrl.activeRow}')
+					tr(ng-repeat='c in ctrl.creditArray track by $index' ng-click='ctrl.setActive(c)' ng-dblclick='ctrl.selectCredit(c)' ng-class='{"active": $index == ctrl.activeRow, "text-danger": !!c.pawn}')
 						td 
-							md-checkbox(ng-model='c.checked')
+							md-checkbox(ng-model='c.checked' ng-disabled='!!c.pawn')
 						td.text-right {{c.company_id}}
 						td {{ctrl.person.person_name}}
 						td {{c.payable_code}}
@@ -27,7 +27,7 @@
 						td {{c.credit_value_utilized | currency:'R$ '}}
 						td {{c.credit_value_available | currency:'R$ '}}
 						td {{c.payable_date | date:'dd/MM/yyyy'}}
-						td.text-center {{'Não'}}
+						td.text-center {{!!c.pawn ? 'Sim' : 'Não'}}
 		.note
 			p.text-primary Observação do título
 			.well

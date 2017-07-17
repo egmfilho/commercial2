@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-30 16:47:19
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-12 16:36:34
+* @Last Modified time: 2017-07-17 12:47:28
 */
 
 (function() {
@@ -10,7 +10,24 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('PersonCredit', [function() {
+		.factory('Pawn', [function() {
+			
+			function Pawn(pawn) {
+				this.user_name   = null;
+				this.system_name = null;
+				this.description = null;
+
+				if (pawn) {
+					Object.assign(this, pawn);
+				}
+			}
+
+			return Pawn;
+
+		}]);
+
+	angular.module('commercial2.services')
+		.factory('PersonCredit', ['Pawn', function(Pawn) {
 
 			function PersonCredit(personCredit) {
 				this.company_id             = null;
@@ -25,9 +42,12 @@
 				this.payable_date           = null;
 				this.payable_note           = null;
 				this.person_id              = null;
+				this.pawn                   = null;
 
 				if (personCredit) {
-					Object.assign(this, personCredit);
+					Object.assign(this, personCredit, {
+						pawn: personCredit.pawn ? new Pawn(personCredit.pawn) : null
+					});
 				}
 			}
 
