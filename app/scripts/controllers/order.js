@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-14 17:19:27
+* @Last Modified time: 2017-07-17 11:23:35
 */
 
 (function() {
@@ -374,13 +374,6 @@
 				}, function(error) { });
 		};
 
-		$scope.$watch(function() {
-			return self.internal.term.queryTerm;
-		}, function(newValue, oldValue) {
-			if (newValue)
-				searchTerm();
-		});
-
 		function internalItems() {
 			return {
 				userPrices: Globals.get('user-prices-raw'),
@@ -400,15 +393,14 @@
 				},
 				term: {
 					tempTerm: new Term(),
-					queryTerm: null,
+					queryTerm: '',
 					queryResult: new Array(),
 					updateSearch: function(e) {
 						e.stopPropagation();
 					},
 					clear: function() {
 						self.internal.term.tempTerm = new Term();
-						self.internal.term.queryTerm = null;
-						self.searchTerm();
+						self.internal.term.queryTerm = '';
 					}
 				}
 
@@ -687,10 +679,6 @@
 			getPersonByCode(code, Globals.get('person-categories').seller).then(function(success) {
 				self.budget.setSeller(new Person(success.data));
 				self.internal.tempSeller = new Person(success.data);
-				$timeout(function() {
-					self.scrollTo('section[name="products"]');
-					self.focusOn('input[name="autocompleteProduct"]');
-				}, 500);
 				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);
@@ -727,7 +715,7 @@
 			$rootScope.loading.load();
 			getPersonByCode(code, Globals.get('person-categories').customer, options).then(function(success) {
 				setCustomer(success.data);
-				if (code == Globals.get('default-customer').code && self.budget.order_client.person_address.length)
+				if (self.budget.order_client.person_address.length)
 					self.budget.setDeliveryAddress(self.budget.order_client.person_address[0])
 				$rootScope.loading.unload();
 			}, function(error) {
@@ -1065,6 +1053,8 @@
 					self.internal.tempItemVlDiscount = 0;
 					self.internal.tempPrice = new Price();
 					self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() });
+
+					self.recalcPayments();
 				}
 			}, 100);
 		}
@@ -1239,7 +1229,7 @@
 		 */
 		function searchTerm() {
 			var options = {
-				limit: 10,
+				limit: 1000,
 				getModality: true
 			};
 
@@ -1261,9 +1251,10 @@
 			$rootScope.loading.load();
 			providerTerm.getByCode(code, options).then(function(success) {
 				self.internal.term.tempTerm = new Term(success.data);
-				self.internal.term.queryResult = [ new Term(success.data) ];
+				// self.internal.term.queryResult = [ new Term(success.data) ];
 				self.internal.term.queryTerm = self.internal.term.tempTerm.term_description;
 				$rootScope.loading.unload();
+				self.selectTerm();
 			}, function(error) {
 				constants.debug && console.log(error);
 				$rootScope.loading.unload();
@@ -1284,6 +1275,7 @@
 			$rootScope.customDialog().showTemplate('Selecionar modalidade', './partials/modalTerm.html', controller)
 				.then(function(success) {
 					self.addModality(success);
+					self.internal.term.clear();
 				}, function(error) { });
 		}
 
@@ -1482,6 +1474,10 @@
 
 			$rootScope.customDialog().showConfirm('Aviso', msg).then(function(success) {
 				var index = self.budget.order_payments.indexOf(payment);
+				
+				if (payment.order_payment_credit == 'Y')
+					self.budget.credit = null;
+
 				self.budget.order_payments.splice(index, 1);
 			}, function(error) { });
 		}
@@ -1496,6 +1492,7 @@
 
 			$rootScope.customDialog().showConfirm('Aviso', msg).then(function(success) {
 				self.budget.order_payments = new Array();
+				self.budget.credit = null;
 			}, function(error) { });
 		}
 
@@ -1674,7 +1671,7 @@
 								self.budget.credit = null;
 							}
 
-							/* Checa se creditos foram retornados.*/
+							/* Checa se creditos foram retornados do modal.*/
 							if (res.length) {
 								var payment = new OrderPayment(),
 									modality = new PaymentModality(success.data); console.log(modality);
@@ -1689,10 +1686,19 @@
 									payment.order_payment_value_total += pc.credit_value_available;
 								});
 
+								payment.order_payment_value = Math.min(payment.order_payment_value, self.budget.order_value);
+								payment.order_payment_value_total = Math.min(payment.order_payment_value_total, self.budget.order_value_total);
+
+								if (payment.order_payment_value_total >= self.budget.order_value_total) {
+									self.budget.order_payments = new Array();
+								}
+
 								/* Adiciona o credito, no inicio do array, como forma de pagamento */
 								self.budget.order_payments.unshift(payment);
 								/* Adiciona uma referencia do credito no corpo do objecto orcamento */
 								self.budget.credit = payment;
+
+								self.recalcPayments();
 							}
 
 							$rootScope.loading.unload();
@@ -1712,6 +1718,17 @@
 				slice = (self.budget.order_value_total - (self.budget.credit ? self.budget.credit.order_payment_value_total : 0)) / paymentLen,
 				total = self.budget.credit ? self.budget.credit.order_payment_value_total : 0,
 				diff = 0;
+
+			if (paymentLen == 0)
+				return;
+
+			if (parseFloat(slice.toFixed(2)) < 0.01 && paymentLen > 1) {
+				self.budget.order_payments = new Array();
+				if (self.budget.credit)
+					self.budget.order_payments.unshift(self.budget.credit);
+
+				return;
+			}
 
 			for (var i = (self.budget.credit ? 1 : 0); i < self.budget.order_payments.length; i++) {
 				self.budget.order_payments[i].order_payment_value = parseFloat(slice.toFixed(2));
@@ -1737,19 +1754,24 @@
 			/* Avancar sessao */
 			Mousetrap.bind('shift+enter', function(e, combo) {
 				switch(_focusOn) {
-					case 'seller':
-						self.focusOn('input[name="autocompleteProduct"]');
+					case 'products':
+						self.scrollTo('section[name="seller"]');
+						self.focusOn('input[name="seller-code"]');
 						break;
 
-					case 'products':
+					case 'seller':
+						self.focusOn('section[name="customer"]');
 						self.focusOn('input[name="customer-code"]');
 						break;
 
 					case 'customer':
+						self.focusOn('section[name="notes"]');
 						self.focusOn('textarea[name="order-note"]');
 						break;
 
 					case 'notes':
+						self.focusOn('section[name="payment"]');
+						self.focusOn('input[name="term-code"]');
 						break;
 
 					case 'payment':
@@ -1789,26 +1811,30 @@
 				return false;
 			});
 
-			/* Ir para vendedor */
+			/* Ir para produtos */
 			Mousetrap.bind(['command+1', 'ctrl+1'], function() {
-				self.focusOn('input[name="autocompleteProduct"]');
+				self.scrollTo('section[name="products"]');
+				self.focusOn('input[name="product-code"]');
 				return false;
 			});
 
-			/* Ir para produtos */
+			/* Ir para vendedor */
 			Mousetrap.bind(['command+2', 'ctrl+2'], function() {
 				self.scrollTo("section[name=\'seller\']")
+				self.focusOn('input[name="seller-code"]');
 				return false;
 			});
 
 			/* Ir para cliente */
 			Mousetrap.bind(['command+3', 'ctrl+3'], function() {
+				self.scrollTo("section[name=\'customer\']")
 				self.focusOn('input[name="customer-code"]');
 				return false;
 			});
 
 			/* Ir para observacoes */
 			Mousetrap.bind(['command+4', 'ctrl+4'], function() {
+				self.scrollTo("section[name=\'notes\']")
 				self.focusOn('textarea[name="order-note"]');
 				return false;
 			});
@@ -1816,6 +1842,7 @@
 			/* Ir para pagamento */
 			Mousetrap.bind(['command+5', 'ctrl+5'], function() {
 				self.scrollTo("section[name=\'payment\']")
+				self.focusOn('textarea[name="term-code"]');
 				return false;
 			});
 		}

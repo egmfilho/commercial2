@@ -528,7 +528,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
 						div(flex='60' layout='column')
 							div(layout='row')
-								md-input-container(flex='25')
+								md-input-container(flex='30')
 									label
 										| Código do prazo
 									input(name='term-code' 
@@ -550,12 +550,9 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 													ng-keydown="order.internal.term.updateSearch($event)")
 										md-opt-group(label='Prazos')
 											md-option(ng-value='t' 
-													ng-repeat='t in order.internal.term.queryResult track by t.term_id')
-												| {{t.term_description}}
-
-								md-button.md-primary(ng-click='order.selectTerm()' 
-										ng-disabled='!order.budget.order_items.length || !order.internal.term.tempTerm.term_id || !order.internal.term.tempTerm.modality.length')
-									| Selecionar
+													ng-repeat='t in order.internal.term.queryResult | filter: { queryable: order.internal.term.queryTerm }'
+													ng-click='order.getTermByCode(t.term_code)')
+												| {{t.term_code}} - {{t.term_description}}
 
 							.payment-table-header-container
 								table.table.payment-table

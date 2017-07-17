@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-13 17:39:06
+* @Last Modified time: 2017-07-17 08:23:41
 */
 
 (function() {
@@ -243,7 +243,7 @@
 			var total = 0;
 
 			angular.forEach(this.order_payments, function(item, index) {
-				total += item.order_payment_value;
+				total += item.order_payment_value_total;
 			});
 
 			return total;

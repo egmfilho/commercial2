@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-28 12:02:16
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-29 09:42:23
+* @Last Modified time: 2017-07-17 11:20:38
 */
 
 (function() {
@@ -26,10 +26,12 @@
 			this.term_active       = null;
 			this.term_al_initial   = null;
 			this.modality          = new Array();
+			this.queryable         = '';
 
 			if (term) {
 				Object.assign(this, term, {
-					modality: term.modality ? term.modality.map(function(m) { return new PaymentModality(m) }) : new Array()
+					modality: term.modality ? term.modality.map(function(m) { return new PaymentModality(m) }) : new Array(),
+					queryable: term ? term.term_code + ' ' + term.term_description : ''
 				});
 			}
 		}
