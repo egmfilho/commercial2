@@ -13,8 +13,10 @@ div(layout='column' layout-fill)
 
 		md-list.md-dense(flex)
 			md-list-item.md-2-line(ng-repeat='o in openOrder.orders' ng-click="open(o.order_code)")
-				.icon(layout-align='center center')
-					md-tooltip(md-direction='top') {{globals("order-status-labels")[o.order_status_id]}}
+				.icon(layout-align='center center' style='position: relative; z-index: 1;')
+
+					md-tooltip(md-direction='right') {{globals("order-status-labels")[o.order_status_id]}}	
+
 					md-icon(					
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
@@ -30,12 +32,46 @@ div(layout='column' layout-fill)
 						ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
 						ng-if='o.order_status_id == globals("order-status-values").billed') cloud_done
 
-				.md-list-item-text
-					h3 
-						| {{o.order_code}} - {{o.order_company.company_name}}
-					h4
-						| Cliente: {{o.order_client.person_code}} - {{o.order_client.person_name}}
-					h4
-						| Vendedor: {{o.order_seller.person_code}} - {{o.order_seller.person_name}}
+				.md-list-item-text(flex layout='row' layout-align='start center')
+
+					span(flex='10')
+						b Código: 
+						br
+						| {{o.order_code}}
+
+					span(flex)
+
+					span(flex='25') 
+						b Loja:
+						br
+						| {{o.order_company.company_name | truncate:'50'}}
+
+					span(flex)
+
+					span(flex='25')
+						b Cliente: 
+						br
+						| {{o.order_client.person_name | truncate:'50'}}
+
+					span(flex)
+
+					span(flex='25')
+						b Vendedor: 
+						br
+						| {{o.order_seller.person_name | truncate:'50'}}
+
+					span(flex)
+
+					span(flex='10')
+						b Total: 
+						br
+						| {{o.order_value_total | currency:'R$ '}}
+
+					span(flex)
+
+					span(flex='10')
+						b Data: 
+						br
+						| {{o.order_date | date:'dd/MM/yyyy'}}
 
 				md-divider

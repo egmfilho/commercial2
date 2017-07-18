@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-17 16:35:31
+* @Last Modified time: 2017-07-18 08:28:43
 */
 
 const electron = require('electron');
@@ -22,7 +22,7 @@ global.globals = {
 	shared: '{ }'
 };
 
-function postCloseEvent(token) {
+function postCloseEvent(token, host) {
 	var querystring = require('querystring'),
 		http = require('http');
 
@@ -31,7 +31,7 @@ function postCloseEvent(token) {
 	});
 
 	var post_options = {
-		hostname: '172.16.0.82',
+		hostname: host,
 		path: '/commercial2.api/person_credit.php?action=getList',
 		method: 'POST',
 		headers: {
@@ -86,9 +86,12 @@ function createWindow() {
 		// when you should delete the corresponding element.
 		mainWindow = null;
 
-		var token = JSON.parse(global.globals.shared)['session-token'];
+		var parsed = JSON.parse(global.globals.shared),
+			token = parsed['session-token'],
+			host = parsed['server-host'];
+
 		if (token)
-			postCloseEvent(token);
+			postCloseEvent(token, host);
 	});
 }
 

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:10:42
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-11 10:05:50
+* @Last Modified time: 2017-07-18 09:43:59
 */
 
 .open-order-container-nav {
@@ -80,8 +80,25 @@
 	// 	min-height: 64px !important;
 	// }
 
+	.md-list-item-text {
+		margin: 0 !important;
+		height: auto;
+		min-height: 60px;
+
+		span {
+			white-space: normal !important;
+			line-height: 18px !important;
+			@extend .text-light;
+
+			b {
+				color: $main-color;
+			}
+		}
+	}
+
 	.icon {
-		font-size: 20px;
-		width: 32px;
+		font-size: 30px;
+		width: 30px;
+		margin-right: 20px;
 	}
 }
