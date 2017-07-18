@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-18 08:28:43
+* @Last Modified time: 2017-07-18 17:26:51
 */
 
 const electron = require('electron');
@@ -22,41 +22,36 @@ global.globals = {
 	shared: '{ }'
 };
 
-function postCloseEvent(token, host) {
+function order66(token, host) {
 	var querystring = require('querystring'),
 		http = require('http');
 
-	var post_data = querystring.stringify({
-		'person_id': '00A000002S'
-	});
-
 	var post_options = {
-		hostname: host,
-		path: '/commercial2.api/person_credit.php?action=getList',
-		method: 'POST',
+		hostname: host.split('/')[2],
+		path: '/commercial2.api/person_credit.php?action=order66',
+		method: 'GET',
 		headers: {
 			'x-session-token': token,
-			'Content-Type': 'application/x-www-form-urlencoded',
-			'Content-Length': Buffer.byteLength(post_data)
+			'Content-Type': 'application/x-www-form-urlencoded'
 		}
 	};
 
 	var post_req = http.request(post_options, function(res) {
 		res.setEncoding('utf8');
 		console.log('Status: ', res.statusCode);
+
 		res.on('data', function(chunk) {
 			console.log('Response: ' + chunk);
+			app.quit();
 		});
 	});
 
 	post_req.on('error', function(e) {
 		console.log('deu erro: ' + e.message );
+		app.quit();
 	});
 
-	post_req.write(post_data);
 	post_req.end();
-
-
 }
 
 function createWindow() {
@@ -85,13 +80,6 @@ function createWindow() {
 		// in an array if your app supports multi windows, this is the time
 		// when you should delete the corresponding element.
 		mainWindow = null;
-
-		var parsed = JSON.parse(global.globals.shared),
-			token = parsed['session-token'],
-			host = parsed['server-host'];
-
-		if (token)
-			postCloseEvent(token, host);
 	});
 }
 
@@ -106,9 +94,21 @@ app.on('window-all-closed', function () {
 	// to stay active until the user quits explicitly with Cmd + Q
 	
 	if (process.platform !== 'darwin') {
-		app.quit();
+		// app.quit();
 	}
-})
+});
+
+app.on('before-quit', function (event) {
+	var parsed = global.globals ? JSON.parse(global.globals.shared) : null,
+		token = parsed ? parsed['session-token'] : null,
+		host = parsed ? parsed['server-host'] : null;
+
+	if (token) {
+		order66(token, host);
+		global.globals = null;
+		event.preventDefault();
+	}
+});
 
 app.on('activate', function () {
 	// On OS X it's common to re-create a window in the app when the
@@ -116,4 +116,4 @@ app.on('activate', function () {
 	if (mainWindow === null) {
 		createWindow();
 	}
-})
+});

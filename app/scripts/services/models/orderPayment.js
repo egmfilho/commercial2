@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-28 12:11:57
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-14 10:56:30
+* @Last Modified time: 2017-07-18 12:16:26
 */
 
 (function() {
@@ -17,24 +17,25 @@
 	function OrderPayment(PaymentModality) {
 
 		function _OrderPayment(payment) {
-			this.order_payment_id           = null;
-			this.order_id                   = null;
-			this.order_payment_value        = 0;
-			this.order_payment_al_discount  = 0;
-			this.order_payment_vl_discount  = 0;
-			this.order_payment_value_total  = 0;
-			this.order_payment_deadline     = null;
-			this.order_payment_installment  = 1;
-			this.order_payment_initial      = 'N';
-			this.order_payment_credit       = null;
-			this.order_payment_date         = null;
-			this.order_payment_update       = null;
-			this.order_payment_bank_id      = null;
-			this.order_payment_agency_id    = null;
-			this.order_payment_check_number = null;
-			this.modality_id                = null;
-			this.modality                   = new PaymentModality();
-			this.payable_id                 = new Array();
+			this.order_payment_id                     = null;
+			this.order_id                             = null;
+			this.order_payment_value                  = 0;
+			this.order_payment_al_discount            = 0;
+			this.order_payment_vl_discount            = 0;
+			this.order_payment_value_total            = 0;
+			this.order_payment_deadline               = null;
+			this.order_payment_installment            = 1;
+			this.order_payment_initial                = 'N';
+			this.order_payment_credit                 = null;
+			this.order_payment_credit_available       = 0;
+			this.order_payment_date                   = null;
+			this.order_payment_update                 = null;
+			this.order_payment_bank_id                = null;
+			this.order_payment_agency_id              = null;
+			this.order_payment_check_number           = null;
+			this.modality_id                          = null;
+			this.modality                             = new PaymentModality();
+			this.payable_id                           = new Array();
 
 			if (payment) {
 				Object.assign(this, payment, {

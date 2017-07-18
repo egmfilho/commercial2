@@ -2,12 +2,25 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:10:42
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-18 09:43:59
+* @Last Modified time: 2017-07-18 10:24:32
 */
 
 .open-order-container-nav {
 	.md-toolbar-tools {
 		background-color: $main-color-light;
+
+		input {
+			border: none;
+			border-radius: 3px;
+			background-color: rgba(#000, .15);
+			padding: 10px;
+			font-size: 15px;
+			color: white;
+
+			&::-webkit-input-placeholder {
+				color: #ccc;
+			}
+		}
 	}
 }
 

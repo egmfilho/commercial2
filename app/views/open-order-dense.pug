@@ -6,13 +6,17 @@ div(layout='column' layout-fill)
 
 			span(flex)
 
+			input(flex='30' placeholder='Filtrar resultados' ng-model='openOrder.filter')
+
+			span(flex)
+
 			md-button.md-raised(redirect-to='/order/new')
 				| Novo
 
 	md-content.open-order-dense-container(flex)
 
 		md-list.md-dense(flex)
-			md-list-item.md-2-line(ng-repeat='o in openOrder.orders' ng-click="open(o.order_code)")
+			md-list-item.md-2-line(ng-repeat='o in openOrder.orders | filter: { queryable: openOrder.filter }' ng-click="open(o.order_code)")
 				.icon(layout-align='center center' style='position: relative; z-index: 1;')
 
 					md-tooltip(md-direction='right') {{globals("order-status-labels")[o.order_status_id]}}	

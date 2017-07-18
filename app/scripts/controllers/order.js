@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-17 17:57:41
+* @Last Modified time: 2017-07-18 17:32:28
 */
 
 (function() {
@@ -27,6 +27,7 @@
 		'Order', 
 		'ProviderPerson', 
 		'Person',
+		'ProviderPersonCredit',
 		'PersonCredit',
 		'Address', 
 		'ProviderProduct', 
@@ -62,6 +63,7 @@
 		Order, 
 		providerPerson, 
 		Person, 
+		providerCredit,
 		PersonCredit, 
 		Address, 
 		providerProduct, 
@@ -146,6 +148,7 @@
 		self.addPayment         = addPayment;
 		self.editPayment        = editPayment;
 		self.removePayment      = removePayment;
+		self.removeCredit       = removeCredit;
 		self.removeAllPayments  = removeAllPayments;
 		self.paymentDialog      = paymentDialog;
 		self.addCredit          = addCredit;
@@ -162,6 +165,9 @@
 			
 			$location.search('code', null);
 			$location.search('company', null);
+
+			if (self.budget.credit)
+				providerCredit.order66();
 		});
 
 		$scope.$on('$viewContentLoaded', function() {
@@ -1478,10 +1484,21 @@
 				var index = self.budget.order_payments.indexOf(payment);
 				
 				if (payment.order_payment_credit == 'Y')
-					self.budget.credit = null;
-
-				self.budget.order_payments.splice(index, 1);
+					self.removeCredit();
+				else
+					self.budget.order_payments.splice(index, 1);
 			}, function(error) { });
+		}
+
+		/**
+		 * Remove o credito dos pagamentos e faz um post avisando o servidor.
+		 */
+		function removeCredit() {
+			if (self.budget.credit) {
+				providerCredit.redeem(self.budget.credit.payable_id);
+				self.budget.credit = null;
+				self.budget.order_payments.shift();
+			}
 		}
 
 		/**
@@ -1493,6 +1510,7 @@
 			var msg = 'Deseja remover todos os pagamentos?';
 
 			$rootScope.customDialog().showConfirm('Aviso', msg).then(function(success) {
+				self.removeCredit();
 				self.budget.order_payments = new Array();
 				self.budget.credit = null;
 			}, function(error) { });
@@ -1631,7 +1649,7 @@
 		function addCredit() {
 			constants.debug && console.log('creditos:', self.budget.order_client.person_credit);
 
-			var controller = function(providerCredit, PersonCredit) {
+			var controller = function() {
 				this._showCloseButton = true;
 				this.person = self.budget.order_client;
 
@@ -1677,25 +1695,25 @@
 				};
 
 				this.close = function() {
-					var result = new Array();
+					var result = new Array(),
+						pawned = { };
 
 					angular.forEach(this.creditArray, function(item, index) {
 						item.checked && result.push(new PersonCredit(item));
+						pawned[item.payable_id] = item.checked ? 1 : 0;
 					});
 
-					// var scope = this;
-					// $rootScope.loading.load();
-					// providerCredit.send(result, 'oi').then(function(success) {
-						this._close(result);
-					// 	$rootScope.loading.unload();
-					// }, function(err) {
-					// 	constants.debug && console.log(err);
-					// 	$rootScope.loading.unload();
-					// });
+					var scope = this;
+					$rootScope.loading.load();
+					providerCredit.pawn(pawned).then(function(success) {
+						scope._close(result);
+						$rootScope.loading.unload();
+					}, function(err) {
+						constants.debug && console.log(err);
+						$rootScope.loading.unload();
+					});
 				}
 			};
-
-			controller.$inject = [ 'ProviderPersonCredit', 'PersonCredit' ];
 
 			$rootScope.customDialog().showTemplate('Cartas de crédito', './partials/modalCustomerCredit.html', controller, { hasBackdrop: true })
 				.then(function(res) {
@@ -1724,6 +1742,7 @@
 									payment.payable_id.push(pc.payable_id);
 									payment.order_payment_value += pc.credit_value_available;
 									payment.order_payment_value_total += pc.credit_value_available;
+									payment.order_payment_credit_available += pc.credit_value_available;
 								});
 
 								payment.order_payment_value = Math.min(payment.order_payment_value, self.budget.order_value);
@@ -1739,6 +1758,8 @@
 								self.budget.credit = payment;
 
 								self.recalcPayments();
+							} else {
+
 							}
 
 							$rootScope.loading.unload();
@@ -1754,6 +1775,12 @@
 		 * Recalcula o valor dos pagamentos/parcelas.
 		 */
 		function recalcPayments() {
+			/* Tenta sempre utilizar o valor todo do credito selecionado. */
+			if (self.budget.credit) {
+				self.budget.credit.order_payment_value = Math.min(self.budget.credit.order_payment_credit_available, self.budget.order_value_total);
+				self.budget.credit.order_payment_value_total = Math.min(self.budget.credit.order_payment_credit_available, self.budget.order_value_total);
+			}
+
 			var paymentLen = self.budget.order_payments.length - (self.budget.credit ? 1 : 0),
 				slice = (self.budget.order_value_total - (self.budget.credit ? self.budget.credit.order_payment_value_total : 0)) / paymentLen,
 				total = self.budget.credit ? self.budget.credit.order_payment_value_total : 0,
@@ -1762,8 +1789,22 @@
 			if (paymentLen == 0)
 				return;
 
+			/* Evita parcelas com valores negativos. */
+			/* Tambem abaixa o valor do credito caso necessario. */
+			if (parseFloat(slice.toFixed(2)) <= 0) {
+				self.budget.order_payments = new Array();
+
+				if (self.budget.credit) {
+					self.budget.order_payments.unshift(self.budget.credit);
+				}
+
+				return;
+			}
+
+			/* Evita dividir 1 centavo por mais de uma parcela */
 			if (parseFloat(slice.toFixed(2)) < 0.01 && paymentLen > 1) {
 				self.budget.order_payments = new Array();
+
 				if (self.budget.credit)
 					self.budget.order_payments.unshift(self.budget.credit);
 
@@ -1800,17 +1841,17 @@
 						break;
 
 					case 'seller':
-						self.focusOn('section[name="customer"]');
+						self.scrollTo('section[name="customer"]');
 						self.focusOn('input[name="customer-code"]');
 						break;
 
 					case 'customer':
-						self.focusOn('section[name="notes"]');
+						self.scrollTo('section[name="notes"]');
 						self.focusOn('textarea[name="order-note"]');
 						break;
 
 					case 'notes':
-						self.focusOn('section[name="payment"]');
+						self.scrollTo('section[name="payment"]');
 						self.focusOn('input[name="term-code"]');
 						break;
 

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-07-17 12:10:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-17 14:17:32
+* @Last Modified time: 2017-07-18 17:32:11
 */
 
 (function() {
@@ -24,7 +24,10 @@
 				});
 
 				return {
-					get: get
+					get: get,
+					pawn: pawn,
+					redeem: redeem,
+					order66: order66
 				}
 
 				// ******************************
@@ -40,13 +43,26 @@
 					}).$promise;
 				}
 
-				function send(array, instance) {
+				function pawn(array) {
 					return provider.save({
 						action: 'pawn'
 					}, {
-						payable_id: array,
-						instance_id: instance
+						payable_id: array
 					}).$promise;
+				}
+
+				function redeem(array) {
+					return provider.save({
+						action: 'redeem'
+					}, {
+						payable_id: array
+					}).$promise;
+				}
+
+				function order66() {
+					return provider.get({
+						action: 'order66'
+					}, { }).$promise;
 				}
 
 			}];

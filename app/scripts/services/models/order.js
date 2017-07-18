@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-17 08:23:41
+* @Last Modified time: 2017-07-18 11:46:38
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('Order', Order);
 
-	Order.$inject = [ 'OrderItem', 'Person', 'Address', 'CompanyERP', 'OrderPayment', 'Globals' ];
+	Order.$inject = [ '$filter', 'OrderItem', 'Person', 'Address', 'CompanyERP', 'OrderPayment', 'Globals' ];
 
-	function Order(OrderItem, Person, Address, CompanyERP, OrderPayment, Globals) {
+	function Order($filter, OrderItem, Person, Address, CompanyERP, OrderPayment, Globals) {
 
 		function _Order(order) {
 			this.order_id                    = null;
@@ -28,7 +28,7 @@
 			this.order_origin_id             = null;
 			this.order_code                  = null;
 			this.order_code_erp              = null;
-			this.order_code_nfe              = null;
+			this.order_code_document         = null;
 			this.order_value                 = 0;
 			this.order_al_discount           = 0;
 			this.order_vl_discount           = 0;
@@ -46,6 +46,7 @@
 			this.address_delivery            = new Address();
 			this.order_payments              = new Array();
 			this.credit                      = null;
+			this.queryable                   = '';
 
 			if (order) {
 				Object.assign(this, order, {
@@ -60,7 +61,16 @@
 					order_seller: new Person(order.order_seller),
 					order_client: new Person(order.order_client),
 					address_delivery: new Address(order.address_delivery),
-					order_payments: order.order_payments ? order.order_payments.map(function(op) { return new OrderPayment(op) }) : new Array()
+					order_payments: order.order_payments ? order.order_payments.map(function(op) { return new OrderPayment(op) }) : new Array(),
+					queryable: order.order_id ?
+						(order.order_code + ' '
+						+ order.order_client.person_code + ' '
+						+ order.order_client.person_name + ' '
+						+ order.order_seller.person_code + ' '
+						+ order.order_seller.person_name + ' '
+						+ order.order_company.company_name + ' '
+						+ $filter('currency')(order.order_value_total, "R$ ") + ' '
+						+ $filter('date')(order.order_date, "dd/MM/yyyy")) : ''
 				});
 			}
 		}

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-11 10:12:25
+* @Last Modified time: 2017-07-18 11:31:19
 */
 
 (function() {
@@ -18,6 +18,8 @@
 
 			var self = this;
 
+			self.filter = '';
+
 			$scope.globals = Globals.get;
 
 			$scope.$on('$viewContentLoaded', function() {
@@ -32,7 +34,8 @@
 				var options = {
 					getCustomer: true,
 					getSeller: true,
-					getCompany: true
+					getCompany: true,
+					limit: 30
 				};
 
 				self.orders = [];
