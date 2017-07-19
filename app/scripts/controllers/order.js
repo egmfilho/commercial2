@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-19 13:41:08
+* @Last Modified time: 2017-07-19 18:02:28
 */
 
 (function() {
@@ -1038,6 +1038,7 @@
 			self.internal.tempProduct = new Product(item.product);
 			
 			self.budget.removeItem(item);
+			self.recalcPayments();
 		}
 
 		/**
@@ -1527,13 +1528,10 @@
 			function getModalities() {
 				var deferred = $q.defer();
 
-				$rootScope.loading.load();
 				providerModality.getByDescription(null, { limit: 1000 }).then(function(success) {
-					$rootScope.loading.unload();
 					deferred.resolve( success.data.map(function(m) { return new PaymentModality(m) }) );
 				}, function(error) {
 					constants.debug && console.log(error);
-					$rootScope.loading.unload();
 					deferred.reject();
 				});
 
@@ -1543,13 +1541,10 @@
 			function getBanks() {
 				var deferred = $q.defer();
 
-				$rootScope.loading.load();
 				providerBank.getByName(null, { limit: 1000 }).then(function(success) {
-					$rootScope.loading.unload();
 					deferred.resolve( success.data.map(function(b) { return new Bank(b) }) );
 				}, function(error) {
 					constants.debug && console.log(error);
-					$rootScope.loading.unload();
 					deferred.reject();
 				});
 
@@ -1628,7 +1623,9 @@
 						this.getBankById(this.payment.order_payment_bank_id);
 				};
 
+			$rootScope.loading.load();
 			$q.all([getModalities(), getBanks()]).then(function(res) {
+				$rootScope.loading.unload();
 				_modalities = res[0]; 
 				_banks = res[1];
 
@@ -1670,6 +1667,11 @@
 				});
 
 				this.selectCredit = function(c) {
+					if (c.credit_value_available < 0.01) {
+						$rootScope.customDialog().showMessage('Aviso', 'Esta carta de crédito não possui valor disponível!');
+						return;
+					}
+
 					if (!c.pawn) {
 						c.checked = !c.checked;
 					} else {

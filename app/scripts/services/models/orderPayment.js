@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-28 12:11:57
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-19 11:14:17
+* @Last Modified time: 2017-07-19 17:14:31
 */
 
 (function() {
@@ -26,7 +26,7 @@
 			this.order_payment_deadline               = null;
 			this.order_payment_installment            = 1;
 			this.order_payment_initial                = 'N';
-			this.order_payment_credit                 = null;
+			this.order_payment_credit                 = 'N';
 			this.order_payment_credit_available       = 0;
 			this.order_payment_date                   = null;
 			this.order_payment_update                 = null;

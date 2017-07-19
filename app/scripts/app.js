@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-11 09:58:13
+* @Last Modified time: 2017-07-19 16:52:49
 */
 'use strict';
 
@@ -86,6 +86,78 @@ angular.module('commercial2', [
 			'A200': '#f58634',
 			'A400': '#f4771c',
 			'A700': '#fbcead',
+			'contrastDefaultColor': 'light'
+		});
+
+		$mdThemingProvider.definePalette('commercial-red', {
+			'50': '#eaaaa5',
+			'100': '#e59691',
+			'200': '#e0837c',
+			'300': '#dc6f67',
+			'400': '#d75c53',
+			'500': '#d2483e',
+			'600': '#c8392f',
+			'700': '#b3332a',
+			'800': '#9f2d25',
+			'900': '#8a2720',
+			'A100': '#efbeba',
+			'A200': '#f4d1cf',
+			'A400': '#f9e5e3',
+			'A700': '#75211b',
+			'contrastDefaultColor': 'light'
+		});
+
+		$mdThemingProvider.definePalette('commercial-orange', {
+			'50': '#fde5d2',
+			'100': '#fdd7b9',
+			'200': '#fcc9a1',
+			'300': '#fbbb88',
+			'400': '#faad70',
+			'500': '#f99f57',
+			'600': '#f8913e',
+			'700': '#f78326',
+			'800': '#f6750d',
+			'900': '#e26908',
+			'A100': '#fef3eb',
+			'A200': '#ffffff',
+			'A400': '#ffffff',
+			'A700': '#c95d07',
+			'contrastDefaultColor': 'light'
+		});
+
+		$mdThemingProvider.definePalette('commercial-green', {
+			'50': '#a3d7a5',
+			'100': '#92cf94',
+			'200': '#80c883',
+			'300': '#6ec071',
+			'400': '#5cb860',
+			'500': '#4caf50',
+			'600': '#449d48',
+			'700': '#3d8b40',
+			'800': '#357a38',
+			'900': '#2d682f',
+			'A100': '#b5dfb7',
+			'A200': '#c7e7c8',
+			'A400': '#d9eeda',
+			'A700': '#255627',
+			'contrastDefaultColor': 'light'
+		});
+
+		$mdThemingProvider.definePalette('commercial-blue', {
+			'50': '#9acffa',
+			'100': '#82c4f8',
+			'200': '#6ab8f7',
+			'300': '#51adf6',
+			'400': '#39a1f4',
+			'500': '#2196f3',
+			'600': '#0d8aee',
+			'700': '#0c7cd5',
+			'800': '#0a6ebd',
+			'900': '#0960a5',
+			'A100': '#b2dbfb',
+			'A200': '#cae6fc',
+			'A400': '#e3f2fd',
+			'A700': '#08528d',
 			'contrastDefaultColor': 'light'
 		});
 

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-18 08:22:05
+* @Last Modified time: 2017-07-19 16:08:03
 */
 
 .customer-credit-modal {
@@ -64,7 +64,15 @@
 .order-toolbar {
 	> div {
 		md-toolbar-filler {
-			background-color: $secondary-color;
+			
+			&.new {
+				background-color: $success-color;
+			}
+
+			&.edit {
+				background-color: $secondary-color;
+			}
+
 			font-size: 2.5em;
 		}
 	}
@@ -121,6 +129,10 @@
 			padding: 8px 16px;
 			border-top-left-radius: 2px;
 			border-top-right-radius: 2px;
+
+			&.error {
+				background-color: $error-color;
+			}
 
 			.md-title, .md-subhead {
 				color: white;
@@ -198,8 +210,8 @@
 
 			md-card {
 				border: 3px solid white;
-				min-height: 150px;
-				height: 150px;
+				min-height: 135px;
+				height: 135px;
 
 				b {
 					color: #6a6a6a;

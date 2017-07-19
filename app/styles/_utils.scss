@@ -2,10 +2,8 @@
 * @Author: egmfilho
 * @Date:   2017-06-07 13:57:12
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-17 11:42:16
+* @Last Modified time: 2017-07-19 16:31:02
 */
-
-$danger-color: #F44336;
 
 .offset-top-5 {
 	margin-top: 5px !important;
@@ -51,10 +49,22 @@ $danger-color: #F44336;
 	color: $main-color !important;
 }
 
+.text-warning {
+	&, * {
+		color: $warning-color !important;
+	}
+}
+
 .text-danger {
 	&, * {
-		color: $danger-color !important;
+		color: $error-color !important;
 	}
+}
+
+.text-success {
+	&, * {
+		color: $success-color !important;
+	}	
 }
 
 .text-light {
@@ -85,4 +95,24 @@ $danger-color: #F44336;
 		background-color: $error-color;
 		color: #f5f5f5;		
 	}
+}
+
+.btn-teal {
+	background-color: $teal-color !important;
+}
+
+.btn-info {
+	background-color: $info-color !important;
+}
+
+.btn-success {
+	background-color: $success-color !important;
+}
+
+.btn-warning {
+	background-color: $warning-color !important;
+}
+
+.btn-danger {
+	background-color: $error-color !important;
 }
