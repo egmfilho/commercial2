@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-18 11:46:38
+* @Last Modified time: 2017-07-19 11:28:20
 */
 
 (function() {
@@ -45,7 +45,7 @@
 			this.order_client                = new Person();
 			this.address_delivery            = new Address();
 			this.order_payments              = new Array();
-			this.credit                      = null;
+			this.creditPayment               = null;
 			this.queryable                   = '';
 
 			if (order) {

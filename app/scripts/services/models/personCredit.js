@@ -2,12 +2,32 @@
 * @Author: egmfilho
 * @Date:   2017-06-30 16:47:19
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-17 12:47:28
+* @Last Modified time: 2017-07-19 13:38:00
 */
 
 (function() {
 
 	'use strict';
+
+	angular.module('commercial2.services')
+		.factory('PersonCreditLimit', [function() {
+
+			function PersonCreditLimit(limit) {
+				this.person_credit_limit_value   = 0;
+				this.person_expired_value        = 0;
+				this.person_expiring_value       = 0;
+				this.person_credit_limit_balance = 0;
+				this.person_expired_quantity     = 0;
+				this.person_expiring_quantity    = 0;
+
+				if (limit) {
+					Object.assign(this, limit);
+				}
+			}
+
+			return PersonCreditLimit;
+
+		}]);
 
 	angular.module('commercial2.services')
 		.factory('Pawn', [function() {

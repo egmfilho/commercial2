@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-18 17:32:28
+* @Last Modified time: 2017-07-19 13:41:08
 */
 
 (function() {
@@ -166,7 +166,7 @@
 			$location.search('code', null);
 			$location.search('company', null);
 
-			if (self.budget.credit)
+			if (self.budget.creditPayment)
 				providerCredit.order66();
 		});
 
@@ -275,10 +275,10 @@
 				return;	
 			}
 
-			if (self.budget.credit) {
-				$rootScope.customDialog().showConfirm('Erro!', 'Este orçamento está utilizando uma Carta de Crédito como forma de pagamento e por isso não é mais possível salvá-lo, você ainda pode exportá-lo. Deseja exportar o orçamento?');
-				return;		
-			}
+			// if (self.budget.creditPayment) {
+			// 	$rootScope.customDialog().showConfirm('Erro!', 'Este orçamento está utilizando uma Carta de Crédito como forma de pagamento e por isso não é mais possível salvá-lo, você ainda pode exportá-lo. Deseja exportar o orçamento?');
+			// 	return;		
+			// }
 
 			var today = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
 			for (var i = 0; i < self.budget.order_payments.length; i++) {
@@ -716,7 +716,7 @@
 			if (code == self.budget.order_client.person_code || !parseInt(code))
 				return;
 
-			var options = { getAddress: true, getContact: true, getCredit: true };
+			var options = { getAddress: true, getContact: true, getCredit: true, getLimit: true };
 			
 			$rootScope.loading.load();
 			getPersonByCode(code, Globals.get('person-categories').customer, options).then(function(success) {
@@ -1494,9 +1494,9 @@
 		 * Remove o credito dos pagamentos e faz um post avisando o servidor.
 		 */
 		function removeCredit() {
-			if (self.budget.credit) {
-				providerCredit.redeem(self.budget.credit.payable_id);
-				self.budget.credit = null;
+			if (self.budget.creditPayment) {
+				providerCredit.redeem(self.budget.creditPayment.credit.map(function(pc) { return pc.payable_id; }));
+				self.budget.creditPayment = null;
 				self.budget.order_payments.shift();
 			}
 		}
@@ -1512,7 +1512,7 @@
 			$rootScope.customDialog().showConfirm('Aviso', msg).then(function(success) {
 				self.removeCredit();
 				self.budget.order_payments = new Array();
-				self.budget.credit = null;
+				self.budget.creditPayment = null;
 			}, function(error) { });
 		}
 
@@ -1653,11 +1653,6 @@
 				this._showCloseButton = true;
 				this.person = self.budget.order_client;
 
-				// this.creditArray = this.person.person_credit.map(function(c) { 
-				// 	c.checked = self.budget.credit && self.budget.credit.payable_id.indexOf(c.payable_id) >= 0; 
-				// 	return c; 
-				// });
-
 				this.creditArray = new Array();
 
 				$rootScope.loading.load();
@@ -1665,7 +1660,7 @@
 				providerCredit.get(this.person.person_id).then(function(success) {
 					scope.creditArray = success.data.map(function(c) {
 						var newC = new PersonCredit(c);
-						newC.checked = self.budget.credit && self.budget.credit.payable_id.indexOf(c.payable_id) >= 0;
+						newC.checked = self.budget.creditPayment && !!self.budget.creditPayment.credit.find(function(pc) { return pc.payable_id == newC.payable_id; });
 						return newC;
 					});
 					$rootScope.loading.unload();
@@ -1724,9 +1719,9 @@
 					providerModality.getByCode(Globals.get('modalities')['credit'].code, { getInstallments: true })
 						.then(function(success) {
 							/* Checa se o orcamento ja possui um pagamento credito e o remove */
-							if (self.budget.credit) {
+							if (self.budget.creditPayment) {
 								self.budget.order_payments.shift();
-								self.budget.credit = null;
+								self.budget.creditPayment = null;
 							}
 
 							/* Checa se creditos foram retornados do modal.*/
@@ -1739,7 +1734,10 @@
 								payment.order_payment_credit = 'Y';
 
 								angular.forEach(res, function(pc) {
-									payment.payable_id.push(pc.payable_id);
+									payment.credit.push({
+										payable_id: pc.payable_id,
+										value: pc.credit_value_available
+									});
 									payment.order_payment_value += pc.credit_value_available;
 									payment.order_payment_value_total += pc.credit_value_available;
 									payment.order_payment_credit_available += pc.credit_value_available;
@@ -1755,7 +1753,7 @@
 								/* Adiciona o credito, no inicio do array, como forma de pagamento */
 								self.budget.order_payments.unshift(payment);
 								/* Adiciona uma referencia do credito no corpo do objecto orcamento */
-								self.budget.credit = payment;
+								self.budget.creditPayment = payment;
 
 								self.recalcPayments();
 							} else {
@@ -1776,14 +1774,14 @@
 		 */
 		function recalcPayments() {
 			/* Tenta sempre utilizar o valor todo do credito selecionado. */
-			if (self.budget.credit) {
-				self.budget.credit.order_payment_value = Math.min(self.budget.credit.order_payment_credit_available, self.budget.order_value_total);
-				self.budget.credit.order_payment_value_total = Math.min(self.budget.credit.order_payment_credit_available, self.budget.order_value_total);
+			if (self.budget.creditPayment) {
+				self.budget.creditPayment.order_payment_value = Math.min(self.budget.creditPayment.order_payment_credit_available, self.budget.order_value_total);
+				self.budget.creditPayment.order_payment_value_total = Math.min(self.budget.creditPayment.order_payment_credit_available, self.budget.order_value_total);
 			}
 
-			var paymentLen = self.budget.order_payments.length - (self.budget.credit ? 1 : 0),
-				slice = (self.budget.order_value_total - (self.budget.credit ? self.budget.credit.order_payment_value_total : 0)) / paymentLen,
-				total = self.budget.credit ? self.budget.credit.order_payment_value_total : 0,
+			var paymentLen = self.budget.order_payments.length - (self.budget.creditPayment ? 1 : 0),
+				slice = (self.budget.order_value_total - (self.budget.creditPayment ? self.budget.creditPayment.order_payment_value_total : 0)) / paymentLen,
+				total = self.budget.creditPayment ? self.budget.creditPayment.order_payment_value_total : 0,
 				diff = 0;
 
 			if (paymentLen == 0)
@@ -1794,8 +1792,8 @@
 			if (parseFloat(slice.toFixed(2)) <= 0) {
 				self.budget.order_payments = new Array();
 
-				if (self.budget.credit) {
-					self.budget.order_payments.unshift(self.budget.credit);
+				if (self.budget.creditPayment) {
+					self.budget.order_payments.unshift(self.budget.creditPayment);
 				}
 
 				return;
@@ -1805,13 +1803,13 @@
 			if (parseFloat(slice.toFixed(2)) < 0.01 && paymentLen > 1) {
 				self.budget.order_payments = new Array();
 
-				if (self.budget.credit)
-					self.budget.order_payments.unshift(self.budget.credit);
+				if (self.budget.creditPayment)
+					self.budget.order_payments.unshift(self.budget.creditPayment);
 
 				return;
 			}
 
-			for (var i = (self.budget.credit ? 1 : 0); i < self.budget.order_payments.length; i++) {
+			for (var i = (self.budget.creditPayment ? 1 : 0); i < self.budget.order_payments.length; i++) {
 				self.budget.order_payments[i].order_payment_value = parseFloat(slice.toFixed(2));
 				self.budget.order_payments[i].order_payment_value_total = parseFloat(slice.toFixed(2));
 				self.budget.order_payments[i].order_payment_al_discount = 0;
@@ -1951,7 +1949,6 @@
 			ModalPerson.show('Localizar Vendedor',category.toString(),options).then(function(success){
 				self.budget.setSeller(new Person(success));
 				self.internal.tempSeller = new Person(success);
-				self.focusOn('input[name="autocompleteProduct"]');
 			},function(error){});
 		}
 
