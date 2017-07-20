@@ -1,4 +1,4 @@
-div(layout='column' layout-fill)
+.open-order(layout='column' layout-fill)
 	md-toolbar.open-order-container-nav
 		.md-toolbar-tools
 			md-truncate
@@ -13,9 +13,28 @@ div(layout='column' layout-fill)
 			md-button.md-raised(redirect-to='/order/new')
 				| Novo
 
-	md-content.open-order-dense-container(flex)
+	.order-table-header-container
+		table.table.order-table
+			thead
+				tr
+					th CÓDIGO
+					th CLIENTE
+					th VENDEDOR
+					th TOTAL
+					th DATA
 
-		md-list.md-dense(flex)
+	md-content.open-order-dense-container(flex)
+		table.table.order-table
+			tbody
+				tr(ng-repeat='o in openOrder.orders | filter: { queryable: openOrder.filter }' ng-click='open(o.order_code)')
+					td {{o.order_code}}
+					td {{o.order_client.person_name}}
+					td {{o.order_seller.person_name}}
+					td {{o.order_value_total | currency:'R$ '}}
+					td {{o.order_date | date:'dd/MM/yyyy'}}
+
+
+		//- md-list.md-dense(flex)
 			md-list-item.md-2-line(ng-repeat='o in openOrder.orders | filter: { queryable: openOrder.filter }' ng-click="open(o.order_code)")
 				.icon(layout-align='center center' style='position: relative; z-index: 1;')
 

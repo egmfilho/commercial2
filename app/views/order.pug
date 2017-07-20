@@ -23,13 +23,13 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								span.md-alt-text {{ 'M-N' | keyboardShortcut }}
 						md-menu-item
 							md-button(ng-click='open()')
-								md-icon(md-font-set='material-icons') restore_page
+								md-icon(md-font-icon='fa fa-folder-open-o')
 								|  Abrir
 								span.md-alt-text {{ 'M-A' | keyboardShortcut }}
 						md-menu-divider
 						md-menu-item
 							md-button(ng-click='save()' ng-disabled='!order.canSave()')
-								md-icon(md-font-set='material-icons') save
+								md-icon(md-font-icon='fa fa-floppy-o')
 								|  Salvar
 								span.md-alt-text {{ 'M-S' | keyboardShortcut }}
 						md-menu-divider
@@ -48,9 +48,9 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								|  Enviar por email
 						md-menu-divider
 						md-menu-item
-							md-button(ng-click='' disabled)
-								md-icon(md-font-set='material-icons') delete_forever
-								|  Excluir
+							md-button(ng-click='')
+								md-icon(md-font-icon='fa fa-remove')
+								|  Cancelar
 				md-menu
 					button(ng-click='$mdMenu.open()') Orçamento
 					md-menu-content
@@ -133,8 +133,13 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								span.md-title Produtos
 									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-1' | keyboardShortcut }})
 								span.md-subhead Adicione ou remova produtos
-							div(layout='column' layout-align='center end' layout-fill)
+							div(layout='row' layout-align='end center' layout-fill)
+								md-button.md-raised.text-primary(ng-click='order.showModalPRoduct()')
+									i.fa.fa-search &nbsp; 
+									| Localizar
+
 								md-button.md-raised(ng-click='order.clearItems()' md-colors='{background: "commercialRed"}')
+									i.fa.fa-remove &nbsp; 
 									| Limpar
 				md-card-content
 					div(layout='row')
@@ -218,18 +223,16 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									currency number-only ng-disabled='!order.internal.tempItem.product.product_code'
 									keys-shortcuts enter='order.setItemVlDiscount(order.internal.tempItemVlDiscount)')
 						
-						.well.well-sm(flex='25' layout='row' layout-align='center center' style='margin-left: 5px;')
-							md-button.md-icon-button.md-raised.md-primary(name='btn-add-item' ng-click='order.addItem()')
+						.well(flex='25' layout='row' layout-align='center center' style='margin-left: 5px;')
+							//- md-button.md-icon-button.md-raised.md-primary(name='btn-add-item' ng-click='order.addItem()')
 								md-icon(md-font-set='material-icons' style='font-size: 23px') arrow_downward
-
 							span(flex)
 								b.text-light Total:&nbsp;
 								| {{order.internal.tempItem.getValueTotal() | currency:"R$ "}}
 
-						//- div(flex='25')
-							md-button.md-raised.md-primary(name='btn-add-item' ng-click='order.addItem()' style='line-height: 10px')
-								small.md-block(style='display: block; height: 12px;') Adicionar
-								small.md-block(style='display: block; height: 12px;') Total: {{order.internal.tempItem.getValueTotal() | currency:"R$ "}}
+							md-button.md-raised.md-primary(name='btn-add-item' ng-click='order.addItem()' style='margin: 0')
+								i.fa.fa-plus &nbsp;
+								| Incluir
 
 					pre(ng-if='debug')
 						| {{order.internal.tempItem | json}}
@@ -285,8 +288,13 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								span.md-title Vendedor
 									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-2' | keyboardShortcut }})
 								span.md-subhead Informe o vendedor
-							div(layout='column' layout-align='center end' layout-fill)
+							div(layout='row' layout-align='end center' layout-fill)
+								md-button.md-raised.text-primary(ng-click='order.showModalSeller()')
+									i.fa.fa-search &nbsp; 
+									| Localizar
+
 								md-button.md-raised(ng-click='order.clearSeller()' md-colors='{background: "commercialRed"}')
+									i.fa.fa-remove &nbsp; 
 									| Limpar
 				md-card-content
 					div(layout-gt-xs='row')
@@ -335,9 +343,15 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-3' | keyboardShortcut }})
 								span.md-subhead Informe o cliente e seu endereço de entrega
 							div(layout='row' layout-align='end center' layout-fill)
-								md-button.md-raised(ng-click='order.newCustomer()')
+								md-button.md-raised.text-primary(ng-click='order.showModalCustomer()')
+									i.fa.fa-search &nbsp; 
+									| Localizar
+
+								md-button.md-raised.text-primary(ng-click='order.newCustomer()')
 									| &nbsp; Cadastrar &nbsp;
+
 								md-button.md-raised(ng-click='order.clearCustomer()' md-colors='{background: "commercialRed"}')
+									i.fa.fa-remove &nbsp; 
 									| Limpar
 				
 				md-card-content
@@ -410,7 +424,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 											| Código: {{order.budget.order_address_delivery_code}}
 										span {{order.budget.address_delivery.toString()}}
 
-									md-button.md-icon-button.md-raised(ng-click='teste()' ng-if='order.budget.order_address_delivery_code')
+									md-button.md-icon-button.md-raised(ng-click='teste()' ng-if='order.budget.order_client_id')
 										md-icon.text-primary(md-font-icon='fa fa-pencil' style='font-size: 20px')
 
 					pre(ng-if='debug')
@@ -428,6 +442,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								span.md-subhead Aqui você pode inserir informações adicionais sobre o orçamento
 							div(layout='column' layout-align='center end' layout-fill)
 								md-button.md-raised(ng-click='order.clearNote()' md-colors='{background: "commercialRed"}')
+									i.fa.fa-remove &nbsp; 
 									| Limpar
 				md-card-content
 					div(layout='row')
@@ -453,6 +468,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								span.md-subhead Informe as formas de pagamento
 							div(layout='column' layout-align='center end' layout-fill)
 								md-button.md-raised(ng-click='order.clearPayments()' md-colors='{background: "commercialRed"}')
+									i.fa.fa-remove &nbsp; 
 									| Limpar
 				md-card-content
 					div(layout='row')
@@ -594,15 +610,17 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 				md-card-content.offset-top-5
 					.offset-top-5(layout='row')
 						md-button.md-raised.md-primary(flex='25' ng-click='' md-colors='{background: "commercialRed"}')
+							i.fa.fa-remove &nbsp;
 							| Cancelar
-						
-						md-button.md-raised.md-primary(flex='25' ng-click='order.exportDAV()' ng-disabled='!order.canExport()' md-colors='{background: "commercialBlue"}')
-							| Exportar DAV
 						
 						md-button.md-raised.md-primary(flex='25' ng-click='order.exportOrder()' ng-disabled='!order.canExport()' md-colors='{background: "commercialOrange"}')
 							| Exportar Pedido
 						
+						md-button.md-raised.md-primary(flex='25' ng-click='order.exportDAV()' ng-disabled='!order.canExport()' md-colors='{background: "commercialBlue"}')
+							| Exportar DAV
+						
 						md-button.md-raised.md-primary(flex='25' ng-click='save()' ng-disabled='!order.canSave()' md-colors='{background: "commercialGreen"}')
+							i.fa.fa-floppy-o &nbsp;
 							| Salvar
 
 footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath !== "/loading" && currentPath.indexOf("/order/print/") < 0')

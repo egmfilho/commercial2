@@ -1,4 +1,9 @@
 .body(layout='column')
+	.well.offset-bottom-15
+		p.md-subhead.text-light(style='margin: 0')
+			b Cliente: &nbsp;
+			| {{ctrl.customer.person_code}} - {{ctrl.customer.person_name}}
+
 	md-tabs.mussum(md-selected='ctrl.selectedTabIndex' md-border-bottom flex)
 		md-tab(label='Endereço de entrega')
 			md-content(layout='column' style='padding: 0' layout-fill)
