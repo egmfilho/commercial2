@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-19 16:08:03
+* @Last Modified time: 2017-07-20 09:58:10
 */
 
 .customer-credit-modal {
@@ -92,35 +92,6 @@
 	max-width: $max-document-width;
 	margin: 0 auto;
 
-	.order-fab {
-		position: fixed;
-		left: 15px;
-		bottom: 30px;
-		transition: left .25s ease;
-		
-		@media(max-width: 1100px) {
-			left: -35px;
-		}
-
-		&.in {
-			@media(max-width: 1100px) {
-				left: 0px;
-			}
-		}
-
-		&.hidden {
-			left: -100px;
-		}
-
-		.md-button.md-fab {
-			font-size: 26px;		
-
-			&.md-mini {
-				font-size: 20px;
-			}
-		}
-	}
-
 	md-card {	
 		font-size: .9em;
 
@@ -172,92 +143,12 @@
 	}
 
 	section[name='customer'] {
-
 		.delivery-address {
 			.md-toolbar-tools {
 				background-color: white;
 				color: $main-color;
 				font-size: .7em;
-				border-top: 1px solid #e1e1e1;
-			}
-		}
-
-		md-tabs {		
-			border: 1px solid #e1e1e1;
-			border-radius: 0;
-			background-color: #f5f5f5;
-			height: 365px;
-
-			.inner-text {
-				text-shadow: -1px -1px 1px rgba(0,0,0,0.3);
-				color: #e1e1e1;
-				font-size: 32px;
-				font-weight: 500;
-			}
-
-			md-content { 
-				background-color: transparent !important;
-				padding: 10px 15px;
-			}
-
-			md-tab-content {
-				background-color: #f5f5f5;
-			}
-
-			md-tabs-wrapper {
-				background-color: white;
-			}
-
-			md-card {
-				border: 3px solid white;
-				min-height: 135px;
-				height: 135px;
-
-				b {
-					color: #6a6a6a;
-				}
-
-				button { 
-					float: right;
-				}
-
-				&.active {
-					border-color: $secondary-color;
-				}
-
-				md-card-content {
-					padding: 8px;
-
-					p {
-						margin: 0;
-					}
-				}
-
-				&.dashed-empty-card {
-					border-style: dashed;
-					border-color: #e1e1e1;
-					background-color: transparent;
-					box-shadow: none;
-
-					p {
-						font-weight: bold !important;
-					}
-				}
-
-				&.new-address-card {
-					height: auto;
-					margin: 0;
-
-					md-card-content {
-						md-switch {
-							margin: 0;
-
-							.md-label {
-								color: #555;
-							}
-						}
-					}
-				}
+				border: 1px solid #e1e1e1;
 			}
 		}
 	}

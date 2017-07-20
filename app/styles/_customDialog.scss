@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 13:43:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-29 13:04:50
+* @Last Modified time: 2017-07-20 09:45:32
 */
 
 .custom-dialog {
@@ -15,7 +15,7 @@
 				0 5px 24px 4px rgba(0, 0, 0, 0.12);
 
 	> div {
-		md-toolbar {
+		md-toolbar.title-bar {
 			min-height: 32px;
 			height: 32px;
 			border-top-left-radius: 3px;

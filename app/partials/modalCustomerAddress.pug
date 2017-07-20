@@ -1,0 +1,78 @@
+.body(layout='column')
+	md-tabs.mussum(md-selected='ctrl.selectedTabIndex' md-border-bottom flex)
+		md-tab(label='Endereço de entrega')
+			md-content(layout='column' style='padding: 0' layout-fill)
+				.boneco(flex layout='row' layout-wrap style='overflow: auto')
+					div(flex layout='column' layout-align='center center' 
+							ng-if='ctrl.customer.person_address == 0')
+						h1.inner-text Nenhum endereço cadastrado.
+						md-button.md-raised.md-primary(ng-click='ctrl.selectedTabIndex = 1') 
+							| &nbsp; Cadastrar &nbsp;
+					
+					//- card de endereco
+					div(flex='33' 
+							ng-repeat='a in ctrl.customer.person_address track by $index'
+							ng-if='ctrl.customer.person_address.length > 0' 
+							ng-show='a.person_address_active == "Y"')
+						md-card(ng-class='{"active": a.person_address_code == ctrl.deliveryAddress.person_address_code}')
+							md-card-content(layout='column' layout-fill) 
+								div(flex='15' layout='row')
+									b Cód: {{a.person_address_code}}
+										span(ng-if='a.person_address_main != "N"') &nbsp;(Principal)
+									div(flex)
+									.label.label-success(ng-if='a.person_address_code == ctrl.deliveryAddress.person_address_code') 
+										i.fa.fa-map-marker &nbsp;
+										| Selecionado
+									.label.label-error(ng-if='a.person_address_active == "N"') 
+										| Inativo
+								div(flex layout='row' layout-align='start center')
+									p.text-primary
+										| {{a.toString()}}
+								div(flex layout='row')
+									div(flex='50' layout='row' layout-align='start end')
+										md-button.md-primary(
+												style='margin: 0'
+												ng-click='ctrl.showAddressContact(a.person_address_contact)')
+											| {{a.person_address_contact.length}}
+											| {{a.person_address_contact.length == 1 ? 'Contato' : 'Contatos'}}
+									span(flex)
+									div(flex='30' layout='row' layout-align='end end')
+										md-button.md-icon-button.md-raised.md-primary(
+												style='margin: 0'
+												ng-click='ctrl.selectAddress(a)' 
+												ng-disabled='a.person_address_active == "N" || a.person_address_code == ctrl.deliveryAddress.person_address_code')
+											md-icon(md-font-icon='fa fa-check')
+
+					//- card vazio 
+					div(flex='33' ng-if='ctrl.customer.person_address.length > 0 && ctrl.globals("default-customer").code != ctrl.customer.person_code')
+						md-card.dashed-empty-card
+							md-card-content(layout='column' layout-align='center center' layout-fill)
+								div
+									md-button.md-icon-button.md-raised.md-primary(
+											ng-click='ctrl.selectedTabIndex = 1')
+										md-icon(md-font-icon='fa fa-plus')
+								div.offset-top-15
+									p.text-light.text-center Novo Endereço
+
+				.delivery-address
+					md-toolbar
+						.md-toolbar-tools
+							i.fa.fa-2x.fa-truck &nbsp;
+							p(ng-if='!ctrl.deliveryAddress.person_address_code') Nenhum endereço informado!
+							div(layout='column' ng-if='ctrl.deliveryAddress.person_address_code') 
+								span(style='font-size: 11px')
+									| Código: {{ctrl.deliveryAddress.person_address_code}}
+								span {{ctrl.deliveryAddress.toString()}}
+
+		md-tab(label='Novo endereço' ng-disabled='!globals("default-customer").code == order.budget.order_client.person_code')
+			md-content
+				form(layout='row' name='newAddressForm')
+					md-card.new-address-card(flex)
+						md-card-content(ng-include='"./partials/newAddress.html"')
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-primary(ng-click='ctrl._close(ctrl.deliveryAddress)')
+		| &nbsp; Ok &nbsp;
+
+	md-button.md-primary(ng-click='ctrl._cancel()')
+		| &nbsp; Cancelar &nbsp;

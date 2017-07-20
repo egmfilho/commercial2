@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-14 15:58:03
+* @Last Modified time: 2017-07-20 09:37:39
 */
 
 (function() {
@@ -126,6 +126,7 @@
 				_title: title,
 				_message: message,
 				_templateUrl: templateUrl,
+				_width: options && options.width ? options.width : 100,
 				_close: function(res) {
 					_deferred.resolve(res);
 					scope._dialog.close();

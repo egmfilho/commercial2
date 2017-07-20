@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-18 17:02:08
+* @Last Modified time: 2017-07-20 11:29:43
 */
 
 (function() {
@@ -55,6 +55,12 @@
 		});
 
 		$scope.$on('customerAdded', function(event, args) {
+			_personId = args.person_id;
+			self.newAddress.person_id = _personId;
+			clear();
+		});
+
+		$scope.$on('modalCustomerAddress', function(event, args) {
 			_personId = args.person_id;
 			self.newAddress.person_id = _personId;
 			clear();

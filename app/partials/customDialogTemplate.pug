@@ -1,5 +1,5 @@
-div(role='dialog' layout='column')
-	md-toolbar
+div(role='dialog' layout='column' ng-style='{ "min-width": ctrl._width }')
+	md-toolbar.title-bar
 		.md-toolbar-tools
 			h2 {{ctrl._title}}
 			span(flex)

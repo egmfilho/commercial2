@@ -89,10 +89,10 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 		input(ng-model='contact.person_address_contact_value')
 
 	div(layout='row' layout-fill layout-align='end center')
-		md-button.md-primary(ng-click='address.clear()')
+		md-button.md-raised(ng-click='address.clear()')
 			| Limpar
 
-		md-button.md-primary(ng-click='address.submit()')
+		md-button.md-raised(ng-click='address.submit()')
 			| Cadastrar
 
 	div(flex='100' layout='row')

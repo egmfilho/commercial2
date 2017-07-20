@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-19 18:02:28
+* @Last Modified time: 2017-07-20 13:45:05
 */
 
 (function() {
@@ -29,6 +29,7 @@
 		'Person',
 		'ProviderPersonCredit',
 		'PersonCredit',
+		'ProviderAddress',
 		'Address', 
 		'ProviderProduct', 
 		'Product', 
@@ -44,7 +45,8 @@
 		'Bank',
 		'ElectronWindow',
 		'ModalPerson',
-		'ModalProduct' 
+		'ModalProduct',
+		'ModalCustomerAddress' 
 	];
 
 	function OrderCtrl(
@@ -65,6 +67,7 @@
 		Person, 
 		providerCredit,
 		PersonCredit, 
+		providerAddress,
 		Address, 
 		providerProduct, 
 		Product,
@@ -80,7 +83,8 @@
 		Bank,
 		ElectronWindow,
 		ModalPerson,
-		ModalProduct) {
+		ModalProduct,
+		ModalCustomerAddress) {
 
 		var self = this, _focusOn;
 
@@ -158,6 +162,26 @@
 		self.showModalCustomer  = showModalCustomer;
 		self.showModalProduct   = showModalProduct;
 
+		$scope.teste = function() {
+			var options = {
+				getCity: true,
+				getDistrict: true,
+				getContact: true
+			};
+
+			$rootScope.loading.load();
+			providerAddress.getByPerson(self.budget.order_client.person_id, options).then(function(success) {
+				$rootScope.loading.unload();
+				var addresses = success.data.map(function(a) { return new Address(a) });
+				ModalCustomerAddress.show(angular.extend(self.budget.order_client, { person_address: addresses }), self.budget.address_delivery)
+					.then(function(success) {
+						self.budget.setDeliveryAddress(success);
+					});
+			}, function(error) {
+				$rootScope.loading.unload();
+			});
+		};
+
 
 		$scope.$on('$destroy', function() {
 			if (constants.isElectron)
@@ -200,9 +224,6 @@
 					self.internal.tempSeller = new Person(self.budget.order_seller);					
 					self.internal.tempCustomer = new Person(self.budget.order_client);
 
-					/* manda o cliente para o controller do cadastro de endereco */
-					$scope.$broadcast('customerAdded', self.budget.order_client);
-
 					/* copia o endereco de entrega para o corpo do orcamento */
 					self.budget.address_delivery = new Address(self.budget.order_client.person_address.find(function(a) {
 						return a.person_address_code == self.budget.order_address_delivery_code;
@@ -232,16 +253,6 @@
 			}
 
 			$timeout(function() { $scope.$broadcast('orderViewLoaded'); });
-		});
-
-		$scope.$on('newAddress', function(event, args) {
-			constants.debug && console.log('$on: newAddress', args);
-			self.budget.order_client.person_address.push(new Address(args));
-			
-			if (args.person_address_delivery == 'Y')
-				self.budget.setDeliveryAddress(args);
-
-			self.internal.address.selectedTabIndex = 0;
 		});
 
 		$scope.newOrder = function() {
@@ -557,7 +568,6 @@
 			self.budget.setCustomer(new Person(person));
 			self.budget.order_address_delivery_code = null;
 			self.internal.tempCustomer = new Person(person);
-			$scope.$broadcast('customerAdded', self.budget.order_client);
 		}
 
 		/**
@@ -767,6 +777,11 @@
 			$rootScope.loading.load();
 			constants.debug && console.log('buscando produto por codigo', code);
 			providerProduct.getByCode(code, self.budget.order_company_id, self.internal.tempItem.price_id, options).then(function(success) {
+				if (success.data.product_active == 'N') {
+					$rootScope.customDialog().showMessage('Aviso', 'Produto inativo!');
+					return;
+				}
+
 				self.internal.tempProduct = new Product(success.data);
 				self.internal.tempItem.setProduct(new Product(success.data));
 				self.internal.tempPrice = new Price(self.internal.tempItem.price);
@@ -796,7 +811,8 @@
 					limit: 10,
 					getPrice: true,
 					getStock: true,
-					getUnit: true
+					getUnit: true,
+					getActiveOnly: true
 				};
 
 			providerProduct.getByName(name, self.budget.order_company_id, self.internal.tempItem.price_id, options)
@@ -896,7 +912,7 @@
 		 * Aplica um valor de desconto no item atual.
 		 * @param {float} value - O valor do desconto.
 		 */
-		function setItemVlDiscount(value, callback) {
+		function setItemVlDiscount(value) {
 			var currentAl = self.internal.tempItem.getValue() == 0 ? 0 : (parseFloat(value) * 100) / self.internal.tempItem.getValue(),
 				maxAl = parseFloat(Globals.get('user-max-discount') || 0),
 				setVl = function(vl) {
@@ -907,7 +923,7 @@
 
 			if (self.internal.tempItemAlDiscount == self.internal.tempItem.order_item_al_discount && 
 				self.internal.tempItemVlDiscount == self.internal.tempItem.order_item_vl_discount) {
-				callback && callback();
+				self.focusOn("button[name=\'btn-add-item\']");
 				return;
 			}
 
@@ -925,7 +941,7 @@
 							product_name: self.internal.tempItem.product.product_name,
 						});
 						setVl(value);
-						callback && callback();
+						self.focusOn("button[name=\'btn-add-item\']");
 					}
 				}, function(error) {
 					setVl(self.internal.tempItem.order_item_vl_discount);
@@ -933,7 +949,7 @@
 				});
 			} else {
 				setVl(value);
-				self.focusOn("input[name=\'vl-discount\']");
+				self.focusOn("button[name=\'btn-add-item\']");
 			}
 		}
 
@@ -1237,7 +1253,7 @@
 		function searchTerm() {
 			var options = {
 				limit: 1000,
-				getModality: true
+				getModality: false
 			};
 
 			providerTerm.getByDescription(self.internal.term.queryTerm, options).then(function(success) {
@@ -1944,23 +1960,27 @@
 			Mousetrap.unbind(['command+5', 'ctrl+5']);
 		}
 
-		function showModalSeller(category) {
-			var options = {
-				limit: 100
-			};
-			ModalPerson.show('Localizar Vendedor',category.toString(),options).then(function(success){
+		function showModalSeller() {
+			var category = Globals.get('person-categories').seller,
+				options = {
+					limit: 100
+				};
+
+			ModalPerson.show('Localizar Vendedor', category, options).then(function(success) {
 				self.budget.setSeller(new Person(success));
 				self.internal.tempSeller = new Person(success);
-			},function(error){});
+			}, function(error){ });
 		}
 
-		function showModalCustomer(category) {
-			var options = {
-				limit: 100
-			};
-			ModalPerson.show('Localizar Cliente',category.toString(),options).then(function(success){
+		function showModalCustomer() {
+			var category = Globals.get('person-categories').customer,
+				options = {
+					limit: 100
+				};
+
+			ModalPerson.show('Localizar Cliente', category, options).then(function(success) {
 				self.getCustomerByCode(success.person_code);
-			},function(error){});
+			}, function(error){ });
 		}
 
 		function showModalProduct() {
