@@ -13,25 +13,29 @@
 			md-button.md-raised(redirect-to='/order/new')
 				| Novo
 
-	.order-table-header-container
-		table.table.order-table
-			thead
-				tr
-					th CÓDIGO
-					th CLIENTE
-					th VENDEDOR
-					th TOTAL
-					th DATA
+		.order-table-header-container
+			table.table.order-table
+				thead
+					tr
+						th CÓDIGO
+						th CLIENTE
+						th VENDEDOR
+						th TOTAL
+						th DATA
+						th &nbsp;
 
 	md-content.open-order-dense-container(flex)
 		table.table.order-table
 			tbody
-				tr(ng-repeat='o in openOrder.orders | filter: { queryable: openOrder.filter }' ng-click='open(o.order_code)')
+				tr(ng-repeat='o in openOrder.orders | filter: { queryable: openOrder.filter }' ng-dblclick='open(o.order_code)')
 					td {{o.order_code}}
 					td {{o.order_client.person_name}}
 					td {{o.order_seller.person_name}}
 					td {{o.order_value_total | currency:'R$ '}}
 					td {{o.order_date | date:'dd/MM/yyyy'}}
+					td 
+						md-button.md-icon-button(ng-click='open(o.order_code)')
+							md-icon.text-primary(md-font-icon='fa fa-pencil')
 
 
 		//- md-list.md-dense(flex)

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:10:42
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-20 17:24:50
+* @Last Modified time: 2017-07-20 18:09:15
 */
 
 .open-order-container-nav {
@@ -85,19 +85,17 @@
 	}
 }
 
-.open-order-dense-container {
-	background-color: white;
-	overflow-y: auto;
-
-	// .md-list.md-list-dense .md-list-item.md-3-line {
-	// 	min-height: 64px !important;
-	// }
+.open-order {
+	.open-order-dense-container {
+		background-color: white;
+		overflow-y: scroll;
+	}
 
 	.order-table-header-container {
+		background-color: white;
 		padding-top: 14px;
 		padding-right: 10px;
-		border: 1px solid #d7d7d7;
-		border-bottom: none;
+		box-shadow: 0 2px 2px rgba(#000, .2);
 	}
 
 	.order-table {
@@ -105,22 +103,39 @@
 
 		tr {
 			th, td {
-				
 				&:nth-child(1) {
 					width: 10%;
 				}
 
-				&:nth-child(2) {
-					width: 40%;
-				}
-
-				&:nth-child(3) {
-					width: 40%;
+				&:nth-child(2), &:nth-child(3) {
+					width: auto;
 				}
 
 				&:nth-child(4), &:nth-child(5) {
 					width: 10%;
 				}
+
+				&:nth-child(6) {
+					width: 40px;
+
+					button.md-button.md-icon-button {
+						margin: 0;
+						height: 10px !important;
+						// font-size: 20px;
+						padding: 0 !important;
+						// padding-top: 10px;
+					}
+				}
+			}
+		}
+
+		tbody tr {
+			&:nth-child(odd) {
+				background-color: #fafafa;
+			}
+
+			td {
+				color: $main-color;
 			}
 		}
 	}
