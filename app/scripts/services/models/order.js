@@ -68,7 +68,6 @@
 						+ order.order_client.person_name + ' '
 						+ order.order_seller.person_code + ' '
 						+ order.order_seller.person_name + ' '
-						+ order.order_company.company_name + ' '
 						+ $filter('currency')(order.order_value_total, "R$ ") + ' '
 						+ $filter('date')(order.order_date, "dd/MM/yyyy")) : ''
 				});

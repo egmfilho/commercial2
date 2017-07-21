@@ -32,7 +32,7 @@
 						this.grid = {
 							propertyName: 'product_name',
 							reverse: true
-						}						
+						}
 
 						this.sortBy = function(propertyName) {
 							vm.grid.reverse = (vm.grid.propertyName === propertyName) ? !vm.grid.reverse : false;

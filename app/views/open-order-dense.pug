@@ -1,10 +1,35 @@
 .open-order(layout='column' layout-fill)
 	md-toolbar.open-order-container-nav
 		.md-toolbar-tools
-			md-truncate
+			//- md-truncate
 				| Lista de orçamentos
 
-			span(flex)
+			//- span(flex)
+
+			md-input-container(flex="40")
+				label Empresa
+				md-select(name='type' ng-model='openOrder.options.company_id' ng-model-options='{ trackBy: $value.company_id }')
+					md-option(ng-value='c.company_id' ng-repeat='c in openOrder.companies' ng-click='openOrder.options.company_id=c.company_id; openOrder.getOrders();') 
+						| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
+
+
+			div(flex='30' layout='row')
+				div(flex='25')
+					md-button.md-icon-button.md-raised.md-primary(style='margin-left: 0' ng-click='openOrder.calendar.start.isCalendarOpen = true')
+						md-icon(md-font-icon='fa fa-calendar')
+
+				md-input-container(flex)
+					label Data inicial
+					md-datepicker(ng-model='openOrder.calendar.start.value' md-hide-icons='all' md-is-open='openOrder.calendar.start.isCalendarOpen' ng-change='openOrder.calendar.start.update()')
+
+			div(flex='30' layout='row')
+				div(flex='25')
+					md-button.md-icon-button.md-raised.md-primary(style='margin-left: 0' ng-click='openOrder.calendar.end.isCalendarOpen = true')
+						md-icon(md-font-icon='fa fa-calendar')
+
+				md-input-container(flex)
+					label Data final
+					md-datepicker(ng-model='openOrder.calendar.end.value' md-hide-icons='all' md-is-open='openOrder.calendar.end.isCalendarOpen' md-min-date='openOrder.calendar.end.minDate' md-max-date='openOrder.calendar.end.maxDate' ng-change='openOrder.calendar.end.update()')
 
 			.search(flex='30')
 				input(placeholder='Filtrar resultados' ng-model='openOrder.filter')
@@ -12,9 +37,11 @@
 					i.fa.fa-times-circle
 
 			span(flex)
+			md-button.md-raised(ng-click='openOrder.getOrders()' md-colors='{ background: "commercialBlue" }')
+				i.material-icons(style='font-size: 16px; vertical-align: text-top') note_add&nbsp;
+				| Atualizar
 
 			md-button.md-raised(redirect-to='/order/new' md-colors='{ background: "commercialGreen" }')
-				//- i.fa.fa-plus &nbsp;
 				i.material-icons(style='font-size: 16px; vertical-align: text-top') note_add&nbsp;
 				| Novo
 
@@ -23,18 +50,28 @@
 				thead
 					tr
 						th &nbsp;
-						th CÓDIGO
-						th CLIENTE
-						th VENDEDOR
-						th TOTAL
-						th DATA
+						th(ng-click="openOrder.sortBy('order_code')")
+							| CÓDIGO &nbsp;
+							i.fa(ng-show="openOrder.grid.propertyName === 'order_code'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th(ng-click="openOrder.sortBy('order_client.person_name')")
+							| CLIENTE &nbsp;
+							i.fa(ng-show="openOrder.grid.propertyName === 'order_client.person_name'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th(ng-click="openOrder.sortBy('order_seller.person_name')")
+							| VENDEDOR &nbsp;
+							i.fa(ng-show="openOrder.grid.propertyName === 'order_seller.person_name'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th(ng-click="openOrder.sortBy('order_value_total')")
+							| TOTAL &nbsp;
+							i.fa(ng-show="openOrder.grid.propertyName === 'order_value_total'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th(ng-click="openOrder.sortBy('order_date')")
+							| DATA &nbsp;
+							i.fa(ng-show="openOrder.grid.propertyName === 'order_date'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						th &nbsp;
 						th &nbsp;
 
 	md-content.open-order-dense-container(flex)
 		table.table.order-table
 			tbody
-				tr(ng-repeat='o in openOrder.orders | filter: { queryable: openOrder.filter }' ng-dblclick='open(o.order_code)')
+				tr(ng-repeat='o in openOrder.orders | orderBy:openOrder.grid.propertyName:openOrder.grid.reverse | filter: { queryable: openOrder.filter }' ng-dblclick='open(o.order_code)')
 					td 
 						md-icon(
 							md-font-set='material-icons' 

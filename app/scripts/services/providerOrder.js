@@ -88,6 +88,9 @@
 						action: 'getList'
 					}, {
 						limit: options && options.limit,
+						order_company_id: options && options.company_id,
+						start_date: options && options.start_date,
+						end_date: options && options.end_date,
 						get_order_company: options && options.getCompany,
 						get_company_address: options && options.getCompanyAddress,
 						get_order_user: options && options.getUser,
