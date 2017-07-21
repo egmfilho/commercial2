@@ -1975,7 +1975,8 @@
 		function showModalCustomer() {
 			var category = Globals.get('person-categories').customer,
 				options = {
-					limit: 100
+					module: 'Cliente',
+					limit: 200
 				};
 
 			ModalPerson.show('Localizar Cliente', category, options).then(function(success) {

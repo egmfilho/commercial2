@@ -9,8 +9,8 @@
 	
 	tbody{
 		tr{
-			&:nth-child(odd){
-				
+			&.inactive td{
+				@extend .text-danger;
 			}
 		}
 	}
@@ -22,12 +22,13 @@
 
 		td{
 			padding: 10px 5px;
+
 		}
 
 		th, td {
 			
 			&:nth-child(1){
-				width: 12%;
+				width: 14%;
 				text-align: center;
 			}
 
@@ -48,6 +49,26 @@
 			&:nth-child(5){
 				width: 15%;
 				text-align: center;
+			}
+		}
+	}
+}
+
+.bar {
+	z-index: 0;
+
+	.md-toolbar-tools {
+		background-color: white;
+		color: $main-color;
+		font-size: .7em;
+		border: 1px solid #e1e1e1;
+		border-top: none;
+
+		.legend{
+			@extend .text-danger;
+
+			i{
+				margin-right: 4px;
 			}
 		}
 	}

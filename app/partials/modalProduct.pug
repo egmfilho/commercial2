@@ -1,15 +1,15 @@
-.body(layout='column' style='width:740px;')
+.body(layout='column')
 	
 	div(layout="row" flex="100")
 		md-input-container(flex="80")
 			label Nome ou Classificação
-			input(ng-model="ctrl.filter.name" keys-shortcuts enter="ctrl.search()")
+			input#focus(ng-model="ctrl.filter.name" keys-shortcuts enter="ctrl.search()")
 		
 		md-input-container
-			md-switch(ng-model='ctrl.filter.active' style="margin: 0;")
+			md-switch(ng-model='ctrl.filter.active' style="margin:0;")
 				| Somente Ativos
 
-		md-button.md-primary(ng-click='ctrl.search()' flex="16")
+		md-button.md-primary.md-raised(ng-click='ctrl.search()' flex="15" style="margin-right:0;")
 			| Buscar
 
 	div(layout='column' style='margin-top: 20px')
@@ -17,21 +17,41 @@
 			table.product-table.table
 				thead
 					tr
-						th CÓDIGO
-						th CLASS.
-						th NOME
-						th PREÇO
-						th ESTOQUE
+						th(ng-click="ctrl.sortBy('product_code')")
+							| CÓDIGO &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'product_code'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th(ng-click="ctrl.sortBy('product_classification')")
+							| CLASS. &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'product_classification'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th(ng-click="ctrl.sortBy('product_name')")
+							| NOME &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'product_name'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th(ng-click="ctrl.sortBy('product_prices[0].price_value')")
+							| PREÇO &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'product_prices[0].price_value'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th(ng-click="ctrl.sortBy('stock.product_stock')")
+							| ESTOQUE &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'stock.product_stock'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 		.container-table
 			table.product-table.table
 				tbody
-					tr(ng-repeat='p in ctrl.result' layout='row' ng-dblclick='ctrl._close(p)')
+					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-dblclick='ctrl.get(p)' ng-class="{'inactive':p.product_active=='N'}")
 						td {{p.product_code}}
 						td {{p.product_classification}}
 						td {{p.product_name}}
-						td {{p.price.price_value | currency: 'R$ '}}
+						td {{p.product_prices[0].price_value | currency: 'R$ '}}
 						td {{p.unit && p.unit.unit_format == "I" ? (p.stock.product_stock | number:'0') : p.stock.product_stock}} ({{p.unit.unit_initials}}) 
 
+	div(layout='column')
+		.bar
+			md-toolbar
+				.md-toolbar-tools(layout='row')
+					i.fa.fa-2x.fa-cubes &nbsp;
+					p(flex) {{ctrl.result.length > 0 ? ctrl.result.length : 'Nenhum' }} Produto{{ctrl.result.length > 1 ? 's' : '' }} Localizado
+					.legend.pull-right
+						i.fa.fa-stop
+						| Inativo
+
 .footer(layout='row' layout-align='end center')
-	md-button.md-primary(ng-click='ctrl._cancel()')
+	md-button.md-primary.md-raised(ng-click='ctrl._cancel()')
 		| &nbsp; Fechar &nbsp;

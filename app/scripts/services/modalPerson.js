@@ -19,11 +19,23 @@
 						this.filter = {
 							category: category,
 							name: '',
-							doc: ''
+							doc: '',
+							active: true
 						};
+						
 						this.options = options;
 
-						this.search = function(filter) {
+						this.grid = {
+							propertyName: 'person_name',
+							reverse: true
+						}
+
+						this.sortBy = function(propertyName){
+							vm.grid.reverse = (vm.grid.propertyName === propertyName) ? !vm.grid.reverse : false;
+							vm.grid.propertyName = propertyName;
+						};
+
+						this.search = function(filter){
 							if( !vm.filter.doc.length && !vm.filter.name.length ){
 								$rootScope.customDialog().showMessage('Aviso', 'Pelo menos um dos campos deverá ser informado.');
 								return;
@@ -36,11 +48,23 @@
 								$rootScope.loading.unload();
 							});
 						}
+
+						this.get = function(p){
+							if( p.person_active == 'Y'){
+								vm._close(p);
+							}
+						}
 					};
 
 					controller.$inject = [ 'ProviderPerson', 'Person' ];
 
-					return $rootScope.customDialog().showTemplate(title, './partials/modalPerson.html', controller);
+					var modalOptions = {
+						zIndex:20,
+						hasBackdrop: true,
+						width: 900
+					};
+
+					return $rootScope.customDialog().showTemplate(title, './partials/modalPerson.html', controller, modalOptions);
 				}
 			}
 		}]);

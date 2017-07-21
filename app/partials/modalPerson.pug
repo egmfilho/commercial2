@@ -1,15 +1,19 @@
-.body(layout='column' style='width:600px;')
+.body(layout='column')
 	
-	div(layout="row" flex="100")
-		md-input-container(flex="25")
-			label CNPJ/CPF
-			input(ng-model="ctrl.filter.doc" keys-shortcuts enter="ctrl.search()")
-	
+	div(layout="row" flex="100" layout-fill)
 		md-input-container(flex="55")
 			label Nome
 			input(ng-model="ctrl.filter.name" keys-shortcuts enter="ctrl.search()")
+
+		md-input-container(flex="20")
+			label CNPJ/CPF
+			input(ng-model="ctrl.filter.doc" keys-shortcuts enter="ctrl.search()")
+
+		md-input-container()
+			md-switch(ng-model='ctrl.filter.active' style="margin:0;")
+				| Somente Ativos
 		
-		md-button.md-primary(ng-click='ctrl.search()' flex="20")
+		md-button.md-primary.md-raised(ng-click='ctrl.search()' flex="15" style="margin-right:0;")
 			| Buscar
 
 	div(layout='column' style='margin-top: 20px')
@@ -17,19 +21,37 @@
 			table.person-table.table
 				thead
 					tr
-						th CÓDIGO
-						th NOME
-						th TIPO
-						th CNPJ/CPF
+						th(ng-click="ctrl.sortBy('person_code')")
+							| CÓDIGO &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'person_code'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th(ng-click="ctrl.sortBy('person_name')")
+							| NOME &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'person_name'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th(ng-click="ctrl.sortBy('person_type')")
+							| TIPO &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'person_type'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th(ng-click="ctrl.sortBy('person_doc')")
+							| CNPJ/CPF &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'person_doc'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 		.container-table
 			table.person-table.table
 				tbody
-					tr(ng-repeat='p in ctrl.result' layout='row' ng-dblclick='ctrl._close(p)')
+					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-dblclick='ctrl.get(p)' ng-class="{'inactive':p.person_active=='N'}")
 						td {{p.person_code}}
 						td {{p.person_name}}
 						td {{p.person_type}}
-						td {{p.person_type == 'F' ? p.person_cpf : p.person_cnpj}}
+						td {{p.person_doc}}
+
+	div(layout='column')
+		.bar
+			md-toolbar
+				.md-toolbar-tools(layout='row')
+					i.fa.fa-2x.fa-cubes &nbsp;
+					p(flex) {{ctrl.result.length > 0 ? ctrl.result.length : 'Nenhum' }} {{ctrl.options.module}}{{ctrl.result.length > 1 ? 's' : '' }} Localizado
+					.legend.pull-right
+						i.fa.fa-stop
+						| Inativo
 
 .footer(layout='row' layout-align='end center')
-	md-button.md-primary(ng-click='ctrl._cancel()')
+	md-button.md-primary.md-raised(ng-click='ctrl._cancel()')
 		| &nbsp; Fechar &nbsp;
