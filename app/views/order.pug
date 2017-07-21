@@ -5,13 +5,6 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 			md-icon(md-font-set='material-icons' ng-if='!order.budget.order_code') note_add
 
 		div
-			.md-toolbar-tools
-				h1(ng-if='order.budget.order_code') 
-					| {{order.budget.order_code}} ({{order.budget.order_date | date:'short'}})
-					span.md-subhead.text-warning &nbsp;[{{order.budget.order_company.company_code}} {{order.budget.order_company.company_name}}]
-				h1(ng-if='!order.budget.order_code') 
-					| Novo Orçamento
-					span.md-subhead.text-success &nbsp;[{{order.budget.order_company.company_code}} {{order.budget.order_company.company_name}}]
 			md-menu-bar.order-menu-bar
 				md-menu
 					button(ng-click='$mdMenu.open()') Arquivo
@@ -106,6 +99,14 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 						md-menu-item
 							md-button(ng-click='toast("Aviso!", "Em breve.")')
 								| Sobre
+
+			.md-toolbar-tools
+				h1(ng-if='order.budget.order_code') 
+					| {{order.budget.order_code}} ({{order.budget.order_date | date:'short'}})
+					span.md-subhead.text-warning &nbsp;[{{order.budget.order_company.company_code}} {{order.budget.order_company.company_name}}]
+				h1(ng-if='!order.budget.order_code') 
+					| Novo Orçamento
+					span.md-subhead.text-success &nbsp;[{{order.budget.order_company.company_code}} {{order.budget.order_company.company_name}}]
 
 md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
@@ -472,48 +473,6 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									| Limpar
 				md-card-content
 					div(layout='row')
-						div(flex='40' layout='column')
-							
-							.summary(layout='column')
-								md-toolbar.md-toolbar-tools
-									h2 Resumo
-
-								table.md-subhead
-									tr
-										td.text-right.text-light
-											b Total de items:
-										td.text-primary
-											| {{order.budget.order_items.length}}&nbsp;
-											| {{order.budget.order_items.length == 1 ? 'item' : 'itens'}}
-									tr
-										td.text-right.text-light
-											b Valor total:
-										td.text-primary
-											| {{order.budget.order_value | currency:'R$ '}}
-									tr
-										td.text-right.text-light
-											b Desconto total:
-										td.text-primary
-											| {{order.budget.order_al_discount | number:'2'}}%
-											| &nbsp;/&nbsp;
-											| {{order.budget.order_vl_discount | currency:'R$ '}}
-									tr
-										td.text-right.text-light
-											b Valor total líquido:
-										td.text-primary
-											| {{order.budget.order_value_total | currency:'R$ '}}
-
-							.offset-top-5(layout='row')
-								md-input-container(flex)
-									label 
-										//- i.fa.fa-lock &nbsp;
-										| Carta de crédito
-									input.text-center.text-primary(ng-value='order.budget.credit.order_payment_value_total | currency:"R$ "' readonly)
-
-								md-button.md-primary.md-raised(ng-click='order.addCredit()' 
-										ng-disabled='!order.budget.order_client.person_credit.length || !order.budget.order_items.length')
-									| Adicionar
-
 
 						div(flex='60' layout='column')
 							div(layout='row')
@@ -586,8 +545,48 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									i.fa.fa-calculator &nbsp;
 									| Recalcular
 
+						div(flex='40' layout='column')
+
+							.well.credit(layout='row' layout-align='center center')
+								span(flex)
+									b.text-light Carta de crédito:&nbsp;
+									| {{order.budget.creditPayment.order_payment_value_total | currency:"R$ "}}
+
+								md-button.md-primary.md-raised(style='margin: 0;' ng-click='order.addCredit()' 
+										ng-disabled='!order.budget.order_client.person_credit.length || !order.budget.order_items.length')
+									i.fa.fa-plus &nbsp;
+									| Adicionar
+							
+							.summary(layout='column')
+								md-toolbar.md-toolbar-tools
+									h2 Resumo
+
+								table.md-subhead
+									tr
+										td.text-right.text-light
+											b Total de items:
+										td.text-primary
+											| {{order.budget.order_items.length}}&nbsp;
+											| {{order.budget.order_items.length == 1 ? 'item' : 'itens'}}
+									tr
+										td.text-right.text-light
+											b Valor total:
+										td.text-primary
+											| {{order.budget.order_value | currency:'R$ '}}
+									tr
+										td.text-right.text-light
+											b Desconto total:
+										td.text-primary
+											| {{order.budget.order_al_discount | number:'2'}}%
+											| &nbsp;/&nbsp;
+											| {{order.budget.order_vl_discount | currency:'R$ '}}
+									tr
+										td.text-right.text-light
+											b Valor total líquido:
+										td.text-primary
+											| {{order.budget.order_value_total | currency:'R$ '}}
+
 					.offset-top-15(layout='row')
-						span(flex)
 						
 						md-input-container.large-input(flex='15')
 							label Total

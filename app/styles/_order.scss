@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-20 16:46:57
+* @Last Modified time: 2017-07-21 10:27:41
 */
 
 .customer-credit-modal {
@@ -290,14 +290,20 @@ md-menu-content {
 section[name="payment"] {
 
 	div[flex="40"] {
-		padding-right: 16px;
+		padding-left: 16px;
+
+		.credit {
+			margin-top: 50px;
+			margin-bottom: 17px;
+		}
 
 		.summary {
 			border: 1px solid #d7d7d7;
-			margin-top: 50px;
 
 			.md-toolbar-tools {
 				background-color: $main-color-lighter;
+				min-height: 45px;
+				max-height: 45px;
 			}
 
 			table {

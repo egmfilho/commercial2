@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-19 08:59:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-18 17:02:08
+* @Last Modified time: 2017-07-21 09:38:11
 */
 
 (function() {
@@ -99,9 +99,9 @@
 			});
 
 			Globals.set('order-status-colors', {
-				'1001': 'mediumseagreen',
-				'1002': 'orange',
-				'1003': 'tomato'
+				'1001': '#4caf50',
+				'1002': '#f99f57',
+				'1003': '#2196f3'
 			});
 
 			Globals.set('order-status-values', {

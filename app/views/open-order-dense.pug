@@ -6,99 +6,87 @@
 
 			span(flex)
 
-			input(flex='30' placeholder='Filtrar resultados' ng-model='openOrder.filter')
+			.search(flex='30')
+				input(placeholder='Filtrar resultados' ng-model='openOrder.filter')
+				button.clear-search-button(ng-click='openOrder.filter = ""' ng-show='openOrder.filter.length')
+					i.fa.fa-times-circle
 
 			span(flex)
 
-			md-button.md-raised(redirect-to='/order/new')
+			md-button.md-raised(redirect-to='/order/new' md-colors='{ background: "commercialGreen" }')
+				//- i.fa.fa-plus &nbsp;
+				i.material-icons(style='font-size: 16px; vertical-align: text-top') note_add&nbsp;
 				| Novo
 
 		.order-table-header-container
 			table.table.order-table
 				thead
 					tr
+						th &nbsp;
 						th CÓDIGO
 						th CLIENTE
 						th VENDEDOR
 						th TOTAL
 						th DATA
 						th &nbsp;
+						th &nbsp;
 
 	md-content.open-order-dense-container(flex)
 		table.table.order-table
 			tbody
 				tr(ng-repeat='o in openOrder.orders | filter: { queryable: openOrder.filter }' ng-dblclick='open(o.order_code)')
+					td 
+						md-icon(
+							md-font-set='material-icons' 
+							ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+							ng-if='o.order_status_id == globals("order-status-values").open') cloud_queue
+					
+						md-icon(
+							md-font-set='material-icons' 
+							ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+							ng-if='o.order_status_id == globals("order-status-values").exported') cloud
+
+						md-icon(
+							md-font-set='material-icons' 
+							ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+							ng-if='o.order_status_id == globals("order-status-values").billed') cloud_done
+
 					td {{o.order_code}}
 					td {{o.order_client.person_name}}
 					td {{o.order_seller.person_name}}
 					td {{o.order_value_total | currency:'R$ '}}
 					td {{o.order_date | date:'dd/MM/yyyy'}}
 					td 
-						md-button.md-icon-button(ng-click='open(o.order_code)')
+						md-button.md-icon-button(ng-click='open(o.order_code)' md-no-ink)
 							md-icon.text-primary(md-font-icon='fa fa-pencil')
+					td 
+						md-button.md-icon-button(ng-click='open(o.order_code)' md-no-ink)
+							md-icon.text-primary(md-font-icon='material-icons') delete_forever
 
-
-		//- md-list.md-dense(flex)
-			md-list-item.md-2-line(ng-repeat='o in openOrder.orders | filter: { queryable: openOrder.filter }' ng-click="open(o.order_code)")
-				.icon(layout-align='center center' style='position: relative; z-index: 1;')
-
-					md-tooltip(md-direction='right') {{globals("order-status-labels")[o.order_status_id]}}	
-
-					md-icon(					
-						md-font-set='material-icons' 
-						ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
-						ng-if='o.order_status_id == globals("order-status-values").open') cloud_queue
-					
+	md-toolbar.info
+		.md-toolbar-tools
+			div(flex='30' layout='row')
+				div
 					md-icon(
 						md-font-set='material-icons' 
-						ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
-						ng-if='o.order_status_id == globals("order-status-values").exported') cloud
+						ng-style='{ "color": globals("order-status-colors")[globals("order-status-values")["open"]] }') cloud_queue
+					span.md-subhead 
+						| Salvo
+		
+				span(flex)
 
+				div
 					md-icon(
 						md-font-set='material-icons' 
-						ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
-						ng-if='o.order_status_id == globals("order-status-values").billed') cloud_done
+						ng-style='{ "color": globals("order-status-colors")[globals("order-status-values")["exported"]] }') cloud
+					span.md-subhead 
+						| Exportado
 
-				.md-list-item-text(flex layout='row' layout-align='start center')
+				span(flex)
 
-					span(flex='10')
-						b Código: 
-						br
-						| {{o.order_code}}
-
-					span(flex)
-
-					span(flex='25') 
-						b Loja:
-						br
-						| {{o.order_company.company_name | truncate:'50'}}
-
-					span(flex)
-
-					span(flex='25')
-						b Cliente: 
-						br
-						| {{o.order_client.person_name | truncate:'50'}}
-
-					span(flex)
-
-					span(flex='25')
-						b Vendedor: 
-						br
-						| {{o.order_seller.person_name | truncate:'50'}}
-
-					span(flex)
-
-					span(flex='10')
-						b Total: 
-						br
-						| {{o.order_value_total | currency:'R$ '}}
-
-					span(flex)
-
-					span(flex='10')
-						b Data: 
-						br
-						| {{o.order_date | date:'dd/MM/yyyy'}}
-
-				md-divider
+				div
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": globals("order-status-colors")[globals("order-status-values")["billed"]] }') cloud_done
+					span.md-subhead 
+						| Faturado
