@@ -11,7 +11,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					md-menu-content
 						md-menu-item
 							md-button(ng-click='newOrder()')
-								md-icon(md-font-set='material-icons') insert_drive_file
+								md-icon(md-font-set='material-icons') note_add
 								|  Novo
 								span.md-alt-text {{ 'M-N' | keyboardShortcut }}
 						md-menu-item
@@ -33,7 +33,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								span.md-alt-text {{ 'M-P' | keyboardShortcut }}
 						md-menu-item
 							md-button(ng-click='order.savePDF()' ng-disabled='!order.canPrint()')
-								md-icon(md-font-set='material-icons') picture_as_pdf
+								md-icon(md-font-icon='fa fa-file-pdf-o')
 								|  Salvar PDF
 						md-menu-item
 							md-button(ng-click='' disabled)
@@ -101,12 +101,54 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								| Sobre
 
 			.md-toolbar-tools
-				h1(ng-if='order.budget.order_code') 
+				//- h1(ng-if='order.budget.order_code') 
 					| {{order.budget.order_code}} ({{order.budget.order_date | date:'short'}})
 					span.md-subhead.text-warning &nbsp;[{{order.budget.order_company.company_code}} {{order.budget.order_company.company_name}}]
-				h1(ng-if='!order.budget.order_code') 
+				//- h1(ng-if='!order.budget.order_code') 
 					| Novo Orçamento
 					span.md-subhead.text-success &nbsp;[{{order.budget.order_company.company_code}} {{order.budget.order_company.company_name}}]
+				md-button.toolbar-btn(ng-click='newOrder()')
+					md-tooltip(md-direction='bottom') Novo orçamento
+					md-icon(md-font-set='material-icons') note_add
+
+				md-button.toolbar-btn(ng-click='open()')
+					md-tooltip(md-direction='bottom') Abrir orçamento
+					md-icon(md-font-icon='fa fa-folder-open-o')
+
+				md-button.toolbar-btn(ng-click='save()' ng-disabled='!order.canSave()')
+					md-tooltip(md-direction='bottom') Salvar orçamento
+					md-icon(md-font-icon='fa fa-floppy-o')
+
+				md-button.toolbar-btn(ng-click='order.print()' ng-disabled='!order.canPrint()')
+					md-tooltip(md-direction='bottom') Imprimir orçamento
+					md-icon(md-font-set='material-icons') print
+
+				md-button.toolbar-btn(ng-click='order.savePDF()' ng-disabled='!order.canPrint()')
+					md-tooltip(md-direction='bottom') Salvar como PDF
+					md-icon(md-font-icon='fa fa-file-pdf-o')
+
+				md-button.toolbar-btn(ng-click='' disabled)
+					md-tooltip(md-direction='bottom') Enviar por email
+					md-icon(md-font-set='material-icons') mail
+
+				.separator
+
+				md-button.toolbar-btn(ng-click='order.showModalSeller()')
+					md-tooltip(md-direction='bottom') Localizar vendedor
+					md-icon(md-font-icon='fa fa-id-badge')
+
+				md-button.toolbar-btn(ng-click='order.showModalCustomer()')
+					md-tooltip(md-direction='bottom') Localizar cliente
+					md-icon(md-font-icon='fa fa-user')
+
+				md-button.toolbar-btn(ng-click='' disabled)
+					md-tooltip(md-direction='bottom') Informações do cliente
+					md-icon(md-font-icon='fa fa-id-card-o')
+
+				md-button.toolbar-btn(ng-click='' disabled)
+					md-tooltip(md-direction='bottom') Aplicar desconto geral
+					md-icon(md-font-set='material-icons') monetization_on
+
 
 md-content#order(flex layout-padding style='background-color: #d9d9d9')
 

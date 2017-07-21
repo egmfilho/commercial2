@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-21 10:27:41
+* @Last Modified time: 2017-07-21 11:48:36
 */
 
 .customer-credit-modal {
@@ -62,6 +62,24 @@
 }
 
 .order-toolbar {
+
+	.toolbar-btn {
+		margin: 2px;		
+		min-width: 40px;
+		padding: 0;
+		font-size: 23px;
+
+		&:disabled {
+			md-icon {
+				opacity: .4;
+			}
+		}
+	}
+
+	.separator {
+		margin: 0 15px;
+	}
+
 	> div {
 		md-toolbar-filler {
 			
