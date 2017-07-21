@@ -660,7 +660,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							input(tabindex='-1' readonly ng-value='order.budget.getPaymentValue() | currency:"R$ "')
 						
 						md-input-container.large-input(flex='15')
-							label Troco
+							label Restante
 							input(tabindex='-1' readonly ng-value='order.budget.getChange() | currency: "R$ "')
 
 					div(layout='row')
@@ -679,10 +679,10 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							i.fa.fa-remove &nbsp;
 							| Cancelar
 						
-						md-button.md-raised.md-primary(flex='25' ng-click='order.exportOrder()' ng-disabled='!order.canExport()' md-colors='{background: "commercialOrange"}')
+						md-button.md-raised.md-primary(flex='25' ng-click='order.exportOrder()' md-colors='{background: "commercialOrange"}')
 							| Exportar Pedido
 						
-						md-button.md-raised.md-primary(flex='25' ng-click='order.exportDAV()' ng-disabled='!order.canExport()' md-colors='{background: "commercialBlue"}')
+						md-button.md-raised.md-primary(flex='25' ng-click='order.exportDAV()' md-colors='{background: "commercialBlue"}')
 							| Exportar DAV
 						
 						md-button.md-raised.md-primary(flex='25' ng-click='save()' ng-disabled='!order.canSave()' md-colors='{background: "commercialGreen"}')

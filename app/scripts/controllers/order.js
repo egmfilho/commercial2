@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-21 16:50:02
+* @Last Modified time: 2017-07-21 18:18:09
 */
 
 (function() {
@@ -162,6 +162,48 @@
 		self.showModalCustomer  = showModalCustomer;
 		self.showModalProduct   = showModalProduct;
 
+		function validateBudget() {
+			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
+				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado e não pode mais ser editado!');
+				return false;
+			}
+
+			if (!self.budget.order_company_id || !self.budget.order_client_id || !self.budget.order_seller_id || !self.budget.order_items.length || !self.budget.order_address_delivery_code) {
+				$rootScope.customDialog().showMessage('Erro!', 'Preencha todos os campos corretamente!');
+				return false;
+			}
+
+			if (self.budget.getChange() > 0 && self.budget.order_payments.length) {
+				$rootScope.customDialog().showMessage('Erro!', 'Reveja os valores dos pagamentos!');
+				return false;	
+			}
+
+			// if (self.budget.creditPayment) {
+			// 	$rootScope.customDialog().showConfirm('Erro!', 'Este orçamento está utilizando uma Carta de Crédito como forma de pagamento e por isso não é mais possível salvá-lo, você ainda pode exportá-lo. Deseja exportar o orçamento?');
+			// 	return;		
+			// }
+
+			var today = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+			for (var i = 0; i < self.budget.order_payments.length; i++) {
+				if (moment(self.budget.order_payments[i].order_payment_deadline).isBefore(today)) {
+					$rootScope.customDialog().showMessage('Erro', 'Não é possível salvar o orçamento pois o mesmo contém ao menos uma forma de pagamento com data anterior à data de hoje.');
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		function filterBudget() {
+			return angular.merge({ }, self.budget, {
+				order_address: null,
+				order_client: null,
+				order_company: null,
+				order_mail_sent: null,
+				order_seller: null
+			});
+		}
+
 		$scope.teste = function() {
 			var options = {
 				getCity: true,
@@ -283,43 +325,13 @@
 		};
 
 		$scope.save = function() {
-			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
-				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado e não pode mais ser editado!');
+			if (!validateBudget()) {
 				return;
-			}
-
-			if (!self.budget.order_company_id || !self.budget.order_client_id || !self.budget.order_seller_id || !self.budget.order_items.length || !self.budget.order_address_delivery_code) {
-				$rootScope.customDialog().showMessage('Erro!', 'Preencha todos os campos corretamente!');
-				return;
-			}
-
-			if (self.budget.getChange() > 0 && self.budget.order_payments.length) {
-				$rootScope.customDialog().showMessage('Erro!', 'Reveja os valores dos pagamentos!');
-				return;	
-			}
-
-			// if (self.budget.creditPayment) {
-			// 	$rootScope.customDialog().showConfirm('Erro!', 'Este orçamento está utilizando uma Carta de Crédito como forma de pagamento e por isso não é mais possível salvá-lo, você ainda pode exportá-lo. Deseja exportar o orçamento?');
-			// 	return;		
-			// }
-
-			var today = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-			for (var i = 0; i < self.budget.order_payments.length; i++) {
-				if (moment(self.budget.order_payments[i].order_payment_deadline).isBefore(today)) {
-					$rootScope.customDialog().showMessage('Erro', 'Não é possível salvar o orçamento pois o mesmo contém ao menos uma forma de pagamento com data anterior à data de hoje.');
-					return;
-				}
 			}
 
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja salvar o orçamento atual?')
 				.then(function(success) {
-					var filtered = angular.merge({ }, self.budget, {
-						order_address: null,
-						order_client: null,
-						order_company: null,
-						order_mail_sent: null,
-						order_seller: null
-					});
+					var filtered = filterBudget();
 
 					constants.debug && console.log('salvando orçamento: ', filtered);
 
@@ -334,7 +346,7 @@
 							.then(function(res) {
 								switch (res) {
 									case 'print': {
-										print();
+										self.print();
 										newOrder();
 										break;
 									}
@@ -587,6 +599,7 @@
 			self.budget.setCustomer(new Person(person));
 			self.budget.order_address_delivery_code = null;
 			self.internal.tempCustomer = new Person(person);
+			self.removeCredit();
 		}
 
 		/**
@@ -661,6 +674,7 @@
 		 */
 		function clearTerm() {
 			self.internal.term.clear();	
+			self.budget.order_term_id = null;
 		}
 
 		/**
@@ -1147,24 +1161,24 @@
 		 * Instancia uma nova janela e chama o dialogo para salvar o PDF.
 		 */
 		function savePDF() {
-			if (!self.canPrint) return;
+			if (!self.canPrint()) return;
 
 			if (constants.isElectron)
 				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + self.budget.order_code + '?action=pdf');
 			else
-				$location.path('/order/print/'+self.budget.order_code)
+				$location.path('/order/print/' + self.budget.order_code)
 		}
 
 		/**
 		 * Instancia uma nova janela e chama o dialogo de impressao.
 		 */
 		function print() {
-			if (!self.canPrint) return;
+			if (!self.canPrint()) return;
 
 			if (constants.isElectron)
 				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + self.budget.order_code + '?action=print');
 			else
-				$location.path('/order/print/'+self.budget.order_code)
+				$location.path('/order/print/' + self.budget.order_code)
 		}
 
 		/**
@@ -1199,13 +1213,6 @@
 		 * @param {string} id - O id do orcamento.
 		 */
 		function exportOrder(id) {
-			if (!self.canPrint) return;
-
-			if (self.budget.order_id == null) {
-				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento ainda não foi salvo!');
-				return;
-			}
-			
 			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
 				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado!');
 				return;
@@ -1215,16 +1222,70 @@
 
 			$rootScope.customDialog().showConfirm('Aviso', 'Exportar pedido?')
 				.then(function(success) {
-					constants.debug && console.log('exportando pedido: ' + id);
-					$rootScope.loading.load();
-					providerOrder.exportOrder(id).then(function(success) {
-						$rootScope.loading.unload();
-						deferred.resolve(success);
-					}, function(error) {
-						constants.debug && console.log(error);
-						$rootScope.loading.unload();
-						deferred.reject(error);
-					});
+					constants.debug && console.log('exportando pedido: ' + id);					
+
+					if (self.budget.order_id) {
+						$rootScope.loading.load();
+						providerOrder.exportOrder(self.budget.order_id).then(function(success) {
+							$rootScope.loading.unload();
+							deferred.resolve(success);
+						}, function(error) {
+							constants.debug && console.log(error);
+							$rootScope.loading.unload();
+							deferred.reject(error);
+						});
+					} else {
+						if (!validateBudget()) {
+							return;
+						}
+
+						if (self.budget.order_payments.length <= 0) {
+							$rootScope.customDialog().showMessage('Aviso', 'O orçamento não possui formas de pagamento informadas!');
+							return;
+						}
+
+						function afterSave(msg, code) {
+							var controller = function() {
+									this._showCloseButton = true;
+									this.code = code;
+									this.msg = msg;
+								};
+
+							$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderExported.html', controller)
+								.then(function(res) {
+									switch (res) {
+										case 'print': {
+											self.print();
+											newOrder();
+											break;
+										}
+										
+										case 'mail': {
+											alert('ainda nao implementado');
+											break;
+										}
+									}
+								}, function(res) {
+									newOrder();
+								});
+						}
+
+						$rootScope.loading.load();
+						providerOrder.saveAndExportOrder(filterBudget()).then(function(success) {
+							self.budget.order_id = success.data.order_id;
+							self.budget.order_code = success.data.order_code;
+							self.budget.order_date = moment().toDate();
+							self.budget.order_erp = success.data.budget_code;
+							$rootScope.loading.unload();
+							afterSave('Orçamento exportado!', success.data.budget_code);
+							deferred.resolve(success);
+						}, function(error) {
+							constants.debug && console.log(error);
+							$rootScope.loading.unload();
+							deferred.reject(error);
+						});
+					}
+
 				}, function(error) { });
 
 			return deferred.promise;
@@ -1235,13 +1296,6 @@
 		 * @param {string} id - O id do orcamento.
 		 */
 		function exportDAV(id) {
-			if (!self.canPrint) return;
-
-			if (self.budget.order_id == null) {
-				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento ainda não foi salvo!');
-				return;
-			}
-
 			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
 				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado!');
 				return;
@@ -1252,15 +1306,69 @@
 			$rootScope.customDialog().showConfirm('Aviso', 'Exportar DAV?')
 				.then(function(success) {
 					constants.debug && console.log('exportando DAV: ' + id);
-					$rootScope.loading.load();
-					providerOrder.exportDAV(id).then(function(success) {
-						$rootScope.loading.unload(success);
-						deferred.resolve(success);
-					}, function(error) {
-						constants.debug && console.log(error);
-						$rootScope.loading.unload();
-						deferred.reject(error);
-					});
+					
+					if (self.budget.order_id) {
+						$rootScope.loading.load();
+						providerOrder.exportDAV(self.budget.order_id).then(function(success) {
+							$rootScope.loading.unload(success);
+							deferred.resolve(success);
+						}, function(error) {
+							constants.debug && console.log(error);
+							$rootScope.loading.unload();
+							deferred.reject(error);
+						});
+					} else {
+						if (!validateBudget()) {
+							return;
+						}
+
+						if (self.budget.order_payments.length <= 0) {
+							$rootScope.customDialog().showMessage('Aviso', 'O orçamento não possui formas de pagamento informadas!');
+							return;
+						}
+
+						function afterSave(msg, code) {
+							var controller = function() {
+									this._showCloseButton = true;
+									this.code = code;
+									this.msg = msg;
+								};
+
+							$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderExported.html', controller)
+								.then(function(res) {
+									switch (res) {
+										case 'print': {
+											self.print();
+											newOrder();
+											break;
+										}
+										
+										case 'mail': {
+											alert('ainda nao implementado');
+											break;
+										}
+									}
+								}, function(res) {
+									newOrder();
+								});
+						}
+
+						$rootScope.loading.load();
+						providerOrder.saveAndExportDAV(filterBudget()).then(function(success) {
+							$rootScope.loading.unload(success);
+							self.budget.order_id = success.data.order_id;
+							self.budget.order_code = success.data.order_code;
+							self.budget.order_date = moment().toDate();
+							self.budget.order_erp = success.data.budget_code;
+							afterSave('Orçamento exportado!', success.data.dav_code);
+							deferred.resolve(success);
+						}, function(error) {
+							constants.debug && console.log(error);
+							$rootScope.loading.unload();
+							deferred.reject(error);
+						});
+					}
+
 				}, function(error) { });
 
 			return deferred.promise;
@@ -1847,6 +1955,7 @@
 			/* Tambem abaixa o valor do credito caso necessario. */
 			if (parseFloat(slice.toFixed(2)) <= 0) {
 				self.budget.order_payments = new Array();
+				self.clearTerm();
 
 				if (self.budget.creditPayment) {
 					self.budget.order_payments.unshift(self.budget.creditPayment);
@@ -1858,6 +1967,7 @@
 			/* Evita dividir 1 centavo por mais de uma parcela */
 			if (parseFloat(slice.toFixed(2)) < 0.01 && paymentLen > 1) {
 				self.budget.order_payments = new Array();
+				self.clearTerm();
 
 				if (self.budget.creditPayment)
 					self.budget.order_payments.unshift(self.budget.creditPayment);
