@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-21 12:55:32
+* @Last Modified time: 2017-07-21 15:17:02
 */
 
 (function() {
@@ -72,7 +72,7 @@
 				this._negativeButtonText = 'Fechar';
 			}
 
-			return show(this, title, message, null, controller, angular.extend({ }, options, { width: 300 }));
+			return show(this, title, message, null, controller, options);
 		}
 
 		/**
@@ -90,7 +90,7 @@
 				this._negativeButtonText = 'Não';
 			}
 
-			return show(this, title, message, null, controller, angular.extend({ }, options, { width: 300 }));
+			return show(this, title, message, null, controller, options);
 		}
 
 		/**
@@ -101,7 +101,7 @@
 		 * @returns {object} Uma promise com o resultado.
 		 */	
 		function showTemplate(title, templateUrl, controller, options) {
-			return show(this, title, null, templateUrl, controller, angular.extend({ }, options, { width: 300 }));
+			return show(this, title, null, templateUrl, controller, options);
 		}
 
 		/**
@@ -127,7 +127,7 @@
 				_title: title,
 				_message: message,
 				_templateUrl: templateUrl,
-				_width: options && options.width ? options.width : 100,
+				_width: options && options.width ? options.width : 300,
 				_close: function(res) {
 					_deferred.resolve(res);
 					scope._dialog.close();

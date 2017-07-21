@@ -1,10 +1,10 @@
 md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
-	div(layout='row')
+	div(layout='row' layout-fill)
 		md-toolbar-filler(layout layout-align='center center' ng-class='order.budget.order_code ? "edit" : "new"')
 			md-icon(md-font-set='material-icons' ng-if='order.budget.order_code') description
 			md-icon(md-font-set='material-icons' ng-if='!order.budget.order_code') note_add
 
-		div
+		div(flex)
 			md-menu-bar.order-menu-bar
 				md-menu
 					button(ng-click='$mdMenu.open()') Arquivo
@@ -41,7 +41,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								|  Enviar por email
 						md-menu-divider
 						md-menu-item
-							md-button(ng-click='')
+							md-button(ng-click='open()')
 								md-icon(md-font-icon='fa fa-remove')
 								|  Cancelar
 				md-menu
@@ -104,7 +104,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 							md-button(ng-click='toast("Aviso!", "Em breve.")')
 								| Sobre
 
-			.md-toolbar-tools
+			.md-toolbar-tools(flex)
 				//- h1(ng-if='order.budget.order_code') 
 					| {{order.budget.order_code}} ({{order.budget.order_date | date:'short'}})
 					span.md-subhead.text-warning &nbsp;[{{order.budget.order_company.company_code}} {{order.budget.order_company.company_name}}]
@@ -128,6 +128,10 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 						| Salvar orçamento &nbsp;
 						span.md-alt-text ({{ 'M-S' | keyboardShortcut }})
 					md-icon(md-font-icon='fa fa-floppy-o' style='color: steelblue')
+
+				md-button.toolbar-btn.pull-right(ng-click='open()')
+					md-tooltip(md-direction='bottom') Cancelar
+					md-icon(md-font-icon='fa fa-remove' style='color: red')
 
 				.separator
 
@@ -166,6 +170,8 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 				md-button.toolbar-btn(ng-click='' disabled)
 					md-tooltip(md-direction='bottom') Aplicar desconto geral
 					md-icon(md-font-set='material-icons' style='color: tan') monetization_on
+				
+				span(flex)
 
 
 md-content#order(flex layout-padding style='background-color: #d9d9d9')
@@ -195,7 +201,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-1' | keyboardShortcut }})
 								span.md-subhead Adicione ou remova produtos
 							div(layout='row' layout-align='end center' layout-fill)
-								md-button.md-raised.text-primary(ng-click='order.showModalPRoduct()')
+								//- md-button.md-raised.text-primary(ng-click='order.showModalProduct()')
 									i.fa.fa-search &nbsp; 
 									| Localizar
 
@@ -205,15 +211,15 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 				md-card-content
 					div(layout='row')
 						md-input-container(flex='25')
-							label Código ( F1 para localizar )
+							label Código ( F2 para localizar )
 							input(name='product-code' ng-value='order.internal.tempItem.product.product_code'
 									blur-to='order.internal.tempItem.product.product_code' 
 									keys-shortcuts prevent-default shift-enter='null'
-									f1='order.showModalProduct()' enter='order.getProductByCode($event.target.value)')
+									f2='order.showModalProduct()' enter='order.getProductByCode($event.target.value)')
 						
 						md-autocomplete(flex
 										keys-shortcuts prevent-default 
-										f1='order.showModalProduct()' 
+										f2='order.showModalProduct()' 
 										enter='order.focusOn("input[name=\'amount\']")'
 										md-input-name='autocompleteProduct'
 										md-no-cache='true'
@@ -226,7 +232,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										md-item-text='item.product_name'
 										md-min-length='3'
 										md-require-match='true'
-										md-floating-label='Código ou descrição ( F1 para localizar )'
+										md-floating-label='Código ou descrição ( F2 para localizar )'
 										ng-blur='order.internal.blurItem()')
 							md-item-template
 								div(md-highlight-text='customerQuery' style='line-height: 2') {{item.product_name}}
@@ -350,7 +356,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-2' | keyboardShortcut }})
 								span.md-subhead Informe o vendedor
 							div(layout='row' layout-align='end center' layout-fill)
-								md-button.md-raised.text-primary(ng-click='order.showModalSeller()')
+								//- md-button.md-raised.text-primary(ng-click='order.showModalSeller()')
 									i.fa.fa-search &nbsp; 
 									| Localizar
 
@@ -360,13 +366,13 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 				md-card-content
 					div(layout-gt-xs='row')
 						md-input-container(flex='25')
-							label Código ( F1 para localizar )
+							label Código ( F2 para localizar )
 							input(name='seller-code'
 									ng-value='order.budget.order_seller.person_code' 
 									blur-to='order.budget.order_seller.person_code'
 									keys-shortcuts prevent-default
 									shift-enter='null'
-									f1='order.showModalSeller()'
+									f2='order.showModalSeller()'
 									enter='order.getSellerByCode($event.target.value)')
 						md-autocomplete(flex='85' 
 										md-input-name='autocompleteSeller'
@@ -380,7 +386,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										md-item-text='item.person_name'
 										md-min-length='3'
 										md-require-match='true'
-										md-floating-label='Nome ( F1 para localizar )'
+										md-floating-label='Nome ( F2 para localizar )'
 										ng-blur='order.internal.blurSeller()')
 							md-item-template
 								div(md-highlight-text='sellerQuery' style='line-height: 2') {{item.person_name}}
@@ -404,12 +410,13 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-3' | keyboardShortcut }})
 								span.md-subhead Informe o cliente e seu endereço de entrega
 							div(layout='row' layout-align='end center' layout-fill)
-								md-button.md-raised.text-primary(ng-click='order.showModalCustomer()')
+								//- md-button.md-raised.text-primary(ng-click='order.showModalCustomer()')
 									i.fa.fa-search &nbsp; 
 									| Localizar
 
 								md-button.md-raised.text-primary(ng-click='order.newCustomer()')
-									| &nbsp; Cadastrar &nbsp;
+									i.fa.fa-user-plus &nbsp;
+									| Cadastrar
 
 								md-button.md-raised(ng-click='order.clearCustomer()' md-colors='{background: "commercialRed"}')
 									i.fa.fa-remove &nbsp; 
@@ -418,17 +425,17 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 				md-card-content
 					div(layout-gt-xs='row' layout-wrap)
 						md-input-container(flex='25')
-							label Código ( F1 para localizar )
+							label Código ( F2 para localizar )
 							input(name='customer-code'
 									ng-value='order.budget.order_client.person_code' 
 									blur-to='order.budget.order_client.person_code'
 									keys-shortcuts prevent-default 
-									shift-enter='null' f1='order.showModalCustomer()'
+									shift-enter='null' f2='order.showModalCustomer()'
 									enter='order.getCustomerByCode($event.target.value)')
 						md-autocomplete(flex='75'
 										keys-shortcuts 
 										prevent-default 
-										f1='order.showModalCustomer()'
+										f2='order.showModalCustomer()'
 										md-input-name='autocompleteCustomer'
 										md-no-cache='true'
 										md-autoselect='true'
@@ -440,7 +447,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										md-item-text='item.person_name'
 										md-min-length='3'
 										md-require-match='true'
-										md-floating-label='Nome ( F1 para localizar )'
+										md-floating-label='Nome ( F2 para localizar )'
 										ng-blur='order.internal.blurCustomer()')
 							md-item-template
 								div(md-highlight-text='customerQuery' style='line-height: 2') {{item.person_name}}
@@ -485,8 +492,8 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 											| Código: {{order.budget.order_address_delivery_code}}
 										span {{order.budget.address_delivery.toString()}}
 
-									md-button.md-icon-button.md-raised(ng-click='teste()' ng-if='order.budget.order_client_id')
-										md-icon.text-primary(md-font-icon='fa fa-pencil' style='font-size: 20px')
+									md-button.md-icon-button.md-raised(ng-click='teste()' ng-if='order.budget.order_client_id' md-colors='{background: "commercialOrange"}')
+										md-icon.text-white(md-font-icon='fa fa-pencil' style='font-size: 20px')
 
 					pre(ng-if='debug')
 						| {{order.budget.order_client | json}}
@@ -668,7 +675,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 			md-card(layout-align='center')
 				md-card-content.offset-top-5
 					.offset-top-5(layout='row')
-						md-button.md-raised.md-primary(flex='25' ng-click='' md-colors='{background: "commercialRed"}')
+						md-button.md-raised.md-primary(flex='25' ng-click='open()' md-colors='{background: "commercialRed"}')
 							i.fa.fa-remove &nbsp;
 							| Cancelar
 						

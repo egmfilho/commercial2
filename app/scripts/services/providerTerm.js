@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-28 12:27:57
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-18 17:02:08
+* @Last Modified time: 2017-07-21 16:21:49
 */
 
 (function() {
@@ -24,6 +24,7 @@
 				});
 
 				return {
+					getById: getById,
 					getByCode: getByCode,
 					getByDescription: getByDescription,
 					getAll:    getAll
@@ -32,6 +33,15 @@
 				// ******************************
 				// Methods declaration
 				// ******************************
+
+				function getById(id, options) {
+					return provider.get({
+						action: 'get'
+					}, {
+						term_id: id,
+						get_term_modality: options && options.getModality
+					}).$promise;
+				}
 
 				function getByCode(code, options) {
 					return provider.get({

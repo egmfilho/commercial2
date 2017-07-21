@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-13 12:15:11
+* @Last Modified time: 2017-07-21 15:24:16
 */
 
 (function() {
@@ -115,7 +115,7 @@
 			}
 
 			function setVlDiscount(value) {
-				if (!value) return;
+				if (value == null) return;
 
 				value = Math.max(parseFloat(value), 0);
 				this.order_item_vl_discount = value;

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-20 13:45:05
+* @Last Modified time: 2017-07-21 16:50:02
 */
 
 (function() {
@@ -229,6 +229,18 @@
 						return a.person_address_code == self.budget.order_address_delivery_code;
 					}));
 
+					if (self.budget.order_term_id) {
+						$rootScope.loading.load();
+						providerTerm.getById(self.budget.order_term_id, { getModality: true }).then(function(success) {
+							self.internal.term.tempTerm = new Term(success.data);
+							self.internal.term.backup = self.internal.term.tempTerm;
+							$rootScope.loading.unload();
+						}, function(error) {
+							constants.debug && console.log(error);
+							$rootScope.loading.unload();
+						});
+					}
+
 					constants.debug && console.log('orcamento carregado', self.budget);
 					$rootScope.loading.unload();
 				}, function(error) {
@@ -409,6 +421,7 @@
 					selectedTabIndex: 0
 				},
 				term: {
+					backup: null,
 					tempTerm: new Term(),
 					queryTerm: '',
 					queryResult: new Array(),
@@ -418,6 +431,12 @@
 					clear: function() {
 						self.internal.term.tempTerm = new Term();
 						self.internal.term.queryTerm = '';
+						self.internal.term.backup = null;
+					},
+					restoreBackup: function() {
+						if (self.internal.term.backup) {
+							self.internal.term.tempTerm = self.internal.term.backup;
+						}
 					}
 				}
 
@@ -923,7 +942,7 @@
 
 			if (self.internal.tempItemAlDiscount == self.internal.tempItem.order_item_al_discount && 
 				self.internal.tempItemVlDiscount == self.internal.tempItem.order_item_vl_discount) {
-				self.focusOn("button[name=\'btn-add-item\']");
+				self.addItem();
 				return;
 			}
 
@@ -941,7 +960,7 @@
 							product_name: self.internal.tempItem.product.product_name,
 						});
 						setVl(value);
-						self.focusOn("button[name=\'btn-add-item\']");
+						self.addItem();
 					}
 				}, function(error) {
 					setVl(self.internal.tempItem.order_item_vl_discount);
@@ -949,7 +968,7 @@
 				});
 			} else {
 				setVl(value);
-				self.focusOn("button[name=\'btn-add-item\']");
+				self.addItem();
 			}
 		}
 
@@ -1277,7 +1296,7 @@
 			providerTerm.getByCode(code, options).then(function(success) {
 				self.internal.term.tempTerm = new Term(success.data);
 				// self.internal.term.queryResult = [ new Term(success.data) ];
-				self.internal.term.queryTerm = self.internal.term.tempTerm.term_description;
+				// self.internal.term.queryTerm = self.internal.term.tempTerm.term_description;
 				$rootScope.loading.unload();
 				self.selectTerm();
 			}, function(error) {
@@ -1299,9 +1318,13 @@
 
 			$rootScope.customDialog().showTemplate('Selecionar modalidade', './partials/modalTerm.html', controller)
 				.then(function(success) {
+					self.internal.term.backup = new Term(self.internal.term.tempTerm);
 					self.addModality(success);
-					self.internal.term.clear();
-				}, function(error) { });
+					self.budget.order_term_id = self.internal.term.tempTerm.term_id;
+					self.internal.term.queryTerm = '';
+				}, function(error) { 
+					self.internal.term.restoreBackup();
+				});
 		}
 
 		/**
@@ -1380,16 +1403,20 @@
 		 * um pagamento para ser adicionado ao orcamento.
 		 */
 		function addPayment() {
-			// if (self.budget.term_id) {
+			if (self.budget.term_id) {
 			// 	$rootScope.customDialog().showConfirm('Aviso', 'Para adicionar um pagamento o prazo deve ser removido do orçamento. Deseja remover o prazo?')
 			// 		.then(function(success) {
-						self.budget.term_id = null;
+			//			self.budget.term_id = null;
+			//			self.internal.term.clear();
 			//			self.addPayment();
 			// 		}, function(error) { });
 			// 	return;
-			// }
+			}
 
 			self.paymentDialog('Adicionar parcela').then(function(success) {
+				self.budget.term_id = null;
+				self.internal.term.clear();
+
 				var payment = new OrderPayment(success);
 
 				/* Se for selecionado como parcela inicial verifica se existe algum pagamento com data anterior. */
@@ -1421,14 +1448,15 @@
 		 * @param {object} payment - O pagamento a ser editado.
 		 */
 		function editPayment(payment) {
-			// if (self.budget.term_id) {
+			if (self.budget.term_id) {
 			// 	$rootScope.customDialog().showConfirm('Aviso', 'Para editar um pagamento o prazo deve ser removido do orçamento. Deseja remover o prazo?')
 			// 		.then(function(success) {
-						self.budget.term_id = null;
+			//			self.budget.term_id = null;
+			//			self.internal.term.clear();
 			//			self.editPayment(payment);
 			// 		}, function(error) { });
 			// 	return;
-			// }
+			}
 
 			if (payment.order_payment_credit == 'Y') {
 				self.addCredit();
@@ -1448,6 +1476,9 @@
 				/* coloca no pagamento e manda pro modal */
 				temp.modality = new PaymentModality(success.data);
 				self.paymentDialog('Editar parcela', temp).then(function(success) {
+					self.budget.term_id = null;
+					self.internal.term.clear();
+
 					var index = self.budget.order_payments.indexOf(payment),
 						newPayment = new OrderPayment(success);
 
@@ -1484,20 +1515,24 @@
 		 * @param {string} id - O pagamento a ser removido.
 		 */
 		function removePayment(payment) {
-			// if (self.budget.term_id) {
+			if (self.budget.term_id) {
 			// 	$rootScope.customDialog().showConfirm('Aviso', 'Para remover um pagamento o prazo deve ser removido do orçamento. Deseja remover o prazo?')
 			// 		.then(function(success) {
-						self.budget.term_id = null;
+			//			self.budget.term_id = null;
+			//			self.internal.term.clear();
 			//			self.removePayment(payment);
 			// 		}, function(error) { });
 			// 	return;
-			// }
+			}
 
 			var msg = 'Deseja remover o pagamento: <b>[';
 			msg += payment.order_payment_installment + 'x] ';
 			msg += payment.modality.modality_description + '</b>';
 
 			$rootScope.customDialog().showConfirm('Aviso', msg).then(function(success) {
+				self.budget.term_id = null;
+				self.internal.term.clear();
+
 				var index = self.budget.order_payments.indexOf(payment);
 				
 				if (payment.order_payment_credit == 'Y')
@@ -1597,6 +1632,7 @@
 
 						$rootScope.loading.load();
 						providerModality.getById(id, options).then(function(success) {
+							scope.queryModality = '';
 							scope.payment.setModality(new PaymentModality(success.data));
 							scope.payment.order_payment_deadline = moment().add(scope.payment.modality.modality_item[0].modality_item_delay, 'days').toDate();
 							
@@ -1619,12 +1655,14 @@
 					};
 
 					/* Banco */
+					this.queryBank = '';
 					this.queryBankResult = _banks;
 					this.tempBank = new Bank();
 
 					this.getBankById = function(id) {
 						$rootScope.loading.load();
 						providerBank.getById(id, { getAgencies: true }).then(function(success) {
+							scope.queryBank = '';
 							scope.tempBank = new Bank(success.data);
 							scope.payment.order_payment_agency_id = null;
 							$rootScope.loading.unload();
