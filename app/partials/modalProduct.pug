@@ -1,6 +1,6 @@
-.body(layout='column')
+.body(flex='100' layout='column' layout-fill)
 	
-	div(layout="row" flex="100")
+	div(layout="row")
 		md-input-container(flex="80")
 			label Nome ou Classificação
 			input#focus(ng-model="ctrl.filter.name" keys-shortcuts enter="ctrl.search()")
@@ -12,7 +12,7 @@
 		md-button.md-primary.md-raised(ng-click='ctrl.search()' flex="15" style="margin-right:0;")
 			| Buscar
 
-	div(layout='column' style='margin-top: 20px')
+	div(flex layout='column' style='margin-top: 20px')
 		.product-table-header-container
 			table.product-table.table
 				thead
@@ -32,7 +32,7 @@
 						th(ng-click="ctrl.sortBy('stock.product_stock')")
 							| ESTOQUE &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'stock.product_stock'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
-		.container-table
+		.container-table(flex)
 			table.product-table.table
 				tbody
 					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-dblclick='ctrl.get(p)' ng-class="{'inactive':p.product_active=='N'}")

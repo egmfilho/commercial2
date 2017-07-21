@@ -11,17 +11,24 @@ md-content(layout='column' ng-controller='MainMenuCtrl as mainMenu')
 				| Último login: {{mainMenu.currentUser.user_last_session.user_session_date | date:'short'}}
 
 	.modules(layout='row' layout-wrap)
-		.module(flex='50' layout-align='center')
+		//- .module(flex='50' layout-align='center')
 			md-button(ng-click='ctrl._goTo("/")')
 				.home-module
 					md-icon(md-font-set='material-icons') home
 				p Início
 
 		.module(flex='50' layout-align='center')
-			md-button(ng-click='ctrl._goTo("/open-order")')
+			md-button(ng-click='ctrl._goTo("/order/new")')
 				.order-module
+					md-icon(md-font-set='material-icons') note_add
+				p Novo
+
+		.module(flex='50' layout-align='center')
+			md-button(ng-click='ctrl._goTo("/")')
+				.home-module
 					md-icon(md-font-set='material-icons') description
-				p Orçamento
+				p Abrir
+
 	.modules(layout='row' layout-wrap)
 		.module(flex='50' layout-align='center')
 			md-button(ng-click='ctrl._goTo()')

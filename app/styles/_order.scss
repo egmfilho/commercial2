@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-21 11:48:36
+* @Last Modified time: 2017-07-21 12:05:34
 */
 
 .customer-credit-modal {
@@ -71,13 +71,15 @@
 
 		&:disabled {
 			md-icon {
-				opacity: .4;
+				opacity: .1;
 			}
 		}
 	}
 
 	.separator {
-		margin: 0 15px;
+		margin: 0 10px;
+		border: 1px solid rgba(#000, .2);
+		height: 30px;
 	}
 
 	> div {

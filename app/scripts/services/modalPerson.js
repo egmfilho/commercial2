@@ -61,7 +61,7 @@
 					var modalOptions = {
 						zIndex:20,
 						hasBackdrop: true,
-						width: 900
+						fullscreen: true
 					};
 
 					return $rootScope.customDialog().showTemplate(title, './partials/modalPerson.html', controller, modalOptions);

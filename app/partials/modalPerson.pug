@@ -1,6 +1,6 @@
-.body(layout='column')
+.body(name='modal-person-body' flex='100' layout='column' layout-fill)
 	
-	div(layout="row" flex="100" layout-fill)
+	div(layout="row")
 		md-input-container(flex="55")
 			label Nome
 			input(ng-model="ctrl.filter.name" keys-shortcuts enter="ctrl.search()")
@@ -16,7 +16,7 @@
 		md-button.md-primary.md-raised(ng-click='ctrl.search()' flex="15" style="margin-right:0;")
 			| Buscar
 
-	div(layout='column' style='margin-top: 20px')
+	div(flex layout='column' style='margin-top: 20px')
 		.person-table-header-container
 			table.person-table.table
 				thead
@@ -33,7 +33,7 @@
 						th(ng-click="ctrl.sortBy('person_doc')")
 							| CNPJ/CPF &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'person_doc'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
-		.container-table
+		.container-table(flex)
 			table.person-table.table
 				tbody
 					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-dblclick='ctrl.get(p)' ng-class="{'inactive':p.person_active=='N'}")

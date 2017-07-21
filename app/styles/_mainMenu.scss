@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-01 16:48:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-02 09:28:24
+* @Last Modified time: 2017-07-21 14:08:15
 */
 
 .main-menu {
@@ -56,19 +56,19 @@
 
 					&.order-module {
 						md-icon {
-							background: $secondary-color;
+							background: #4caf50;
 						}
 					}
 
 					&.home-module {
 						md-icon {
-							background: #00BCD4;
+							background: #f99f57;
 						}
 					}
 
 					&.settings-module {
 						md-icon {
-							background: #009688;
+							background: deepskyblue;
 						}
 					}
 

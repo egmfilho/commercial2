@@ -11,7 +11,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					md-menu-content
 						md-menu-item
 							md-button(ng-click='newOrder()')
-								md-icon(md-font-set='material-icons') note_add
+								md-icon(md-font-icon='fa fa-file-o')
 								|  Novo
 								span.md-alt-text {{ 'M-N' | keyboardShortcut }}
 						md-menu-item
@@ -47,12 +47,16 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 				md-menu
 					button(ng-click='$mdMenu.open()') Orçamento
 					md-menu-content
-						md-menu-item
+						//- md-menu-item
 							md-button(ng-click='order.selectCompany()' ng-disabled='!order.canChangeCompany()')
 								md-icon(md-font-set='material-icons') business
 								| Informar empresa
 								span.md-alt-text {{ 'M-E' | keyboardShortcut }}
-						md-menu-divider
+						//- md-menu-divider
+						md-menu-item
+							md-button(ng-click='order.showModalProduct()')
+								md-icon(md-font-set='material-icons') shopping_cart
+								| Localizar produto
 						md-menu-item
 							md-button(ng-click='order.showModalSeller()')
 								md-icon(md-font-icon='fa fa-id-badge')
@@ -108,46 +112,60 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					| Novo Orçamento
 					span.md-subhead.text-success &nbsp;[{{order.budget.order_company.company_code}} {{order.budget.order_company.company_name}}]
 				md-button.toolbar-btn(ng-click='newOrder()')
-					md-tooltip(md-direction='bottom') Novo orçamento
-					md-icon(md-font-set='material-icons') note_add
+					md-tooltip(md-direction='bottom') 
+						| Novo orçamento &nbsp;
+						span.md-alt-text ({{ 'M-N' | keyboardShortcut }})
+					md-icon(md-font-icon='fa fa-file-o')
 
 				md-button.toolbar-btn(ng-click='open()')
-					md-tooltip(md-direction='bottom') Abrir orçamento
-					md-icon(md-font-icon='fa fa-folder-open-o')
+					md-tooltip(md-direction='bottom') 
+						| Abrir orçamento &nbsp;
+						span.md-alt-text ({{ 'M-A' | keyboardShortcut }})
+					md-icon(md-font-icon='fa fa-folder-open-o' style='color: orange')
 
 				md-button.toolbar-btn(ng-click='save()' ng-disabled='!order.canSave()')
-					md-tooltip(md-direction='bottom') Salvar orçamento
-					md-icon(md-font-icon='fa fa-floppy-o')
-
-				md-button.toolbar-btn(ng-click='order.print()' ng-disabled='!order.canPrint()')
-					md-tooltip(md-direction='bottom') Imprimir orçamento
-					md-icon(md-font-set='material-icons') print
-
-				md-button.toolbar-btn(ng-click='order.savePDF()' ng-disabled='!order.canPrint()')
-					md-tooltip(md-direction='bottom') Salvar como PDF
-					md-icon(md-font-icon='fa fa-file-pdf-o')
-
-				md-button.toolbar-btn(ng-click='' disabled)
-					md-tooltip(md-direction='bottom') Enviar por email
-					md-icon(md-font-set='material-icons') mail
+					md-tooltip(md-direction='bottom') 
+						| Salvar orçamento &nbsp;
+						span.md-alt-text ({{ 'M-S' | keyboardShortcut }})
+					md-icon(md-font-icon='fa fa-floppy-o' style='color: steelblue')
 
 				.separator
 
+				md-button.toolbar-btn(ng-click='order.print()' ng-disabled='!order.canPrint()')
+					md-tooltip(md-direction='bottom') 
+						| Imprimir orçamento &nbsp;
+						span.md-alt-text ({{ 'M-P' | keyboardShortcut }})
+					md-icon(md-font-set='material-icons' style='color: deepskyblue') print
+
+				md-button.toolbar-btn(ng-click='order.savePDF()' ng-disabled='!order.canPrint()')
+					md-tooltip(md-direction='bottom') Salvar como PDF
+					md-icon(md-font-icon='fa fa-file-pdf-o' style='color: red')
+
+				md-button.toolbar-btn(ng-click='' disabled)
+					md-tooltip(md-direction='bottom') Enviar por email
+					md-icon(md-font-set='material-icons' style='color: lightblue') mail
+
+				.separator
+
+				md-button.toolbar-btn(ng-click='order.showModalProduct()')
+					md-tooltip(md-direction='bottom') Localizar produto
+					md-icon(md-font-set='material-icons' style='color: chocolate') shopping_cart
+
 				md-button.toolbar-btn(ng-click='order.showModalSeller()')
 					md-tooltip(md-direction='bottom') Localizar vendedor
-					md-icon(md-font-icon='fa fa-id-badge')
+					md-icon(md-font-icon='fa fa-id-badge' style='color: lightseagreen')
 
 				md-button.toolbar-btn(ng-click='order.showModalCustomer()')
 					md-tooltip(md-direction='bottom') Localizar cliente
-					md-icon(md-font-icon='fa fa-user')
+					md-icon(md-font-icon='fa fa-user' style='color: darkseagreen')
 
 				md-button.toolbar-btn(ng-click='' disabled)
 					md-tooltip(md-direction='bottom') Informações do cliente
-					md-icon(md-font-icon='fa fa-id-card-o')
+					md-icon(md-font-icon='fa fa-id-card-o' style='color: tomato')
 
 				md-button.toolbar-btn(ng-click='' disabled)
 					md-tooltip(md-direction='bottom') Aplicar desconto geral
-					md-icon(md-font-set='material-icons') monetization_on
+					md-icon(md-font-set='material-icons' style='color: tan') monetization_on
 
 
 md-content#order(flex layout-padding style='background-color: #d9d9d9')
@@ -592,7 +610,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							.well.credit(layout='row' layout-align='center center')
 								span(flex)
 									b.text-light Carta de crédito:&nbsp;
-									| {{order.budget.creditPayment.order_payment_value_total | currency:"R$ "}}
+									| {{order.budget.creditPayment.order_payment_credit_available || '0' | currency:"R$ "}}
 
 								md-button.md-primary.md-raised(style='margin: 0;' ng-click='order.addCredit()' 
 										ng-disabled='!order.budget.order_client.person_credit.length || !order.budget.order_items.length')

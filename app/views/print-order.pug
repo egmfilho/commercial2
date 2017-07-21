@@ -63,9 +63,6 @@ md-content.print-order(layout-fill ng-if='print.order.order_code')
 					b {{contact.person_address_contact_label}}: 
 					| {{contact.person_address_contact_value}}
 
-	.message
-		p {{globals('print-message')[print.order.order_company_id].order_message}}
-
 	table.products
 		thead
 			tr
@@ -87,12 +84,16 @@ md-content.print-order(layout-fill ng-if='print.order.order_code')
 				td {{(i.order_item_value_total / i.order_item_amount) | currency:'R$ '}}
 				td {{i.order_item_value_total | currency:'R$ '}}
 
-	table.payments
-		thead
-			tr
-				th(colspan='3') PAGAMENTO
-		tbody
-			tr(ng-repeat='i in print.order.order_payments' layout='row')
-				td {{i.modality.modality_description}}
-				td {{i.order_payment_value | currency:'R$ '}}
-				td {{i.order_payment_installment}}x
+	div(layout='row' layout-align='end center')
+		table.payments
+			thead
+				tr
+					th(colspan='3') PAGAMENTO
+			tbody
+				tr(ng-repeat='i in print.order.order_payments' layout='row')
+					td {{i.modality.modality_description}}
+					td {{i.order_payment_value | currency:'R$ '}}
+					td {{i.order_payment_installment}}x
+
+	.message
+		p {{globals('print-message')[print.order.order_company_id].order_message}}

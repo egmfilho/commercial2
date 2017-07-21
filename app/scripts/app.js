@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-19 16:52:49
+* @Last Modified time: 2017-07-21 14:09:37
 */
 'use strict';
 
@@ -183,12 +183,12 @@ angular.module('commercial2', [
 				controller: 'LogoutCtrl',
 				controllerAs: 'logout'
 			})
-			.when('/', {
-				module: 'home',
-				templateUrl: 'views/home.html',
-				controller: 'HomeCtrl',
-				controllerAs: 'home'
-			})
+			// .when('/', {
+			// 	module: 'home',
+			// 	templateUrl: 'views/home.html',
+			// 	controller: 'HomeCtrl',
+			// 	controllerAs: 'home'
+			// })
 			.when('/order/:action', {
 				module: 'order',
 				templateUrl: 'views/order.html',
@@ -213,7 +213,7 @@ angular.module('commercial2', [
 				controllerAs: 'about'
 			})
 			.otherwise({
-				redirectTo: '/'
+				redirectTo: '/open-order'
 			});
 
 	}])

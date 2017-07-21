@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-20 09:37:39
+* @Last Modified time: 2017-07-21 12:55:32
 */
 
 (function() {
@@ -53,7 +53,8 @@
 				trapFocus: true,
 				clickOutsideToClose: false,
 				escapeToClose: false,
-				zIndex: 2000
+				zIndex: 2000,
+				width: 300
 			});
 		}
 
@@ -71,7 +72,7 @@
 				this._negativeButtonText = 'Fechar';
 			}
 
-			return show(this, title, message, null, controller, options);
+			return show(this, title, message, null, controller, angular.extend({ }, options, { width: 300 }));
 		}
 
 		/**
@@ -89,7 +90,7 @@
 				this._negativeButtonText = 'Não';
 			}
 
-			return show(this, title, message, null, controller, options);
+			return show(this, title, message, null, controller, angular.extend({ }, options, { width: 300 }));
 		}
 
 		/**
@@ -100,7 +101,7 @@
 		 * @returns {object} Uma promise com o resultado.
 		 */	
 		function showTemplate(title, templateUrl, controller, options) {
-			return show(this, title, null, templateUrl, controller, options);
+			return show(this, title, null, templateUrl, controller, angular.extend({ }, options, { width: 300 }));
 		}
 
 		/**
@@ -139,7 +140,7 @@
 
 			var _options = {
 				attatchTo: angular.element(document.body),
-				panelClass: 'custom-dialog',
+				panelClass: 'custom-dialog layout-column flex',
 				animation: _animation,
 				fullscreen: false,
 				hasBackdrop: false,

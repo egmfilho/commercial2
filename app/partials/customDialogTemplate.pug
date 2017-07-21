@@ -1,4 +1,4 @@
-div(role='dialog' layout='column' ng-style='{ "min-width": ctrl._width }')
+div(role='dialog' flex layout='column' ng-style='{ "min-width": ctrl._width }')
 	md-toolbar.title-bar
 		.md-toolbar-tools
 			h2 {{ctrl._title}}
@@ -6,7 +6,7 @@ div(role='dialog' layout='column' ng-style='{ "min-width": ctrl._width }')
 			md-button.md-icon-button(ng-if='ctrl._showCloseButton' tabindex='-1')
 				md-icon(md-font-icon='fa fa-times' ng-click='ctrl._cancel()')
 	
-	.body(flex ng-if='!ctrl._templateUrl' layout-fill)
+	.body(flex ng-if='!ctrl._templateUrl')
 		.dialog-content(layout='column')
 			div(layout='row' layout-align='start center')
 				md-progress-circular(md-mode='indeterminate' md-diameter='30px' ng-if='ctrl._showProgress')
@@ -21,4 +21,4 @@ div(role='dialog' layout='column' ng-style='{ "min-width": ctrl._width }')
 		md-button.md-primary(name='negative' md-autofocus ng-click='ctrl._cancel()' ng-if='ctrl._negativeButtonText') 
 			| &nbsp; {{ctrl._negativeButtonText}} &nbsp;
 	
-	div(layout='column' ng-if='ctrl._templateUrl' ng-include='ctrl._templateUrl')
+	div(name='custom-dialog-includer' flex layout='column' ng-if='ctrl._templateUrl' ng-include='ctrl._templateUrl' layout-fill)
