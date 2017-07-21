@@ -6,15 +6,15 @@
 
 			//- span(flex)
 
-			md-input-container(flex="40")
+			md-input-container.md-select(flex="40")
 				label Empresa
 				md-select(name='type' ng-model='openOrder.options.company_id' ng-model-options='{ trackBy: $value.company_id }')
 					md-option(ng-value='c.company_id' ng-repeat='c in openOrder.companies' ng-click='openOrder.options.company_id=c.company_id; openOrder.getOrders();') 
 						| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
 
 
-			div(flex='30' layout='row')
-				div(flex='25')
+			div.md-date(flex='15' layout='row' ng-class='{"md-date-on":openOrder.calendar.start.isCalendarOpen}')
+				div(flex='30')
 					md-button.md-icon-button.md-raised.md-primary(style='margin-left: 0' ng-click='openOrder.calendar.start.isCalendarOpen = true')
 						md-icon(md-font-icon='fa fa-calendar')
 
@@ -22,8 +22,8 @@
 					label Data inicial
 					md-datepicker(ng-model='openOrder.calendar.start.value' md-hide-icons='all' md-is-open='openOrder.calendar.start.isCalendarOpen' ng-change='openOrder.calendar.start.update()')
 
-			div(flex='30' layout='row')
-				div(flex='25')
+			div.md-date(flex='15' layout='row' ng-class='{"md-date-on":openOrder.calendar.end.isCalendarOpen}')
+				div(flex='30')
 					md-button.md-icon-button.md-raised.md-primary(style='margin-left: 0' ng-click='openOrder.calendar.end.isCalendarOpen = true')
 						md-icon(md-font-icon='fa fa-calendar')
 
@@ -36,8 +36,7 @@
 				button.clear-search-button(ng-click='openOrder.filter = ""' ng-show='openOrder.filter.length')
 					i.fa.fa-times-circle
 
-			span(flex)
-			md-button.md-raised(ng-click='openOrder.getOrders()' md-colors='{ background: "commercialBlue" }')
+			md-button.md-raised.filter(ng-click='openOrder.getOrders()' md-colors='{ background: "commercialBlue" }')
 				i.material-icons(style='font-size: 16px; vertical-align: text-top') note_add&nbsp;
 				| Atualizar
 

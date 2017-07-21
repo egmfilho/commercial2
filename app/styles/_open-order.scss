@@ -7,7 +7,47 @@
 
 .open-order-container-nav {
 	.md-toolbar-tools {
+		
 		background-color: $main-color-light;
+		height: 80px;
+		max-height: 80px;
+
+		.md-select{
+			height: 20px;
+			margin-right: 20px;
+		}
+
+		.md-text{
+			color: #FFF;
+		}
+
+		.md-date{
+			padding-top: 12px;
+
+			input{
+				width: 80px;
+				min-width: 80px;
+				color: #FFF;
+			}
+		}
+
+		.md-date-on{
+			input{
+				@extend .text-primary;
+			}
+		}
+
+		label{
+			color: #FFF !important;
+		}
+
+		.md-select-value{
+			font-size: 14px;
+		}
+
+		.filter{
+			min-width: 120px;
+		}
 
 		.search {
 			position: relative;

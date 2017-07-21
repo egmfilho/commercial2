@@ -3,12 +3,16 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('ModalPerson', [ '$rootScope', 'Globals', function($rootScope, Globals) {
+		.factory('ModalPerson', [ '$rootScope', '$timeout', 'Globals', function($rootScope, $timeout, Globals) {
 
 			return {
 				show: function( title, category, options ) {
 					
 					var controller;
+
+					$timeout(function(){
+						jQuery('#focus').focus();
+					},200);
 
 					controller = function(providerPerson, Person) {
 						var vm = this;
