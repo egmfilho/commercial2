@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 08:16:50
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 13:20:59
+* @Last Modified time: 2017-07-24 15:27:41
 */
 
 (function() {
@@ -48,19 +48,24 @@
 		*/
 		function createWindow(url, options) {
 
-			var win = new _BrowserWindow(angular.extend({ }, { 
-				devTools: constants.debug,
-				width: 1024, 
-				height: 768, 
-				show: false,
-				title: 'Orçamento',
-				parent: _electron.remote.getCurrentWindow(),
-				modal: false,
-				contextIsolation: false
-			}, options));
+			var parent = _electron.remote.getCurrentWindow(),
+				win = new _BrowserWindow(angular.extend({ }, { 
+					devTools: constants.debug,
+					width: 1024, 
+					height: 768, 
+					show: false,
+					title: 'Commercial 2',
+					parent: parent,
+					modal: false,
+					contextIsolation: false
+				}, options));
 
 			win.loadURL(url);
 			win.show();
+
+			win.on('close', function() {
+				parent.focus();
+			});
 
 			return win;
 		}

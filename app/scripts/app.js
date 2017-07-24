@@ -2,9 +2,74 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 08:16:41
+* @Last Modified time: 2017-07-24 18:08:51
 */
+
 'use strict';
+
+/* Ref: http://procbits.com/2012/01/19/comparing-two-javascript-objects */
+Object.defineProperty(Object.prototype, 'equals', {
+	enumerable: false,
+	configurable: true,
+	writable: true,
+	value: function(x) {
+		var p;
+
+		for (p in this) {
+			if (typeof(x[p]) == 'undefined' && typeof(this[p]) != 'undefined')
+				return false;
+		}
+
+		for (p in this) {
+			if (p != '$$hashkey') {
+				if (this[p]) {
+					switch (typeof(this[p])) {
+						case 'object':
+							if (Array.isArray(this[p])) {
+								if (this[p].length != x[p].length) {
+									return false;
+								}
+
+								for (var i = 0; i < this[p].length; i++) {
+									if (!this[p][i].equals(x[p][i])) {
+										return false;
+									}
+								}
+							} else {
+								if (!this[p].equals(x[p])) {
+									return false;
+								}
+							}
+
+							break;
+
+						case 'function':
+							// if (typeof(x[p]) == 'undefined' || (p != 'equals' && this[p].toString() != x[p].toString())) {
+							// 	return false;
+							// }
+							break;
+
+						default:
+							if (this[p] != x[p]) {
+								console.log(p, this[p], x);
+								return false;
+							}
+					}
+				} else {
+					if (x[p]) 
+						return false;
+				}
+			}
+		}
+
+		for (p in x) {
+			if (typeof(this[p]) == 'undefined' && typeof(x[p]) != 'undefined')
+				return false;
+		}
+
+		return true;
+	}
+});
 
 angular.module('commercial2.constants', [ ]);
 angular.module('commercial2.filters', [ ]);
@@ -244,7 +309,6 @@ angular.module('commercial2', [
 		$rootScope.clearCredentials = function() {
 			Globals.clear();
 		};
-
 	}])
 	.run(['$rootScope', '$mdToast', 'MainMenu', 'CustomDialog', 'Constants', function($rootScope, $mdToast, mainMenu, customDialog, constants) {
 

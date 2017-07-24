@@ -331,7 +331,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 						.container-table
 							table.table.products-table
 								tbody
-									tr(ng-repeat='i in order.budget.order_items' layout='row' ng-dblclick='order.editItem(i)')
+									tr(ng-repeat='i in order.budget.order_items track by $index' layout='row' ng-dblclick='order.editItem(i)')
 										td {{i.product.product_code}} - {{i.product.product_name}}
 										td {{i.product.unit.unit_initials}}
 										td {{i.order_item_amount}}

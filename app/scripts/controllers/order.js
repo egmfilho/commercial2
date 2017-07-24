@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 14:11:18
+* @Last Modified time: 2017-07-24 18:09:59
 */
 
 (function() {
@@ -88,7 +88,7 @@
 		ModalProduct,
 		ModalCustomerAddress) {
 
-		var self = this, _focusOn, _isToolbarLocked = false;
+		var self = this, _backup, _focusOn, _isToolbarLocked = false;
 
 		$scope.debug = constants.debug;
 		$scope.globals = Globals.get;
@@ -327,6 +327,7 @@
 						providerTerm.getById(self.budget.order_term_id, { getModality: true }).then(function(success) {
 							self.internal.term.tempTerm = new Term(success.data);
 							self.internal.term.backup = self.internal.term.tempTerm;
+							_backup = new Order(self.budget);
 							$rootScope.loading.unload();
 						}, function(error) {
 							constants.debug && console.log(error);
@@ -386,6 +387,13 @@
 		};
 
 		$scope.save = function() {
+			alert('Orcamento alterado? ' + !self.budget.equals(_backup));
+			return;
+			if (_backup.equals(self.budget)) {
+				$rootScope.customDialog().showMessage('Aviso', 'Nenhuma alteração!');
+				return;
+			}
+
 			if (!validateBudget()) {
 				return;
 			}
@@ -1104,6 +1112,8 @@
 				this.authorize = authorize;
 
 				function authorize(user, pass, callback) {
+					if (!user || !pass) return;
+
 					$rootScope.loading.load();
 					providerPermission.authorize('order', 'user_discount', user, pass).then(function(success) {
 						$rootScope.loading.unload();
@@ -1250,8 +1260,12 @@
 		function print() {
 			if (!self.canPrint()) return;
 
+			var options = {
+				zoomFactor: 0.8
+			};
+
 			if (constants.isElectron)
-				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + self.budget.order_code + '?action=print');
+				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + self.budget.order_code + '?action=print', options);
 			else
 				$location.path('/order/print/' + self.budget.order_code)
 		}
