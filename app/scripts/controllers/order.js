@@ -201,7 +201,8 @@
 
 				},function(error){
 					self.focusOn('input[name="customer-code"]');
-				});				
+				});
+				self.scrollTo('section[name="customer"]');		
 				return false;
 			}			
 
@@ -210,7 +211,7 @@
 
 				},function(error){
 					self.scrollTo('section[name="customer"]');
-					teste();
+					$scope.teste();
 				});
 				self.scrollTo('section[name="customer"]');			
 				return false;
@@ -652,6 +653,8 @@
 						$rootScope.loading.unload();
 					}, function(error) {
 						$rootScope.loading.unload();
+						console.log(error);
+						$rootScope.customDialog().showMessage('Aviso!',error.data.status.description);
 						newCustomer(res);
 					});
 				}, function(res) { });
