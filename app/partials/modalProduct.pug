@@ -47,7 +47,7 @@
 			md-toolbar
 				.md-toolbar-tools(layout='row')
 					i.fa.fa-2x.fa-cubes &nbsp;
-					p(flex) {{ctrl.result.length > 0 ? ctrl.result.length : 'Nenhum' }} Produto{{ctrl.result.length > 1 ? 's' : '' }} Localizado
+					p(flex) {{ctrl.result.length > 0 ? ctrl.result.length : 'Nenhum' }} Produto{{ctrl.result.length > 1 ? 's' : '' }} Localizado{{ctrl.result.length > 1 ? 's' : '' }}
 					.legend.pull-right
 						i.fa.fa-stop
 						| Inativo

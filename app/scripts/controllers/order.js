@@ -170,8 +170,48 @@
 				return false;
 			}
 
-			if (!self.budget.order_company_id || !self.budget.order_client_id || !self.budget.order_seller_id || !self.budget.order_items.length || !self.budget.order_address_delivery_code) {
-				$rootScope.customDialog().showMessage('Erro!', 'Preencha todos os campos corretamente!');
+			if (!self.budget.order_company_id) {
+				$rootScope.customDialog().showMessage('Erro!', 'A empresa do orçamento deverá ser informada!');
+				return false;
+			}
+
+			if (!self.budget.order_items.length) {
+				$rootScope.customDialog().showMessage('Erro!', 'O orçamento deverá conter ao menos um produto!').then(function(success){
+
+				},function(error){					
+					self.focusOn('input[name="product-code"]');
+				});
+				self.scrollTo('section[name="products"]');		
+				return false;
+			}
+
+			if (!self.budget.order_seller_id) {
+				$rootScope.customDialog().showMessage('Erro!', 'O vendedor deverá ser informado!').then(function(success){
+
+				},function(error){
+					self.focusOn('input[name="seller-code"]');
+				});
+				self.scrollTo('section[name="seller"]');		
+				return false;
+			}
+
+			if (!self.budget.order_client_id) {
+				$rootScope.customDialog().showMessage('Erro!', 'O cliente deverá ser informado!').then(function(success){
+
+				},function(error){
+					self.focusOn('input[name="customer-code"]');
+				});				
+				return false;
+			}			
+
+			if (!self.budget.order_address_delivery_code) {
+				$rootScope.customDialog().showMessage('Erro!', 'Informe o endereço de entrega do pedido!').then(function(success){
+
+				},function(error){
+					self.scrollTo('section[name="customer"]');
+					teste();
+				});
+				self.scrollTo('section[name="customer"]');			
 				return false;
 			}
 
@@ -2088,7 +2128,7 @@
 
 			/* Ir para cliente */
 			Mousetrap.bind(['command+3', 'ctrl+3'], function() {
-				self.scrollTo("section[name=\'customer\']")
+				self.scrollTo('section[name="customer"]')
 				self.focusOn('input[name="customer-code"]');
 				return false;
 			});
@@ -2127,6 +2167,7 @@
 		function showModalSeller() {
 			var category = Globals.get('person-categories').seller,
 				options = {
+					module: 'Representante',
 					limit: 100
 				};
 
