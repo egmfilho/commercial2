@@ -8,26 +8,29 @@
 .open-order-container-nav {
 	.md-toolbar-tools {
 		
-		background-color: $main-color-light;
+		background-color: rgb(250,250,250);//lightgray;//$main-color-light;
 		height: 80px;
 		max-height: 80px;
 
 		.md-select{
 			height: 20px;
-			margin-right: 20px;
+			margin-right: 20px;			
 		}
 
 		.md-text{
-			color: #FFF;
+			//color: #FFF;
+			@extend .text-primary;
 		}
 
 		.md-date{
 			padding-top: 12px;
+			cursor: pointer;
 
 			input{
 				width: 80px;
 				min-width: 80px;
-				color: #FFF;
+				@extend .text-primary;
+				//color: #FFF;
 			}
 		}
 
@@ -38,7 +41,8 @@
 		}
 
 		label{
-			color: #FFF !important;
+			//color: #FFF !important;
+			@extend .text-primary;
 		}
 
 		.md-select-value{
@@ -56,11 +60,13 @@
 				width: 100%;
 				border: none;
 				border-radius: 3px;
-				background-color: rgba(#000, .15);
+				background-color: rgb(238,238,238);//rgba(#000, .15);
+
 				padding: 10px;
 				padding-right: 35px;
 				font-size: 15px;
-				color: white;
+				//color: white;
+				@extend .text-primary;
 
 				&::-webkit-input-placeholder {
 					color: #ccc;

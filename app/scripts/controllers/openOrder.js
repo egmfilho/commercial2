@@ -36,6 +36,7 @@
 			self.calendar.start = {
 				isCalendarOpen: false,
 				value: moment().toDate(),
+				maxDate: moment().toDate(),
 				update: function(){
 					self.calendar.end.value = moment(self.calendar.start.value).toDate();
 					self.options.start_date = self.calendar.start.value;

@@ -13,22 +13,22 @@
 						| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
 
 
-			div.md-date(flex='15' layout='row' ng-class='{"md-date-on":openOrder.calendar.start.isCalendarOpen}')
-				div(flex='30')
-					md-button.md-icon-button.md-raised.md-primary(style='margin-left: 0' ng-click='openOrder.calendar.start.isCalendarOpen = true')
-						md-icon(md-font-icon='fa fa-calendar')
+			div.md-date(flex='10' ng-class='{"md-date-on":openOrder.calendar.start.isCalendarOpen}')
+				//- div(flex='30')
+				//- 	md-button.md-icon-button.md-raised.md-primary(style='margin-left: 0' ng-click='openOrder.calendar.start.isCalendarOpen = true')
+				//- 		md-icon(md-font-icon='fa fa-calendar')
 
-				md-input-container(flex)
-					label Data inicial
-					md-datepicker(ng-model='openOrder.calendar.start.value' md-hide-icons='all' md-is-open='openOrder.calendar.start.isCalendarOpen' ng-change='openOrder.calendar.start.update()')
+				md-input-container(flex ng-click='openOrder.calendar.start.isCalendarOpen = true')
+					label Inicio
+					md-datepicker(ng-model='openOrder.calendar.start.value' md-hide-icons='all' md-is-open='openOrder.calendar.start.isCalendarOpen' ng-change='openOrder.calendar.start.update()' md-max-date='openOrder.calendar.start.max')
 
-			div.md-date(flex='15' layout='row' ng-class='{"md-date-on":openOrder.calendar.end.isCalendarOpen}')
-				div(flex='30')
-					md-button.md-icon-button.md-raised.md-primary(style='margin-left: 0' ng-click='openOrder.calendar.end.isCalendarOpen = true')
-						md-icon(md-font-icon='fa fa-calendar')
+			div.md-date(flex='10' ng-class='{"md-date-on":openOrder.calendar.end.isCalendarOpen}')
+				//- div(flex='30')
+				//- 	md-button.md-icon-button.md-raised.md-primary(style='margin-left: 0' ng-click='openOrder.calendar.end.isCalendarOpen = true')
+				//- 		md-icon(md-font-icon='fa fa-calendar')
 
-				md-input-container(flex)
-					label Data final
+				md-input-container(flex ng-click='openOrder.calendar.end.isCalendarOpen = true')
+					label Fim
 					md-datepicker(ng-model='openOrder.calendar.end.value' md-hide-icons='all' md-is-open='openOrder.calendar.end.isCalendarOpen' md-min-date='openOrder.calendar.end.minDate' md-max-date='openOrder.calendar.end.maxDate' ng-change='openOrder.calendar.end.update()')
 
 			.search(flex='30')
