@@ -5,6 +5,8 @@
 	angular.module('commercial2.services')
 		.factory('ModalPerson', [ '$rootScope', '$timeout', 'Globals', function($rootScope, $timeout, Globals) {
 
+			var _isOpen = true;
+
 			return {
 				show: function( title, category, options ) {
 					
@@ -63,9 +65,10 @@
 					controller.$inject = [ 'ProviderPerson', 'Person' ];
 
 					var modalOptions = {
-						zIndex:20,
-						hasBackdrop: true,
-						fullscreen: true
+						zIndex: 1,
+						hasBackdrop: false,
+						escapeToClose: false,
+						innerDialog: true
 					};
 
 					return $rootScope.customDialog().showTemplate(title, './partials/modalPerson.html', controller, modalOptions);

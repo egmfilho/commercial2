@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 13:43:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-21 13:16:27
+* @Last Modified time: 2017-07-24 12:29:14
 */
 
 .custom-dialog {
@@ -66,5 +66,19 @@
 
 	.footer {
 		padding: 5px;
+	}
+
+	&.custom-dialog-inner {
+		border-radius: 0 !important;
+
+		md-toolbar.title-bar {
+			border-radius: 0 !important;			
+		}
+
+		left: 0;
+		top: 0;
+		min-width: 100%;
+		min-height: calc(100% - 129px);
+		margin-top: 40px;
 	}
 }

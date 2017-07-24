@@ -63,10 +63,11 @@
 					controller.$inject = [ 'ProviderProduct', 'Product' ];
 
 					var modalOptions = {
-						zIndex:20,
-						hasBackdrop: true,
-						width: 900,
-						fullscreen: true
+						attatchTo: angular.element(document.getElementById('order')),
+						zIndex: 1,
+						hasBackdrop: false,
+						escapeToClose: false,
+						innerDialog: true
 					};
 
 					return $rootScope.customDialog().showTemplate(title, './partials/modalProduct.html', controller, modalOptions);

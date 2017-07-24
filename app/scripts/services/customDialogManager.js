@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-16 12:29:16
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-22 12:38:15
+* @Last Modified time: 2017-07-24 12:19:23
 */
 
 (function() {
@@ -20,6 +20,12 @@
 		};
 
 		this.removeDialog = function(dialog) {
+			try {
+				dialog.close()
+			} catch(e) {
+
+			}
+			
 			_openDialogs.splice(_openDialogs.indexOf(dialog), 1);
 		};
 

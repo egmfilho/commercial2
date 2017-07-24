@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 09:50:35
+* @Last Modified time: 2017-07-24 12:34:46
 */
 
 (function() {
@@ -88,7 +88,7 @@
 		ModalProduct,
 		ModalCustomerAddress) {
 
-		var self = this, _focusOn;
+		var self = this, _focusOn, _isToolbarLocked = false;
 
 		$scope.debug = constants.debug;
 		$scope.globals = Globals.get;
@@ -104,6 +104,7 @@
 			$location.path() == '/order/new' ? $route.reload() : $location.path('/order/new');
 		}
 
+		self.isToolbarLocked    = isToolbarLocked;
 		self.canSave            = canSave;
 		self.canExport          = canExport;
 		self.canPrint           = canPrint;
@@ -240,6 +241,8 @@
 				jQuery('section[name="customer"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'customer' });
 				jQuery('section[name="notes"] textarea').addClass('mousetrap').on('focus', function() { _focusOn = 'notes' });
 				jQuery('section[name="payment"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'customer' });
+
+				self.focusOn('input[name=\'product-code\']');
 			}, 200);
 
 			self.searchTerm();
@@ -485,6 +488,13 @@
 		// ******************************
 		// Methods declaration
 		// ******************************
+
+		/**
+		 * Verifica se a barra de tarefas esta trancada.
+		 */
+		function isToolbarLocked() {
+			return _isToolbarLocked;
+		}
 
 		/**
 		 * Verifica se o orcamento pode ser salvo.
@@ -2014,29 +2024,31 @@
 
 			/* Avancar sessao */
 			Mousetrap.bind('shift+enter', function(e, combo) {
-				switch(_focusOn) {
-					case 'products':
-						self.scrollTo('section[name="seller"]');
-						self.focusOn('input[name="seller-code"]');
-						break;
+				if (!_isToolbarLocked) {
+					switch(_focusOn) {
+						case 'products':
+							self.scrollTo('section[name="seller"]');
+							self.focusOn('input[name="seller-code"]');
+							break;
 
-					case 'seller':
-						self.scrollTo('section[name="customer"]');
-						self.focusOn('input[name="customer-code"]');
-						break;
+						case 'seller':
+							self.scrollTo('section[name="customer"]');
+							self.focusOn('input[name="customer-code"]');
+							break;
 
-					case 'customer':
-						self.scrollTo('section[name="notes"]');
-						self.focusOn('textarea[name="order-note"]');
-						break;
+						case 'customer':
+							self.scrollTo('section[name="notes"]');
+							self.focusOn('textarea[name="order-note"]');
+							break;
 
-					case 'notes':
-						self.scrollTo('section[name="payment"]');
-						self.focusOn('input[name="term-code"]');
-						break;
+						case 'notes':
+							self.scrollTo('section[name="payment"]');
+							self.focusOn('input[name="term-code"]');
+							break;
 
-					case 'payment':
-						break;
+						case 'payment':
+							break;
+					}
 				}
 
 				return false;
@@ -2056,54 +2068,75 @@
 
 			/* Salvar orcamento */
 			Mousetrap.bind(['command+s', 'ctrl+s'], function() {
-				$scope.save();
+				if (!_isToolbarLocked)
+					$scope.save();
+
 				return false;
 			});
 
 			/* Imprimir orcamento */
 			Mousetrap.bind(['command+p', 'ctrl+p'], function() {
-				self.print();
+				if (!_isToolbarLocked)
+					self.print();
+
 				return false;
 			});
 
 			/* Mudar empresa do orcamento */
 			Mousetrap.bind(['command+e', 'ctrl+e'], function() {
-				self.selectCompany();
+				if (!_isToolbarLocked)
+					self.selectCompany();
+
 				return false;
 			});
 
 			/* Ir para produtos */
 			Mousetrap.bind(['command+1', 'ctrl+1'], function() {
-				self.scrollTo('section[name="products"]');
-				self.focusOn('input[name="product-code"]');
+				if (!_isToolbarLocked) {
+					self.scrollTo('section[name="products"]');
+					self.focusOn('input[name="product-code"]');
+				}
+
 				return false;
 			});
 
 			/* Ir para vendedor */
 			Mousetrap.bind(['command+2', 'ctrl+2'], function() {
-				self.scrollTo("section[name=\'seller\']")
-				self.focusOn('input[name="seller-code"]');
+				if (!_isToolbarLocked) {
+					self.scrollTo("section[name=\'seller\']")
+					self.focusOn('input[name="seller-code"]');
+				}
+
 				return false;
 			});
 
 			/* Ir para cliente */
 			Mousetrap.bind(['command+3', 'ctrl+3'], function() {
-				self.scrollTo("section[name=\'customer\']")
-				self.focusOn('input[name="customer-code"]');
+				if (!_isToolbarLocked) {
+					self.scrollTo("section[name=\'customer\']")
+					self.focusOn('input[name="customer-code"]');
+				}
+				
 				return false;
 			});
 
 			/* Ir para observacoes */
 			Mousetrap.bind(['command+4', 'ctrl+4'], function() {
-				self.scrollTo("section[name=\'notes\']")
-				self.focusOn('textarea[name="order-note"]');
+				if (!_isToolbarLocked) {
+					self.scrollTo("section[name=\'notes\']")
+					self.focusOn('textarea[name="order-note"]');
+				}
+
 				return false;
 			});
 
 			/* Ir para pagamento */
 			Mousetrap.bind(['command+5', 'ctrl+5'], function() {
-				self.scrollTo("section[name=\'payment\']")
-				self.focusOn('textarea[name="term-code"]');
+				if (!_isToolbarLocked) {
+					self.scrollTo("section[name=\'payment\']")
+					self.focusOn('textarea[name="term-code"]');
+				}
+
 				return false;
 			});
 		}
@@ -2143,9 +2176,13 @@
 					limit: 200
 				};
 
+			_isToolbarLocked = true;
 			ModalPerson.show('Localizar Cliente', category, options).then(function(success) {
 				self.getCustomerByCode(success.person_code);
-			}, function(error){ });
+				_isToolbarLocked = false;
+			}, function(error){
+				_isToolbarLocked = false;
+			});
 		}
 
 		function showModalProduct() {
@@ -2155,9 +2192,14 @@
 				getStock: 1,
 				limit: 200
 			};
-			ModalProduct.show('Localizar Produto',self.budget.order_company_id,self.internal.tempItem.price_id,options).then(function(success){
+
+			_isToolbarLocked = true;
+			ModalProduct.show('Localizar Produto',self.budget.order_company_id,self.internal.tempItem.price_id,options).then(function(success) {
 				self.getProductByCode(success.product_code);
-			},function(error){});
+				_isToolbarLocked = false;
+			},function(error) {
+				_isToolbarLocked = false;
+			});
 		}
 	}
 }());
