@@ -180,11 +180,6 @@
 				return false;	
 			}
 
-			if (self.budget.creditPayment) {
-				$rootScope.customDialog().showMessage('Aviso', 'Este orçamento está utilizando uma Carta de Crédito como forma de pagamento e por isso não é mais possível salvá-lo, você ainda pode exportá-lo.');
-				return;		
-			}
-
 			var today = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
 			for (var i = 0; i < self.budget.order_payments.length; i++) {
 				if (moment(self.budget.order_payments[i].order_payment_deadline).isBefore(today)) {
@@ -243,7 +238,7 @@
 				jQuery('section[name="seller"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'seller' });
 				jQuery('section[name="products"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'products' });
 				jQuery('section[name="customer"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'customer' });
-				jQuery('section[name="notes"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'notes' });
+				jQuery('section[name="notes"] textarea').addClass('mousetrap').on('focus', function() { _focusOn = 'notes' });
 				jQuery('section[name="payment"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'customer' });
 			}, 200);
 
@@ -343,6 +338,11 @@
 		$scope.save = function() {
 			if (!validateBudget()) {
 				return;
+			}
+
+			if (self.budget.creditPayment) {
+				$rootScope.customDialog().showMessage('Aviso', 'Este orçamento está utilizando uma Carta de Crédito como forma de pagamento e por isso não é mais possível salvá-lo, você ainda pode exportá-lo.');
+				return;		
 			}
 
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja salvar o orçamento atual?')
