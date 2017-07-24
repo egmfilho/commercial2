@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-18 11:31:19
+* @Last Modified time: 2017-07-24 08:18:18
 */
 
 (function() {
@@ -23,7 +23,12 @@
 			$scope.globals = Globals.get;
 
 			$scope.$on('$viewContentLoaded', function() {
+				$rootScope.titleBarText = 'Abrir Orçamento';
 				self.getOrders();
+			});
+
+			$scope.$on('$destroy', function() {
+				$rootScope.titleBarText = '';
 			});
 
 			$scope.open = function(code) {

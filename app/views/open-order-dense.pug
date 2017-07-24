@@ -1,38 +1,26 @@
 .open-order(layout='column' layout-fill)
 	md-toolbar.open-order-container-nav
 		.md-toolbar-tools
-			//- md-truncate
-				| Lista de orçamentos
-
-			//- span(flex)
 
 			md-input-container.md-select(flex="40")
 				label Empresa
-				md-select(name='type' ng-model='openOrder.options.company_id' ng-model-options='{ trackBy: $value.company_id }')
-					md-option(ng-value='c.company_id' ng-repeat='c in openOrder.companies' ng-click='openOrder.options.company_id=c.company_id; openOrder.getOrders();') 
+				md-select(name='type' ng-model='openOrder.options.company_id' ng-change='openOrder.getOrders()')
+					md-option(ng-value='c.company_id' ng-repeat='c in openOrder.companies') 
 						| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
 
 
 			div.md-date(flex='10' ng-class='{"md-date-on":openOrder.calendar.start.isCalendarOpen}')
-				//- div(flex='30')
-				//- 	md-button.md-icon-button.md-raised.md-primary(style='margin-left: 0' ng-click='openOrder.calendar.start.isCalendarOpen = true')
-				//- 		md-icon(md-font-icon='fa fa-calendar')
-
 				md-input-container(flex ng-click='openOrder.calendar.start.isCalendarOpen = true')
 					label Inicio
 					md-datepicker(ng-model='openOrder.calendar.start.value' md-hide-icons='all' md-is-open='openOrder.calendar.start.isCalendarOpen' ng-change='openOrder.calendar.start.update()' md-max-date='openOrder.calendar.start.max')
 
 			div.md-date(flex='10' ng-class='{"md-date-on":openOrder.calendar.end.isCalendarOpen}')
-				//- div(flex='30')
-				//- 	md-button.md-icon-button.md-raised.md-primary(style='margin-left: 0' ng-click='openOrder.calendar.end.isCalendarOpen = true')
-				//- 		md-icon(md-font-icon='fa fa-calendar')
-
 				md-input-container(flex ng-click='openOrder.calendar.end.isCalendarOpen = true')
 					label Fim
 					md-datepicker(ng-model='openOrder.calendar.end.value' md-hide-icons='all' md-is-open='openOrder.calendar.end.isCalendarOpen' md-min-date='openOrder.calendar.end.minDate' md-max-date='openOrder.calendar.end.maxDate' ng-change='openOrder.calendar.end.update()')
 
 			.search(flex='30')
-				input(placeholder='Filtrar resultados' ng-model='openOrder.filter')
+				input(placeholder='Pesquisar' ng-model='openOrder.filter')
 				button.clear-search-button(ng-click='openOrder.filter = ""' ng-show='openOrder.filter.length')
 					i.fa.fa-times-circle
 
@@ -40,7 +28,7 @@
 				i.material-icons(style='font-size: 16px; vertical-align: text-top') note_add&nbsp;
 				| Atualizar
 
-			md-button.md-raised(redirect-to='/order/new' md-colors='{ background: "commercialGreen" }')
+			md-button.md-raised(redirect-to='/order/new' query-key='company' query-value='{{openOrder.options.company_id}}' md-colors='{ background: "commercialGreen" }')
 				i.material-icons(style='font-size: 16px; vertical-align: text-top') note_add&nbsp;
 				| Novo
 

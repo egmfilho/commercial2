@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-18 17:26:51
+* @Last Modified time: 2017-07-24 09:54:06
 */
 
 const electron = require('electron');
@@ -74,6 +74,18 @@ function createWindow() {
 	// Open the DevTools.
 	// mainWindow.webContents.openDevTools()
 
+	mainWindow.on('close', function(e) {
+		var choice = electron.dialog.showMessageBox(this, {
+			type: 'question',
+			buttons: ['Sim', 'Não'],
+			title: 'Confirmação',
+			message: 'Deseja encerrar o Commercial?'
+		});
+
+		if (choice == 1) 
+			e.preventDefault();
+	});
+
 	// Emitted when the window is closed.
 	mainWindow.on('closed', function () {
 		// Dereference the window object, usually you would store windows
@@ -93,9 +105,9 @@ app.on('window-all-closed', function () {
 	// On OS X it is common for applications and their menu bar
 	// to stay active until the user quits explicitly with Cmd + Q
 	
-	if (process.platform !== 'darwin') {
-		// app.quit();
-	}
+	// if (process.platform !== 'darwin') {
+		app.quit();
+	// }
 });
 
 app.on('before-quit', function (event) {

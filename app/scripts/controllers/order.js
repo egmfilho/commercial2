@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-21 18:18:09
+* @Last Modified time: 2017-07-24 09:50:35
 */
 
 (function() {
@@ -18,7 +18,8 @@
 		'$location',
 		'$route', 
 		'$routeParams', 
-		'$q', 
+		'$q',
+		'$filter', 
 		'$mdPanel', 
 		'Cookies',
 		'Constants',
@@ -57,6 +58,7 @@
 		$route, 
 		$routeParams, 
 		$q, 
+		$filter,
 		$mdPanel,
 		Cookies, 
 		constants, 
@@ -178,10 +180,10 @@
 				return false;	
 			}
 
-			// if (self.budget.creditPayment) {
-			// 	$rootScope.customDialog().showConfirm('Erro!', 'Este orçamento está utilizando uma Carta de Crédito como forma de pagamento e por isso não é mais possível salvá-lo, você ainda pode exportá-lo. Deseja exportar o orçamento?');
-			// 	return;		
-			// }
+			if (self.budget.creditPayment) {
+				$rootScope.customDialog().showMessage('Aviso', 'Este orçamento está utilizando uma Carta de Crédito como forma de pagamento e por isso não é mais possível salvá-lo, você ainda pode exportá-lo.');
+				return;		
+			}
 
 			var today = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
 			for (var i = 0; i < self.budget.order_payments.length; i++) {
@@ -258,9 +260,13 @@
 					getTerm: true,
 					getProductPrice: true
 				};
+
 				$rootScope.loading.load();
 				providerOrder.getByCode($routeParams.code, options).then(function(success) {
 					self.budget = new Order(success.data);
+
+					/* Configura a barra de titulo interna do Commercial */
+					$rootScope.titleBarText = 'Editar orçamento - Código: ' + self.budget.order_code + ' (' + $filter('date')(self.budget.order_date, 'short') + ')';
 					
 					/* copia os valores para as variaveis temporarias dos autocompletes */
 					self.internal.tempSeller = new Person(self.budget.order_seller);					
@@ -295,6 +301,16 @@
 					$rootScope.loading.unload();
 				});
 			} else if ($routeParams.action && $routeParams.action == 'new') {
+				$rootScope.titleBarText = 'Novo orçamento';
+
+				if ($routeParams.company) {
+					var company = Globals.get('user-companies-raw').find(function(company) {
+						return company.company_id == $routeParams.company;
+					});
+
+					self.budget.setCompany(new UserCompany(company).company_erp);
+				}
+
 				if (!self.budget.order_company_id) {
 					/* Seleciona a empresa principal */
 					var company = Globals.get('user-companies-raw').find(function(company) {
@@ -352,7 +368,7 @@
 									}
 									
 									case 'mail': {
-										alert('ainda nao implementado');
+										$rootScope.toast('Aviso', 'Ainda nao implementado!');
 										break;
 									}
 									

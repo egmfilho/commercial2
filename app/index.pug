@@ -9,7 +9,7 @@ block header
 			.md-toolbar-tools
 				md-button.md-icon-button(ng-click='showMainMenu()')
 					md-icon(md-font-icon='fa fa-bars' aria-label='Menu')
-				h1 Commercial - Gestor de vendas
+				h1 {{titleBarText && titleBarText.length ? titleBarText : 'Commercial - Gestor de vendas'}}
 				span.flex
 				//- md-menu
 					md-button.md-icon-button(ng-click='$mdMenu.open($event)')

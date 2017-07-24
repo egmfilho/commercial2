@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-21 14:09:37
+* @Last Modified time: 2017-07-24 08:16:41
 */
 'use strict';
 
@@ -250,6 +250,8 @@ angular.module('commercial2', [
 
 		/* Numero de versao atual do sistema. */
 		$rootScope.version = constants.version;
+
+		$rootScope.titleBarText = '';
 
 		/* Controlador de carregamento. */
 		/* Exibe e esconde a tela de carregamento. */
