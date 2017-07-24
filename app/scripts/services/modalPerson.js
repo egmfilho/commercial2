@@ -14,7 +14,7 @@
 
 					$timeout(function(){
 						jQuery('#focus').focus();
-					},200);
+					},300);
 
 					controller = function(providerPerson, Person) {
 						var vm = this;
@@ -22,6 +22,7 @@
 						this._showCloseButton = true;
 
 						this.result = [];
+
 						this.filter = {
 							category: category,
 							name: '',
@@ -50,6 +51,10 @@
 							providerPerson.getByFilter(vm.filter, vm.options).then(function(success) {
 								vm.result = success.data.map(function(p) { return new Person(p); });
 								$rootScope.loading.unload();
+								if( !vm.result.length ){
+									$rootScope.customDialog().showMessage('Aviso', 'Nenhum ' + options.module + ' localizado.');
+									return;
+								}
 							}, function(error) {
 								$rootScope.loading.unload();
 							});

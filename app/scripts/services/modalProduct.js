@@ -12,7 +12,7 @@
 					
 					$timeout(function(){
 						jQuery('#focus').focus();
-					},200);
+					},300);
 
 					controller = function(providerProduct, Product) {
 						var vm = this;
@@ -48,6 +48,10 @@
 							providerProduct.getByFilter(vm.filter, vm.companyId, vm.priceId, vm.options).then(function(success) {
 								vm.result = success.data.map(function(p) { return new Product(p); });
 								$rootScope.loading.unload();
+								if( !vm.result.length ){
+									$rootScope.customDialog().showMessage('Aviso', 'Nenhum produto localizado.');
+									return;
+								}
 							}, function(error) {
 								$rootScope.loading.unload();
 							});
