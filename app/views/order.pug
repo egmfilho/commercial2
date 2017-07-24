@@ -25,6 +25,17 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								md-icon(md-font-icon='fa fa-floppy-o')
 								|  Salvar
 								span.md-alt-text {{ 'M-S' | keyboardShortcut }}
+
+						md-menu-item
+							md-button(ng-click='order.exportOrder()' ng-disabled='!order.canExport() || order.isToolbarLocked()')
+								md-icon(md-font-icon='fa fa-cloud-upload')
+								| Exportar Pedido
+						
+						md-menu-item
+							md-button(ng-click='order.exportDAV()' ng-disabled='!order.canExport() || order.isToolbarLocked()')
+								md-icon(md-font-icon='fa fa-upload')
+								| Exportar DAV
+
 						md-menu-divider
 						md-menu-item
 							md-button(ng-click='order.print()' ng-disabled='!order.canPrint() || order.isToolbarLocked()')
@@ -679,10 +690,12 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							i.fa.fa-remove &nbsp;
 							| Cancelar
 						
-						md-button.md-raised.md-primary(flex='25' ng-click='order.exportOrder()' md-colors='{background: "commercialOrange"}')
+						md-button.md-raised.md-primary(flex='25' ng-click='order.exportOrder()' ng-disabled='!order.canExport()' md-colors='{background: "commercialOrange"}')
+							i.fa.fa-cloud-upload &nbsp;	
 							| Exportar Pedido
 						
-						md-button.md-raised.md-primary(flex='25' ng-click='order.exportDAV()' md-colors='{background: "commercialBlue"}')
+						md-button.md-raised.md-primary(flex='25' ng-click='order.exportDAV()' ng-disabled='!order.canExport()' md-colors='{background: "commercialBlue"}')
+							i.fa.fa-upload &nbsp;
 							| Exportar DAV
 						
 						md-button.md-raised.md-primary(flex='25' ng-click='save()' ng-disabled='!order.canSave()' md-colors='{background: "commercialGreen"}')

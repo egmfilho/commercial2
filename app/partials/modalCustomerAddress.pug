@@ -9,7 +9,7 @@
 			md-content(layout='column' style='padding: 0' layout-fill)
 				.boneco(flex layout='row' layout-wrap style='overflow: auto')
 					div(flex layout='column' layout-align='center center' 
-							ng-if='ctrl.customer.person_address == 0')
+							ng-if='ctrl.customer.person_address.length == 0')
 						h1.inner-text Nenhum endereço cadastrado.
 						md-button.md-raised.md-primary(ng-click='ctrl.selectedTabIndex = 1') 
 							| &nbsp; Cadastrar &nbsp;

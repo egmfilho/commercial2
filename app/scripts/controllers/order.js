@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 12:45:09
+* @Last Modified time: 2017-07-24 14:11:18
 */
 
 (function() {
@@ -167,17 +167,17 @@
 
 		function validateBudget() {
 			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
-				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado e não pode mais ser editado!');
+				$rootScope.customDialog().showMessage('Erro', 'Este orçamento já foi exportado e não pode mais ser editado!');
 				return false;
 			}
 
 			if (!self.budget.order_company_id) {
-				$rootScope.customDialog().showMessage('Erro!', 'A empresa do orçamento deverá ser informada!');
+				$rootScope.customDialog().showMessage('Erro', 'A empresa do orçamento deverá ser informada!');
 				return false;
 			}
 
 			if (!self.budget.order_items.length) {
-				$rootScope.customDialog().showMessage('Erro!', 'O orçamento deverá conter ao menos um produto!').then(function(success){
+				$rootScope.customDialog().showMessage('Erro', 'O orçamento deverá conter ao menos um produto!').then(function(success){
 
 				},function(error){					
 					self.focusOn('input[name="product-code"]');
@@ -187,7 +187,7 @@
 			}
 
 			if (!self.budget.order_seller_id) {
-				$rootScope.customDialog().showMessage('Erro!', 'O vendedor deverá ser informado!').then(function(success){
+				$rootScope.customDialog().showMessage('Erro', 'O vendedor deverá ser informado!').then(function(success){
 
 				},function(error){
 					self.focusOn('input[name="seller-code"]');
@@ -197,7 +197,7 @@
 			}
 
 			if (!self.budget.order_client_id) {
-				$rootScope.customDialog().showMessage('Erro!', 'O cliente deverá ser informado!').then(function(success){
+				$rootScope.customDialog().showMessage('Erro', 'O cliente deverá ser informado!').then(function(success){
 
 				},function(error){
 					self.focusOn('input[name="customer-code"]');
@@ -207,7 +207,7 @@
 			}			
 
 			if (!self.budget.order_address_delivery_code) {
-				$rootScope.customDialog().showMessage('Erro!', 'Informe o endereço de entrega do pedido!').then(function(success){
+				$rootScope.customDialog().showMessage('Erro', 'Informe o endereço de entrega do pedido!').then(function(success){
 
 				},function(error){
 					self.scrollTo('section[name="customer"]');
@@ -218,7 +218,8 @@
 			}
 
 			if (self.budget.getChange() > 0 && self.budget.order_payments.length) {
-				$rootScope.customDialog().showMessage('Erro!', 'Reveja os valores dos pagamentos!');
+				$rootScope.customDialog().showMessage('Erro', 'Reveja os valores dos pagamentos!');
+				self.scrollTo('section[name="payment"]');
 				return false;	
 			}
 
@@ -553,7 +554,7 @@
 		 * Verifica se o orcamento pode ser exportado.
 		 */
 		function canExport() {
-			return self.budget.order_code && self.budget.order_status_id == Globals.get('order-status-values').open;
+			return self.budget.order_status_id == Globals.get('order-status-values').open;
 		}
 
 		/**
@@ -1287,9 +1288,25 @@
 		 * @param {string} id - O id do orcamento.
 		 */
 		function exportOrder(id) {
+			if (!validateBudget()) {
+				return;
+			}
+
 			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
 				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado!');
 				return;
+			}
+
+			if (!self.budget.order_payments.length) {
+				$rootScope.customDialog().showMessage('Erro', 'O orçamento precisa ter ao menos uma forma de pagamento informada!');
+				self.scrollTo('section[name="payment"]');
+				return false;
+			}
+
+			if (self.budget.getChange() != 0) {
+				$rootScope.customDialog().showMessage('Erro', 'Reveja os valores dos pagamentos!');
+				self.scrollTo('section[name="payment"]');
+				return false;
 			}
 
 			var deferred = $q.defer();
@@ -1309,15 +1326,6 @@
 							deferred.reject(error);
 						});
 					} else {
-						if (!validateBudget()) {
-							return;
-						}
-
-						if (self.budget.order_payments.length <= 0) {
-							$rootScope.customDialog().showMessage('Aviso', 'O orçamento não possui formas de pagamento informadas!');
-							return;
-						}
-
 						function afterSave(msg, code) {
 							var controller = function() {
 									this._showCloseButton = true;
@@ -1370,9 +1378,25 @@
 		 * @param {string} id - O id do orcamento.
 		 */
 		function exportDAV(id) {
+			if (!validateBudget()) {
+				return;
+			}
+
 			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
 				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado!');
 				return;
+			}
+
+			if (!self.budget.order_payments.length) {
+				$rootScope.customDialog().showMessage('Erro', 'O orçamento precisa ter ao menos uma forma de pagamento informada!');
+				self.scrollTo('section[name="payment"]');
+				return false;
+			}
+
+			if (self.budget.getChange() != 0) {
+				$rootScope.customDialog().showMessage('Erro', 'Reveja os valores dos pagamentos!');
+				self.scrollTo('section[name="payment"]');
+				return false;
 			}
 
 			var deferred = $q.defer();
@@ -1392,15 +1416,6 @@
 							deferred.reject(error);
 						});
 					} else {
-						if (!validateBudget()) {
-							return;
-						}
-
-						if (self.budget.order_payments.length <= 0) {
-							$rootScope.customDialog().showMessage('Aviso', 'O orçamento não possui formas de pagamento informadas!');
-							return;
-						}
-
 						function afterSave(msg, code) {
 							var controller = function() {
 									this._showCloseButton = true;
