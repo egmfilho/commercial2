@@ -14,7 +14,7 @@ html
 		link(rel='stylesheet' href='styles/vendor.min.css')
 		link(rel='stylesheet' href='styles/main.css')
 
-	body(ng-app='commercial2' ng-cloak)
+	body(ng-app='commercial2' ng-cloak ng-class='{ "print-window": currentPath.indexOf("print") != -1 }')
 
 		div(layout='column' layout-fill)
 

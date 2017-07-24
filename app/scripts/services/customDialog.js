@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 11:46:58
+* @Last Modified time: 2017-07-24 12:54:20
 */
 
 (function() {
@@ -140,7 +140,7 @@
 
 			var _options = {
 				attatchTo: angular.element(document.body),
-				panelClass: 'custom-dialog layout-column flex ' + (options.innerDialog ? 'custom-dialog-inner' : ''),
+				panelClass: 'custom-dialog layout-column flex ' + (options && options.innerDialog ? 'custom-dialog-inner' : ''),
 				animation: _animation,
 				fullscreen: false,
 				hasBackdrop: false,

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 08:16:50
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-06 08:28:18
+* @Last Modified time: 2017-07-24 13:20:59
 */
 
 (function() {
@@ -50,8 +50,8 @@
 
 			var win = new _BrowserWindow(angular.extend({ }, { 
 				devTools: constants.debug,
-				width: 800, 
-				height: 600, 
+				width: 1024, 
+				height: 768, 
 				show: false,
 				title: 'Orçamento',
 				parent: _electron.remote.getCurrentWindow(),

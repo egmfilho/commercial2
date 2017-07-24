@@ -1,4 +1,4 @@
-.body(layout='column')
+.body(flex='100' layout='column' layout-fill)
 	.well.offset-bottom-15
 		p.md-subhead.text-light(style='margin: 0')
 			b Cliente: &nbsp;
@@ -15,7 +15,7 @@
 							| &nbsp; Cadastrar &nbsp;
 					
 					//- card de endereco
-					div(flex='33' 
+					div(flex='25' 
 							ng-repeat='a in ctrl.customer.person_address track by $index'
 							ng-if='ctrl.customer.person_address.length > 0' 
 							ng-show='a.person_address_active == "Y"')
@@ -49,7 +49,7 @@
 											md-icon(md-font-icon='fa fa-check')
 
 					//- card vazio 
-					div(flex='33' ng-if='ctrl.customer.person_address.length > 0 && ctrl.globals("default-customer").code != ctrl.customer.person_code')
+					div(flex='25' ng-if='ctrl.customer.person_address.length > 0 && ctrl.globals("default-customer").code != ctrl.customer.person_code')
 						md-card.dashed-empty-card
 							md-card-content(layout='column' layout-align='center center' layout-fill)
 								div
@@ -76,8 +76,8 @@
 						md-card-content(ng-include='"./partials/newAddress.html"')
 
 .footer(layout='row' layout-align='end center')
-	md-button.md-primary(ng-click='ctrl._close(ctrl.deliveryAddress)')
+	md-button.md-raised(ng-click='ctrl._close(ctrl.deliveryAddress)' md-colors='{background: "commercialGreen"}')
 		| &nbsp; Ok &nbsp;
 
-	md-button.md-primary(ng-click='ctrl._cancel()')
+	md-button.md-raised.md-primary(ng-click='ctrl._cancel()')
 		| &nbsp; Cancelar &nbsp;

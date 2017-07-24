@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 12:40:39
+* @Last Modified time: 2017-07-24 12:45:09
 */
 
 (function() {
@@ -254,9 +254,14 @@
 			providerAddress.getByPerson(self.budget.order_client.person_id, options).then(function(success) {
 				$rootScope.loading.unload();
 				var addresses = success.data.map(function(a) { return new Address(a) });
+
+				_isToolbarLocked = true;
 				ModalCustomerAddress.show(angular.extend(self.budget.order_client, { person_address: addresses }), self.budget.address_delivery)
 					.then(function(success) {
 						self.budget.setDeliveryAddress(success);
+						_isToolbarLocked = false;
+					}, function(error) {
+						_isToolbarLocked = false;
 					});
 			}, function(error) {
 				$rootScope.loading.unload();

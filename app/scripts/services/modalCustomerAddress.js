@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-07-20 08:24:35
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-20 11:29:41
+* @Last Modified time: 2017-07-24 12:59:02
 */
 
 (function() {
@@ -16,7 +16,13 @@
 				show: function(customer, deliveryAddress) {
 					
 					var controller,
-						options = { hasBackdrop: true, width: 900 };
+						options = {
+							attatchTo: angular.element(document.getElementById('order')),
+							zIndex: 1,
+							hasBackdrop: false, 
+							escapeToClose: false, 
+							innerDialog: true 
+						};
 
 					controller = function($scope) {
 						var vm = this;
