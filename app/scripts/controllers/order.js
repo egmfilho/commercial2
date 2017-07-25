@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-25 09:17:19
+* @Last Modified time: 2017-07-25 10:07:18
 */
 
 (function() {
@@ -533,8 +533,6 @@
 		};
 
 		$scope.save = function() {
-			alert('Orcamento alterado? ' + !self.budget.equals(_backup));
-			return;
 			if (_backup.equals(self.budget)) {
 				$rootScope.customDialog().showMessage('Aviso', 'Nenhuma alteração!');
 				return;

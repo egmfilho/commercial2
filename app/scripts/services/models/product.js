@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 16:16:04
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 17:26:10
+* @Last Modified time: 2017-07-25 10:05:16
 */
 
 (function() {
@@ -42,6 +42,7 @@
 				this.product_code               = null;
 				this.product_ean                = null;
 				this.product_name               = null;
+				this.product_max_discount       = 0;
 				this.product_classification     = null;
 				this.product_active             = null;
 				this.product_billing_aliquot    = null;
