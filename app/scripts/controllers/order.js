@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-25 10:07:18
+* @Last Modified time: 2017-07-25 10:25:27
 */
 
 (function() {
@@ -1136,13 +1136,14 @@
 			}
 
 			var max = parseFloat(Globals.get('user-max-discount') || 0),
+				productMaxAl = self.internal.tempItem.product.product_max_discount,
 				setAl = function(al) {
 					self.internal.tempItem.setAlDiscount(al);
 					self.internal.tempItemAlDiscount = self.internal.tempItem.order_item_al_discount;
 					self.internal.tempItemVlDiscount = self.internal.tempItem.order_item_vl_discount;
 				};
 
-			if (value > max) {
+			if (value > productMaxAl) {
 				authorizeDiscount(value).then(function(success) {
 					if (value > success.user_max_discount) {
 						$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
@@ -1176,6 +1177,7 @@
 		function setItemVlDiscount(value) {
 			var currentAl = self.internal.tempItem.getValue() == 0 ? 0 : (parseFloat(value) * 100) / self.internal.tempItem.getValue(),
 				maxAl = parseFloat(Globals.get('user-max-discount') || 0),
+				productMaxAl = self.internal.tempItem.product.product_max_discount,
 				setVl = function(vl) {
 					self.internal.tempItem.setVlDiscount(vl);
 					self.internal.tempItemAlDiscount = self.internal.tempItem.order_item_al_discount;
@@ -1188,7 +1190,7 @@
 				return;
 			}
 
-			if (currentAl > maxAl) {
+			if (currentAl > productMaxAl) {
 				authorizeDiscount(currentAl).then(function(success) {
 					if (currentAl > success.user_max_discount) {
 						$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
