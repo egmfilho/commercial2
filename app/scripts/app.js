@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 18:08:51
+* @Last Modified time: 2017-07-25 09:38:21
 */
 
 'use strict';
@@ -13,12 +13,11 @@ Object.defineProperty(Object.prototype, 'equals', {
 	configurable: true,
 	writable: true,
 	value: function(x) {
-		var p;
+		var p, i;
 
-		for (p in this) {
+		for (p in this)
 			if (typeof(x[p]) == 'undefined' && typeof(this[p]) != 'undefined')
 				return false;
-		}
 
 		for (p in this) {
 			if (p != '$$hashkey') {
@@ -26,46 +25,38 @@ Object.defineProperty(Object.prototype, 'equals', {
 					switch (typeof(this[p])) {
 						case 'object':
 							if (Array.isArray(this[p])) {
-								if (this[p].length != x[p].length) {
+								if (this[p].length != x[p].length)
 									return false;
-								}
 
-								for (var i = 0; i < this[p].length; i++) {
-									if (!this[p][i].equals(x[p][i])) {
+								for (i = 0; i < this[p].length; i++)
+									if (!this[p][i].equals(x[p][i]))
 										return false;
-									}
-								}
 							} else {
-								if (!this[p].equals(x[p])) {
+								if (!this[p].equals(x[p]))
 									return false;
-								}
 							}
 
 							break;
 
 						case 'function':
-							// if (typeof(x[p]) == 'undefined' || (p != 'equals' && this[p].toString() != x[p].toString())) {
+							// if (typeof(x[p]) == 'undefined' || (p != 'equals' && this[p].toString() != x[p].toString()))
 							// 	return false;
-							// }
 							break;
 
 						default:
-							if (this[p] != x[p]) {
-								console.log(p, this[p], x);
+							if (this[p] != x[p])
 								return false;
-							}
 					}
 				} else {
-					if (x[p]) 
+					if (x[p])
 						return false;
 				}
 			}
 		}
 
-		for (p in x) {
+		for (p in x)
 			if (typeof(this[p]) == 'undefined' && typeof(x[p]) != 'undefined')
 				return false;
-		}
 
 		return true;
 	}
@@ -233,10 +224,16 @@ angular.module('commercial2', [
 	.config(['$routeProvider', function($routeProvider) {
 
 		$routeProvider
-			.when('/login', {
+			.when('/login', {				
 				templateUrl: 'views/login.html',
 				controller: 'LoginCtrl',
-				controllerAs: 'login'
+				controllerAs: 'login',
+				resolve: {
+					redirect: ['$location', 'Globals', function($location, Globals) {
+						if (!!Globals.get('session-token'))
+							$location.path('/open-order');
+					}]
+				}
 			})
 			.when('/loading', {
 				templateUrl: 'views/afterLogin.html',
@@ -277,8 +274,12 @@ angular.module('commercial2', [
 				controller: 'AboutCtrl',
 				controllerAs: 'about'
 			})
+			.when('/config', {
+				module: 'config',
+				templateUrl: 'views/config.html'
+			})
 			.otherwise({
-				redirectTo: '/open-order'
+				redirectTo: '/login'
 			});
 
 	}])
@@ -315,6 +316,7 @@ angular.module('commercial2', [
 		/* Numero de versao atual do sistema. */
 		$rootScope.version = constants.version;
 
+		/* Titulo exibido na barra de ferraments do Commercial. */
 		$rootScope.titleBarText = '';
 
 		/* Controlador de carregamento. */

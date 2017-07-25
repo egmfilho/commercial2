@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 18:09:59
+* @Last Modified time: 2017-07-25 09:17:19
 */
 
 (function() {
@@ -93,7 +93,149 @@
 		$scope.debug = constants.debug;
 		$scope.globals = Globals.get;
 
-		$scope.teste = function() { console.log('oi') };
+		/**
+		 * Cria os atalhos globais de teclado.
+		 */
+		function bindKeys() {
+			var Mousetrap = require('mousetrap');
+
+			/* Avancar sessao */
+			Mousetrap.bind('shift+enter', function(e, combo) {
+				if (!_isToolbarLocked) {
+					switch(_focusOn) {
+						case 'products':
+							self.scrollTo('section[name="seller"]');
+							self.focusOn('input[name="seller-code"]');
+							break;
+
+						case 'seller':
+							self.scrollTo('section[name="customer"]');
+							self.focusOn('input[name="customer-code"]');
+							break;
+
+						case 'customer':
+							self.scrollTo('section[name="notes"]');
+							self.focusOn('textarea[name="order-note"]');
+							break;
+
+						case 'notes':
+							self.scrollTo('section[name="payment"]');
+							self.focusOn('input[name="term-code"]');
+							break;
+
+						case 'payment':
+							break;
+					}
+				}
+
+				return false;
+			});
+
+			/* Novo orcamento */
+			Mousetrap.bind(['command+n', 'ctrl+n'], function() {
+				$scope.newOrder();
+				return false;
+			});
+
+			/* Abrir orcamento */
+			Mousetrap.bind(['command+a', 'ctrl+a'], function() {
+				$scope.open();
+				return false;
+			});
+
+			/* Salvar orcamento */
+			Mousetrap.bind(['command+s', 'ctrl+s'], function() {
+				if (!_isToolbarLocked)
+					$scope.save();
+
+				return false;
+			});
+
+			/* Imprimir orcamento */
+			Mousetrap.bind(['command+p', 'ctrl+p'], function() {
+				if (!_isToolbarLocked)
+					self.print();
+
+				return false;
+			});
+
+			/* Mudar empresa do orcamento */
+			// Mousetrap.bind(['command+e', 'ctrl+e'], function() {
+			// 	if (!_isToolbarLocked)
+			// 		self.selectCompany();
+
+			// 	return false;
+			// });
+
+			/* Ir para produtos */
+			Mousetrap.bind(['command+1', 'ctrl+1'], function() {
+				if (!_isToolbarLocked) {
+					self.scrollTo('section[name="products"]');
+					self.focusOn('input[name="product-code"]');
+				}
+
+				return false;
+			});
+
+			/* Ir para vendedor */
+			Mousetrap.bind(['command+2', 'ctrl+2'], function() {
+				if (!_isToolbarLocked) {
+					self.scrollTo("section[name=\'seller\']")
+					self.focusOn('input[name="seller-code"]');
+				}
+
+				return false;
+			});
+
+			/* Ir para cliente */
+			Mousetrap.bind(['command+3', 'ctrl+3'], function() {
+				if (!_isToolbarLocked) {
+					self.scrollTo("section[name=\'customer\']")
+					self.focusOn('input[name="customer-code"]');
+				}
+
+				return false;
+			});
+
+			/* Ir para observacoes */
+			Mousetrap.bind(['command+4', 'ctrl+4'], function() {
+				if (!_isToolbarLocked) {
+					self.scrollTo("section[name=\'notes\']")
+					self.focusOn('textarea[name="order-note"]');
+				}
+
+				return false;
+			});
+
+			/* Ir para pagamento */
+			Mousetrap.bind(['command+5', 'ctrl+5'], function() {
+				if (!_isToolbarLocked) {
+					self.scrollTo("section[name=\'payment\']")
+					self.focusOn('textarea[name="term-code"]');
+				}
+
+				return false;
+			});
+		}
+
+		/**
+		 * Limpa os atalhos globais de teclado.
+		 */
+		function unbindKeys() {
+			var Mousetrap = require('mousetrap');
+
+			Mousetrap.unbind('shift+enter');
+			Mousetrap.unbind(['command+n', 'ctrl+n']);
+			Mousetrap.unbind(['command+a', 'ctrl+a']);
+			Mousetrap.unbind(['command+s', 'ctrl+s']);
+			Mousetrap.unbind(['command+p', 'ctrl+p']);
+			Mousetrap.unbind(['command+e', 'ctrl+e']);
+			Mousetrap.unbind(['command+1', 'ctrl+1']);
+			Mousetrap.unbind(['command+2', 'ctrl+2']);
+			Mousetrap.unbind(['command+3', 'ctrl+3']);
+			Mousetrap.unbind(['command+4', 'ctrl+4']);
+			Mousetrap.unbind(['command+5', 'ctrl+5']);
+		}
 
 		/* Cria os atalhos do teclado */
 		if (constants.isElectron) {
@@ -103,6 +245,10 @@
 		function newOrder() {
 			$location.path() == '/order/new' ? $route.reload() : $location.path('/order/new');
 		}
+
+		// ******************************
+		// Methods enumeration
+		// ******************************
 
 		self.isToolbarLocked    = isToolbarLocked;
 		self.canSave            = canSave;
@@ -145,7 +291,9 @@
 		self.print              = print;
 		self.savePDF            = savePDF;
 		self.showNotFound       = showNotFound;
+		self.addressDialog      = addressDialog;
 		self.showAddressContact = showAddressContact;
+		self.afterExportDialog  = afterExportDialog;
 		self.exportOrder        = exportOrder;
 		self.exportDAV          = exportDAV;
 		self.searchTerm         = searchTerm;
@@ -160,12 +308,11 @@
 		self.paymentDialog      = paymentDialog;
 		self.addCredit          = addCredit;
 		self.recalcPayments     = recalcPayments;
-
 		self.showModalSeller    = showModalSeller;
 		self.showModalCustomer  = showModalCustomer;
 		self.showModalProduct   = showModalProduct;
 
-		function validateBudget() {
+		function validateBudgetToSave() {
 			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
 				$rootScope.customDialog().showMessage('Erro', 'Este orçamento já foi exportado e não pode mais ser editado!');
 				return false;
@@ -234,6 +381,27 @@
 			return true;
 		}
 
+		function validateBudgetToExport() {
+			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
+				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado!');
+				return;
+			}
+
+			if (!self.budget.order_payments.length) {
+				$rootScope.customDialog().showMessage('Erro', 'O orçamento precisa ter ao menos uma forma de pagamento informada!');
+				self.scrollTo('section[name="payment"]');
+				return false;
+			}
+
+			if (self.budget.getChange() != 0) {
+				$rootScope.customDialog().showMessage('Erro', 'Reveja os valores dos pagamentos!');
+				self.scrollTo('section[name="payment"]');
+				return false;
+			}
+
+			return true;
+		}
+
 		function filterBudget() {
 			return angular.merge({ }, self.budget, {
 				order_address: null,
@@ -243,32 +411,6 @@
 				order_seller: null
 			});
 		}
-
-		$scope.teste = function() {
-			var options = {
-				getCity: true,
-				getDistrict: true,
-				getContact: true
-			};
-
-			$rootScope.loading.load();
-			providerAddress.getByPerson(self.budget.order_client.person_id, options).then(function(success) {
-				$rootScope.loading.unload();
-				var addresses = success.data.map(function(a) { return new Address(a) });
-
-				_isToolbarLocked = true;
-				ModalCustomerAddress.show(angular.extend(self.budget.order_client, { person_address: addresses }), self.budget.address_delivery)
-					.then(function(success) {
-						self.budget.setDeliveryAddress(success);
-						_isToolbarLocked = false;
-					}, function(error) {
-						_isToolbarLocked = false;
-					});
-			}, function(error) {
-				$rootScope.loading.unload();
-			});
-		};
-
 
 		$scope.$on('$destroy', function() {
 			if (constants.isElectron)
@@ -327,6 +469,7 @@
 						providerTerm.getById(self.budget.order_term_id, { getModality: true }).then(function(success) {
 							self.internal.term.tempTerm = new Term(success.data);
 							self.internal.term.backup = self.internal.term.tempTerm;
+							/* Cria uma copia de backup para saber se o orcamento foi modificado no final */
 							_backup = new Order(self.budget);
 							$rootScope.loading.unload();
 						}, function(error) {
@@ -364,6 +507,9 @@
 					});
 					self.budget.setCompany(new UserCompany(company).company_erp);
 				}
+
+				/* Cria uma copia de backup para saber se o orcamento foi modificado no final */
+				_backup = new Order(self.budget);
 			} else {
 				$location.path('/');
 			}
@@ -394,7 +540,7 @@
 				return;
 			}
 
-			if (!validateBudget()) {
+			if (!validateBudgetToSave()) {
 				return;
 			}
 
@@ -555,7 +701,8 @@
 		 * Verifica se o orcamento pode ser salvo.
 		 */
 		function canSave() {
-			return self.budget.order_company_id && self.budget.order_status_id == Globals.get('order-status-values').open;
+			var isEqualsBackup = _backup ? self.budget.equals(_backup) : false;
+			return !isEqualsBackup && self.budget.order_company_id && self.budget.order_status_id == Globals.get('order-status-values').open;
 		}
 
 		/**
@@ -1215,6 +1362,7 @@
 			$rootScope.customDialog().showConfirm('Aviso', message)
 				.then(function(success) {
 					self.budget.removeItem(item);
+					self.recalcPayments();
 				}, function(error) { });
 		}
 
@@ -1278,6 +1426,35 @@
 		}
 
 		/**
+		 * Exibe um modal com os enderecos do cliente, e uma tela
+		 * de cadastros de endereco, para selecionar o endereco de entrega.
+		 */
+		function addressDialog() {
+			var options = {
+				getCity: true,
+				getDistrict: true,
+				getContact: true
+			};
+
+			$rootScope.loading.load();
+			providerAddress.getByPerson(self.budget.order_client.person_id, options).then(function(success) {
+				$rootScope.loading.unload();
+				var addresses = success.data.map(function(a) { return new Address(a) });
+
+				_isToolbarLocked = true;
+				ModalCustomerAddress.show(angular.extend(self.budget.order_client, { person_address: addresses }), self.budget.address_delivery)
+					.then(function(success) {
+						self.budget.setDeliveryAddress(success);
+						_isToolbarLocked = false;
+					}, function(error) {
+						_isToolbarLocked = false;
+					});
+			}, function(error) {
+				$rootScope.loading.unload();
+			});
+		}
+
+		/**
 		 * Exibe um modal com os contatos do endereco.
 		 * @param {object} array - um array com os contatos.
 		 */
@@ -1298,29 +1475,43 @@
 		}
 
 		/**
+		 * Exibe um modal exibindo o codigo do orcamento exportado.
+		 * @param {string} msg - A mensagem a ser exibida.
+		 * @param {string} code - O codigo do orcamento exportado.
+		 */		
+		function afterExportDialog(msg, code) {
+			var controller = function() {
+					this._showCloseButton = true;
+					this.code = code;
+					this.msg = msg;
+				};
+
+			$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderExported.html', controller)
+				.then(function(res) {
+					switch (res) {
+						case 'print': {
+							self.print();
+							$scope.open();
+							break;
+						}
+						
+						case 'mail': {
+							alert('ainda nao implementado');
+							break;
+						}
+					}
+				}, function(res) {
+					$scope.open();
+				});
+		}
+
+		/**
 		 * Exporta o orcamento para pedido.
 		 * @param {string} id - O id do orcamento.
 		 */
 		function exportOrder(id) {
-			if (!validateBudget()) {
+			if (!validateBudgetToSave() || !validateBudgetToExport()) {
 				return;
-			}
-
-			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
-				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado!');
-				return;
-			}
-
-			if (!self.budget.order_payments.length) {
-				$rootScope.customDialog().showMessage('Erro', 'O orçamento precisa ter ao menos uma forma de pagamento informada!');
-				self.scrollTo('section[name="payment"]');
-				return false;
-			}
-
-			if (self.budget.getChange() != 0) {
-				$rootScope.customDialog().showMessage('Erro', 'Reveja os valores dos pagamentos!');
-				self.scrollTo('section[name="payment"]');
-				return false;
 			}
 
 			var deferred = $q.defer();
@@ -1329,52 +1520,50 @@
 				.then(function(success) {
 					constants.debug && console.log('exportando pedido: ' + id);					
 
+					$rootScope.loading.load();
+					/* O orcamento ja esta salvo. */
 					if (self.budget.order_id) {
-						$rootScope.loading.load();
-						providerOrder.exportOrder(self.budget.order_id).then(function(success) {
-							$rootScope.loading.unload();
-							deferred.resolve(success);
-						}, function(error) {
-							constants.debug && console.log(error);
-							$rootScope.loading.unload();
-							deferred.reject(error);
-						});
-					} else {
-						function afterSave(msg, code) {
-							var controller = function() {
-									this._showCloseButton = true;
-									this.code = code;
-									this.msg = msg;
-								};
+						/* Nao foi editado. */
+						if (!self.canSave()) {
+							/* Apenas exporta. */
+							providerOrder.exportOrder(self.budget.order_id).then(function(success) {
+								self.budget.order_erp = success.data.budget_code;
+								$rootScope.loading.unload();
 
-							$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderExported.html', controller)
-								.then(function(res) {
-									switch (res) {
-										case 'print': {
-											self.print();
-											newOrder();
-											break;
-										}
-										
-										case 'mail': {
-											alert('ainda nao implementado');
-											break;
-										}
-									}
-								}, function(res) {
-									newOrder();
-								});
+								deferred.resolve(success);
+
+								self.afterExportDialog('Orçamento exportado!', success.data.budget_code);
+							}, function(error) {
+								constants.debug && console.log(error);
+								$rootScope.loading.unload();
+								deferred.reject(error);
+							});
+						} else {
+							/* Edita e exporta. */
+							providerOrder.editAndExportOrder(filterBudget()).then(function(success) {
+								$rootScope.loading.unload();
+
+								deferred.resolve(success);
+								
+								self.afterExportDialog('Orçamento exportado!', success.data.budget_code);
+							}, function(error) {
+								constants.debug && console.log(error);
+								$rootScope.loading.unload();
+								deferred.reject(error);
+							});
 						}
-
-						$rootScope.loading.load();
+					} else {
+						/* Novo orcamento, salva e exporta */
 						providerOrder.saveAndExportOrder(filterBudget()).then(function(success) {
 							self.budget.order_id = success.data.order_id;
 							self.budget.order_code = success.data.order_code;
 							self.budget.order_date = moment().toDate();
 							self.budget.order_erp = success.data.budget_code;
 							$rootScope.loading.unload();
-							afterSave('Orçamento exportado!', success.data.budget_code);
+
 							deferred.resolve(success);
+							
+							self.afterExportDialog('Orçamento exportado!', success.data.budget_code);
 						}, function(error) {
 							constants.debug && console.log(error);
 							$rootScope.loading.unload();
@@ -1392,25 +1581,8 @@
 		 * @param {string} id - O id do orcamento.
 		 */
 		function exportDAV(id) {
-			if (!validateBudget()) {
+			if (!validateBudgetToSave() || !validateBudgetToExport()) {
 				return;
-			}
-
-			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
-				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado!');
-				return;
-			}
-
-			if (!self.budget.order_payments.length) {
-				$rootScope.customDialog().showMessage('Erro', 'O orçamento precisa ter ao menos uma forma de pagamento informada!');
-				self.scrollTo('section[name="payment"]');
-				return false;
-			}
-
-			if (self.budget.getChange() != 0) {
-				$rootScope.customDialog().showMessage('Erro', 'Reveja os valores dos pagamentos!');
-				self.scrollTo('section[name="payment"]');
-				return false;
 			}
 
 			var deferred = $q.defer();
@@ -1419,52 +1591,50 @@
 				.then(function(success) {
 					constants.debug && console.log('exportando DAV: ' + id);
 					
+					$rootScope.loading.load();
+					/* O orcamento ja esta salvo. */
 					if (self.budget.order_id) {
-						$rootScope.loading.load();
-						providerOrder.exportDAV(self.budget.order_id).then(function(success) {
-							$rootScope.loading.unload(success);
-							deferred.resolve(success);
-						}, function(error) {
-							constants.debug && console.log(error);
-							$rootScope.loading.unload();
-							deferred.reject(error);
-						});
-					} else {
-						function afterSave(msg, code) {
-							var controller = function() {
-									this._showCloseButton = true;
-									this.code = code;
-									this.msg = msg;
-								};
+						/* Nao foi editado. */
+						if (!self.canSave()) {
+							/* Apenas exporta. */
+							providerOrder.exportDAV(self.budget.order_id).then(function(success) {
+								$rootScope.loading.unload(success);
 
-							$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderExported.html', controller)
-								.then(function(res) {
-									switch (res) {
-										case 'print': {
-											self.print();
-											newOrder();
-											break;
-										}
-										
-										case 'mail': {
-											alert('ainda nao implementado');
-											break;
-										}
-									}
-								}, function(res) {
-									newOrder();
-								});
+								deferred.resolve(success);
+
+								self.afterExportDialog('Orçamento exportado!', success.data.dav_code);
+							}, function(error) {
+								constants.debug && console.log(error);
+								$rootScope.loading.unload();
+								deferred.reject(error);
+							});	
+						} else {
+							/* Edita e exporta. */
+							providerOrder.editAndExportDAV(filterBudget()).then(function(success) {
+								$rootScope.loading.unload(success);
+								self.budget.order_erp = success.data.budget_code;
+								
+								deferred.resolve(success);
+								
+								self.afterExportDialog('Orçamento exportado!', success.data.dav_code);
+							}, function(error) {
+								constants.debug && console.log(error);
+								$rootScope.loading.unload();
+								deferred.reject(error);
+							});
 						}
-
-						$rootScope.loading.load();
+					} else {
+						/* Novo orcamento, salva e exporta */
 						providerOrder.saveAndExportDAV(filterBudget()).then(function(success) {
 							$rootScope.loading.unload(success);
 							self.budget.order_id = success.data.order_id;
 							self.budget.order_code = success.data.order_code;
 							self.budget.order_date = moment().toDate();
 							self.budget.order_erp = success.data.budget_code;
-							afterSave('Orçamento exportado!', success.data.dav_code);
+							
 							deferred.resolve(success);
+							
+							self.afterExportDialog('Orçamento exportado!', success.data.dav_code);
 						}, function(error) {
 							constants.debug && console.log(error);
 							$rootScope.loading.unload();
@@ -2092,148 +2262,9 @@
 			self.budget.order_payments[self.budget.order_payments.length - 1].order_payment_value_total += diff;
 		}
 
-
-
-
-
-		function bindKeys() {
-			var Mousetrap = require('mousetrap');
-
-			/* Avancar sessao */
-			Mousetrap.bind('shift+enter', function(e, combo) {
-				if (!_isToolbarLocked) {
-					switch(_focusOn) {
-						case 'products':
-							self.scrollTo('section[name="seller"]');
-							self.focusOn('input[name="seller-code"]');
-							break;
-
-						case 'seller':
-							self.scrollTo('section[name="customer"]');
-							self.focusOn('input[name="customer-code"]');
-							break;
-
-						case 'customer':
-							self.scrollTo('section[name="notes"]');
-							self.focusOn('textarea[name="order-note"]');
-							break;
-
-						case 'notes':
-							self.scrollTo('section[name="payment"]');
-							self.focusOn('input[name="term-code"]');
-							break;
-
-						case 'payment':
-							break;
-					}
-				}
-
-				return false;
-			});
-
-			/* Novo orcamento */
-			Mousetrap.bind(['command+n', 'ctrl+n'], function() {
-				$scope.newOrder();
-				return false;
-			});
-
-			/* Abrir orcamento */
-			Mousetrap.bind(['command+a', 'ctrl+a'], function() {
-				$scope.open();
-				return false;
-			});
-
-			/* Salvar orcamento */
-			Mousetrap.bind(['command+s', 'ctrl+s'], function() {
-				if (!_isToolbarLocked)
-					$scope.save();
-
-				return false;
-			});
-
-			/* Imprimir orcamento */
-			Mousetrap.bind(['command+p', 'ctrl+p'], function() {
-				if (!_isToolbarLocked)
-					self.print();
-
-				return false;
-			});
-
-			/* Mudar empresa do orcamento */
-			Mousetrap.bind(['command+e', 'ctrl+e'], function() {
-				if (!_isToolbarLocked)
-					self.selectCompany();
-
-				return false;
-			});
-
-			/* Ir para produtos */
-			Mousetrap.bind(['command+1', 'ctrl+1'], function() {
-				if (!_isToolbarLocked) {
-					self.scrollTo('section[name="products"]');
-					self.focusOn('input[name="product-code"]');
-				}
-
-				return false;
-			});
-
-			/* Ir para vendedor */
-			Mousetrap.bind(['command+2', 'ctrl+2'], function() {
-				if (!_isToolbarLocked) {
-					self.scrollTo("section[name=\'seller\']")
-					self.focusOn('input[name="seller-code"]');
-				}
-
-				return false;
-			});
-
-			/* Ir para cliente */
-			Mousetrap.bind(['command+3', 'ctrl+3'], function() {
-				if (!_isToolbarLocked) {
-					self.scrollTo("section[name=\'customer\']")
-					self.focusOn('input[name="customer-code"]');
-				}
-
-				return false;
-			});
-
-			/* Ir para observacoes */
-			Mousetrap.bind(['command+4', 'ctrl+4'], function() {
-				if (!_isToolbarLocked) {
-					self.scrollTo("section[name=\'notes\']")
-					self.focusOn('textarea[name="order-note"]');
-				}
-
-				return false;
-			});
-
-			/* Ir para pagamento */
-			Mousetrap.bind(['command+5', 'ctrl+5'], function() {
-				if (!_isToolbarLocked) {
-					self.scrollTo("section[name=\'payment\']")
-					self.focusOn('textarea[name="term-code"]');
-				}
-
-				return false;
-			});
-		}
-
-		function unbindKeys() {
-			var Mousetrap = require('mousetrap');
-
-			Mousetrap.unbind('shift+enter');
-			Mousetrap.unbind(['command+n', 'ctrl+n']);
-			Mousetrap.unbind(['command+a', 'ctrl+a']);
-			Mousetrap.unbind(['command+s', 'ctrl+s']);
-			Mousetrap.unbind(['command+p', 'ctrl+p']);
-			Mousetrap.unbind(['command+e', 'ctrl+e']);
-			Mousetrap.unbind(['command+1', 'ctrl+1']);
-			Mousetrap.unbind(['command+2', 'ctrl+2']);
-			Mousetrap.unbind(['command+3', 'ctrl+3']);
-			Mousetrap.unbind(['command+4', 'ctrl+4']);
-			Mousetrap.unbind(['command+5', 'ctrl+5']);
-		}
-
+		/**
+		 * Exibe a tela de localizacao de vendedores.
+		 */
 		function showModalSeller() {
 			var category = Globals.get('person-categories').seller,
 				options = {
@@ -2247,6 +2278,9 @@
 			}, function(error){ });
 		}
 
+		/**
+		 * Exibe a tela de localizacao de clientes.
+		 */
 		function showModalCustomer() {
 			var category = Globals.get('person-categories').customer,
 				options = {
@@ -2263,6 +2297,9 @@
 			});
 		}
 
+		/**
+		 * Exibe a tela de localizacao de produtos.
+		 */
 		function showModalProduct() {
 			var options = {
 				getUnit: 1,

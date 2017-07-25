@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-22 13:23:08
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-21 17:29:54
+* @Last Modified time: 2017-07-25 09:13:59
 */
 
 (function() {
@@ -31,8 +31,10 @@
 					edit: edit,
 					exportDAV: exportDAV,
 					saveAndExportDAV: saveAndExportDAV,
+					editAndExportDAV: editAndExportDAV,
 					exportOrder: exportOrder,
-					saveAndExportOrder: saveAndExportOrder
+					saveAndExportOrder: saveAndExportOrder,
+					editAndExportOrder: editAndExportOrder
 				}
 
 				// ******************************
@@ -137,6 +139,12 @@
 					}, order).$promise;
 				}
 
+				function editAndExportDAV(order) {
+					return provider.save({
+						action: 'editExportDav'
+					}, order).$promise;
+				}
+
 				function exportOrder(id) {
 					return provider.save({
 						action: 'exportOrder'
@@ -148,6 +156,12 @@
 				function saveAndExportOrder(order) {
 					return provider.save({
 						action: 'insertExportOrder'
+					}, order).$promise;
+				}
+
+				function editAndExportOrder(order) {
+					return provider.save({
+						action: 'editExportOrder'
 					}, order).$promise;
 				}
 
