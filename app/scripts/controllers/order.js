@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-25 13:24:05
+* @Last Modified time: 2017-07-25 13:27:39
 */
 
 (function() {
@@ -315,7 +315,7 @@
 		self.showModalProduct    = showModalProduct;
 
 		function validatePayments() {
-			
+
 		}
 
 		function validateBudgetToSave() {
@@ -1330,9 +1330,9 @@
 		}
 
 		function authorizeCredit() {
-			var msg = 'Desconto acima do permitido: ' + value.toFixed(2) + '%';
+			var msg = 'Crédito não disponível ';
 
-			return self.authorizationDialog(msg, 'order', 'user_credit_limt');	
+			return self.authorizationDialog(msg, 'order', 'user_credit_authorization');	
 		}
 
 		/**
