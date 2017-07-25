@@ -36,20 +36,20 @@
 			table.table.order-table
 				thead
 					tr
-						th &nbsp;
-						th(ng-click="openOrder.sortBy('order_code')")
+						th.sortable &nbsp;
+						th.sortable(ng-click="openOrder.sortBy('order_code')")
 							| CÓDIGO &nbsp;
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_code'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
-						th(ng-click="openOrder.sortBy('order_client.person_name')")
+						th.sortable(ng-click="openOrder.sortBy('order_client.person_name')")
 							| CLIENTE &nbsp;
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_client.person_name'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
-						th(ng-click="openOrder.sortBy('order_seller.person_name')")
+						th.sortable(ng-click="openOrder.sortBy('order_seller.person_name')")
 							| VENDEDOR &nbsp;
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_seller.person_name'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
-						th(ng-click="openOrder.sortBy('order_value_total')")
+						th.sortable(ng-click="openOrder.sortBy('order_value_total')")
 							| TOTAL &nbsp;
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_value_total'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
-						th(ng-click="openOrder.sortBy('order_date')")
+						th.sortable(ng-click="openOrder.sortBy('order_date')")
 							| DATA &nbsp;
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_date'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						th &nbsp;

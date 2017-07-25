@@ -248,19 +248,19 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							md-item-template
 								div(md-highlight-text='customerQuery' style='line-height: 2') {{item.product_name}}
 								div(layout='row' style='color: #888')
-									div(style='font-size: 11px;line-height: 1')
+									div(flex='20' style='font-size: 11px;line-height: 1')
 										| Cód: 
 										| {{item.product_code}} 
-									div(flex='5')
-									div(style='font-size: 11px;line-height: 1')
-										| Ref: 
-										| {{item.product_classification || 'Sem referência'}} 
-									div(flex='5')
-									div(style='font-size: 11px;line-height: 1')
+									//- div(flex='5')
+									div(flex='30' style='font-size: 11px;line-height: 1')
+										| Class.: 
+										| {{item.product_classification || 'indisponível' | truncate:10}} 
+									//- div(flex='5')
+									div(flex='30' style='font-size: 11px;line-height: 1')
 										| Estoque: 
-										| {{item.unit && item.unit.unit_format == "I" ? (item.stock.product_stock | number:'0') : item.stock.product_stock}} ({{item.unit.unit_initials}}) 
-									div(flex='5')
-									div(style='font-size: 11px;line-height: 1')
+										| {{item.unit && item.unit.unit_format == "I" ? (item.stock.product_stock | number: 0) : (item.stock.product_stock | number: 2)}} ({{item.unit.unit_initials}}) 
+									//- div(flex='5')
+									div(flex='20' style='font-size: 11px;line-height: 1')
 										| Preço: 
 										| {{item.product_prices[0].price_value | currency: 'R$ '}} 
 
@@ -271,7 +271,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									ng-disabled='!order.internal.tempItem.product.product_code'
 									ng-model-options='{ trackBy: "$value.price_id" }')
 								md-option(ng-value='p' ng-repeat='p in order.internal.tempProduct.product_prices' 
-										ng-click='order.priceTableChanged()')
+										ng-click='order.priceTableChanged(p)')
 									| {{p.price_name}} ({{p.price_value | currency:'R$ '}})
 					
 					div(layout='row')
@@ -343,18 +343,20 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 											md-button.md-icon-button(tabindex='-1' ng-click='order.removeItem(i)')
 												md-icon(md-font-set='material-icons' md-menu-align-target) delete_forever
 
-					.offset-top-30(layout='row')
+					.items-summary(layout='row')
 						span(flex)
-						md-input-container.large-input(flex='15')
-							label Desconto %
-							input(tabindex='-1' readonly ng-model='order.budget.order_al_discount'
-									currency trim max-fraction-size='4')
-						md-input-container.large-input(flex='15')
-							label Desconto R$
-							input(tabindex='-1' readonly ng-value='order.budget.order_vl_discount | currency: "R$ "')
-						md-input-container.large-input(flex='15')
-							label Total
-							input(tabindex='-1' readonly ng-value='order.budget.order_value_total | currency:"R$ "')
+
+						div(layout='column' layout-align='center start')
+							span Desconto %
+							span {{order.budget.order_al_discount | number:2}}%
+
+						div(layout='column' layout-align='center start')
+							span Desconto R$
+							span {{order.budget.order_vl_discount | currency:'R$ '}}
+
+						div(layout='column' layout-align='center start')
+							span Total
+							span {{order.budget.order_value_total | currency:'R$ '}}
 
 		//- Vendedor
 		section(name='seller')

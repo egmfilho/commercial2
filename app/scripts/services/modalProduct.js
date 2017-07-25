@@ -70,7 +70,6 @@
 						attatchTo: angular.element(document.getElementById('order')),
 						zIndex: 1,
 						hasBackdrop: false,
-						escapeToClose: false,
 						innerDialog: true
 					};
 

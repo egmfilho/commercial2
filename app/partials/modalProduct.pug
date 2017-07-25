@@ -17,19 +17,19 @@
 			table.product-table.table
 				thead
 					tr
-						th(ng-click="ctrl.sortBy('product_code')")
+						th.sortable(ng-click="ctrl.sortBy('product_code')")
 							| CÓDIGO &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'product_code'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
-						th(ng-click="ctrl.sortBy('product_classification')")
+						th.sortable(ng-click="ctrl.sortBy('product_classification')")
 							| CLASS. &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'product_classification'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
-						th(ng-click="ctrl.sortBy('product_name')")
+						th.sortable(ng-click="ctrl.sortBy('product_name')")
 							| NOME &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'product_name'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
-						th(ng-click="ctrl.sortBy('product_prices[0].price_value')")
+						th.sortable(ng-click="ctrl.sortBy('product_prices[0].price_value')")
 							| PREÇO &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'product_prices[0].price_value'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
-						th(ng-click="ctrl.sortBy('stock.product_stock')")
+						th.sortable(ng-click="ctrl.sortBy('stock.product_stock')")
 							| ESTOQUE &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'stock.product_stock'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 		.container-table(flex)

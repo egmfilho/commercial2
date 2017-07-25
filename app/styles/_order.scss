@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-25 08:42:56
+* @Last Modified time: 2017-07-25 12:46:51
 */
 
 .customer-credit-modal {
@@ -14,12 +14,10 @@
 	}
 
 	.credit-table {
-		width: 850px;
-
 		tr {
 			th, td {
 				&:nth-child(1) {
-					width: 16px;
+					width: 20px;
 
 					md-checkbox {
 						margin: 0;
@@ -149,16 +147,6 @@
 			.md-errors-spacer {
 				min-height: 0;
 			}
-
-			&.large-input {
-				font-size: 1.3em;
-				margin-left: 5px;
-
-				input {
-					text-align: center;
-					color: $main-color;
-				}
-			}
 		}
 	}
 
@@ -222,6 +210,32 @@
 					font-size: 20px;
 					padding-top: 10px;
 				}
+			}
+		}
+	}
+}
+
+.items-summary {
+	margin-top: 0;
+	height: auto;
+	border: 1px solid #d7d7d7;
+	border-top: none;
+
+	div {
+		min-width: 120px;
+		height: 100%;
+		margin: 16px 8px;
+
+		span {
+			display: block;
+
+			&:first-child {
+				@extend .text-light;
+			}
+
+			&:last-child {
+				@extend .text-primary;
+				font-size: 20px;
 			}
 		}
 	}

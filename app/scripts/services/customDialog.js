@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 12:54:20
+* @Last Modified time: 2017-07-25 12:32:36
 */
 
 (function() {
@@ -130,11 +130,15 @@
 				_width: options && options.width ? options.width : 300,
 				_close: function(res) {
 					_deferred.resolve(res);
-					scope._dialog.close();
+					scope._dialog.close().then(function(success) {
+						scope._dialog.destroy();
+					});
 				},
 				_cancel: function(res) {
 					_deferred.reject(res);
-					scope._dialog.close();
+					scope._dialog.close().then(function(success) {
+						scope._dialog.destroy();
+					});
 				}
 			};
 
@@ -153,7 +157,10 @@
 				templateUrl: './partials/customDialogTemplate.html',
 				locals: locals,
 				controller: controller,
-				controllerAs: 'ctrl'
+				controllerAs: 'ctrl',
+				onRemoving: function(element, removePromise) {
+					_deferred.reject();
+				}
 			};
 
 			scope._dialog = $mdPanel.create(angular.extend({ }, _options, options));

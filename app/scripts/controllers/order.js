@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-25 10:25:27
+* @Last Modified time: 2017-07-25 13:24:05
 */
 
 (function() {
@@ -145,7 +145,7 @@
 
 			/* Salvar orcamento */
 			Mousetrap.bind(['command+s', 'ctrl+s'], function() {
-				if (!_isToolbarLocked)
+				if (!_isToolbarLocked && self.canSave())
 					$scope.save();
 
 				return false;
@@ -250,67 +250,73 @@
 		// Methods enumeration
 		// ******************************
 
-		self.isToolbarLocked    = isToolbarLocked;
-		self.canSave            = canSave;
-		self.canExport          = canExport;
-		self.canPrint           = canPrint;
-		self.canChangeCompany   = canChangeCompany;
-		self.isExported         = isExported;
-		self.selectCompany      = selectCompany;
-		self.internal           = internalItems();
-		self.budget             = new Order({ order_user: Globals.get('user')});
-		self.newCustomer        = newCustomer;
-		self.setCustomer        = setCustomer;
-		self.clearSeller        = clearSeller;
-		self.clearProductSearch = clearProductSearch;
-		self.clearItems         = clearItems;
-		self.clearCustomer      = clearCustomer;
-		self.clearNote          = clearNote;
-		self.clearPayments      = clearPayments;
-		self.clearTerm          = clearTerm;
-		self.getPersonByCode    = getPersonByCode;
-		self.getPersonByName    = getPersonByName;
-		self.getSellerByCode    = getSellerByCode;
-		self.getSellerByName    = getSellerByName;
-		self.getCustomerByCode  = getCustomerByCode;
-		self.getCustomerByName  = getCustomerByName;
-		self.getProductByCode   = getProductByCode;
-		self.getProductByName   = getProductByName;
-		self.priceTableChanged  = priceTableChanged;
-		self.setItemAmount      = setItemAmount;
-		self.setItemAlDiscount  = setItemAlDiscount;
-		self.setItemVlDiscount  = setItemVlDiscount;
-		self.setTotalAlDiscount = setTotalAlDiscount;
-		self.setTotalVlDiscount = setTotalVlDiscount;
-		self.authorizeDiscount  = authorizeDiscount;
-		self.editItem           = editItem;
-		self.addItem            = addItem;
-		self.removeItem         = removeItem;
-		self.scrollTo           = scrollTo;
-		self.focusOn            = focusOn;
-		self.print              = print;
-		self.savePDF            = savePDF;
-		self.showNotFound       = showNotFound;
-		self.addressDialog      = addressDialog;
-		self.showAddressContact = showAddressContact;
-		self.afterExportDialog  = afterExportDialog;
-		self.exportOrder        = exportOrder;
-		self.exportDAV          = exportDAV;
-		self.searchTerm         = searchTerm;
-		self.getTermByCode      = getTermByCode;
-		self.selectTerm         = selectTerm;
-		self.addModality        = addModality;
-		self.addPayment         = addPayment;
-		self.editPayment        = editPayment;
-		self.removePayment      = removePayment;
-		self.removeCredit       = removeCredit;
-		self.removeAllPayments  = removeAllPayments;
-		self.paymentDialog      = paymentDialog;
-		self.addCredit          = addCredit;
-		self.recalcPayments     = recalcPayments;
-		self.showModalSeller    = showModalSeller;
-		self.showModalCustomer  = showModalCustomer;
-		self.showModalProduct   = showModalProduct;
+		self.isToolbarLocked     = isToolbarLocked;
+		self.canSave             = canSave;
+		self.canExport           = canExport;
+		self.canPrint            = canPrint;
+		self.canChangeCompany    = canChangeCompany;
+		self.isExported          = isExported;
+		self.selectCompany       = selectCompany;
+		self.internal            = internalItems();
+		self.budget              = new Order({ order_user: Globals.get('user')});
+		self.newCustomer         = newCustomer;
+		self.setCustomer         = setCustomer;
+		self.clearSeller         = clearSeller;
+		self.clearProductSearch  = clearProductSearch;
+		self.clearItems          = clearItems;
+		self.clearCustomer       = clearCustomer;
+		self.clearNote           = clearNote;
+		self.clearPayments       = clearPayments;
+		self.clearTerm           = clearTerm;
+		self.getPersonByCode     = getPersonByCode;
+		self.getPersonByName     = getPersonByName;
+		self.getSellerByCode     = getSellerByCode;
+		self.getSellerByName     = getSellerByName;
+		self.getCustomerByCode   = getCustomerByCode;
+		self.getCustomerByName   = getCustomerByName;
+		self.getProductByCode    = getProductByCode;
+		self.getProductByName    = getProductByName;
+		self.priceTableChanged   = priceTableChanged;
+		self.setItemAmount       = setItemAmount;
+		self.setItemAlDiscount   = setItemAlDiscount;
+		self.setItemVlDiscount   = setItemVlDiscount;
+		self.setTotalAlDiscount  = setTotalAlDiscount;
+		self.setTotalVlDiscount  = setTotalVlDiscount;
+		self.authorizationDialog = authorizationDialog;
+		self.authorizeDiscount   = authorizeDiscount;
+		self.authorizeCredit     = authorizeCredit;
+		self.editItem            = editItem;
+		self.addItem             = addItem;
+		self.removeItem          = removeItem;
+		self.scrollTo            = scrollTo;
+		self.focusOn             = focusOn;
+		self.print               = print;
+		self.savePDF             = savePDF;
+		self.showNotFound        = showNotFound;
+		self.addressDialog       = addressDialog;
+		self.showAddressContact  = showAddressContact;
+		self.afterExportDialog   = afterExportDialog;
+		self.exportOrder         = exportOrder;
+		self.exportDAV           = exportDAV;
+		self.searchTerm          = searchTerm;
+		self.getTermByCode       = getTermByCode;
+		self.selectTerm          = selectTerm;
+		self.addModality         = addModality;
+		self.addPayment          = addPayment;
+		self.editPayment         = editPayment;
+		self.removePayment       = removePayment;
+		self.removeCredit        = removeCredit;
+		self.removeAllPayments   = removeAllPayments;
+		self.paymentDialog       = paymentDialog;
+		self.addCredit           = addCredit;
+		self.recalcPayments      = recalcPayments;
+		self.showModalSeller     = showModalSeller;
+		self.showModalCustomer   = showModalCustomer;
+		self.showModalProduct    = showModalProduct;
+
+		function validatePayments() {
+			
+		}
 
 		function validateBudgetToSave() {
 			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
@@ -517,8 +523,9 @@
 			$timeout(function() { $scope.$broadcast('orderViewLoaded'); });
 		});
 
-		$scope.newOrder = function() {
-			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
+		$scope.newOrder = function(skip) {
+			// if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
+			if (!self.canSave() || !!skip) {
 				newOrder();
 			} else {
 				$rootScope.customDialog().showConfirm('Aviso', 'Deseja descartar o orçamento atual?')
@@ -528,8 +535,15 @@
 			}
 		};
 
-		$scope.open = function() {
-			$location.path('/open-order');
+		$scope.open = function(skip) {
+			if (!self.canSave() || !!skip) {
+				$location.path('/open-order');
+			} else {
+				$rootScope.customDialog().showConfirm('Aviso', 'Deseja descartar o orçamento atual?')
+					.then(function(success) {
+						$location.path('/open-order');
+					}, function(error) { });	
+			}
 		};
 
 		$scope.save = function() {
@@ -565,7 +579,7 @@
 								switch (res) {
 									case 'print': {
 										self.print();
-										newOrder();
+										$scope.open(true);
 										break;
 									}
 									
@@ -577,10 +591,10 @@
 									case 'order': {
 										exportOrder(self.budget.order_id).then(function(success) {
 											$rootScope.toast('Orçamento exportado!', 'Código gerado: ' + success.data.order_code);
-											newOrder();
+											$scope.open(true);
 										}, function(error) {
 											$rootScope.customDialog().showMessage('Erro', error.data.status.description);
-											newOrder();
+											$scope.open(true);
 										});
 										break;
 									}
@@ -588,16 +602,16 @@
 									case 'dav': {
 										exportDAV(self.budget.order_id).then(function(success) {
 											$rootScope.toast('Orçamento exportado!', 'Código gerado: ' + success.data.order_code);
-											newOrder();
+											$scope.open(true);
 										}, function(error) {
 											$rootScope.customDialog().showMessage('Erro', error.data.status.description);
-											newOrder();
+											$scope.open(true);
 										});
 										break;
 									}
 								}
 							}, function(res) {
-								newOrder();
+								$scope.open(true);
 							});
 					}
 
@@ -1040,6 +1054,7 @@
 			providerProduct.getByCode(code, self.budget.order_company_id, self.internal.tempItem.price_id, options).then(function(success) {
 				if (success.data.product_active == 'N') {
 					$rootScope.customDialog().showMessage('Aviso', 'Produto inativo!');
+					$rootScope.loading.unload();
 					return;
 				}
 
@@ -1091,7 +1106,9 @@
 		 * Seleciona a tabela de precos do item.
 		 * @param {object} price - A tabela de precos.
 		 */
-		function priceTableChanged() {
+		function priceTableChanged(price) {
+			if (self.internal.tempItem.price.equals(price)) return;
+
 			if (self.internal.tempItem.order_item_al_discount > 0) {
 				var msg = 'Ao trocar a tabela de preços o desconto será removido do item. Deseja continuar?';
 
@@ -1102,7 +1119,7 @@
 						self.internal.tempItemAlDiscount = self.internal.tempItem.order_item_al_discount;
 						self.internal.tempItemVlDiscount = self.internal.tempItem.order_item_vl_discount;
 						
-						self.priceTableChanged();
+						self.priceTableChanged(price);
 					}, function(error) { 
 						self.internal.tempPrice = new Price(self.internal.tempItem.price); 
 					});
@@ -1110,7 +1127,8 @@
 				return;
 			}
 
-			self.internal.tempItem.setPrice(self.internal.tempPrice);
+			console.log(price);
+			self.internal.tempItem.setPrice(price);
 		}
 
 		/**
@@ -1241,33 +1259,42 @@
 		}
 
 		/**
-		 * Abre um modal para autorizar o desconto do item.
-		 * @param {float} value - O valor do desconto.
-		 * @param {float} max - O valor maximo de desconto permitido para o usuario.
+		 * Abre um modal para autorizar uma acao.
+		 * @param {string} msg - A mensagem a ser exibida na janela.
+		 * @param {string} module - O modulo do qual a permissao pertence.
+		 * @param {string} access - O nome da permissao.
 		 * @returns {object} - Uma promise com o resultado.
 		 */
-		function authorizeDiscount(value) {
+		function authorizationDialog(msg, module, access) {
 			var deferred = $q.defer(),
 				options = null;
 
 			function controller($rootScope, providerPermission, Audit) {
 				var ctrl = this;
 
-				this.text = 'Desconto acima do permitido: ' + value.toFixed(2) + '%';
+				this.text = msg;
 				this.user = null;
 				this.pass = null;
 				this.authorize = authorize;
+				this.advance = function() {
+					jQuery('input[ng-model=\'ctrl.pass\']').focus();
+				};
+
+				$timeout(function() {
+					jQuery('input[ng-model=\'ctrl.user\']').focus();
+				}, 300);
+
 
 				function authorize(user, pass, callback) {
 					if (!user || !pass) return;
 
 					$rootScope.loading.load();
-					providerPermission.authorize('order', 'user_discount', user, pass).then(function(success) {
+					providerPermission.authorize(module, access, user, pass).then(function(success) {
 						$rootScope.loading.unload();
 						ctrl._close(success.data);
 					}, function(error) {
 						$rootScope.loading.unload();
-						$rootScope.customDialog().showMessage('Aviso', error.data.status.description);
+						$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 					});
 				}
 			}
@@ -1289,6 +1316,23 @@
 				});
 
 			return deferred.promise;
+		}
+
+		/**
+		 * Abre um modal para autorizar o desconto do item.
+		 * @param {float} value - O valor do desconto.
+		 * @returns {object} - Uma promise com o resultado.
+		 */
+		function authorizeDiscount(value) {
+			var msg = 'Desconto acima do permitido: ' + value.toFixed(2) + '%';
+
+			return self.authorizationDialog(msg, 'order', 'user_discount');
+		}
+
+		function authorizeCredit() {
+			var msg = 'Desconto acima do permitido: ' + value.toFixed(2) + '%';
+
+			return self.authorizationDialog(msg, 'order', 'user_credit_limt');	
 		}
 
 		/**
@@ -1491,7 +1535,7 @@
 					switch (res) {
 						case 'print': {
 							self.print();
-							$scope.open();
+							$scope.open(true);
 							break;
 						}
 						
@@ -1501,7 +1545,7 @@
 						}
 					}
 				}, function(res) {
-					$scope.open();
+					$scope.open(true);
 				});
 		}
 
@@ -2147,8 +2191,11 @@
 				}
 			};
 
-			$rootScope.customDialog().showTemplate('Cartas de crédito', './partials/modalCustomerCredit.html', controller, { hasBackdrop: true })
+			_isToolbarLocked = true;
+			$rootScope.customDialog().showTemplate('Cartas de crédito', './partials/modalCustomerCredit.html', controller, { zIndex: 1, innerDialog: true })
 				.then(function(res) {
+					_isToolbarLocked = false;
+
 					constants.debug && console.log('creditos selecionados: ', res);
 
 					$rootScope.loading.load();
@@ -2203,7 +2250,9 @@
 							$rootScope.loading.load();
 						});					
 					
-				}, function(error) { });
+				}, function(error) { 
+					_isToolbarLocked = false;
+				});
 		}
 
 		/**
@@ -2272,10 +2321,15 @@
 					limit: 100
 				};
 
-			ModalPerson.show('Localizar Vendedor', category, options).then(function(success) {
-				self.budget.setSeller(new Person(success));
-				self.internal.tempSeller = new Person(success);
-			}, function(error){ });
+			_isToolbarLocked = true;
+			ModalPerson.show('Localizar Vendedor', category, options)
+				.then(function(success) {
+					self.budget.setSeller(new Person(success));
+					self.internal.tempSeller = new Person(success);
+					_isToolbarLocked = false;
+				}, function(error) {
+					_isToolbarLocked = false;
+				});
 		}
 
 		/**
@@ -2289,12 +2343,13 @@
 				};
 
 			_isToolbarLocked = true;
-			ModalPerson.show('Localizar Cliente', category, options).then(function(success) {
-				self.getCustomerByCode(success.person_code);
-				_isToolbarLocked = false;
-			}, function(error){
-				_isToolbarLocked = false;
-			});
+			ModalPerson.show('Localizar Cliente', category, options)
+				.then(function(success) {
+					self.getCustomerByCode(success.person_code);
+					_isToolbarLocked = false;
+				}, function(error){
+					_isToolbarLocked = false;
+				});
 		}
 
 		/**
@@ -2309,12 +2364,13 @@
 			};
 
 			_isToolbarLocked = true;
-			ModalProduct.show('Localizar Produto',self.budget.order_company_id,self.internal.tempItem.price_id,options).then(function(success) {
-				self.getProductByCode(success.product_code);
-				_isToolbarLocked = false;
-			},function(error) {
-				_isToolbarLocked = false;
-			});
+			ModalProduct.show('Localizar Produto',self.budget.order_company_id,self.internal.tempItem.price_id,options)
+				.then(function(success) {
+					self.getProductByCode(success.product_code);
+					_isToolbarLocked = false;
+				},function(error) {
+					_isToolbarLocked = false;
+				});
 		}
 	}
 }());

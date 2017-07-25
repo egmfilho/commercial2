@@ -1,5 +1,5 @@
-.customer-credit-modal
-	.body(layout='column')
+.customer-credit-modal(flex layout='column' layout-fill)
+	.body(flex layout='column')
 		.credit-table-header-container
 			table.table.credit-table
 				thead
@@ -14,7 +14,7 @@
 						th EMISSÃO
 						th EMPENHADO
 
-		.container-table
+		.container-table(flex)
 			table.table.credit-table
 				tbody
 					tr(ng-repeat='c in ctrl.creditArray track by $index' ng-click='ctrl.setActive(c)' ng-dblclick='ctrl.selectCredit(c)' ng-class='{"active": $index == ctrl.activeRow, "text-danger": !!c.pawn}')
@@ -33,8 +33,8 @@
 			.well
 				| {{ctrl.tempNote}}
 
-	.footer(layout='row' layout-align='end center' style='border-top: 1px solid #d7d7d7;')
-		md-button.md-primary(name='positive' ng-click='ctrl.close()')
+	.footer(layout='row' layout-align='end center')
+		md-button.md-raised(name='positive' ng-click='ctrl.close()' md-colors='{ background: "commercialGreen" }')
 			| &nbsp; Ok &nbsp;
-		md-button.md-primary(name='negative' ng-click='ctrl._cancel()')
+		md-button.md-raised.md-primary(name='negative' ng-click='ctrl._cancel()')
 			| &nbsp; Cancelar &nbsp;

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-25 08:46:04
+* @Last Modified time: 2017-07-25 12:55:43
 */
 
 
@@ -111,6 +111,14 @@ table.table {
 		font-size: 12px;
 		font-weight: bold;
 		padding-bottom: 12px;
+
+		&.sortable {
+			cursor: pointer !important;
+
+			* {
+				cursor: pointer !important;
+			}
+		}
 	}
 
 	tbody tr {

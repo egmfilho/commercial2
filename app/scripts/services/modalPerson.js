@@ -72,7 +72,6 @@
 					var modalOptions = {
 						zIndex: 1,
 						hasBackdrop: false,
-						escapeToClose: false,
 						innerDialog: true
 					};
 
