@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-25 12:32:36
+* @Last Modified time: 2017-07-26 12:14:20
 */
 
 (function() {
@@ -72,7 +72,7 @@
 				this._negativeButtonText = 'Fechar';
 			}
 
-			return show(this, title, message, null, controller, options);
+			return show(this, title, message, null, controller, angular.extend({}, options, { zIndex: 100, width: 400 }));
 		}
 
 		/**
@@ -90,7 +90,7 @@
 				this._negativeButtonText = 'Não';
 			}
 
-			return show(this, title, message, null, controller, options);
+			return show(this, title, message, null, controller, angular.extend({}, options, { zIndex: 100, width: 400 }));
 		}
 
 		/**

@@ -625,6 +625,15 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									i.fa.fa-calculator &nbsp;
 									| Recalcular
 
+							.payment-summary(flex layout='row')
+								div(layout='column' layout-align='center start')
+									span Total
+									span {{order.budget.getPaymentValue() | number:2}}%
+
+								div(layout='column' layout-align='center start')
+									span Restante
+									span {{order.budget.getChange() | currency:'R$ '}}
+
 						div(flex='40' layout='column')
 
 							.well.credit(layout='row' layout-align='center center')
@@ -639,7 +648,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 							
 							.summary(layout='column')
 								md-toolbar.md-toolbar-tools(style='z-index: 0')
-									h2 Resumo
+									h2 Resumo do orçamento
 
 								table.md-subhead
 									tr
@@ -666,22 +675,18 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 										td.text-primary
 											| {{order.budget.order_value_total | currency:'R$ '}}
 
-					.offset-top-15(layout='row')
-						
-						md-input-container.large-input(flex='15')
-							label Total
-							input(tabindex='-1' readonly ng-value='order.budget.getPaymentValue() | currency:"R$ "')
-						
-						md-input-container.large-input(flex='15')
-							label Restante
-							input(tabindex='-1' readonly ng-value='order.budget.getChange() | currency: "R$ "')
+								.order-button-container(flex layout='row' layout-align='center center')
+									md-button.md-raised.md-primary(ng-click='')
+										i.fa.fa-sticky-note &nbsp;
+										| Adicionar observações
 
-					div(layout='row')
-						pre(flex='40' ng-if='debug')
-							| {{order.internal.term.tempTerm | json}}
 
-						pre(flex='60' ng-if='debug')
-							| {{order.budget.order_payments | json}}
+				div(layout='row')
+					pre(flex='40' ng-if='debug')
+						| {{order.internal.term.tempTerm | json}}
+
+					pre(flex='60' ng-if='debug')
+						| {{order.budget.order_payments | json}}
 
 		//- Controle
 		section(name='control')

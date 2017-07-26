@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-26 11:17:07
+* @Last Modified time: 2017-07-26 12:35:43
 */
 
 (function() {
@@ -318,7 +318,7 @@
 		self.showModalCustomerInfo = showModalCustomerInfo;
 		self.showModalProduct      = showModalProduct;
 
-		function validateBudgetToSave() {
+		function validateBudgetToSave(callback) {
 			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
 				$rootScope.customDialog().showMessage('Erro', 'Este orçamento já foi exportado e não pode mais ser editado!');
 				return false;
@@ -398,7 +398,8 @@
 							person_name: self.budget.order_client.person_name,
 							person_code: self.budget.order_client.person_code
 						});
-						$scope.save();
+						// $scope.save();
+						callback && callback();
 					}
 				}, function(error){});
 				return false;
@@ -572,7 +573,7 @@
 				return;
 			}
 
-			if (!validateBudgetToSave()) {
+			if (!validateBudgetToSave($scope.save)) {
 				return;
 			}
 
@@ -664,6 +665,8 @@
 							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 						});
 					}
+
+					self.budget.removeAudit();
 				}, function(error) {
 					self.budget.removeAudit();
 				});
@@ -1577,10 +1580,9 @@
 
 		/**
 		 * Exporta o orcamento para pedido.
-		 * @param {string} id - O id do orcamento.
 		 */
-		function exportOrder(id) {
-			if (!validateBudgetToSave() || !validateBudgetToExport()) {
+		function exportOrder() {
+			if (!validateBudgetToSave(self.exportOrder) || !validateBudgetToExport()) {
 				return;
 			}
 
@@ -1588,7 +1590,7 @@
 
 			$rootScope.customDialog().showConfirm('Aviso', 'Exportar pedido?')
 				.then(function(success) {
-					constants.debug && console.log('exportando pedido: ' + id);					
+					constants.debug && console.log('exportando pedido: ' + self.budget.order_id);					
 
 					$rootScope.loading.load();
 					/* O orcamento ja esta salvo. */
@@ -1641,17 +1643,19 @@
 						});
 					}
 
-				}, function(error) { });
+					self.budget.removeAudit();
+				}, function(error) {
+					self.budget.removeAudit();
+				});
 
 			return deferred.promise;
 		}
 
 		/**
 		 * Exporta o orcamento para DAV.
-		 * @param {string} id - O id do orcamento.
 		 */
-		function exportDAV(id) {
-			if (!validateBudgetToSave() || !validateBudgetToExport()) {
+		function exportDAV() {
+			if (!validateBudgetToSave(self.exportDAV) || !validateBudgetToExport()) {
 				return;
 			}
 
@@ -1659,7 +1663,7 @@
 
 			$rootScope.customDialog().showConfirm('Aviso', 'Exportar DAV?')
 				.then(function(success) {
-					constants.debug && console.log('exportando DAV: ' + id);
+					constants.debug && console.log('exportando DAV: ' + self.budget.order_id);
 					
 					$rootScope.loading.load();
 					/* O orcamento ja esta salvo. */
@@ -1712,7 +1716,10 @@
 						});
 					}
 
-				}, function(error) { });
+					self.budget.removeAudit();
+				}, function(error) {
+					self.budget.removeAudit();
+				});
 
 			return deferred.promise;
 		}
@@ -2294,7 +2301,7 @@
 			var paymentLen = self.budget.order_payments.length - (self.budget.creditPayment ? 1 : 0),
 				slice = (self.budget.order_value_total - (self.budget.creditPayment ? self.budget.creditPayment.order_payment_value_total : 0)) / paymentLen,
 				total = self.budget.creditPayment ? self.budget.creditPayment.order_payment_value_total : 0,
-				diff = 0;
+				diff = 0, temp;
 
 			if (paymentLen == 0)
 				return;
@@ -2333,8 +2340,11 @@
 
 			diff = parseFloat((self.budget.order_value_total - total).toFixed(2));
 
-			self.budget.order_payments[self.budget.order_payments.length - 1].order_payment_value += diff;
-			self.budget.order_payments[self.budget.order_payments.length - 1].order_payment_value_total += diff;
+			temp = self.budget.order_payments[self.budget.order_payments.length - 1].order_payment_value;
+			self.budget.order_payments[self.budget.order_payments.length - 1].order_payment_value = parseFloat((temp + diff).toFixed(2));
+
+			temp = self.budget.order_payments[self.budget.order_payments.length - 1].order_payment_value_total;
+			self.budget.order_payments[self.budget.order_payments.length - 1].order_payment_value_total = parseFloat((temp + diff).toFixed(2));;
 		}
 
 		/**

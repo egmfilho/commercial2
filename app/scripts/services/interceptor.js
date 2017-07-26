@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 11:04:49
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-26 11:19:37
+* @Last Modified time: 2017-07-26 11:28:38
 */
 
 (function() {
@@ -32,11 +32,11 @@
 				req.headers['x-session-token'] = Globals.get('session-token');
 			}
 
-			if (ElectronOS.getHostname()) {
+			if (constants.isElectron && ElectronOS.getHostname()) {
 				req.headers['Hostname'] = ElectronOS.getHostname();
 			}
 
-			if (ElectronOS.getNetworkInterfaces()) {
+			if (constants.isElectron && ElectronOS.getNetworkInterfaces()) {
 				req.headers['Host-Info'] = JSON.stringify(ElectronOS.getNetworkInterfaces());
 			}
 

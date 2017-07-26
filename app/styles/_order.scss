@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-25 12:46:51
+* @Last Modified time: 2017-07-26 13:33:38
 */
 
 .customer-credit-modal {
@@ -345,6 +345,37 @@ section[name="payment"] {
 
 				tr td {
 					padding: 7px;
+				}
+			}
+
+			.order-button-container {
+				margin-top: 10px;
+				padding-bottom: 16px;
+			}
+		}
+	}
+
+	.payment-summary {
+		// margin-top: 15px;
+		height: auto;
+		border: 1px solid #d7d7d7;
+		border-top: none;
+		padding: 0 16px;
+
+		div {
+			min-width: 120px;
+			margin: 16px 8px;
+
+			span {
+				display: block;
+
+				&:first-child {
+					@extend .text-light;
+				}
+
+				&:last-child {
+					@extend .text-primary;
+					font-size: 20px;
 				}
 			}
 		}
