@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-25 13:27:39
+* @Last Modified time: 2017-07-26 11:17:07
 */
 
 (function() {
@@ -44,10 +44,11 @@
 		'OrderPayment',
 		'ProviderBank',
 		'Bank',
-		'ElectronWindow',
 		'ModalPerson',
 		'ModalProduct',
-		'ModalCustomerAddress' 
+		'ModalCustomerAddress',
+		'ElectronWindow',
+		'ElectronOS'
 	];
 
 	function OrderCtrl(
@@ -83,10 +84,11 @@
 		OrderPayment,
 		providerBank,
 		Bank,
-		ElectronWindow,
 		ModalPerson,
 		ModalProduct,
-		ModalCustomerAddress) {
+		ModalCustomerAddress,
+		ElectronWindow,
+		ElectronOS) {
 
 		var self = this, _backup, _focusOn, _isToolbarLocked = false;
 
@@ -661,7 +663,9 @@
 							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 						});
 					}
-				}, function(error) { });
+				}, function(error) {
+					self.budget.removeAudit();
+				});
 		};
 
 		function internalItems() {

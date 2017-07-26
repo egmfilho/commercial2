@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 17:25:02
+* @Last Modified time: 2017-07-26 10:04:03
 */
 
 (function() {
@@ -112,7 +112,8 @@
 			setVlDiscount: setVlDiscount,			
 			updateValues: updateValues,
 			getPaymentValue: getPaymentValue,
-			getChange: getChange
+			getChange: getChange,
+			removeAudit: removeAudit
 		};
 
 		return _Order;
@@ -290,6 +291,10 @@
 		function getChange() {
 			// return Math.max(0, this.order_value_total - this.getPaymentValueTotal());
 			return this.order_value_total - this.getPaymentValue();
+		}
+
+		function removeAudit() {
+			this.order_audit = new OrderAudit();
 		}
 
 	}

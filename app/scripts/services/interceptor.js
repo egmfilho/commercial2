@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 11:04:49
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-19 10:39:52
+* @Last Modified time: 2017-07-26 11:19:37
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('Interceptor', Interceptor);
 
-	Interceptor.$inject = [ '$location', '$q', '$httpParamSerializerJQLike', 'Cookies', 'Globals', 'Constants' ];
+	Interceptor.$inject = [ '$location', '$q', '$httpParamSerializerJQLike', 'Cookies', 'Globals', 'Constants', 'ElectronOS' ];
 
-	function Interceptor($location, $q, $httpParamSerializerJQLike, Cookies, Globals, constants) {
+	function Interceptor($location, $q, $httpParamSerializerJQLike, Cookies, Globals, constants, ElectronOS) {
 
 		return {
 			'request': 		 request,
@@ -30,6 +30,14 @@
 			if (Globals.get('session-token')) {
 				constants.debug && console.log('injetando sessao no request');
 				req.headers['x-session-token'] = Globals.get('session-token');
+			}
+
+			if (ElectronOS.getHostname()) {
+				req.headers['Hostname'] = ElectronOS.getHostname();
+			}
+
+			if (ElectronOS.getNetworkInterfaces()) {
+				req.headers['Host-Info'] = JSON.stringify(ElectronOS.getNetworkInterfaces());
 			}
 
 			req.headers['Content-Type'] = 'application/x-www-form-urlencoded';
