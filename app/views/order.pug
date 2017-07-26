@@ -174,7 +174,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					md-tooltip(md-direction='bottom') Localizar cliente
 					md-icon(md-font-icon='fa fa-user' style='color: darkseagreen')
 
-				md-button.toolbar-btn(ng-click='' ng-disabled='true || order.isToolbarLocked()')
+				md-button.toolbar-btn(ng-click='order.showModalCustomerInfo()' ng-disabled='!order.budget.order_client.person_id || order.isToolbarLocked()')
 					md-tooltip(md-direction='bottom') Informações do cliente
 					md-icon(md-font-icon='fa fa-id-card-o' style='color: tomato')
 

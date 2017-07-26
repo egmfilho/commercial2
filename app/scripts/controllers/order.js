@@ -182,7 +182,7 @@
 			/* Ir para vendedor */
 			Mousetrap.bind(['command+2', 'ctrl+2'], function() {
 				if (!_isToolbarLocked) {
-					self.scrollTo("section[name=\'seller\']")
+					self.scrollTo("section[name=\'seller\']");
 					self.focusOn('input[name="seller-code"]');
 				}
 
@@ -192,7 +192,7 @@
 			/* Ir para cliente */
 			Mousetrap.bind(['command+3', 'ctrl+3'], function() {
 				if (!_isToolbarLocked) {
-					self.scrollTo("section[name=\'customer\']")
+					self.scrollTo("section[name=\'customer\']");
 					self.focusOn('input[name="customer-code"]');
 				}
 
@@ -202,7 +202,7 @@
 			/* Ir para observacoes */
 			Mousetrap.bind(['command+4', 'ctrl+4'], function() {
 				if (!_isToolbarLocked) {
-					self.scrollTo("section[name=\'notes\']")
+					self.scrollTo("section[name=\'notes\']");
 					self.focusOn('textarea[name="order-note"]');
 				}
 
@@ -212,7 +212,7 @@
 			/* Ir para pagamento */
 			Mousetrap.bind(['command+5', 'ctrl+5'], function() {
 				if (!_isToolbarLocked) {
-					self.scrollTo("section[name=\'payment\']")
+					self.scrollTo("section[name=\'payment\']");
 					self.focusOn('textarea[name="term-code"]');
 				}
 
@@ -252,70 +252,71 @@
 		// Methods enumeration
 		// ******************************
 
-		self.isToolbarLocked     = isToolbarLocked;
-		self.canSave             = canSave;
-		self.canExport           = canExport;
-		self.canPrint            = canPrint;
-		self.canChangeCompany    = canChangeCompany;
-		self.isExported          = isExported;
-		self.selectCompany       = selectCompany;
-		self.internal            = internalItems();
-		self.budget              = new Order({ order_user: Globals.get('user')});
-		self.newCustomer         = newCustomer;
-		self.setCustomer         = setCustomer;
-		self.setOrderAudit       = setOrderAudit;
-		self.clearSeller         = clearSeller;
-		self.clearProductSearch  = clearProductSearch;
-		self.clearItems          = clearItems;
-		self.clearCustomer       = clearCustomer;
-		self.clearNote           = clearNote;
-		self.clearPayments       = clearPayments;
-		self.clearTerm           = clearTerm;
-		self.getPersonByCode     = getPersonByCode;
-		self.getPersonByName     = getPersonByName;
-		self.getSellerByCode     = getSellerByCode;
-		self.getSellerByName     = getSellerByName;
-		self.getCustomerByCode   = getCustomerByCode;
-		self.getCustomerByName   = getCustomerByName;
-		self.getProductByCode    = getProductByCode;
-		self.getProductByName    = getProductByName;
-		self.priceTableChanged   = priceTableChanged;
-		self.setItemAmount       = setItemAmount;
-		self.setItemAlDiscount   = setItemAlDiscount;
-		self.setItemVlDiscount   = setItemVlDiscount;
-		self.setTotalAlDiscount  = setTotalAlDiscount;
-		self.setTotalVlDiscount  = setTotalVlDiscount;
-		self.authorizationDialog = authorizationDialog;
-		self.authorizeDiscount   = authorizeDiscount;
-		self.authorizeCredit     = authorizeCredit;
-		self.editItem            = editItem;
-		self.addItem             = addItem;
-		self.removeItem          = removeItem;
-		self.scrollTo            = scrollTo;
-		self.focusOn             = focusOn;
-		self.print               = print;
-		self.savePDF             = savePDF;
-		self.showNotFound        = showNotFound;
-		self.addressDialog       = addressDialog;
-		self.showAddressContact  = showAddressContact;
-		self.afterExportDialog   = afterExportDialog;
-		self.exportOrder         = exportOrder;
-		self.exportDAV           = exportDAV;
-		self.searchTerm          = searchTerm;
-		self.getTermByCode       = getTermByCode;
-		self.selectTerm          = selectTerm;
-		self.addModality         = addModality;
-		self.addPayment          = addPayment;
-		self.editPayment         = editPayment;
-		self.removePayment       = removePayment;
-		self.removeCredit        = removeCredit;
-		self.removeAllPayments   = removeAllPayments;
-		self.paymentDialog       = paymentDialog;
-		self.addCredit           = addCredit;
-		self.recalcPayments      = recalcPayments;
-		self.showModalSeller     = showModalSeller;
-		self.showModalCustomer   = showModalCustomer;
-		self.showModalProduct    = showModalProduct;		
+		self.isToolbarLocked       = isToolbarLocked;
+		self.canSave               = canSave;
+		self.canExport             = canExport;
+		self.canPrint              = canPrint;
+		self.canChangeCompany      = canChangeCompany;
+		self.isExported            = isExported;
+		self.selectCompany         = selectCompany;
+		self.internal              = internalItems();
+		self.budget                = new Order({ order_user: Globals.get  ('user')});
+		self.newCustomer           = newCustomer;
+		self.setCustomer           = setCustomer;
+		self.setOrderAudit         = setOrderAudit;
+		self.clearSeller           = clearSeller;
+		self.clearProductSearch    = clearProductSearch;
+		self.clearItems            = clearItems;
+		self.clearCustomer         = clearCustomer;
+		self.clearNote             = clearNote;
+		self.clearPayments         = clearPayments;
+		self.clearTerm             = clearTerm;
+		self.getPersonByCode       = getPersonByCode;
+		self.getPersonByName       = getPersonByName;
+		self.getSellerByCode       = getSellerByCode;
+		self.getSellerByName       = getSellerByName;
+		self.getCustomerByCode     = getCustomerByCode;
+		self.getCustomerByName     = getCustomerByName;
+		self.getProductByCode      = getProductByCode;
+		self.getProductByName      = getProductByName;
+		self.priceTableChanged     = priceTableChanged;
+		self.setItemAmount         = setItemAmount;
+		self.setItemAlDiscount     = setItemAlDiscount;
+		self.setItemVlDiscount     = setItemVlDiscount;
+		self.setTotalAlDiscount    = setTotalAlDiscount;
+		self.setTotalVlDiscount    = setTotalVlDiscount;
+		self.authorizationDialog   = authorizationDialog;
+		self.authorizeDiscount     = authorizeDiscount;
+		self.authorizeCredit       = authorizeCredit;
+		self.editItem              = editItem;
+		self.addItem               = addItem;
+		self.removeItem            = removeItem;
+		self.scrollTo              = scrollTo;
+		self.focusOn               = focusOn;
+		self.print                 = print;
+		self.savePDF               = savePDF;
+		self.showNotFound          = showNotFound;
+		self.addressDialog         = addressDialog;
+		self.showAddressContact    = showAddressContact;
+		self.afterExportDialog     = afterExportDialog;
+		self.exportOrder           = exportOrder;
+		self.exportDAV             = exportDAV;
+		self.searchTerm            = searchTerm;
+		self.getTermByCode         = getTermByCode;
+		self.selectTerm            = selectTerm;
+		self.addModality           = addModality;
+		self.addPayment            = addPayment;
+		self.editPayment           = editPayment;
+		self.removePayment         = removePayment;
+		self.removeCredit          = removeCredit;
+		self.removeAllPayments     = removeAllPayments;
+		self.paymentDialog         = paymentDialog;
+		self.addCredit             = addCredit;
+		self.recalcPayments        = recalcPayments;
+		self.showModalSeller       = showModalSeller;
+		self.showModalCustomer     = showModalCustomer;
+		self.showModalCustomerInfo = showModalCustomerInfo;
+		self.showModalProduct      = showModalProduct;
 
 		function validateBudgetToSave() {
 			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
@@ -2375,6 +2376,19 @@
 				}, function(error){
 					_isToolbarLocked = false;
 				});
+		}
+
+		/**
+		 * Exibe a tela de informação de clientes.
+		 */
+		function showModalCustomerInfo() {
+			var message = '';
+			message += '<b>Cliente</b>: ' + self.budget.order_client.person_code + ' - ' + self.budget.order_client.person_name + '<br/><br/>';
+			message += '<b>Limite de crédito</b>: ' + self.budget.order_client.person_credit_limit.person_credit_limit_value + '<br/>';
+			message += '<b>Títulos em aberto vencidos</b>: ' + self.budget.order_client.person_credit_limit.person_expired_quantity + '<br/>';
+			message += '<b>Títulos em aberto a vencer</b>: ' + self.budget.order_client.person_credit_limit.person_expiring_quantity + '<br/>';
+			message += '<div style="border-top:1px dashed black;margin-top:10px;padding-top:10px;"><b>Saldo de crédito</b>: ' + self.budget.order_client.person_credit_limit.person_credit_limit_balance + '</div>';
+			$rootScope.customDialog().showMessage('Informação', message, {width:520});
 		}
 
 		/**
