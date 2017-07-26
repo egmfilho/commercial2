@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-25 17:37:09
+* @Last Modified time: 2017-07-26 14:08:30
 */
 
 'use strict';
@@ -274,12 +274,12 @@ angular.module('commercial2', [
 				controller: 'AboutCtrl',
 				controllerAs: 'about'
 			})
-			.when('/config', {
-				module: 'config',
-				templateUrl: 'views/config.html',
-				controller: 'ConfigCtrl',
-				controllerAs: 'config'
-			})
+			// .when('/config', {
+			// 	module: 'config',
+			// 	templateUrl: 'views/config.html',
+			// 	controller: 'ConfigCtrl',
+			// 	controllerAs: 'config'
+			// })
 			.otherwise({
 				redirectTo: '/login'
 			});
