@@ -14,7 +14,7 @@
 			'api': 'http://172.16.0.82/commercial2.api/',
 			'version': '2.0.0b pre-release',
 			'cookie': 'commercial.currentUser',
-			'debug': true,
+			'debug': false,
 			'isElectron': window && window.process && window.process.versions['electron']
 		});
 

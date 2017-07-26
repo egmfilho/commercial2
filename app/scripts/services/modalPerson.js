@@ -14,7 +14,7 @@
 
 					$timeout(function(){
 						jQuery('#focus').focus();
-					},300);
+					},400);
 
 					controller = function(providerPerson, Person) {
 						var vm = this;

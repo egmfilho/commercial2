@@ -12,7 +12,7 @@
 					
 					$timeout(function(){
 						jQuery('#focus').focus();
-					},300);
+					},400);
 
 					controller = function(providerProduct, Product) {
 						var vm = this;
