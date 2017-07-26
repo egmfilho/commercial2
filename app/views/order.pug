@@ -627,11 +627,19 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 
 							.payment-summary(flex layout='row')
 								div(layout='column' layout-align='center start')
-									span Total
-									span {{order.budget.getPaymentValue() | number:2}}%
+									span Alíquota
+									span {{order.budget.getPaymentAliquot() | number:2}}%
+
+								span(flex)
 
 								div(layout='column' layout-align='center start')
-									span Restante
+									span Valor Total
+									span {{order.budget.getPaymentValue() | currency:'R$ '}}
+
+								span(flex)
+
+								div(layout='column' layout-align='center start')
+									span Valor Restante
 									span {{order.budget.getChange() | currency:'R$ '}}
 
 						div(flex='40' layout='column')

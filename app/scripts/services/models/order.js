@@ -111,6 +111,7 @@
 			setAlDiscount: setAlDiscount,
 			setVlDiscount: setVlDiscount,			
 			updateValues: updateValues,
+			getPaymentAliquot: getPaymentAliquot,
 			getPaymentValue: getPaymentValue,
 			getChange: getChange,
 			removeAudit: removeAudit
@@ -275,6 +276,20 @@
 		/**
 		 * Calcula a soma de todos os pagamentos do orcamento.
 		 */
+		function getPaymentAliquot() {
+			var total = 0;
+
+			var order_value = this.order_value_total;
+			if( order_value == 0 ){
+				return total;
+			}
+			var payments = this.getPaymentValue();
+
+			total = (100*payments)/(order_value);
+
+			return total;
+		}
+
 		function getPaymentValue() {
 			var total = 0;
 

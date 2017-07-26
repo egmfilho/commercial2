@@ -2393,12 +2393,12 @@
 		 */
 		function showModalCustomerInfo() {
 			var message = '';
-			message += '<b>Cliente</b>: ' + self.budget.order_client.person_code + ' - ' + self.budget.order_client.person_name + '<br/><br/>';
+			message += '<div style="margin-bottom:10px;"><b>Cliente</b>: ' + self.budget.order_client.person_code + ' - ' + self.budget.order_client.person_name + '</div>';
 			message += '<b>Limite de crédito</b>: ' + self.budget.order_client.person_credit_limit.person_credit_limit_value + '<br/>';
 			message += '<b>Títulos em aberto vencidos</b>: ' + self.budget.order_client.person_credit_limit.person_expired_quantity + '<br/>';
 			message += '<b>Títulos em aberto a vencer</b>: ' + self.budget.order_client.person_credit_limit.person_expiring_quantity + '<br/>';
 			message += '<div style="border-top:1px dashed black;margin-top:10px;padding-top:10px;"><b>Saldo de crédito</b>: ' + self.budget.order_client.person_credit_limit.person_credit_limit_balance + '</div>';
-			$rootScope.customDialog().showMessage('Informação', message, {width:520});
+			$rootScope.customDialog().showMessage('Informação', message);
 		}
 
 		/**
