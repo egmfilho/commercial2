@@ -261,6 +261,7 @@
 		self.budget              = new Order({ order_user: Globals.get('user')});
 		self.newCustomer         = newCustomer;
 		self.setCustomer         = setCustomer;
+		self.setOrderAudit       = setOrderAudit;
 		self.clearSeller         = clearSeller;
 		self.clearProductSearch  = clearProductSearch;
 		self.clearItems          = clearItems;
@@ -312,11 +313,7 @@
 		self.recalcPayments      = recalcPayments;
 		self.showModalSeller     = showModalSeller;
 		self.showModalCustomer   = showModalCustomer;
-		self.showModalProduct    = showModalProduct;
-
-		function validatePayments() {
-
-		}
+		self.showModalProduct    = showModalProduct;		
 
 		function validateBudgetToSave() {
 			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
@@ -371,17 +368,37 @@
 			}
 
 			if (self.budget.getChange() > 0 && self.budget.order_payments.length) {
-				$rootScope.customDialog().showMessage('Erro', 'Reveja os valores dos pagamentos!');
+				$rootScope.customDialog().showMessage('Erro', 'Reveja os valores de pagamento!');
 				self.scrollTo('section[name="payment"]');
 				return false;	
 			}
 
+			var debtor = 0;
+			var authorized_modality_id = Globals.get('credit-limit').split(',');
 			var today = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
 			for (var i = 0; i < self.budget.order_payments.length; i++) {
 				if (moment(self.budget.order_payments[i].order_payment_deadline).isBefore(today)) {
 					$rootScope.customDialog().showMessage('Erro', 'Não é possível salvar o orçamento pois o mesmo contém ao menos uma forma de pagamento com data anterior à data de hoje.');
 					return false;
 				}
+				if( authorized_modality_id.indexOf(self.budget.order_payments[i].modality_id) == -1 ){
+					debtor += self.budget.order_payments[i].order_payment_value_total;
+				}
+			}
+			
+			if( !self.budget.order_audit.user_id && debtor > self.budget.order_client.person_credit_limit.person_credit_limit_balance ){
+				authorizeCredit().then(function(success){
+					if( success.user_max_credit_authorization > 0 ){
+						self.setOrderAudit({
+							user_id: success.user_id,
+							user_name: success.user_name,
+							person_name: self.budget.order_client.person_name,
+							person_code: self.budget.order_client.person_code
+						});
+						$scope.save();
+					}
+				}, function(error){});
+				return false;
 			}
 
 			return true;
@@ -389,7 +406,7 @@
 
 		function validateBudgetToExport() {
 			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
-				$rootScope.customDialog().showMessage('Erro!', 'Este orçamento já foi exportado!');
+				$rootScope.customDialog().showMessage('Erro', 'Este orçamento já foi exportado!');
 				return;
 			}
 
@@ -547,7 +564,7 @@
 		};
 
 		$scope.save = function() {
-			if (_backup.equals(self.budget)) {
+			if (_backup && self.budget.equals(_backup)) {
 				$rootScope.customDialog().showMessage('Aviso', 'Nenhuma alteração!');
 				return;
 			}
@@ -842,6 +859,10 @@
 			self.budget.order_address_delivery_code = null;
 			self.internal.tempCustomer = new Person(person);
 			self.removeCredit();
+		}
+
+		function setOrderAudit(audit) {
+			self.budget.setOrderAudit(audit);			
 		}
 
 		/**

@@ -10,11 +10,31 @@
 	'use strict';
 
 	angular.module('commercial2.services')
+		.factory('OrderAudit', [function() {
+
+			function _OrderAudit(audit) {
+				this.user_id     = null;
+				this.date        = new Date();
+				this.user_name   = null;
+				this.person_name = null;
+				this.person_code = null;
+
+				if (audit)
+					Object.assign(this, audit, {
+						date: audit.date ? new Date(audit.date) : new Date()
+					});
+			}
+
+			return _OrderAudit;
+
+		}]);
+
+	angular.module('commercial2.services')
 		.factory('Order', Order);
 
-	Order.$inject = [ '$filter', 'OrderItem', 'Person', 'Address', 'CompanyERP', 'OrderPayment', 'Globals' ];
+	Order.$inject = [ '$filter', 'OrderItem', 'Person', 'Address', 'CompanyERP', 'OrderPayment', 'OrderAudit', 'Globals' ];
 
-	function Order($filter, OrderItem, Person, Address, CompanyERP, OrderPayment, Globals) {
+	function Order($filter, OrderItem, Person, Address, CompanyERP, OrderPayment, OrderAudit, Globals) {
 
 		function _Order(order) {
 			this.order_id                    = null;
@@ -46,6 +66,7 @@
 			this.address_delivery            = new Address();
 			this.order_payments              = new Array();
 			this.creditPayment               = null;
+			this.order_audit                 = new OrderAudit();
 			this.queryable                   = '';
 
 			if (order) {
@@ -79,6 +100,7 @@
 			setSeller: setSeller,
 			removeSeller: removeSeller,
 			setCustomer: setCustomer,
+			setOrderAudit: setOrderAudit,
 			removeCustomer: removeCustomer,
 			addItem: addItem,
 			replaceItem: replaceItem,
@@ -87,7 +109,7 @@
 			setDeliveryAddress: setDeliveryAddress,
 			removeDeliveryAddress: removeDeliveryAddress,
 			setAlDiscount: setAlDiscount,
-			setVlDiscount: setVlDiscount,
+			setVlDiscount: setVlDiscount,			
 			updateValues: updateValues,
 			getPaymentValue: getPaymentValue,
 			getChange: getChange
@@ -132,6 +154,10 @@
 		function setCustomer(customer) {
 			this.order_client = new Person(customer);
 			this.order_client_id = this.order_client.person_id;
+		}
+
+		function setOrderAudit(audit) {
+			this.order_audit = new OrderAudit(audit);
 		}
 
 		/**
