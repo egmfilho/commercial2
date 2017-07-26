@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 09:54:06
+* @Last Modified time: 2017-07-26 18:13:48
 */
 
 const electron = require('electron');
@@ -82,8 +82,8 @@ function createWindow() {
 			message: 'Deseja encerrar o Commercial?'
 		});
 
-		if (choice == 1) 
-			e.preventDefault();
+		if (choice == 1)
+			e.preventDefault(); 
 	});
 
 	// Emitted when the window is closed.

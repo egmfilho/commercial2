@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-26 14:01:17
+* @Last Modified time: 2017-07-26 18:00:55
 */
 
 (function() {
@@ -195,10 +195,10 @@
 			});
 
 			/* Ir para pagamento */
-			Mousetrap.bind(['command+5', 'ctrl+4'], function() {
+			Mousetrap.bind(['command+4', 'ctrl+4'], function() {
 				if (!_isToolbarLocked) {
 					self.scrollTo("section[name=\'payment\']");
-					self.focusOn('textarea[name="term-code"]');
+					self.focusOn('input[name="term-code"]');
 				}
 
 				return false;
@@ -596,24 +596,12 @@
 									}
 									
 									case 'order': {
-										exportOrder(self.budget.order_id).then(function(success) {
-											$rootScope.toast('Orçamento exportado!', 'Código gerado: ' + success.data.order_code);
-											$scope.open(true);
-										}, function(error) {
-											$rootScope.customDialog().showMessage('Erro', error.data.status.description);
-											$scope.open(true);
-										});
+										exportOrder(self.budget.order_id);
 										break;
 									}
 									
 									case 'dav': {
-										exportDAV(self.budget.order_id).then(function(success) {
-											$rootScope.toast('Orçamento exportado!', 'Código gerado: ' + success.data.order_code);
-											$scope.open(true);
-										}, function(error) {
-											$rootScope.customDialog().showMessage('Erro', error.data.status.description);
-											$scope.open(true);
-										});
+										exportDAV(self.budget.order_id);
 										break;
 									}
 								}
@@ -1758,9 +1746,30 @@
 				this._showCloseButton = true;
 				this.term = new Term(self.internal.term.tempTerm);
 				this.value_total = self.budget.order_value_total;
+
+				this.hoverIndex = 0;
+
+				if (constants.isElectron) {
+					var scope = this;
+					Mousetrap.bind('up', function() {
+						$timeout(function() {
+							jQuery('table[name="clementino"] tbody tr:nth-child(' + (scope.hoverIndex + 1) + ')').focus();
+							scope.hoverIndex = Math.max(0, scope.hoverIndex - 1);
+						});
+						return false;
+					});
+
+					Mousetrap.bind('down', function() {
+						$timeout(function() {
+							jQuery('table[name="clementino"] tbody tr:nth-child(' + (scope.hoverIndex + 1) + ')').focus();
+							scope.hoverIndex = Math.min(scope.term.modality.length - 1, scope.hoverIndex + 1);
+						});
+						return false;
+					});	
+				}
 			};
 
-			$rootScope.customDialog().showTemplate('Selecionar modalidade', './partials/modalTerm.html', controller)
+			$rootScope.customDialog().showTemplate('Selecionar modalidade', './partials/modalTerm.html', controller, { width: 400 })
 				.then(function(success) {
 					self.internal.term.backup = new Term(self.internal.term.tempTerm);
 					self.addModality(success);
@@ -1768,6 +1777,11 @@
 					self.internal.term.queryTerm = '';
 				}, function(error) { 
 					self.internal.term.restoreBackup();
+
+					if (constants.isElectron) {
+						Mousetrap.unbind('up');
+						Mousetrap.unbind('down');
+					}
 				});
 		}
 

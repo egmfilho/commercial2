@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-26 12:14:20
+* @Last Modified time: 2017-07-26 17:48:27
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('CustomDialog', CustomDialog);
 
-	CustomDialog.$inject = [ '$q', '$mdPanel', 'CustomDialogManager' ];
+	CustomDialog.$inject = [ '$q', '$timeout', '$mdPanel', 'CustomDialogManager' ];
 
-	function CustomDialog($q, $mdPanel, CustomDialogManager) {
+	function CustomDialog($q, $timeout, $mdPanel, CustomDialogManager) {
 
 		var _animationPosition, _animation;
 
@@ -69,10 +69,20 @@
 			function controller() {
 				this._showCloseButton = true;
 				this._showInfoSign = true;
-				this._negativeButtonText = 'Fechar';
+				this._negativeButtonText = 'Fechar';	
 			}
 
-			return show(this, title, message, null, controller, angular.extend({}, options, { zIndex: 100, width: 400 }));
+			var _options = {
+				zIndex: 100, 
+				width: 400,
+				onOpenComplete: function() {
+					$timeout(function() {
+						$('.footer button[name="negative"]').focus();
+					});
+				}
+			};
+
+			return show(this, title, message, null, controller, angular.extend({}, _options, options));
 		}
 
 		/**
@@ -90,7 +100,17 @@
 				this._negativeButtonText = 'Não';
 			}
 
-			return show(this, title, message, null, controller, angular.extend({}, options, { zIndex: 100, width: 400 }));
+			var _options = {
+				zIndex: 100, 
+				width: 400,
+				onOpenComplete: function() {
+					$timeout(function() {
+						$('.footer button[name="positive"]').focus();
+					});
+				}
+			};
+
+			return show(this, title, message, null, controller, angular.extend({}, _options, options));
 		}
 
 		/**

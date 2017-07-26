@@ -7,12 +7,14 @@
 		| {{ctrl.term.term_description}}
 
 	.container-table
-		table.table
+		table.table(name='clementino')
 			tbody
-				tr(ng-repeat='m in ctrl.term.modality track by m.modality_id' ng-click='ctrl._close(m)')
+				tr(ng-repeat='m in ctrl.term.modality track by $index' ng-click='ctrl._close(m)' ng-class='{ "active": $index == ctrl.hoverIndex }' keys-shortcuts enter='ctrl._close(m)')
 					td {{m.modality_code}}
 					td {{m.modality_description}}
 					td {{ctrl.term.term_installment}}x ({{ctrl.value_total / ctrl.term.term_installment | currency:'R$ '}})
+
+	| {{ctrl.hoverIndex}}
 
 .footer(layout='row' layout-align='end center')
 	md-button.md-primary(ng-click='ctrl._cancel()')
