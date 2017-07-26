@@ -1,1 +1,15 @@
-h1 Configurações
+.config(layout='column' layout-fill ng-cloak)
+	md-tabs.md-primary(flex md-selected='config.selectedTabIndex')
+		md-tab
+			md-tab-label 
+				i.fa.fa-user-circle-o &nbsp;
+				| Usuários
+			md-tab-body
+				div(flex layout-fill layout='column' ng-include='"./partials/config/users.html"' ng-controller='ConfigCtrl.Users as users')
+
+		md-tab
+			md-tab-label 
+				i.fa.fa-cogs &nbsp;
+				| Geral
+			md-tab-body
+				div(flex layout-fill layout='column' ng-include='"./partials/config/general.html"' ng-controller='ConfigCtrl.General as general')

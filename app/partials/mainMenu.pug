@@ -31,7 +31,7 @@ md-content(layout='column' ng-controller='MainMenuCtrl as mainMenu')
 
 	.modules(layout='row' layout-wrap)
 		.module(flex='50' layout-align='center')
-			md-button(ng-click='ctrl._goTo()')
+			md-button(ng-click='ctrl._goTo("/config")')
 				.settings-module
 					md-icon(md-font-set='material-icons') build
 				p Ajustes

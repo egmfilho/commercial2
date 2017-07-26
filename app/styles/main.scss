@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-25 12:55:43
+* @Last Modified time: 2017-07-26 08:13:06
 */
 
 
@@ -141,6 +141,16 @@ table.table {
 			font-size: 12px;
 			vertical-align: middle !important;
 			padding: 10px 5px;
+
+			button.md-button.md-icon-button {
+				margin: 0;
+				width: 24px !important;
+				height: 24px !important;
+				min-height: 24px;
+				max-height: 24px;
+				padding: 0 !important;
+				font-size: 17px;
+			}
 		}
 	}
 }
@@ -342,5 +352,6 @@ md-tabs.mussum {
 @import "order";
 @import "open-order";
 @import "print-order";
+@import "config";
 
 @import "utils";

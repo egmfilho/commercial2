@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:06:00
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 17:26:27
+* @Last Modified time: 2017-07-25 18:11:08
 */
 
 (function() {
@@ -39,8 +39,8 @@
 						user_login: user.user_login ? new Date(user.user_login) : null,
 						user_date: user.user_date ? new Date(user.user_date) : null,
 						user_update: user.user_update ? new Date(user.user_update) : null,
-						user_company: user.user_company.map(function(b) { return new UserCompany(b); }),
-						user_price: user.user_price.map(function(p) { return new UserPrice(p); })
+						user_company: user.user_company ? user.user_company.map(function(b) { return new UserCompany(b); }) : null,
+						user_price: user.user_price ? user.user_price.map(function(p) { return new UserPrice(p); }) : null
 					});
 				}
 			}
