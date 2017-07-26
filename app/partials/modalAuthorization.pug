@@ -12,8 +12,11 @@
 		input(type='password' ng-model='ctrl.pass' keys-shortcuts enter='ctrl.authorize(ctrl.user, ctrl.pass)')
 
 .footer(layout='row' layout-align='end center')
-	md-button.md-primary(ng-click='ctrl.authorize(ctrl.user, ctrl.pass)')
-		| &nbsp; Autorizar &nbsp;
-
-	md-button.md-primary(ng-click='ctrl._cancel()')
+	md-button.md-primary.button-red(ng-click='ctrl._cancel()')
+		i.fa.fa-remove &nbsp; 
 		| &nbsp; Cancelar &nbsp;
+
+	md-button.md-primary.button-green(ng-click='ctrl.authorize(ctrl.user, ctrl.pass)')
+		i.fa.fa-check &nbsp;
+		| &nbsp; Autorizar &nbsp;
+	

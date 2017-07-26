@@ -168,7 +168,7 @@
 	height: 200px;
 	overflow-y: scroll;
 	border: 1px solid rgba(#000, .12);
-	background-color: #f5f5f5;
+	background-color: #d4d4d4;
 
 	&.short {
 		height: 120px;
@@ -380,4 +380,57 @@ section[name="payment"] {
 			}
 		}
 	}
+}
+
+.logo{
+	background-image:url('../images/LOGO-2017-NOME.png');
+	background-position:center center;
+	background-size: contain;
+	background-repeat: no-repeat;
+	width: 140px;
+    height: 48px;
+    margin: 12px 42px 12px 12px;
+    float: right;
+}
+
+.header-blue{
+	background-color: #085086 !important;
+}
+
+.header-green{
+	background-color: #326534 !important;
+}
+
+.header-red{
+	background-color: #8a0d04 !important;
+}
+
+.header-orange{
+	background-color: #f5a034 !important;
+}
+
+.button-blue{
+	background-color: #085086 !important;
+	color: #fff !important;
+}
+
+.button-green{
+	background-color: #139a17 !important;
+	color: #fff !important;
+	&.text-primary{
+		color: #fff !important;
+	}
+}
+
+.button-red{
+	background-color: #e82f20 !important;
+	color: #fff !important;
+}
+
+.button-orange{
+	background-color: #f5a034 !important;
+}
+
+.toolbar-orange{
+	background-color: #f5a034 !important;
 }

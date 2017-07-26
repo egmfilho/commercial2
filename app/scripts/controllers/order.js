@@ -302,6 +302,7 @@
 		self.showModalCustomerInfo = showModalCustomerInfo;
 		self.showModalProduct      = showModalProduct;
 		self.showModalNotes        = showModalNotes;
+		self.goToSection           = goToSection;
 
 		function validateBudgetToSave(callback) {
 			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
@@ -1322,7 +1323,7 @@
 				zIndex: 1
 			};
 			
-			$rootScope.customDialog().showTemplate('Autorização requerida', './partials/modalAuthorization.html', controller, options)
+			$rootScope.customDialog().showTemplate('Autorização', './partials/modalAuthorization.html', controller, options)
 				.then(function(success) {
 					deferred.resolve(success);
 				}, function(error) {
@@ -1344,7 +1345,7 @@
 		}
 
 		function authorizeCredit() {
-			var msg = 'Crédito não disponível ';
+			var msg = 'O valor da compra ultrapassa o limite de crédito.';
 
 			return self.authorizationDialog(msg, 'order', 'user_credit_authorization');	
 		}
@@ -2422,6 +2423,14 @@
 					self.budget.order_note = success.order_note;
 					self.budget.order_note_doc = success.order_note_doc;
 				}, function(error) { });
+		}
+
+		/**
+		 * Faz a ancora para a seção.
+		 */
+		function goToSection(section,focus) {
+			self.scrollTo('section[name="'+section+'"]');
+			self.focusOn('input[name="'+focus+'"]');
 		}
 	}
 }());

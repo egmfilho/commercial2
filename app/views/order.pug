@@ -18,7 +18,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 							md-button(ng-click='open()')
 								md-icon(md-font-icon='fa fa-folder-open-o')
 								|  Abrir
-								span.md-alt-text {{ 'M-A' | keyboardShortcut }}
+								span.md-alt-text {{ 'M-A' | keyboardShortcut 
 						md-menu-divider
 						md-menu-item
 							md-button(ng-click='save()' ng-disabled='!order.canSave() || order.isToolbarLocked()')
@@ -65,15 +65,15 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								span.md-alt-text {{ 'M-E' | keyboardShortcut }}
 						//- md-menu-divider
 						md-menu-item
-							md-button(ng-click='order.showModalProduct()' ng-disabled='order.isToolbarLocked()')
+							md-button(ng-click='order.goToSection("products","product-code")' ng-disabled='order.isToolbarLocked()')
 								md-icon(md-font-set='material-icons') shopping_cart
 								| Localizar produto
 						md-menu-item
-							md-button(ng-click='order.showModalSeller()' ng-disabled='order.isToolbarLocked()')
+							md-button(ng-click='order.goToSection("seller","seller-code")' ng-disabled='order.isToolbarLocked()')
 								md-icon(md-font-icon='fa fa-id-badge')
 								| Localizar vendedor
 						md-menu-item
-							md-button(ng-click='order.showModalCustomer()' ng-disabled='order.isToolbarLocked()')
+							md-button(ng-click='order.goToSection("customer","customer-code")' ng-disabled='order.isToolbarLocked()')
 								md-icon(md-font-icon='fa fa-user')
 								| Localizar cliente
 						md-menu-item
@@ -162,15 +162,15 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 
 				.separator
 
-				md-button.toolbar-btn(ng-click='order.showModalProduct()' ng-disabled='order.isToolbarLocked()')
+				md-button.toolbar-btn(ng-click='order.goToSection("products","product-code")' ng-disabled='order.isToolbarLocked()')
 					md-tooltip(md-direction='bottom') Localizar produto
 					md-icon(md-font-set='material-icons' style='color: chocolate') shopping_cart
 
-				md-button.toolbar-btn(ng-click='order.showModalSeller()' ng-disabled='order.isToolbarLocked()')
+				md-button.toolbar-btn(ng-click='order.goToSection("seller","seller-code")' ng-disabled='order.isToolbarLocked()')
 					md-tooltip(md-direction='bottom') Localizar vendedor
 					md-icon(md-font-icon='fa fa-id-badge' style='color: lightseagreen')
 
-				md-button.toolbar-btn(ng-click='order.showModalCustomer()' ng-disabled='order.isToolbarLocked()')
+				md-button.toolbar-btn(ng-click='order.goToSection("customer","customer-code")' ng-disabled='order.isToolbarLocked()')
 					md-tooltip(md-direction='bottom') Localizar cliente
 					md-icon(md-font-icon='fa fa-user' style='color: darkseagreen')
 
@@ -188,8 +188,10 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 				
 				span(flex)
 
+		div(flex="20")
+			.logo
 
-md-content#order(flex layout-padding style='background-color: #d9d9d9')
+md-content#order(flex layout-padding style='background-color: #a9a9a9')
 
 	.order-container
 		//- Info
@@ -208,7 +210,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 		//- Produtos					
 		section(name='products')
 			md-card
-				md-card-header
+				md-card-header.header-blue
 					md-card-header-text
 						div(layout='row')
 							div(flex='90' layout='column')
@@ -220,7 +222,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									i.fa.fa-search &nbsp; 
 									| Localizar
 
-								md-button.md-raised(ng-click='order.clearItems()' md-colors='{background: "commercialRed"}')
+								md-button.md-raised.button-red(ng-click='order.clearItems()' md-colors='{background: "commercialRed"}')
 									i.fa.fa-remove &nbsp; 
 									| Limpar
 				md-card-content
@@ -312,7 +314,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 								b.text-light Total:&nbsp;
 								| {{order.internal.tempItem.getValueTotal() | currency:"R$ "}}
 
-							md-button.md-raised.md-primary(name='btn-add-item' ng-click='order.addItem()' style='margin: 0')
+							md-button.md-raised.md-primary.button-green(name='btn-add-item' ng-click='order.addItem()' style='margin:0')
 								i.fa.fa-plus &nbsp;
 								| Incluir
 
@@ -365,7 +367,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 		//- Vendedor
 		section(name='seller')
 			md-card
-				md-card-header
+				md-card-header.header-green
 					md-card-header-text
 						div(layout='row')
 							div(flex='90' layout='column')
@@ -377,7 +379,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									i.fa.fa-search &nbsp; 
 									| Localizar
 
-								md-button.md-raised(ng-click='order.clearSeller()' md-colors='{background: "commercialRed"}')
+								md-button.md-raised.button-red(ng-click='order.clearSeller()' md-colors='{background: "commercialRed"}')
 									i.fa.fa-remove &nbsp; 
 									| Limpar
 				md-card-content
@@ -417,7 +419,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 		//- Cliente
 		section(name='customer')
 			md-card(layout-align='center')
-				md-card-header
+				md-card-header.header-red
 					md-card-header-text
 						div(layout='row')
 							div(flex='90' layout='column')
@@ -431,11 +433,11 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									i.fa.fa-search &nbsp; 
 									| Localizar
 
-								md-button.md-raised.text-primary(ng-click='order.newCustomer()')
+								md-button.md-raised.text-primary.button-green(ng-click='order.newCustomer()')
 									i.fa.fa-user-plus &nbsp;
 									| Cadastrar
 
-								md-button.md-raised(ng-click='order.clearCustomer()' md-colors='{background: "commercialRed"}')
+								md-button.md-raised.button-red(ng-click='order.clearCustomer()' md-colors='{background: "commercialRed"}')
 									i.fa.fa-remove &nbsp; 
 									| Limpar
 				
@@ -544,7 +546,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 		//- Pagamento
 		section(name='payment')
 			md-card(layout-align='center')
-				md-card-header
+				md-card-header.header-orange
 					md-card-header-text
 						div(layout='row')
 							div(flex='90' layout='column')
@@ -552,7 +554,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-4' | keyboardShortcut }})
 								span.md-subhead Informe as formas de pagamento
 							div(layout='column' layout-align='center end' layout-fill)
-								md-button.md-raised(ng-click='order.clearPayments()' md-colors='{background: "commercialRed"}')
+								md-button.md-raised.button-red(ng-click='order.clearPayments()' md-colors='{background: "commercialRed"}')
 									i.fa.fa-remove &nbsp; 
 									| Limpar
 				md-card-content
@@ -659,7 +661,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 									| Adicionar
 							
 							.summary(layout='column')
-								md-toolbar.md-toolbar-tools(style='z-index: 0')
+								md-toolbar.md-toolbar-tools.toolbar-orange(style=';z-index:0')
 									h2 Resumo do orçamento
 
 								table.md-subhead
@@ -688,7 +690,7 @@ md-content#order(flex layout-padding style='background-color: #d9d9d9')
 											| {{order.budget.order_value_total | currency:'R$ '}}
 
 								.order-button-container(flex layout='row' layout-align='center center')
-									md-button.md-raised.md-primary(ng-click='order.showModalNotes()')
+									md-button.md-raised.md-primary.button-orange(ng-click='order.showModalNotes()')
 										i.fa.fa-sticky-note &nbsp;
 										| Adicionar observações
 
