@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-26 12:35:43
+* @Last Modified time: 2017-07-26 14:01:17
 */
 
 (function() {
@@ -116,11 +116,6 @@
 							break;
 
 						case 'customer':
-							self.scrollTo('section[name="notes"]');
-							self.focusOn('textarea[name="order-note"]');
-							break;
-
-						case 'notes':
 							self.scrollTo('section[name="payment"]');
 							self.focusOn('input[name="term-code"]');
 							break;
@@ -199,18 +194,8 @@
 				return false;
 			});
 
-			/* Ir para observacoes */
-			Mousetrap.bind(['command+4', 'ctrl+4'], function() {
-				if (!_isToolbarLocked) {
-					self.scrollTo("section[name=\'notes\']");
-					self.focusOn('textarea[name="order-note"]');
-				}
-
-				return false;
-			});
-
 			/* Ir para pagamento */
-			Mousetrap.bind(['command+5', 'ctrl+5'], function() {
+			Mousetrap.bind(['command+5', 'ctrl+4'], function() {
 				if (!_isToolbarLocked) {
 					self.scrollTo("section[name=\'payment\']");
 					self.focusOn('textarea[name="term-code"]');
@@ -236,7 +221,6 @@
 			Mousetrap.unbind(['command+2', 'ctrl+2']);
 			Mousetrap.unbind(['command+3', 'ctrl+3']);
 			Mousetrap.unbind(['command+4', 'ctrl+4']);
-			Mousetrap.unbind(['command+5', 'ctrl+5']);
 		}
 
 		/* Cria os atalhos do teclado */
@@ -317,6 +301,7 @@
 		self.showModalCustomer     = showModalCustomer;
 		self.showModalCustomerInfo = showModalCustomerInfo;
 		self.showModalProduct      = showModalProduct;
+		self.showModalNotes        = showModalNotes;
 
 		function validateBudgetToSave(callback) {
 			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
@@ -2420,6 +2405,23 @@
 				},function(error) {
 					_isToolbarLocked = false;
 				});
+		}
+
+		/**
+		 * Exibe a tela de observacoes do orcamento.
+		 */
+		function showModalNotes() {
+			var controller = function() {
+				this._showCloseButton = true;
+				this.order_note = self.budget.order_note;
+				this.order_note_doc = self.budget.order_note_doc;
+			}
+
+			$rootScope.customDialog().showTemplate('Observações do orçamento', './partials/modalNotes.html', controller, { width: 500 })
+				.then(function(success) {
+					self.budget.order_note = success.order_note;
+					self.budget.order_note_doc = success.order_note_doc;
+				}, function(error) { });
 		}
 	}
 }());

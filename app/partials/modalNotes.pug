@@ -1,0 +1,15 @@
+.body(layout='column' layout-fill)
+	
+	md-input-container(flex)
+		label Observações do orçamento
+		textarea(name='order-note' ng-model='ctrl.order_note' rows='3')
+
+	span(style='margin: 16px;')
+
+	md-input-container(flex)
+		label Observações da Nota
+		textarea(ng-model='ctrl.order_note_doc' rows='3')
+
+.footer(layout='row' layout-align='end center' style='border-top: 1px solid #d7d7d7')
+	md-button.md-primary(ng-click='ctrl._close({ order_note: ctrl.order_note, order_note_doc: ctrl.order_note_doc })')
+		| &nbsp; Ok &nbsp;
