@@ -14,8 +14,6 @@
 					td {{m.modality_description}}
 					td {{ctrl.term.term_installment}}x ({{ctrl.value_total / ctrl.term.term_installment | currency:'R$ '}})
 
-	| {{ctrl.hoverIndex}}
-
 .footer(layout='row' layout-align='end center')
 	md-button.md-primary(ng-click='ctrl._cancel()')
 		| &nbsp; Fechar &nbsp;

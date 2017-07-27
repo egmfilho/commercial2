@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-26 17:48:27
+* @Last Modified time: 2017-07-27 09:26:53
 */
 
 (function() {
@@ -169,11 +169,11 @@
 				fullscreen: false,
 				hasBackdrop: false,
 				position: $mdPanel.newPanelPosition().absolute().center(),
-				trapFocus: true,
 				zIndex: 80,
 				clickOutsideToClose: true,
 				escapeToClose: true,
 				focusOnOpen: true,
+				trapFocus: true,
 				templateUrl: './partials/customDialogTemplate.html',
 				locals: locals,
 				controller: controller,

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-26 10:04:03
+* @Last Modified time: 2017-07-27 09:36:20
 */
 
 (function() {
@@ -305,7 +305,7 @@
 		 */
 		function getChange() {
 			// return Math.max(0, this.order_value_total - this.getPaymentValueTotal());
-			return this.order_value_total - this.getPaymentValue();
+			return parseFloat((this.order_value_total - this.getPaymentValue()).toFixed(2));
 		}
 
 		function removeAudit() {
