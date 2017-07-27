@@ -56,7 +56,7 @@
 					controller.$inject = [ 'ProviderUser', 'User' ];
 
 					var modalOptions = {
-						zIndex: 1,
+						zIndex: 100,
 						hasBackdrop: true,
 						innerDialog: false,
 						focusOnOpen: false

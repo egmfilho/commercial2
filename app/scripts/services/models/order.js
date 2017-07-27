@@ -86,6 +86,7 @@
 					queryable: order.order_id ?
 						(order.order_code + ' '
 						+ order.order_client.person_code + ' '
+						+ order.order_code_erp + ' '
 						+ order.order_client.person_name + ' '
 						+ order.order_seller.person_code + ' '
 						+ order.order_seller.person_name + ' '

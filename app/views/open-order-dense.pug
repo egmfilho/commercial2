@@ -40,6 +40,9 @@
 						th.sortable(ng-click="openOrder.sortBy('order_code')")
 							| CÓDIGO &nbsp;
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_code'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-click="openOrder.sortBy('order_code_erp')")
+							| ERP &nbsp;
+							i.fa(ng-show="openOrder.grid.propertyName === 'order_code_erp'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						th.sortable(ng-click="openOrder.sortBy('order_client.person_name')")
 							| CLIENTE &nbsp;
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_client.person_name'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
@@ -76,6 +79,7 @@
 							ng-if='o.order_status_id == globals("order-status-values").billed') cloud_done
 
 					td {{o.order_code}}
+					td {{o.order_code_erp}}
 					td {{o.order_client.person_name}}
 					td {{o.order_seller.person_name}}
 					td {{o.order_value_total | currency:'R$ '}}

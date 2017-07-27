@@ -28,6 +28,15 @@
 			color: $main-color;
 			letter-spacing: .5px;
 		}
+
+		.pass{
+			margin: 10px;
+			text-align: right;
+			
+			.fa-lock{
+				font-size: 32px;
+			}
+		}
 	}
 
 	.modules {
