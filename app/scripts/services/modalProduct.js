@@ -12,7 +12,7 @@
 					
 					$timeout(function(){
 						jQuery('#focus').focus();
-					},400);
+					},100);
 
 					controller = function(providerProduct, Product) {
 						var vm = this;
@@ -70,7 +70,8 @@
 						attatchTo: angular.element(document.getElementById('order')),
 						zIndex: 1,
 						hasBackdrop: false,
-						innerDialog: true
+						innerDialog: true,
+						focusOnOpen: false
 					};
 
 					return $rootScope.customDialog().showTemplate(title, './partials/modalProduct.html', controller, modalOptions);

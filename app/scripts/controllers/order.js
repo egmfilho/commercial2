@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-27 10:12:36
+* @Last Modified time: 2017-07-27 11:46:05
 */
 
 (function() {
@@ -1722,11 +1722,11 @@
 				getModality: true
 			};
 
+			jQuery('input[name="term-code"]').blur();
+
 			$rootScope.loading.load();
 			providerTerm.getByCode(code, options).then(function(success) {
 				self.internal.term.tempTerm = new Term(success.data);
-				// self.internal.term.queryResult = [ new Term(success.data) ];
-				// self.internal.term.queryTerm = self.internal.term.tempTerm.term_description;
 				$rootScope.loading.unload();
 				self.selectTerm();
 			}, function(error) {
