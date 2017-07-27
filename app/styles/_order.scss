@@ -382,7 +382,7 @@ section[name="payment"] {
 	}
 }
 
-.logo{
+.logo-commercial{
 	background-image:url('../images/LOGO-2017-NOME.png');
 	background-position:center center;
 	background-size: contain;
@@ -391,6 +391,12 @@ section[name="payment"] {
     height: 48px;
     margin: 12px 42px 12px 12px;
     float: right;
+}
+
+@media print{
+	.logo-commercial{
+		display: none;
+	}
 }
 
 .header-blue{
