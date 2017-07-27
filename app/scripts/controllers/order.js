@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-27 11:46:05
+* @Last Modified time: 2017-07-27 17:29:01
 */
 
 (function() {
@@ -278,6 +278,7 @@
 		self.scrollTo              = scrollTo;
 		self.focusOn               = focusOn;
 		self.print                 = print;
+		self.mail                  = mail;
 		self.savePDF               = savePDF;
 		self.showNotFound          = showNotFound;
 		self.addressDialog         = addressDialog;
@@ -595,7 +596,8 @@
 									}
 									
 									case 'mail': {
-										$rootScope.toast('Aviso', 'Ainda nao implementado!');
+										self.mail();
+										$scope.open(true);
 										break;
 									}
 									
@@ -1468,6 +1470,24 @@
 		}
 
 		/**
+		 * Instancia uma nova janela para envio de email.
+		 */
+		function mail() {
+			if (!self.canPrint()) return;
+
+			var options = {
+				width: 920, 
+				height: 650,
+				resizeable: false
+			}
+
+			if (constants.isElectron)
+				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/mail/' + self.budget.order_code, options);
+			else
+				$location.path('/order/print/' + self.budget.order_code)
+		}
+
+		/**
 		 * Exibe um modal com aviso de 404 not found.
 		 */
 		function showNotFound() {
@@ -1545,7 +1565,8 @@
 						}
 						
 						case 'mail': {
-							alert('ainda nao implementado');
+							self.mail();
+							$scope.open(true);
 							break;
 						}
 					}

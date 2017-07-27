@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-26 14:08:30
+* @Last Modified time: 2017-07-27 12:26:19
 */
 
 'use strict';
@@ -267,6 +267,11 @@ angular.module('commercial2', [
 				templateUrl: 'views/print-order.html',
 				controller: 'PrintOrderCtrl',
 				controllerAs: 'print'
+			})
+			.when('/order/mail/:code', {
+				templateUrl: 'views/mail-order.html',
+				controller: 'MailOrderCtrl',
+				controllerAs: 'mail'
 			})
 			.when('/about', {
 				module: 'about',

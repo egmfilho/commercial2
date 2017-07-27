@@ -47,7 +47,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								md-icon(md-font-icon='fa fa-file-pdf-o')
 								|  Salvar PDF
 						md-menu-item
-							md-button(ng-click='' ng-disabled='true || order.isToolbarLocked()')
+							md-button(ng-click='order.mail()' ng-disabled='!order.canPrint() || order.isToolbarLocked()')
 								md-icon(md-font-set='material-icons') mail
 								|  Enviar por email
 						md-menu-divider
@@ -156,7 +156,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					md-tooltip(md-direction='bottom') Salvar como PDF
 					md-icon(md-font-icon='fa fa-file-pdf-o' style='color: red')
 
-				md-button.toolbar-btn(ng-click='' ng-disabled='true || order.isToolbarLocked()')
+				md-button.toolbar-btn(ng-click='order.mail()' ng-disabled='!order.canPrint() || order.isToolbarLocked()')
 					md-tooltip(md-direction='bottom') Enviar por email
 					md-icon(md-font-set='material-icons' style='color: lightblue') mail
 
