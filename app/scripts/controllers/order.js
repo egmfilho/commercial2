@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-27 08:54:49
+* @Last Modified time: 2017-07-27 10:12:36
 */
 
 (function() {
@@ -1745,7 +1745,7 @@
 				this.term = new Term(self.internal.term.tempTerm);
 				this.value_total = self.budget.order_value_total;
 
-				this.hoverIndex = 0;
+				this.hoverIndex = -1;
 
 				if (constants.isElectron) {
 					var scope = this;
@@ -1765,14 +1765,14 @@
 						return false;
 					});	
 				}
+
+				jQuery('table[name="clementino"]').focus();
 			};
 
 			var options = {
 				width: 400,
-				onOpenComplete: function() {
-					jQuery('table[name="clementino"] tbody tr:nth-child(0)').focus();
-				}
-			}
+				focusOnOpen: false,
+			};
 
 			$rootScope.customDialog().showTemplate('Selecionar modalidade', './partials/modalTerm.html', controller, options)
 				.then(function(success) {

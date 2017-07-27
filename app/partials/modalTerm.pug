@@ -9,7 +9,7 @@
 	.container-table
 		table.table(name='clementino')
 			tbody
-				tr(ng-repeat='m in ctrl.term.modality track by $index' ng-click='ctrl._close(m)' ng-class='{ "active": $index == ctrl.hoverIndex }' keys-shortcuts enter='ctrl._close(m)')
+				tr(ng-repeat='m in ctrl.term.modality track by $index' ng-click='ctrl._close(m)' keys-shortcuts enter='ctrl._close(m)')
 					td {{m.modality_code}}
 					td {{m.modality_description}}
 					td {{ctrl.term.term_installment}}x ({{ctrl.value_total / ctrl.term.term_installment | currency:'R$ '}})
