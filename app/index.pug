@@ -11,12 +11,12 @@ block header
 					md-icon(md-font-icon='fa fa-bars' aria-label='Menu')
 				h1 {{titleBarText && titleBarText.length ? titleBarText : 'Commercial - Gestor de vendas'}}
 				span.flex
-				//- md-menu
+				md-menu
 					md-button.md-icon-button(ng-click='$mdMenu.open($event)')
 						md-icon(md-font-icon='fa fa-gear' aria-label='Ajustes')
 					md-menu-content
 						md-menu-item
-							md-button(ng-click='' style='text-align: center') 
+							md-button(ng-click='newUserPass()' style='text-align: center') 
 								md-icon(md-font-set='material-icons' md-menu-align-target) account_circle
 								|  Redefinir senha de usuário
 

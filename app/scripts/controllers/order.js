@@ -375,7 +375,7 @@
 				}
 			}
 			
-			if( !self.budget.order_audit.user_id && debtor > self.budget.order_client.person_credit_limit.person_credit_limit_balance ){
+			if( !self.budget.order_audit.user_id && debtor > 0 && debtor > self.budget.order_client.person_credit_limit.person_credit_limit_balance ){
 				authorizeCredit().then(function(success){
 					if( success.user_max_credit_authorization > 0 ){
 						self.setOrderAudit({
@@ -445,6 +445,10 @@
 				jQuery('section[name="payment"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'customer' });
 
 				self.focusOn('input[name=\'product-code\']');
+				if( Globals.get('user')['user_seller'] ){
+					self.budget.setSeller(new Person(Globals.get('user')['user_seller']));
+					self.internal.tempSeller = new Person(Globals.get('user')['user_seller']);
+				}
 			}, 200);
 
 			self.searchTerm();
@@ -881,7 +885,7 @@
 		/**
 		 * Limpa os campos da sessao de vendedor.
 		 */
-		function clearCustomer() {
+		function clearCustomer(){
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos?').then(function() {
 				self.budget.removeCustomer();
 				self.budget.removeDeliveryAddress();

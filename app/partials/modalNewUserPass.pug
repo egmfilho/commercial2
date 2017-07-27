@@ -1,0 +1,27 @@
+.body(layout='column')
+	p {{ctrl.text}}
+
+	md-input-container
+		label 
+			| Senha atual
+		input(type='password' ng-model='ctrl.data.user_pass' keys-shortcuts enter='ctrl.goTo("user_new_pass")')
+
+	md-input-container
+		label 
+			| Nova senha
+		input(name='user_new_pass' type='password' ng-model='ctrl.data.user_new_pass' keys-shortcuts enter='ctrl.goTo("user_new_pass_confirm")')
+
+	md-input-container
+		label 
+			| Confirme sua nova senha
+		input(name='user_new_pass_confirm' type='password' ng-model='ctrl.data.user_new_pass_confirm' keys-shortcuts enter='ctrl.update(ctrl.data)')
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-primary.button-red(ng-click='ctrl._cancel()')
+		i.fa.fa-remove &nbsp; 
+		| &nbsp; Cancelar &nbsp;
+
+	md-button.md-primary.button-green(ng-click='ctrl.update(ctrl.data)')
+		i.fa.fa-check &nbsp;
+		| &nbsp; Atualizar &nbsp;
+	

@@ -24,7 +24,8 @@
 				});
 
 				return {
-					getAll: getAll
+					getAll: getAll,
+					setNewPass: setNewPass
 				}
 
 				// ******************************
@@ -36,6 +37,16 @@
 						action: 'getList'
 					}, { 
 						get_user_profile: true
+					}).$promise;
+				}
+
+				function setNewPass(data) {
+					return provider.query({
+						action: 'newPass'
+					}, {
+						user_id: data && data.user_id,
+						user_pass: data && data.user_pass,
+						user_new_pass: data && data.user_new_pass
 					}).$promise;
 				}
 
