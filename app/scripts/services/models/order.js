@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-27 09:36:20
+* @Last Modified time: 2017-07-27 09:49:09
 */
 
 (function() {
@@ -304,7 +304,6 @@
 		 * Calcula o troco do orcamento.
 		 */
 		function getChange() {
-			// return Math.max(0, this.order_value_total - this.getPaymentValueTotal());
 			return parseFloat((this.order_value_total - this.getPaymentValue()).toFixed(2));
 		}
 
