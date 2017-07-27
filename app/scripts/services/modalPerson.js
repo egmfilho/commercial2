@@ -14,7 +14,7 @@
 
 					$timeout(function(){
 						jQuery('#focus').focus();
-					},400);
+					},100);
 
 					controller = function(providerPerson, Person) {
 						var vm = this;
@@ -72,7 +72,8 @@
 					var modalOptions = {
 						zIndex: 1,
 						hasBackdrop: false,
-						innerDialog: true
+						innerDialog: true,
+						focusOnOpen: false
 					};
 
 					return $rootScope.customDialog().showTemplate(title, './partials/modalPerson.html', controller, modalOptions);
