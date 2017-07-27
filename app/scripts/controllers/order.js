@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-26 18:00:55
+* @Last Modified time: 2017-07-27 08:54:49
 */
 
 (function() {
@@ -481,7 +481,7 @@
 						$rootScope.loading.load();
 						providerTerm.getById(self.budget.order_term_id, { getModality: true }).then(function(success) {
 							self.internal.term.tempTerm = new Term(success.data);
-							self.internal.term.backup = self.internal.term.tempTerm;
+							self.internal.term.backup = new Term(success.data);
 							/* Cria uma copia de backup para saber se o orcamento foi modificado no final */
 							_backup = new Order(self.budget);
 							$rootScope.loading.unload();
@@ -677,9 +677,7 @@
 						self.internal.term.backup = null;
 					},
 					restoreBackup: function() {
-						if (self.internal.term.backup) {
-							self.internal.term.tempTerm = self.internal.term.backup;
-						}
+						self.internal.term.tempTerm = new Term(self.internal.term.backup);
 					}
 				}
 
@@ -1753,25 +1751,31 @@
 					var scope = this;
 					Mousetrap.bind('up', function() {
 						$timeout(function() {
-							jQuery('table[name="clementino"] tbody tr:nth-child(' + (scope.hoverIndex + 1) + ')').focus();
 							scope.hoverIndex = Math.max(0, scope.hoverIndex - 1);
+							jQuery('table[name="clementino"] tbody tr:nth-child(' + (scope.hoverIndex + 1) + ')').focus();
 						});
 						return false;
 					});
 
 					Mousetrap.bind('down', function() {
 						$timeout(function() {
-							jQuery('table[name="clementino"] tbody tr:nth-child(' + (scope.hoverIndex + 1) + ')').focus();
 							scope.hoverIndex = Math.min(scope.term.modality.length - 1, scope.hoverIndex + 1);
+							jQuery('table[name="clementino"] tbody tr:nth-child(' + (scope.hoverIndex + 1) + ')').focus();
 						});
 						return false;
 					});	
 				}
 			};
 
-			$rootScope.customDialog().showTemplate('Selecionar modalidade', './partials/modalTerm.html', controller, { width: 400 })
+			var options = {
+				width: 400,
+				onOpenComplete: function() {
+					jQuery('table[name="clementino"] tbody tr:nth-child(0)').focus();
+				}
+			}
+
+			$rootScope.customDialog().showTemplate('Selecionar modalidade', './partials/modalTerm.html', controller, options)
 				.then(function(success) {
-					self.internal.term.backup = new Term(self.internal.term.tempTerm);
 					self.addModality(success);
 					self.budget.order_term_id = self.internal.term.tempTerm.term_id;
 					self.internal.term.queryTerm = '';
@@ -1849,9 +1853,13 @@
 				message += 'Deseja Continuar?';
 				$rootScope.customDialog().showConfirm('Aviso', message).then(function(success) {
 					self.budget.order_payments = new Array();
+					self.internal.term.backup = new Term(self.internal.term.tempTerm);
 					add();
-				}, function(error){ });
+				}, function(error) {
+					self.internal.term.restoreBackup();
+				});
 			} else {
+				self.internal.term.backup = new Term(self.internal.term.tempTerm);
 				add();
 			}
 		}
