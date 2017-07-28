@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-07-27 12:24:55
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-28 16:37:15
+* @Last Modified time: 2017-07-28 16:58:06
 */
 
 (function() {
@@ -43,7 +43,10 @@
 			}
 		};
 		
-		self.mailArray = [{ name: 'Alfonse', mail: 'brown@alfonse.com' }, { name: 'Alabama', mail: 'bama@ala.com' }, { name: 'Alessandro', mail: 'alessandro@dafel.com.br' }];
+		self.mailArray = [{ 
+			nome: Globals.get('user').user_name,
+			mail: Globals.get('user').user_mail
+		}];
 
 		self.focusSearchInput = function() {
 			jQuery(".box input").focus().select();
@@ -61,12 +64,10 @@
 		$scope.globals = Globals.get;
 
 		$scope.zoomIn = function() {
-			console.log('teste');
 			jQuery('.chico-bento .preview .print-container .print-order').removeClass('zoom-50');
 		};
 
 		$scope.zoomOut = function() {
-			console.log('teste2');
 			jQuery('.chico-bento .preview .print-container .print-order').addClass('zoom-50');
 		};
 
@@ -116,6 +117,7 @@
 				getCompany: true,
 				getCompanyAddress: true,
 				getCustomer: true,
+				getContacts: true,
 				getSeller: true,
 				getItems: true,
 				getPayments: true,
@@ -157,8 +159,8 @@
 							subject: self.form.subject,
 							message: self.form.message,
 							reply: {
-								name: Globals.get('user').user_mail,
-								mail: Globals.get('user').user_name
+								name: Globals.get('user').user_name,
+								mail: Globals.get('user').user_mail
 							},
 							pdf: success 
 						}

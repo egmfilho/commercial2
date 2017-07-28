@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-22 13:23:08
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-25 09:13:59
+* @Last Modified time: 2017-07-28 16:52:37
 */
 
 (function() {
@@ -52,6 +52,7 @@
 						get_order_client: options && options.getCustomer,
 						get_person_address: options && options.getCustomer,
 						get_person_credit: options && options.getCustomer,
+						get_person_contact: options && options.getContacts,
 						get_order_seller: options && options.getSeller,
 						get_order_items: options && options.getItems,
 						get_order_items_product: options && options.getItems,
@@ -75,6 +76,7 @@
 						get_order_client: options && options.getCustomer,
 						get_person_address: options && options.getCustomer,
 						get_person_credit: options && options.getCustomer,
+						get_person_contact: options && options.getContacts,
 						get_order_seller: options && options.getSeller,
 						get_order_items: options && options.getItems,
 						get_order_items_product: options && options.getItems,
@@ -101,6 +103,7 @@
 						get_order_client: options && options.getCustomer,
 						get_person_address: options && options.getPersonAddress,
 						get_person_credit: options && options.getPersonCredit,
+						get_person_contact: options && options.getContacts,
 						get_order_seller: options && options.getSeller,
 						get_order_items: options && options.getItems,
 						get_order_items_product: options && options.getItems,
