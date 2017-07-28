@@ -1,0 +1,146 @@
+.chico-bento
+	.form
+		.header.hidden-on-print
+			| Enviar por email
+		
+		.body.hidden-on-print
+
+			table
+				tr
+					td Para: 
+					td 
+						input(name='to')
+
+				tr
+					td Assunto: 
+					td 
+						input(name='subject')
+
+				tr
+					td.message Mensagem:
+					td
+						textarea(name='message')
+
+				tr
+					td
+					td
+						.footer.clearfix
+							.attachment
+								i.material-icons attach_file
+								b Anexo: &nbsp;
+								span(ng-show='mail.order.order_code')
+									i.fa.fa-file-pdf-o &nbsp;
+									| Orçamento_{{mail.order.order_code}}.pdf 
+								span(ng-hide='mail.order.order_code')
+									| Carregando...
+
+							.send
+								md-button.md-raised.md-primary(ng-click='mail.send()')
+									i.material-icons send
+									| Enviar
+
+		.preview(ng-if='mail.order.order_code')
+			.preview-header.hidden-on-print
+				span Pré-Visualização: 
+				span Orçamento_{{mail.order.order_code}}.pdf
+
+			md-content.print-order
+				.header(layout='row')
+					.logo(flex='20' layout='column' layout-align='center center')
+						img(ng-src='{{mail.logo}}')
+					
+					.company(flex layout='row' layout-align='start center')
+						div
+							.md-block 
+								| {{mail.order.order_company.company_name}}
+							.md-block 
+								| {{mail.order.order_company.company_address.company_address_type}}
+								| {{mail.order.order_company.company_address.company_address_public_place}}
+							.md-block 
+								| {{mail.order.order_company.company_address.company_address_district}} -
+								| {{mail.order.order_company.company_address.company_address_city}} -
+								| {{mail.order.order_company.company_address.company_address_uf}}
+							.md-block 
+								| {{mail.order.order_company.company_phone}}
+					
+					.info(flex='30' layout='column' layout-align='end')
+						.md-title
+							div Orçamento n&#186;: {{mail.order.order_code}}
+							div(ng-if='mail.order.order_code_erp') ERP: {{mail.order.order_code_erp}}
+						span(flex)
+						.md-subhead
+							| Data da impressão: {{now | date:'dd/MM/yyyy'}}
+						.md-subhead
+							| Hora da impressão: {{now | date:'HH:mm:ss'}}
+
+				.order-info
+					table
+						tr
+							td 
+								b Data da emissão: 
+								| {{mail.order.order_date | date:'dd/MM/yyyy'}}
+							td 
+								b Vendedor: 
+								| {{mail.order.order_seller.person_code}} - {{mail.order.order_seller.person_name}}
+							td 
+								b Cliente: 
+								| {{mail.order.order_client.person_code}} - {{mail.order.order_client.person_name}}
+						tr
+							td 
+								b CPF/CNPJ: 
+								| {{mail.order.order_client.person_type == 'F' ? mail.order.order_client.person_cpf : mail.order.order_client.person_cnpj}}  
+							td 
+								b Insc. Est.: 
+								| {{mail.order.address_delivery.person_address_ie}}
+							td 
+								b Endereço: 
+								| {{mail.order.address_delivery.person_address_type}} {{mail.order.address_delivery.person_address_public_place}} - {{mail.order.address_delivery.person_address_number}}
+						tr
+							td 
+								b Bairro: 
+								| {{mail.order.address_delivery.district.district_name}}
+							td 
+								b Cidade: 
+								| {{mail.order.address_delivery.city.city_name}} - {{mail.order.address_delivery.city.uf_id}}
+							td 
+								b Cep: 
+								| {{mail.order.address_delivery.person_address_cep}}
+						tr
+							td(ng-repeat='contact in mail.order.address_delivery.person_address_contact|limitTo:3')
+								b {{contact.person_address_contact_label}}: 
+								| {{contact.person_address_contact_value}}
+
+				table.products
+					thead
+						tr
+							th PRODUTO
+							th UND
+							th QTD
+							th VALOR
+							th(colspan='2') DESCONTO
+							th LÍQUIDO
+							th TOTAL
+					tbody
+						tr(ng-repeat='i in mail.order.order_items' layout='row')
+							td {{i.product.product_code}} - {{i.product.product_name}}
+							td {{i.product.unit.unit_initials}}
+							td {{i.order_item_amount}}
+							td {{i.order_item_value_unitary | currency}}
+							td {{i.order_item_al_discount | currency:''}}%
+							td {{i.order_item_vl_discount | currency:'R$ '}}
+							td {{(i.order_item_value_total / i.order_item_amount) | currency:'R$ '}}
+							td {{i.order_item_value_total | currency:'R$ '}}
+
+				div(layout='row' layout-align='end center')
+					table.payments
+						thead
+							tr
+								th(colspan='3') PAGAMENTO
+						tbody
+							tr(ng-repeat='i in mail.order.order_payments' layout='row')
+								td {{i.modality.modality_description}}
+								td {{i.order_payment_value | currency:'R$ '}}
+								td {{i.order_payment_installment}}x
+
+				.message
+					p {{globals('print-message')[mail.order.order_company_id].order_message}}

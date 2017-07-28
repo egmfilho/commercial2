@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-02 12:07:18
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-06 09:07:06
+* @Last Modified time: 2017-07-27 17:25:16
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('ElectronPrinter', ElectronPrinter);
 
-	ElectronPrinter.$inject = [ 'Constants' ];
+	ElectronPrinter.$inject = [ '$q', 'Constants' ];
 
-	function ElectronPrinter(constants) {
+	function ElectronPrinter($q, constants) {
 
 		// ******************************************
 		// Check if it's running on Electron
@@ -24,7 +24,8 @@
 			var oops = function() { alert('Disponível apenas na versão desktop.'); };
 			return { 
 				print: oops,
-				savePDF: oops
+				savePDF: oops,
+				getRawPDF: getRawPDF
 			};
 		}
 
@@ -47,7 +48,8 @@
 
 		return {
 			print: print,
-			savePDF: savePDF
+			savePDF: savePDF,
+			getRawPDF: getRawPDF
 		}
 
 		// ******************************
@@ -103,6 +105,25 @@
 					});
 				}
 			});
+		}
+
+		/**
+		* Retorna apenas os binarios do pdf.
+		* @param {object} options - As configuracoes das paginas do pdf.
+		*/
+		function getRawPDF(options) {
+			var win = _electron.remote.getCurrentWindow(),
+				deferred = $q.defer();
+
+			win.webContents.printToPDF(angular.extend({ }, printSettings, options), function(err, data) {
+				if (err) {
+					deferred.reject(err);
+				} else {
+					deferred.resolve(data);
+				}
+			});
+
+			return deferred.promise;
 		}
 
 	}

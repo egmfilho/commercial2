@@ -1,0 +1,166 @@
+/*
+* @Author: egmfilho
+* @Date:   2017-07-27 12:32:24
+* @Last Modified by:   egmfilho
+* @Last Modified time: 2017-07-27 17:38:18
+*/
+
+.mail-window {
+	background-color: white;
+
+	.form, .preview {
+		box-shadow: none;
+	}
+
+	.hidden-on-print {
+		@media only print {
+			display: none;
+		}
+	}
+
+	@media only screen {
+		height: auto;
+		background-color: #ccc;
+
+		.chico-bento {
+			display: block;
+			min-width: 900px;
+			max-width: 900px;
+			margin: 0 auto;
+		}
+
+		.form {
+			display: block;
+			margin: 0 32px;
+			background-color: white;
+			padding: 32px;
+
+			box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 
+						0px 4px 5px 0px rgba(0, 0, 0, 0.14), 
+						0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+
+			> .header {
+				padding: 16px;
+				background-color: $main-color;
+				font-size: 24px;
+				color: white;
+				margin: -32px;
+				margin-bottom: 0;
+			}
+
+			.body {
+				table {
+					width: 100%;
+					margin-top: 32px;
+
+					tr {
+						td {
+							align-items: center;
+
+							&:first-child {
+								text-align: right;
+								width: 90px;
+								padding: 0;
+								padding-right: 6px;
+							}
+
+							&:last-child {
+								width: auto;
+								padding: 8px 0;
+							}
+
+							&.message {
+								vertical-align: top;
+								padding-top: 10px;
+							}
+						}
+					}
+				}
+
+				input, textarea {
+					box-shadow: inset 0 0 2px rgba(#000, .2);
+					border: 1px solid #bbb;
+					display: block;
+					width: calc(100% - 16px);
+					padding: 8px;
+				}
+
+				input {
+					padding: 8px;
+				}
+
+				textarea {
+					resize: none !important;
+					height: 120px;
+				}
+
+				.footer {
+					.attachment {
+						display: inline-block;
+						margin-top: 7px;
+
+						span {
+							padding: 7px;
+							margin: 0;
+							background-color: whitesmoke;
+							border: 1px solid #d7d7d7;
+							width: auto;
+							display: inline-block;
+
+							i.fa {
+								color: orangered;
+								margin-right: 5px;
+							}
+						}
+
+						.material-icons {
+							vertical-align: top;
+							font-size: 19px;
+							line-height: 34px;
+						}
+					}
+
+					.send {
+						float: right !important;
+
+						button {
+							padding: 0 12px !important;
+							margin-right: 0;
+
+							.material-icons {
+								vertical-align: text-top;
+								font-size: 19px;
+								margin-right: 5px;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.preview {
+			margin-top: 16px;
+			border: 5px solid #4caf50;
+			box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 
+						0px 4px 5px 0px rgba(0, 0, 0, 0.14), 
+						0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+		}
+
+		.preview-header {
+			display: block;
+			background-color: #4caf50;
+			padding: 12px;
+			font-size: 18px;
+			color: white;
+
+			.fa {
+				margin-right: 8px;
+			}
+		}
+
+		.print-order {
+			margin: 32px;
+			zoom: .8;
+		}
+	}
+}

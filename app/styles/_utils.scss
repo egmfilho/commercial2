@@ -2,8 +2,19 @@
 * @Author: egmfilho
 * @Date:   2017-06-07 13:57:12
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-20 13:27:47
+* @Last Modified time: 2017-07-27 14:00:58
 */
+
+.clearfix {
+	&:before, &:after {
+		content: " ";
+		display: table;
+	}
+	
+	&:after {
+		clear: both;
+	}
+}
 
 .offset-top-5 {
 	margin-top: 5px !important;

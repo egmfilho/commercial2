@@ -19,7 +19,8 @@ md-content.print-order(layout-fill ng-if='print.order.order_code')
 		
 		.info(flex='30' layout='column' layout-align='end')
 			.md-title
-				| Orçamento n&#186;: {{print.order.order_code}}
+				div Orçamento n&#186;: {{mail.order.order_code}}
+				div(ng-if='mail.order.order_code_erp') ERP: {{mail.order.order_code_erp}}
 			span(flex)
 			.md-subhead
 				| Data da impressão: {{now | date:'dd/MM/yyyy'}}
