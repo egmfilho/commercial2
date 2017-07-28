@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-07-27 12:32:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-27 17:38:18
+* @Last Modified time: 2017-07-28 14:37:09
 */
 
 .mail-window {
@@ -58,26 +58,31 @@
 							align-items: center;
 
 							&:first-child {
-								text-align: right;
 								width: 90px;
+								vertical-align: top;
+								text-align: right;
 								padding: 0;
 								padding-right: 6px;
+								padding-top: 15px;
 							}
 
 							&:last-child {
 								width: auto;
 								padding: 8px 0;
 							}
-
-							&.message {
-								vertical-align: top;
-								padding-top: 10px;
-							}
 						}
 					}
 				}
 
-				input, textarea {
+				div.box {
+					box-shadow: inset 0 0 2px rgba(#000, .2);
+					border: 1px solid #bbb;
+					height: 36px;
+					display: table;
+					min-width: 100%;
+				}
+
+				input.box, textarea.box {
 					box-shadow: inset 0 0 2px rgba(#000, .2);
 					border: 1px solid #bbb;
 					display: block;
@@ -85,13 +90,64 @@
 					padding: 8px;
 				}
 
-				input {
+				input.box {
+					height: 20px;
 					padding: 8px;
 				}
 
-				textarea {
+				textarea.box {
 					resize: none !important;
 					height: 120px;
+				}
+
+				md-chips-wrap {
+					padding: 0 8px;
+					min-height: 32px;
+					height: 32px;
+					max-height: 32px;
+					box-shadow: none;
+
+					md-chip {
+						margin-top: 4px;
+						margin-right: 4px;
+						font-size: 14px;
+						height: 24px;
+						line-height: 24px;
+
+						.md-chip-content {
+							height: 24px;
+						}
+
+						.md-chip-remove-container {
+							width: 24px;
+							height: 24px;
+
+							button {
+								width: 24px;
+								height: 24px;
+
+								md-icon {
+									width: 10px;
+									height: 10px;
+									zoom: .6;
+								}
+							}
+						}
+					}
+
+					.md-chip-input-container {
+						margin: 0;
+						height: 28px;
+
+						* {
+							height: 28px;
+							margin: 0;
+						}
+
+						> * {
+							margin-top: 2px;
+						}
+					}
 				}
 
 				.footer {
@@ -158,9 +214,25 @@
 			}
 		}
 
+		.print-container {
+			width: auto;
+			height: 400px;
+			overflow: auto;
+			background-color: #777;
+		}
+
 		.print-order {
+			border: 32px solid white;
+			width: 920px;
+			height: 1200px;
+			display: inline-block;
 			margin: 32px;
-			zoom: .8;
+			transition: zoom .5s ease;
+		}
+
+		.zoom-50 {
+			zoom: .5;
+			margin: 32px 250px;
 		}
 	}
 }

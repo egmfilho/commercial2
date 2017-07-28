@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-27 12:26:19
+* @Last Modified time: 2017-07-28 14:27:58
 */
 
 'use strict';
@@ -20,7 +20,7 @@ Object.defineProperty(Object.prototype, 'equals', {
 				return false;
 
 		for (p in this) {
-			if (p != '$$hashkey') {
+			if (p != '$$hashKey') {
 				if (this[p]) {
 					switch (typeof(this[p])) {
 						case 'object':
@@ -109,7 +109,7 @@ angular.module('commercial2', [
 
 		/* https://angular-md-color.com/#/ */
 
-		// $mdThemingProvider.definePalette('customPrimary', {
+		// $mdThemingProvider.definePalette('custom-primary', {
 		// 	'50': '#8a8a8d',
 		// 	'100': '#7d7d81',
 		// 	'200': '#717174',
@@ -332,11 +332,11 @@ angular.module('commercial2', [
 			dialog: null,
 			count: 0,
 			isLoading: function() { return this.count > 0 },
-			load: function() { 
+			load: function(title, message) { 
 				if (this.count == 0) {
 					if (!this.dialog) 
 						this.dialog = $rootScope.customDialog();
-					this.dialog.showUnclosable('Aguarde', 'Carregando informações...');
+					this.dialog.showUnclosable(title || 'Aguarde', message || 'Carregando informações...');
 				}
 				this.count++; 
 			},

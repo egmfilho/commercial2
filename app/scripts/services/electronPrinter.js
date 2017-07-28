@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-02 12:07:18
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-27 17:25:16
+* @Last Modified time: 2017-07-28 12:59:47
 */
 
 (function() {
@@ -25,7 +25,7 @@
 			return { 
 				print: oops,
 				savePDF: oops,
-				getRawPDF: getRawPDF
+				getHexPDF: oops
 			};
 		}
 
@@ -49,7 +49,7 @@
 		return {
 			print: print,
 			savePDF: savePDF,
-			getRawPDF: getRawPDF
+			getHexPDF: getHexPDF
 		}
 
 		// ******************************
@@ -95,7 +95,7 @@
 							return;
 						}
 
-						_fs.writeFile(filePath, data, function(err) {
+						_fs.writeFile(filePath, data.toString('latin1'), function(err) {
 							if (err) {
 								_dialog.showErrorBox('Erro', 'Erro ao salvar o arquivo.');
 								if (constants.debug) console.log(err);
@@ -111,15 +111,19 @@
 		* Retorna apenas os binarios do pdf.
 		* @param {object} options - As configuracoes das paginas do pdf.
 		*/
-		function getRawPDF(options) {
+		function getHexPDF(options) {
 			var win = _electron.remote.getCurrentWindow(),
 				deferred = $q.defer();
+
+			if (!win) {
+				console.log('janela nao encontrada!');
+			}
 
 			win.webContents.printToPDF(angular.extend({ }, printSettings, options), function(err, data) {
 				if (err) {
 					deferred.reject(err);
 				} else {
-					deferred.resolve(data);
+					deferred.resolve(data.toString('hex'));
 				}
 			});
 
