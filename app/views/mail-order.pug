@@ -51,15 +51,17 @@
 									| Enviar
 
 		.preview(ng-if='mail.order.order_code')
-			.preview-header.hidden-on-print
+			.preview-header.hidden-on-print(layout='row' layout-align='start center')
 				span Pré-Visualização: 
 				span Orçamento_{{mail.order.order_code}}.pdf
 
+				span(flex)
+
 				md-button.md-icon-button.md-raised(ng-click='zoomOut()')
-					md-icon(md-font-icon='fa fa-search-minus' style='font-size: 20px')
+					md-icon(md-icon-set='material-icons' style='font-size: 24px') zoom_out
 
 				md-button.md-icon-button.md-raised(ng-click='zoomIn()')
-					md-icon(md-font-icon='fa fa-search-plus' style='font-size: 20px')
+					md-icon(md-icon-set='material-icons' style='font-size: 24px') zoom_in
 
 			.print-container
 				md-content.print-order.zoom-50

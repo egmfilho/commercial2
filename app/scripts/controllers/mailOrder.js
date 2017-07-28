@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-07-27 12:24:55
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-28 14:37:50
+* @Last Modified time: 2017-07-28 16:22:30
 */
 
 (function() {
@@ -154,6 +154,10 @@
 							to: self.form.to,
 							subject: self.form.subject,
 							message: self.form.message,
+							reply: {
+								name: Globals.get('user').user_mail,
+								mail: Globals.get('user').user_name
+							},
 							pdf: success 
 						}
 					}).then(function(success) {
