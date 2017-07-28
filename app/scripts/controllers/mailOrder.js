@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-07-27 12:24:55
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-28 16:58:06
+* @Last Modified time: 2017-07-28 17:59:40
 */
 
 (function() {
@@ -44,7 +44,7 @@
 		};
 		
 		self.mailArray = [{ 
-			nome: Globals.get('user').user_name,
+			name: Globals.get('user').user_name,
 			mail: Globals.get('user').user_mail
 		}];
 
@@ -75,6 +75,8 @@
 			if ($routeParams.code) {
 				getOrder($routeParams.code)
 					.then(function(success) {
+						self.form.message = 'Segue em anexo o orçamento de código ' + self.order.order_code + ' em formato PDF.';
+
 						$timeout(function() {
 							jQuery('.chico-bento .preview .print-container').on('DOMMouseScroll mousewheel', function(e) { 
 								
@@ -118,6 +120,7 @@
 				getCompanyAddress: true,
 				getCustomer: true,
 				getContacts: true,
+				contactType: Globals.get('mail-contact-id'),
 				getSeller: true,
 				getItems: true,
 				getPayments: true,
@@ -142,11 +145,18 @@
 			return deferred.promise;
 		}
 
-		this.send = function() {
-			console.log(self.form);
+		function closeWindow() {
+			require('electron').remote.getCurrentWindow().close();
+		}
 
+		this.send = function() {
 			if (constants.isElectron)
 				$rootScope.loading.load('Aguarde', 'Enviando email...');
+
+			if (!self.form.to.length) {
+				$rootScope.customDialog().showMessage('Aviso', 'Nenhum destinatário informado!');
+				return;
+			}
 
 			ElectronPrinter.getHexPDF()
 				.then(function(success) {
@@ -166,9 +176,13 @@
 						}
 					}).then(function(success) {
 						$rootScope.loading.unload();
-						$rootScope.customDialog().showMessage('Sucesso', 'O email foi enviado!');
+						$rootScope.customDialog().showMessage('Sucesso', 'O email foi enviado!')
+							.then(function(success){ }, function(error) {
+								closeWindow();
+							});
 					}, function(error) {
 						constants.debug && console.log(error);
+						$rootScope.customDialog().showMessage('Erro', 'Não foi possível enviar o email. Tente novamente mais tarde.');
 						$rootScope.loading.unload();
 					});
 				}, function(error) {

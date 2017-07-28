@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-19 08:59:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-21 09:38:11
+* @Last Modified time: 2017-07-28 17:53:11
 */
 
 (function() {
@@ -55,6 +55,7 @@
 				Globals.set('print-message', success.data.data.order);
 				Globals.set('default-price-table', success.data.data.price.default_price);
 				Globals.set('credit-limit', success.data.data.credit_limit.authorized_modality_id);
+				Globals.set('mail-contact-id', success.data.data.contact_mail.contact_mail_type_id);
 				
 				deferred.resolve();
 			}, function(error) {

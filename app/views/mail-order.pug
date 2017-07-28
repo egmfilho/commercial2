@@ -85,9 +85,10 @@
 						
 						.info(flex='30' layout='column' layout-align='end')
 							.md-title
-								div Orçamento n&#186;: {{mail.order.order_code}}
-								div(ng-if='mail.order.order_code_erp') ERP: {{mail.order.order_code_erp}}
+								div(ng-if='mail.order.order_code_erp') {{mail.order.order_export_type == 'dav' ? 'DAV' : 'Pedido'}}: {{mail.order.order_code_erp}}
 							span(flex)
+							.md-subhead
+								| Orçamento n&#186;: {{mail.order.order_code}}
 							.md-subhead
 								| Data da impressão: {{now | date:'dd/MM/yyyy'}}
 							.md-subhead

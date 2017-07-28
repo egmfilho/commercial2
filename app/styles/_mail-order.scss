@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-07-27 12:32:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-28 16:49:15
+* @Last Modified time: 2017-07-28 17:23:01
 */
 
 .mail-window {
@@ -146,6 +146,10 @@
 
 						> * {
 							margin-top: 2px;
+						}
+
+						input {
+							width: 250px;
 						}
 					}
 				}
