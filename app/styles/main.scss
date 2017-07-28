@@ -107,7 +107,7 @@ table.table {
 
 	thead tr th {
 		text-align: left;
-		color: rgba(#000, .4);
+		color: rgba(#000, .8);
 		font-size: 12px;
 		font-weight: bold;
 		padding-bottom: 12px;
@@ -342,6 +342,26 @@ md-tabs.mussum {
 			}
 		}
 	}
+}
+
+/* cor das fontes */
+
+table.table tr{
+	th, td{
+		color: rgba(0, 0, 0, .8) !important;
+	}
+}
+
+md-input-container label{
+	color: rgba(0, 0, 0, .8) !important;
+}
+
+input, select{
+	color: rgba(0, 0, 0, .8) !important;
+}
+
+md-select md-select-value span{
+	color: rgba(0, 0, 0, .8) !important;
 }
 
 @import "scrollbar";

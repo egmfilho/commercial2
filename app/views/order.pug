@@ -281,14 +281,20 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									| {{p.price_name}} ({{p.price_value | currency:'R$ '}})
 					
 					div(layout='row')
-						md-input-container(flex='25')
-							label 
-								| Quantidade
-							input(name='amount' ng-model='order.internal.tempItem.order_item_amount'
-									ng-change='order.setItemAmount(order.internal.tempItem.order_item_amount)'
-									keys-shortcuts enter='order.focusOn("input[name=\'al-discount\']")'
-									currency trim min-fraction-size='0' number-only 
-									ng-disabled='!order.internal.tempItem.product.product_code')
+						div(layout='col' flex='25')
+							md-input-container(flex='50')
+								label 
+									| Estoque
+								input(name='stock' ng-model='order.internal.tempItem.product.stock.product_stock + " " + ( order.internal.tempItem.product.unit.unit_initials ? order.internal.tempItem.product.unit.unit_initials : "" )' disabled='disabled')
+
+							md-input-container(flex='50')
+								label 
+									| Quantidade
+								input(name='amount' ng-model='order.internal.tempItem.order_item_amount'
+										ng-change='order.setItemAmount(order.internal.tempItem.order_item_amount)'
+										keys-shortcuts enter='order.focusOn("input[name=\'al-discount\']")'
+										currency trim min-fraction-size='0' number-only 
+										ng-disabled='!order.internal.tempItem.product.product_code')
 						
 						md-input-container(flex='25')
 							label 

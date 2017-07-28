@@ -12,7 +12,7 @@
 			div.md-date(flex='10' ng-class='{"md-date-on":openOrder.calendar.start.isCalendarOpen}')
 				md-input-container(flex ng-click='openOrder.calendar.start.isCalendarOpen = true')
 					label Inicio
-					md-datepicker(ng-model='openOrder.calendar.start.value' md-hide-icons='all' md-is-open='openOrder.calendar.start.isCalendarOpen' ng-change='openOrder.calendar.start.update()' md-max-date='openOrder.calendar.start.max')
+					md-datepicker(ng-model='openOrder.calendar.start.value' md-hide-icons='all' md-is-open='openOrder.calendar.start.isCalendarOpen' ng-change='openOrder.calendar.start.update()' md-max-date='openOrder.calendar.start.maxDate')
 
 			div.md-date(flex='10' ng-class='{"md-date-on":openOrder.calendar.end.isCalendarOpen}')
 				md-input-container(flex ng-click='openOrder.calendar.end.isCalendarOpen = true')
@@ -65,17 +65,17 @@
 					td 
 						md-icon(
 							md-font-set='material-icons' 
-							ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+							ng-style='{ "color": globals("order-export-type-colors")[o.order_export_type] }'
 							ng-if='o.order_status_id == globals("order-status-values").open') cloud_queue
 					
 						md-icon(
 							md-font-set='material-icons' 
-							ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+							ng-style='{ "color": globals("order-export-type-colors")[o.order_export_type] }'
 							ng-if='o.order_status_id == globals("order-status-values").exported') cloud
 
 						md-icon(
 							md-font-set='material-icons' 
-							ng-style='{ "color": globals("order-status-colors")[o.order_status_id] }'
+							ng-style='{ "color": globals("order-export-type-colors")[o.order_export_type] }'
 							ng-if='o.order_status_id == globals("order-status-values").billed') cloud_done
 
 					td {{o.order_code}}
@@ -93,11 +93,11 @@
 
 	md-toolbar.info
 		.md-toolbar-tools
-			div(flex='30' layout='row')
+			div(flex='50' layout='row')
 				div
 					md-icon(
 						md-font-set='material-icons' 
-						ng-style='{ "color": globals("order-status-colors")[globals("order-status-values")["open"]] }') cloud_queue
+						ng-style='{ "color": globals("order-export-type-colors")["open"] }') cloud_queue
 					span.md-subhead 
 						| Salvo
 		
@@ -106,15 +106,33 @@
 				div
 					md-icon(
 						md-font-set='material-icons' 
-						ng-style='{ "color": globals("order-status-colors")[globals("order-status-values")["exported"]] }') cloud
+						ng-style='{ "color": globals("order-export-type-colors")["order"] }') cloud
 					span.md-subhead 
-						| Exportado
+						| Exportado Pedido
 
 				span(flex)
 
 				div
 					md-icon(
 						md-font-set='material-icons' 
-						ng-style='{ "color": globals("order-status-colors")[globals("order-status-values")["billed"]] }') cloud_done
+						ng-style='{ "color": globals("order-export-type-colors")["order"] }') cloud_done
 					span.md-subhead 
-						| Faturado
+						| Faturado Pedido
+
+				span(flex)
+
+				div
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": globals("order-export-type-colors")["dav"] }') cloud
+					span.md-subhead 
+						| Exportado Dav
+
+				span(flex)
+
+				div
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": globals("order-export-type-colors")["dav"] }') cloud_done
+					span.md-subhead 
+						| Faturado Dav

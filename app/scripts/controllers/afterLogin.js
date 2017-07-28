@@ -105,6 +105,12 @@
 				'1003': '#2196f3'
 			});
 
+			Globals.set('order-export-type-colors', {
+				'open': '#4caf50',
+				'order': '#f99f57',
+				'dav': '#2196f3'
+			});
+
 			Globals.set('order-status-values', {
 				'open': 1001,
 				'exported': 1002,
