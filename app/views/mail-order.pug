@@ -10,17 +10,17 @@
 					td Para: 
 					td
 						.box(ng-click='mail.focusSearchInput()')
-							md-chips(ng-model='mail.form.to' md-autocomplete-snap md-transform-chip='mail.transformChip($chip)' md-require-match='false')
+							md-chips(ng-model='mail.form.to' md-autocomplete-snap md-transform-chip='mail.internal.newContact($chip)' md-require-match='false')
 								md-autocomplete(md-selected-item='mail.internal.selectedItem'
 										md-search-text='mail.internal.searchText'
 										md-items='item in mail.internal.querySearch(mail.internal.searchText)'
-										md-item-text='item.name'
+										md-item-text='item.email'
 										placeholder='Informe os destinatários')
 									span(md-highlight-text='mail.internal.searchText') {{item.name}} ({{item.mail}})
 								md-chip-template
 									span
-										strong {{$chip.name}} &nbsp;
-										em ({{$chip.mail}})
+										strong {{$chip.mail}} &nbsp;
+										em ({{$chip.name}})
 
 				tr
 					td Assunto: 
@@ -52,7 +52,7 @@
 
 		.preview(ng-if='mail.order.order_code')
 			.preview-header.hidden-on-print(layout='row' layout-align='start center')
-				span Pré-Visualização: 
+				span Pré-Visualização: &nbsp;
 				span Orçamento_{{mail.order.order_code}}.pdf
 
 				span(flex)

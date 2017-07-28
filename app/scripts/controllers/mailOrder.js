@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-07-27 12:24:55
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-28 16:22:30
+* @Last Modified time: 2017-07-28 16:37:15
 */
 
 (function() {
@@ -31,17 +31,19 @@
 			searchText: '',
 			querySearch: function(query) {
 				return query ? self.mailArray.filter(createFilterForQuery(query)) : [];
+			},
+			newContact: function(chip) {
+				if (angular.isObject(chip))
+					return chip;
+
+				return {
+					name: 'Externo',
+					mail: chip
+				};
 			}
 		};
 		
 		self.mailArray = [{ name: 'Alfonse', mail: 'brown@alfonse.com' }, { name: 'Alabama', mail: 'bama@ala.com' }, { name: 'Alessandro', mail: 'alessandro@dafel.com.br' }];
-
-		self.transformChip = function(chip) {
-			if (angular.isObject(chip))
-				return chip;
-
-			return { name: chip, type: 'new' };
-		};
 
 		self.focusSearchInput = function() {
 			jQuery(".box input").focus().select();
