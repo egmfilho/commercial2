@@ -2,12 +2,12 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:10:42
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 13:52:10
+* @Last Modified time: 2017-07-31 16:21:01
 */
 
 .open-order-container-nav {
 	.md-toolbar-tools {
-		
+		overflow: hidden;
 		background-color: white;
 		height: 120px;
 		max-height: 120px;
@@ -40,12 +40,12 @@
 			}
 		}
 
-		input {
-			font-size: 14px;
-		}
-
 		label{
 			font-size: 16px;
+		}
+
+		input {
+			font-size: 14px;
 		}
 
 		.md-input-focused, .md-input-has-value {

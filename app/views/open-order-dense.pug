@@ -19,9 +19,6 @@
 						md-datepicker(ng-model='openOrder.calendar.start.value' md-hide-icons='all' md-is-open='openOrder.calendar.start.isCalendarOpen' ng-change='openOrder.calendar.start.update()' md-max-date='openOrder.calendar.start.maxDate')
 
 				.clown(layout='row' layout-fill)
-					//- md-input-container(flex='80')
-						label Vendedor
-						input(type='text')
 					md-autocomplete(flex='80' 
 									md-input-name='autocompleteSeller'
 									md-no-cache='true'

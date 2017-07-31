@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 08:20:17
+* @Last Modified time: 2017-07-31 17:05:04
 */
 
 'use strict';
@@ -15,12 +15,14 @@ Object.defineProperty(Object.prototype, 'equals', {
 	value: function(x) {
 		var p, i;
 
+		if (!x) return false;
+
 		for (p in this)
 			if (typeof(x[p]) == 'undefined' && typeof(this[p]) != 'undefined')
 				return false;
 
 		for (p in this) {
-			if (p != '$$hashKey') {
+			if (p != '$$hashKey' && p != 'queryable') {
 				if (this[p]) {
 					switch (typeof(this[p])) {
 						case 'object':

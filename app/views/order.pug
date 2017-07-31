@@ -285,7 +285,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 							md-input-container(flex='50')
 								label 
 									| Estoque
-								input(name='stock' ng-model='order.internal.tempItem.product.stock.product_stock + " " + ( order.internal.tempItem.product.unit.unit_initials ? order.internal.tempItem.product.unit.unit_initials : "" )' disabled='disabled')
+								input(name='stock' ng-value='order.internal.tempItem.product.stock.product_stock + " " + ( order.internal.tempItem.product.unit.unit_initials ? order.internal.tempItem.product.unit.unit_initials : "" )' disabled='true')
 
 							md-input-container(flex='50')
 								label 

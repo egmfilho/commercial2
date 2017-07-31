@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-27 17:29:01
+* @Last Modified time: 2017-07-31 17:03:32
 */
 
 (function() {
@@ -446,10 +446,6 @@
 				jQuery('section[name="payment"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'customer' });
 
 				self.focusOn('input[name=\'product-code\']');
-				if( Globals.get('user')['user_seller'] ){
-					self.budget.setSeller(new Person(Globals.get('user')['user_seller']));
-					self.internal.tempSeller = new Person(Globals.get('user')['user_seller']);
-				}
 			}, 200);
 
 			self.searchTerm();
@@ -524,6 +520,11 @@
 						return company.user_company_main == 'Y';
 					});
 					self.budget.setCompany(new UserCompany(company).company_erp);
+				}
+
+				if( Globals.get('user')['user_seller'] ) {
+					self.budget.setSeller(new Person(Globals.get('user')['user_seller']));
+					self.internal.tempSeller = new Person(Globals.get('user')['user_seller']);
 				}
 
 				/* Cria uma copia de backup para saber se o orcamento foi modificado no final */
@@ -731,7 +732,7 @@
 		 * Verifica se o orcamento pode ser impresso.
 		 */
 		function canPrint() {
-			return !!self.budget.order_code;
+			return self.budget.order_code && self.budget.equals(_backup);
 		}
 
 		/**

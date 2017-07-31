@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-07-27 12:24:55
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 08:45:25
+* @Last Modified time: 2017-07-31 17:06:36
 */
 
 (function() {
@@ -169,13 +169,13 @@
 		}
 
 		this.send = function() {
-			if (constants.isElectron)
-				$rootScope.loading.load('Aguarde', 'Enviando email...');
-
 			if (!self.form.to.length) {
 				$rootScope.customDialog().showMessage('Aviso', 'Nenhum destinatário informado!');
 				return;
 			}
+
+			if (constants.isElectron)
+				$rootScope.loading.load('Aguarde', 'Enviando email...');
 
 			ElectronPrinter.getHexPDF()
 				.then(function(success) {
