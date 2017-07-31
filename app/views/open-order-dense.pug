@@ -123,7 +123,7 @@
 		span(flex)
 		.search
 			input(type='text' placeholder='Pesquisar' ng-model='openOrder.filters.query' keys-shortcuts escape='setSearchOpen(false)')
-			a(ng-click='isSearchOpened = false')
+			a(ng-click='setSearchOpen(false)')
 				i.fa.fa-remove
 
 	md-toolbar.info(layout='column')

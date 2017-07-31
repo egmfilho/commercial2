@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 17:13:55
+* @Last Modified time: 2017-07-31 17:20:17
 */
 
 (function() {
@@ -16,7 +16,8 @@
 
 		function OpenOrderCtrl($rootScope, $scope, $location, $q, $timeout, providerOrder, Order, providerPerson, Person, Globals, constants, ElectronWindow) {
 
-			var self = this;
+			var self = this,
+				Mousetrap = require('mousetrap');
 
 			self.seller = null;
 			self.companyId = Globals.get('user').user_company[0].company_id;
