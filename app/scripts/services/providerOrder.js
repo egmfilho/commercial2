@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-22 13:23:08
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-28 17:59:40
+* @Last Modified time: 2017-07-31 14:11:02
 */
 
 (function() {
@@ -99,6 +99,7 @@
 						order_company_id: options && options.company_id,
 						start_date: options && options.start_date,
 						end_date: options && options.end_date,
+						order_seller_id: options && options.order_seller_id,
 						get_order_company: options && options.getCompany,
 						get_company_address: options && options.getCompanyAddress,
 						get_order_user: options && options.getUser,

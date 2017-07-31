@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-26 18:13:48
+* @Last Modified time: 2017-07-31 09:24:11
 */
 
 const electron = require('electron');

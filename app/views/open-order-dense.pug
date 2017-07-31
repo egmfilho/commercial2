@@ -1,36 +1,67 @@
 .open-order(layout='column' layout-fill)
 	md-toolbar.open-order-container-nav
-		.md-toolbar-tools
+		.md-toolbar-tools(layout='row')
+			.logo-container(flex='15')
+				.logo
 
-			md-input-container.md-select(flex="40")
-				label Empresa
-				md-select(name='type' ng-model='openOrder.options.company_id' ng-change='openOrder.getOrders()')
-					md-option(ng-value='c.company_id' ng-repeat='c in openOrder.companies') 
-						| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
+			span(flex)
 
+			div(flex='60' layout='column')
+				.clown(layout='row' layout-fill)
+					md-input-container.md-select(flex='80')
+						label Empresa
+						md-select(name='type' ng-model='openOrder.companyId' ng-change='openOrder.getOrders()')
+							md-option(ng-value='c.company_id' ng-repeat='c in openOrder.companies') 
+								| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
 
-			div.md-date(flex='10' ng-class='{"md-date-on":openOrder.calendar.start.isCalendarOpen}')
-				md-input-container(flex ng-click='openOrder.calendar.start.isCalendarOpen = true')
-					label Inicio
-					md-datepicker(ng-model='openOrder.calendar.start.value' md-hide-icons='all' md-is-open='openOrder.calendar.start.isCalendarOpen' ng-change='openOrder.calendar.start.update()' md-max-date='openOrder.calendar.start.maxDate')
+					md-input-container.datepicker(flex ng-click='openOrder.calendar.start.isCalendarOpen = true')
+						label Início
+						md-datepicker(ng-model='openOrder.calendar.start.value' md-hide-icons='all' md-is-open='openOrder.calendar.start.isCalendarOpen' ng-change='openOrder.calendar.start.update()' md-max-date='openOrder.calendar.start.maxDate')
 
-			div.md-date(flex='10' ng-class='{"md-date-on":openOrder.calendar.end.isCalendarOpen}')
-				md-input-container(flex ng-click='openOrder.calendar.end.isCalendarOpen = true')
-					label Fim
-					md-datepicker(ng-model='openOrder.calendar.end.value' md-hide-icons='all' md-is-open='openOrder.calendar.end.isCalendarOpen' md-min-date='openOrder.calendar.end.minDate' md-max-date='openOrder.calendar.end.maxDate' ng-change='openOrder.calendar.end.update()')
+				.clown(layout='row' layout-fill)
+					//- md-input-container(flex='80')
+						label Vendedor
+						input(type='text')
+					md-autocomplete(flex='80' 
+									md-input-name='autocompleteSeller'
+									md-no-cache='true'
+									md-autoselect='true'
+									md-escape-options='none'
+									md-selected-item='openOrder.seller'
+									md-search-text='sellerQuery'
+									md-items='item in openOrder.getSellerByName(sellerQuery)'
+									md-item-text='item.queryable'
+									md-min-length='3'
+									md-require-match='true'
+									md-floating-label='Vendedor')
+						md-item-template
+							div(md-highlight-text='sellerQuery' style='line-height: 2') {{item.person_name}}
+							div(style='font-size: 11px;line-height: 1')
+								| Código: 
+								| {{item.person_code}}
 
-			.search(flex='30')
-				input(placeholder='Pesquisar' ng-model='openOrder.filter')
-				button.clear-search-button(ng-click='openOrder.filter = ""' ng-show='openOrder.filter.length')
-					i.fa.fa-times-circle
+					md-input-container.datepicker(flex ng-click='openOrder.calendar.end.isCalendarOpen = true')
+						label Fim
+						md-datepicker(ng-model='openOrder.calendar.end.value' md-hide-icons='all' md-is-open='openOrder.calendar.end.isCalendarOpen' md-min-date='openOrder.calendar.end.minDate' md-max-date='openOrder.calendar.end.maxDate' ng-change='openOrder.calendar.end.update()')
 
-			md-button.md-raised.filter(ng-click='openOrder.getOrders()' md-colors='{ background: "commercialBlue" }')
-				i.material-icons(style='font-size: 16px; vertical-align: text-top') note_add&nbsp;
-				| Atualizar
+			span(flex)
 
-			md-button.md-raised(redirect-to='/order/new' query-key='company' query-value='{{openOrder.options.company_id}}' md-colors='{ background: "commercialGreen" }')
-				i.material-icons(style='font-size: 16px; vertical-align: text-top') note_add&nbsp;
-				| Novo
+			.end-menu(flex='15' layout='column' layout-fill)
+				span(flex)
+
+				div(layout='row' layout-align='center center')
+					md-button.md-raised.filter(ng-click='openOrder.getOrders()' md-colors='{ background: "commercialBlue" }')
+						i.material-icons(style='font-size: 16px; vertical-align: text-top') refresh&nbsp;
+						| Atualizar
+
+				span(flex)
+
+				div(layout='row' layout-align='center center')
+					md-button.md-raised(redirect-to='/order/new' query-key='company' query-value='{{openOrder.companyId}}' md-colors='{ background: "commercialGreen" }')
+						i.material-icons(style='font-size: 16px; vertical-align: text-top') note_add&nbsp;
+						| Novo
+
+				span(flex)
 
 		.order-table-header-container
 			table.table.order-table
@@ -61,7 +92,7 @@
 	md-content.open-order-dense-container(flex)
 		table.table.order-table
 			tbody
-				tr(ng-repeat='o in openOrder.orders | orderBy:openOrder.grid.propertyName:openOrder.grid.reverse | filter: { queryable: openOrder.filter }' ng-dblclick='open(o.order_code)')
+				tr(ng-repeat='o in openOrder.orders | orderBy:openOrder.grid.propertyName:openOrder.grid.reverse | filter: { queryable: openOrder.filters.query, order_status_id: openOrder.filters.status, order_export_type: openOrder.filters.exportType }' ng-dblclick='open(o.order_code)')
 					td 
 						md-icon(
 							md-font-set='material-icons' 
@@ -91,10 +122,17 @@
 						md-button.md-icon-button(ng-click='open(o.order_code)' md-no-ink)
 							md-icon.text-primary(md-font-icon='material-icons') delete_forever
 
-	md-toolbar.info
-		.md-toolbar-tools
-			div(flex='50' layout='row')
-				div
+	.search-container(layout='row' ng-class='{ "opened": isSearchOpened }')
+		span(flex)
+		.search
+			input(type='text' placeholder='Pesquisar' ng-model='openOrder.filters.query' keys-shortcuts escape='setSearchOpen(false)')
+			a(ng-click='isSearchOpened = false')
+				i.fa.fa-remove
+
+	md-toolbar.info(layout='column')
+		.md-toolbar-tools(flex layout='row' layout-fill)
+			.filters(flex layout='row')
+				.status-filter(ng-click='openOrder.filters.setStatus("open", globals("order-status-values")["open"], 1)')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-export-type-colors")["open"] }') cloud_queue
@@ -103,7 +141,7 @@
 		
 				span(flex)
 
-				div
+				.status-filter(ng-click='openOrder.filters.setStatus("order", globals("order-status-values")["exported"], 3)')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-export-type-colors")["order"] }') cloud
@@ -112,7 +150,7 @@
 
 				span(flex)
 
-				div
+				.status-filter(ng-click='openOrder.filters.setStatus("order", globals("order-status-values")["billed"], 5)')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-export-type-colors")["order"] }') cloud_done
@@ -121,7 +159,7 @@
 
 				span(flex)
 
-				div
+				.status-filter(ng-click='openOrder.filters.setStatus("dav", globals("order-status-values")["exported"], 7)')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-export-type-colors")["dav"] }') cloud
@@ -130,9 +168,15 @@
 
 				span(flex)
 
-				div
+				.status-filter(ng-click='openOrder.filters.setStatus("dav", globals("order-status-values")["billed"], 9)')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-export-type-colors")["dav"] }') cloud_done
 					span.md-subhead 
 						| Faturado Dav
+			span(flex='20')
+
+			md-button.md-icon-button.search-button(ng-click='setSearchOpen(true)')
+				md-tooltip(md-direction='left') 
+					| Pesquisar ({{ 'M-F' | keyboardShortcut }})
+				md-icon.text-primary(md-font-set='material-icons') search

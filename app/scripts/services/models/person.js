@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 10:32:39
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 17:25:38
+* @Last Modified time: 2017-07-31 14:30:24
 */
 
 (function() {
@@ -22,12 +22,14 @@
 				this.person_address       = new Array();
 				this.person_credit        = new Array();
 				this.person_credit_limit  = new PersonCreditLimit();
+				this.queryable            = '';
 
 				if (person) {
 					Object.assign(this, person, { 
 						person_address: person.person_address ? person.person_address.map(function(a) { return new Address(a); }) : new Array(),
 						person_credit: person.person_credit ? person.person_credit.map(function(a) { return new PersonCredit(a); }) : new Array(),
-						person_credit_limit: person.person_credit_limit ? new PersonCreditLimit(person.person_credit_limit) : new PersonCreditLimit()
+						person_credit_limit: person.person_credit_limit ? new PersonCreditLimit(person.person_credit_limit) : new PersonCreditLimit(),
+						queryable: person.person_code + ' - ' + person.person_name
 					});
 				}
 			}

@@ -2,47 +2,56 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:10:42
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-26 08:12:52
+* @Last Modified time: 2017-07-31 13:52:10
 */
 
 .open-order-container-nav {
 	.md-toolbar-tools {
 		
-		background-color: rgb(250,250,250);//lightgray;//$main-color-light;
-		height: 80px;
-		max-height: 80px;
+		background-color: white;
+		height: 120px;
+		max-height: 120px;
+		box-shadow: 0 0 4px rgba(#000, .3);
+		position: relative;
+		z-index: 1;
 
-		.md-select{
-			height: 20px;
-			margin-right: 20px;			
-		}
+		.logo-container {
+			height: 100%;
+			padding: 16px;
 
-		.md-text{
-			//color: #FFF;
-			@extend .text-primary;
-		}
-
-		.md-date{
-			padding-top: 12px;
-			cursor: pointer;
-
-			input{
-				width: 80px;
-				min-width: 80px;
-				@extend .text-primary;
-				//color: #FFF;
+			.logo {
+				background-image: url('../images/LOGO 2017.png');
+				background-position: center;
+				background-size: contain;
+				background-repeat: no-repeat;
+				width: 100%;
+				height: 100%;
 			}
 		}
 
-		.md-date-on{
-			input{
-				@extend .text-primary;
+		.clown {
+			height: 50px;
+			max-height: 50px;
+		}
+
+		.end-menu {
+			button {
+				width: 100%;
 			}
+		}
+
+		input {
+			font-size: 14px;
 		}
 
 		label{
-			//color: #FFF !important;
-			@extend .text-primary;
+			font-size: 16px;
+		}
+
+		.md-input-focused, .md-input-has-value {
+			label {
+				@extend .text-primary;
+			}
 		}
 
 		.md-select-value{
@@ -53,44 +62,9 @@
 			min-width: 120px;
 		}
 
-		label {
-			font-size: 16px;
-		}
-
-		.search {
-			position: relative;
-
-			input {
-				width: 100%;
-				border: none;
-				border-radius: 3px;
-				background-color: rgba(#000, .05);
-
-				padding: 10px;
-				padding-right: 35px;
-				font-size: 15px;
-				//color: white;
-				@extend .text-primary;
-
-				&::-webkit-input-placeholder {
-					color: #aaa;
-				}
-			}
-
-			.clear-search-button {
-				background: none;
-				border: none;
-				color: $main-color;
-				opacity: .25;
-				position: absolute;
-				right: 5px;
-				top: 5px;
-				transition: opacity .5s ease;
-
-				&:hover {
-					opacity: .8;
-				}
-			}
+		.datepicker {
+			margin-top: 17px;
+			margin-bottom: 0;
 		}
 	}
 }
@@ -165,7 +139,8 @@
 		background-color: white;
 		padding-top: 14px;
 		padding-right: 10px;
-		box-shadow: 0 2px 2px rgba(#000, .2);
+		// box-shadow: 0 0 2px rgba(#000, .2);
+		border-bottom: 1px solid whitesmoke;
 	}
 
 	.order-table {
@@ -221,21 +196,84 @@
 		}
 	}
 
+	.search-container {
+		position: absolute;
+		bottom: 0px;
+		right: 10px;
+		width: 100%;
+		z-index: 0;
+		transition: bottom .3s;
+		overflow-x: hidden; // para esconder a sombra q fica do lado direito (aparecia em cima do scroll)
+		padding-top: 2px;
+
+		&.opened {
+			bottom: 50px;
+		}
+
+		.search {
+			background-color: white;
+			padding: 5px;
+			border-top-left-radius: 4px;
+			box-shadow: 0 0 2px rgba(#000, .3);
+			
+			input {
+				width: 280px;
+				border: 1px solid #e7e7e7;
+				padding: 4px;
+			}
+
+			a {
+				margin: 0 10px;
+				margin-left: 12px;
+				color: $main-color;
+			}
+		}
+	}
+
 	md-toolbar.info {
 		background-color: white;
 		color: $main-color;
 		min-height: 50px;
 		max-height: 50px;
-		border-top: 1px solid whitesmoke;
+		box-shadow: 0 0 4px rgba(#000, .3);
 		
 		.md-toolbar-tools {
-			md-icon {
-				font-size: 20px;
-				line-height: 20px;
+			.status-filter {
+				padding: 4px;
+				cursor: pointer !important;
+				min-width: 160px;
+				text-align: center;
+				border-radius: 4px;
+				transition: box-shadow .5s;
+
+				&.active {
+					background-color: whitesmoke;
+					box-shadow: 0 0 4px rgba(#000, .4);
+				}
+
+				&:hover {
+					background-color: whitesmoke;
+				}
+
+				md-icon {
+					font-size: 20px;
+					line-height: 20px;
+					cursor: pointer !important;					
+				}
+
+				.md-subhead {
+					font-size: 14px;
+					cursor: pointer !important;
+				}
 			}
 
-			.md-subhead {
-				font-size: 14px;
+			.search-button {
+				margin-left: 0;
+				padding-left: 0;
+
+				.material-icons {
+					font-size: 30px;
+				}
 			}
 		}
 	}
