@@ -2,11 +2,15 @@
 * @Author: egmfilho
 * @Date:   2017-07-27 12:32:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 08:52:53
+* @Last Modified time: 2017-07-31 09:09:54
 */
 
 .mail-window {
 	background-color: white;
+	background-image: url('../images/login-background.jpg');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
 
 	.form, .preview {
 		box-shadow: none;
@@ -149,7 +153,7 @@
 						}
 
 						input {
-							width: 335px;
+							width: 300px;
 						}
 					}
 				}
