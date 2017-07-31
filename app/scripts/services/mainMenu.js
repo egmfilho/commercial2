@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-01 15:57:25
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-02 09:18:08
+* @Last Modified time: 2017-07-31 08:20:17
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('MainMenu', MainMenu)
 
-	MainMenu.$inject = [ '$mdPanel' ];
+	MainMenu.$inject = [ '$mdPanel', 'Cookies', 'Constants' ];
 
-	function MainMenu($mdPanel) {
+	function MainMenu($mdPanel, Cookies, constants) {
 
 		var _instance;
 
@@ -30,13 +30,31 @@
 				.closeTo(animationPosition)
 				.withAnimation($mdPanel.animation.SCALE);
 
-			var controller = function($location, mdPanelRef) {
+			var controller = function($location, mdPanelRef, ModalUserPass) {
+				var scope = this;
+
+				Cookies.get(constants['cookie']).then(function(success) {
+					scope.currentUser = JSON.parse(window.atob(success));
+					constants.debug && console.log(scope.currentUser);
+				}, function(error) {
+					constants.debug && console.log('Cookie de sessao nao encontrado pelo main menu.');
+				});
+
 				this._goTo = function(path) {
 					if (path) $location.path(path);
 					if (mdPanelRef) mdPanelRef.close();
 				};
+
+				this.newUserPass = function() {
+					ModalUserPass.show('Atualizar senha')
+						.then(function(success) {
+							$rootScope.customDialog().showMessage('Aviso', 'Senha atualizada com sucesso!');
+						}, function(error){
+							console.log(success);
+						});
+				};;
 			};
-			controller.$inject = [ '$location', 'mdPanelRef' ];
+			controller.$inject = [ '$location', 'mdPanelRef', 'ModalUserPass' ];
 
 			var config = {
 				attatchTo: angular.element(document.body),

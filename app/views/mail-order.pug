@@ -16,7 +16,8 @@
 										md-items='item in mail.internal.querySearch(mail.internal.searchText)'
 										md-item-text='item.email'
 										placeholder='Informe os destinatários')
-									span(md-highlight-text='mail.internal.searchText') {{item.name}} ({{item.mail}})
+									span(md-highlight-text='mail.internal.searchText') 
+										| {{item.name}} ({{item.mail}})
 								md-chip-template
 									span
 										strong {{$chip.mail}} &nbsp;

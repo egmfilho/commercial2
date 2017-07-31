@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-28 14:27:58
+* @Last Modified time: 2017-07-31 08:20:17
 */
 
 'use strict';
@@ -318,7 +318,7 @@ angular.module('commercial2', [
 			Globals.clear();
 		};
 	}])
-	.run(['$rootScope', '$mdToast', 'MainMenu', 'CustomDialog', 'Constants', 'ModalUserPass', function($rootScope, $mdToast, mainMenu, customDialog, constants, ModalUserPass) {
+	.run(['$rootScope', '$mdToast', 'MainMenu', 'CustomDialog', 'Constants', function($rootScope, $mdToast, mainMenu, customDialog, constants) {
 
 		/* Numero de versao atual do sistema. */
 		$rootScope.version = constants.version;
@@ -379,16 +379,6 @@ angular.module('commercial2', [
 		/* Retorna uma nova instancia da janela de modal. */
 		$rootScope.customDialog = function() {
 			return new customDialog();
-		};
-
-		/* Abre o modal para alteração de senha do usuário. */
-		$rootScope.newUserPass = function() {
-			ModalUserPass.show('Atualizar senha')
-				.then(function(success) {
-					$rootScope.customDialog().showMessage('Aviso', 'Senha atualizada com sucesso!');
-				}, function(error){
-					console.log(success);
-				});
 		};
 		
 	}]);

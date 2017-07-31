@@ -1,17 +1,17 @@
-md-content(layout='column' ng-controller='MainMenuCtrl as mainMenu')
+md-content(layout='column')
 	.user(layout='row' layout-wrap)
 		.avatar(flex='20')
 			md-icon(md-font-set='material-icons') account_circle
 		.description(flex)
 			p 
-				b {{mainMenu.currentUser.user_name}}
+				b {{ctrl.currentUser.user_name}}
 				br
-				| {{mainMenu.currentUser.user_mail}}
+				| {{ctrl.currentUser.user_mail}}
 				br
-				| Último login: {{mainMenu.currentUser.user_last_session.user_session_date | date:'short'}}
+				| Último login: {{ctrl.currentUser.user_last_session.user_session_date | date:'short'}}
 		.pass(flex='15')
-			md-button.md-icon-button(ng-click='newUserPass()')
-				md-icon(md-font-icon='fa fa-lock' aria-label='Atualizar Senha')
+			md-button.md-icon-button.md-raised.md-primary(ng-click='ctrl.newUserPass()')
+				md-icon(md-font-icon='fa fa-unlock-alt' aria-label='Atualizar Senha')
 	
 	.modules(layout='row' layout-wrap)
 		//- .module(flex='50' layout-align='center')

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-07-27 12:24:55
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-28 17:59:40
+* @Last Modified time: 2017-07-31 08:45:25
 */
 
 (function() {
@@ -76,6 +76,25 @@
 				getOrder($routeParams.code)
 					.then(function(success) {
 						self.form.message = 'Segue em anexo o orçamento de código ' + self.order.order_code + ' em formato PDF.';
+
+						var parsedMails = self.order.order_client.person_contact.map(function(c) {
+								return {
+									name: c.person_address_contact_name,
+									mail: c.person_address_contact_value
+								}
+							}),
+							mainContact = self.order.order_client.person_contact.filter(function(c) {
+								return c.person_address_contact_main == 'Y';
+							})[0];
+
+						if (mainContact) {
+							self.form.to.push({
+								name: mainContact.person_address_contact_name,
+								mail: mainContact.person_address_contact_value
+							});
+						}
+
+						self.mailArray = self.mailArray.concat(parsedMails);
 
 						$timeout(function() {
 							jQuery('.chico-bento .preview .print-container').on('DOMMouseScroll mousewheel', function(e) { 

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-01 16:48:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-21 14:08:15
+* @Last Modified time: 2017-07-31 08:27:05
 */
 
 .main-menu {
@@ -29,12 +29,12 @@
 			letter-spacing: .5px;
 		}
 
-		.pass{
+		.pass {
 			margin: 10px;
 			text-align: right;
 			
-			.fa-lock{
-				font-size: 32px;
+			.fa {
+				font-size: 18px;
 			}
 		}
 	}
@@ -90,7 +90,7 @@
 
 				p {
 					color: $main-color;
-					font-size: 14px;
+					font-size: 16px;
 					font-weight: 400;
 					letter-spacing: 0.8px;
 					margin-bottom: 0;
