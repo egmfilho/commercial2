@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 14:40:22
+* @Last Modified time: 2017-07-31 17:13:55
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.controllers')
 		.controller('OpenOrderCtrl', OpenOrderCtrl);
 
-		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', '$location', '$q', 'ProviderOrder', 'Order', 'ProviderPerson', 'Person', 'Globals', 'Constants', 'ElectronWindow' ];
+		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', '$location', '$q', '$timeout', 'ProviderOrder', 'Order', 'ProviderPerson', 'Person', 'Globals', 'Constants', 'ElectronWindow' ];
 
-		function OpenOrderCtrl($rootScope, $scope, $location, $q, providerOrder, Order, providerPerson, Person, Globals, constants, ElectronWindow) {
+		function OpenOrderCtrl($rootScope, $scope, $location, $q, $timeout, providerOrder, Order, providerPerson, Person, Globals, constants, ElectronWindow) {
 
 			var self = this;
 
@@ -40,18 +40,18 @@
 				}
 			}
 
+			if (constants.isElectron) {
+				Mousetrap.bind(['command+f', 'ctrl+f'], function() {
+					$timeout(function() { $scope.setSearchOpen(true); });
+					return false;
+				});
+			}
+
 			$scope.globals = Globals.get;
 
 			$scope.$on('$viewContentLoaded', function() {
 				$rootScope.titleBarText = 'Abrir Orçamento';
 				self.getOrders();
-
-				if (constants.isElectron) {
-					Mousetrap.bind(['command+f', 'ctrl+f'], function() {
-						$scope.setSearchOpen(true);
-						return false;
-					});
-				}
 			});
 
 			$scope.$on('$destroy', function() {
