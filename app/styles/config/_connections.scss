@@ -1,0 +1,27 @@
+/*
+* @Author: egmfilho
+* @Date:   2017-08-01 10:09:41
+* @Last Modified by:   egmfilho
+* @Last Modified time: 2017-08-01 10:14:31
+*/
+
+.connections {
+
+	.content {
+		.form {
+			.icon-input {
+				.fa {
+					font-size: 20px;
+					margin: 0 8px;
+					padding-top: 20px;
+					color: $main-color; 
+				}
+
+				md-input-container {
+					height: 40px;
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+}

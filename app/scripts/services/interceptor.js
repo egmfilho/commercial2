@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 11:04:49
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-26 11:28:38
+* @Last Modified time: 2017-08-01 13:47:25
 */
 
 (function() {
@@ -40,6 +40,7 @@
 				req.headers['Host-Info'] = JSON.stringify(ElectronOS.getNetworkInterfaces());
 			}
 
+			req.headers['System-Version'] = constants.version;
 			req.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 			req.data = $httpParamSerializerJQLike(req.data);
 			return req;

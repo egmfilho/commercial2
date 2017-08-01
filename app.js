@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 09:24:11
+* @Last Modified time: 2017-08-01 14:25:41
 */
 
 const electron = require('electron');
@@ -59,7 +59,10 @@ function createWindow() {
 	mainWindow = new BrowserWindow({
 		width: 1024, 
 		height: 768,
-		devTools: false
+		devTools: false,
+		webPreferences: {
+			zoomFactor: 1.15
+		}
 	});
 
 	mainWindow.maximize();

@@ -39,7 +39,7 @@ gulp.task('index', function() {
 });
 
 gulp.task('compile-views', function() {
-	return gulp.src(source + 'views/*.pug')
+	return gulp.src(source + 'views/**/*.pug')
 		.pipe(pug({ }).on('error', error_handler))
 		.pipe(gulp.dest(dest + 'views'))
 		.pipe(connect.reload());
@@ -53,7 +53,7 @@ gulp.task('compile-partials', function() {
 });
 
 gulp.task('compile-sass', function() {
-	return gulp.src(source + 'styles/*.scss')
+	return gulp.src(source + 'styles/**/*.scss')
 		.pipe(sass().on('error', error_handler))
 		.pipe(gulp.dest(dest + 'styles'))
 		.pipe(connect.reload());
@@ -122,10 +122,10 @@ gulp.task('copy-videos', function() {
 
 gulp.task('watch', function() {
 	gulp.watch([source + '*.pug'], ['index']);
-	gulp.watch([source + 'views/*.pug'], ['compile-views']);	
-	gulp.watch([source + 'templates/*.pug'], ['index', 'compile-views']);
+	gulp.watch([source + 'views/**/*.pug'], ['compile-views']);	
+	gulp.watch([source + 'templates/**/*.pug'], ['index', 'compile-views']);
 	gulp.watch([source + 'partials/**/*.pug'], ['compile-partials']);
-	gulp.watch([source + 'styles/*.scss'], ['compile-sass']);
+	gulp.watch([source + 'styles/**/*.scss'], ['compile-sass']);
 	gulp.watch([source + 'scripts/**/*.js'], ['app-bundle']);
 	gulp.watch(bowerFiles({ filter: '**/*.css' }), ['css']);
 	gulp.watch(bowerFiles({ filter: '**/*.js' }), ['vendor-bundle']);

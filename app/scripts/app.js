@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 17:05:04
+* @Last Modified time: 2017-08-01 14:26:10
 */
 
 'use strict';
@@ -46,7 +46,7 @@ Object.defineProperty(Object.prototype, 'equals', {
 							break;
 
 						default:
-							if (this[p] != x[p])
+							if (this[p] != x[p]) 
 								return false;
 					}
 				} else {

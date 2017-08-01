@@ -34,9 +34,9 @@
 							| CNPJ/CPF &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'person_doc'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 		.container-table(flex)
-			table.person-table.table
+			table.person-table.table(name='clementino')
 				tbody
-					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-dblclick='ctrl.get(p)' ng-class="{'inactive':p.person_active=='N'}")
+					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-dblclick='ctrl.get(p)' ng-class="{'inactive':p.person_active=='N'}" keys-shortcuts enter='ctrl.get(p)')
 						td {{p.person_code}}
 						td {{p.person_name}}
 						td {{p.person_type}}

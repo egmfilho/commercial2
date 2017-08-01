@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-02 12:07:18
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-28 12:59:47
+* @Last Modified time: 2017-08-01 10:52:16
 */
 
 (function() {
@@ -95,7 +95,7 @@
 							return;
 						}
 
-						_fs.writeFile(filePath, data.toString('latin1'), function(err) {
+						_fs.writeFile(filePath, data, function(err) {
 							if (err) {
 								_dialog.showErrorBox('Erro', 'Erro ao salvar o arquivo.');
 								if (constants.debug) console.log(err);

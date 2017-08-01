@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-20 11:29:43
+* @Last Modified time: 2017-08-01 11:12:03
 */
 
 (function() {
@@ -151,6 +151,7 @@
 			}, function(error) {
 				constants.debug && console.log(error);
 				$rootScope.loading.unload();
+				$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 			});
 		}
 

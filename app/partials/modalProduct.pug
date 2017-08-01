@@ -3,7 +3,7 @@
 	div(layout="row")
 		md-input-container(flex="80")
 			label Nome ou Classificação
-			input#focus(ng-model="ctrl.filter.name" keys-shortcuts enter="ctrl.search()")
+			input(ng-model="ctrl.filter.name" keys-shortcuts enter="ctrl.search()")
 		
 		md-input-container
 			md-switch(ng-model='ctrl.filter.active' style="margin:0;")
@@ -33,9 +33,9 @@
 							| ESTOQUE &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'stock.product_stock'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 		.container-table(flex)
-			table.product-table.table
+			table.product-table.table(name='clementino')
 				tbody
-					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-dblclick='ctrl.get(p)' ng-class="{'inactive':p.product_active=='N'}")
+					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-dblclick='ctrl.get(p)' ng-class="{'inactive':p.product_active=='N'}" keys-shortcuts enter='ctrl.get(p)')
 						td {{p.product_code}}
 						td {{p.product_classification}}
 						td {{p.product_name}}

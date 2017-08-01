@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-07-25 13:54:12
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-26 08:05:58
+* @Last Modified time: 2017-08-01 10:14:31
 */
 
 .config {
@@ -28,68 +28,27 @@
 	}
 
 	.content {
-		.title {
-			font-size: 32px;
-			font-weight: 200;
-			color: $main-color;
-			background-color: white;
-			padding: 15px 60px 25px 60px;
+		.form-container {
+			padding: 16px;
 
-			.subtitle {
-				font-size: 20px;
-				@extend .text-light;
-			}
-		}
+			.form {
+				background-color: white;
+				padding: 16px;
+				// margin: 16px;
 
-		.form {
-			background-color: white;
-			padding: 30px 60px;
-
-			.users-table-header-container {
-				padding-top: 14px;
-				padding-right: 10px;
-				border: 1px solid #d7d7d7;
-				border-bottom: none;
-			}
-
-			.users-table {
-				tr {
-					th, td {
-						&:nth-child(1) {
-							width: 15%;
-						}
-
-						&:nth-child(2) {
-							width: auto;
-						}
-
-						&:nth-child(3) {
-							width: 15%;
-						}
-
-						&:nth-child(4), &:nth-child(5) {
-							width: 15%;
-						}
-
-						&:nth-child(6), &:nth-child(7) {
-							width: 30px;
-						}
-					}
+				.title {
+					margin: -16px;
+					margin-bottom: 16px;
+					background-color: $main-color-light;
+					font-size: 20px;
+					color: white;
+					padding: 10px 16px;
 				}
 			}
-
-			.users-table-footer {
-				border: 1px solid #d7d7d7;
-				border-top: none;	
-			}
-		}
-
-		.connection {
-			display: block;
-			width: 400px;
-			margin: 60px auto;
-			background-color: white;
-			padding: 32px;
 		}
 	}
+
+	@import "config/users";
+	@import "config/connections";
+	@import "config/general";
 }

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 14:06:37
+* @Last Modified time: 2017-08-01 14:17:06
 */
 
 
@@ -91,6 +91,10 @@ footer {
 	}
 }
 
+.container-table {
+	border-color: #d7d7d7 !important;
+}
+
 table.table {
 	width: 100%;
 	border-collapse: collapse;
@@ -129,11 +133,11 @@ table.table {
 		}
 
 		&:hover {
-			background-color: #e0e7eb !important;
+			background-color: darken(#e0e7eb, 4%) !important;
 		}
 
 		&.active {
-			background-color: #e0e7eb;
+			background-color: darken(#e0e7eb, 4%) !important;
 		}
 
 		td {
@@ -353,15 +357,15 @@ table.table tr{
 }
 
 md-input-container label{
-	color: rgba(0, 0, 0, .65) !important;
+	color: rgba(0, 0, 0, .8) !important;
 }
 
 input, select{
-	color: rgba(0, 0, 0, .65) !important;
+	color: rgba(0, 0, 0, .8) !important;
 }
 
 md-select md-select-value span{
-	color: rgba(0, 0, 0, .65) !important;
+	color: rgba(0, 0, 0, .8) !important;
 }
 
 @import "scrollbar";
@@ -380,3 +384,9 @@ md-select md-select-value span{
 @import "config";
 
 @import "utils";
+
+*:not(.fa):not(.material-icons) {
+	@media only screen {
+		font-weight: 600 !important;
+	}
+}

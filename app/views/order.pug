@@ -238,6 +238,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 										keys-shortcuts prevent-default 
 										f2='order.showModalProduct()' 
 										enter='order.focusOn("input[name=\'amount\']")'
+										md-delay='300'
 										md-input-name='autocompleteProduct'
 										md-no-cache='true'
 										md-autoselect='true'
@@ -249,7 +250,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 										md-item-text='item.product_name'
 										md-min-length='3'
 										md-require-match='true'
-										md-floating-label='Código ou descrição ( F2 para localizar )'
+										md-floating-label='Descrição ( F2 para localizar )'
 										ng-blur='order.internal.blurItem()')
 							md-item-template
 								div(md-highlight-text='customerQuery' style='line-height: 2') {{item.product_name}}
@@ -400,6 +401,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									f2='order.showModalSeller()'
 									enter='order.getSellerByCode($event.target.value)')
 						md-autocomplete(flex='85' 
+										md-delay='300'
 										md-input-name='autocompleteSeller'
 										md-no-cache='true'
 										md-autoselect='true'
@@ -461,6 +463,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 										keys-shortcuts 
 										prevent-default 
 										f2='order.showModalCustomer()'
+										md-delay='300'
 										md-input-name='autocompleteCustomer'
 										md-no-cache='true'
 										md-autoselect='true'
@@ -522,32 +525,6 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 
 					pre(ng-if='debug')
 						| {{order.budget.order_client | json}}
-
-		//- Observações
-		//- section(name='notes')
-			md-card(layout-align='center')
-				md-card-header
-					md-card-header-text
-						div(layout='row')
-							div(flex='90' layout='column')
-								span.md-title Observações
-									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-4' | keyboardShortcut }})
-								span.md-subhead Aqui você pode inserir informações adicionais sobre o orçamento
-							div(layout='column' layout-align='center end' layout-fill)
-								md-button.md-raised(ng-click='order.clearNote()' md-colors='{background: "commercialRed"}')
-									i.fa.fa-remove &nbsp; 
-									| Limpar
-				md-card-content
-					div(layout='row')
-						md-input-container(flex)
-							label Observações do orçamento
-							textarea(name='order-note' ng-model='order.budget.order_note' md-maxlength='150' rows='3')
-
-						span(flex='5')
-
-						md-input-container(flex)
-							label Observações da Nota
-							textarea(ng-model='order.budget.order_note_doc' md-maxlength='150' rows='3')
 
 		//- Pagamento
 		section(name='payment')

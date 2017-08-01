@@ -3,7 +3,7 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('ModalPerson', [ '$rootScope', '$timeout', 'Globals', function($rootScope, $timeout, Globals) {
+		.factory('ModalPerson', [ '$rootScope', '$timeout', 'Globals', 'Constants', function($rootScope, $timeout, Globals, constants) {
 
 			var _isOpen = true;
 
@@ -18,6 +18,27 @@
 
 					controller = function(providerPerson, Person) {
 						var vm = this;
+
+						this.hoverIndex = -1;
+
+						if (constants.isElectron) {
+							var scope = this;
+							Mousetrap.bind('up', function() {
+								$timeout(function() {
+									scope.hoverIndex = Math.max(0, scope.hoverIndex - 1);
+									jQuery('table[name="clementino"] tbody tr:nth-child(' + (scope.hoverIndex + 1) + ')').focus();
+								});
+								return false;
+							});
+
+							Mousetrap.bind('down', function() {
+								$timeout(function() {
+									scope.hoverIndex = Math.min(scope.result.length - 1, scope.hoverIndex + 1);
+									jQuery('table[name="clementino"] tbody tr:nth-child(' + (scope.hoverIndex + 1) + ')').focus();
+								});
+								return false;
+							});	
+						}
 
 						this._showCloseButton = true;
 
@@ -42,6 +63,12 @@
 							vm.grid.propertyName = propertyName;
 						};
 
+						function endSearch() {
+							vm.hoverIndex = -1;
+							jQuery('input[ng-model="ctrl.filter.name"]').blur();
+							jQuery('table[name="clementino"] tbody tr:nth-child(0)').focus();
+						}
+
 						this.search = function(filter){
 							if( !vm.filter.doc.length && !vm.filter.name.length ){
 								$rootScope.customDialog().showMessage('Aviso', 'Pelo menos um dos campos deverá ser informado.');
@@ -51,6 +78,7 @@
 							providerPerson.getByFilter(vm.filter, vm.options).then(function(success) {
 								vm.result = success.data.map(function(p) { return new Person(p); });
 								$rootScope.loading.unload();
+								endSearch();
 								if( !vm.result.length ){
 									$rootScope.customDialog().showMessage('Aviso', 'Nenhum ' + options.module + ' localizado.');
 									return;
@@ -62,6 +90,11 @@
 
 						this.get = function(p){
 							if( p.person_active == 'Y'){
+								if (constants.isElectron) {
+									Mousetrap.unbind('up');
+									Mousetrap.unbind('down');
+								}
+
 								vm._close(p);
 							}
 						}

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 09:39:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 17:24:27
+* @Last Modified time: 2017-08-01 10:28:10
 */
 
 (function() {
@@ -60,7 +60,7 @@
 		}]);
 
 	angular.module('commercial2.services')
-		.factory('Address', ['District', 'City', function(District, City) {
+		.factory('Address', ['District', 'City', 'Globals', function(District, City, Globals) {
 
 			function Address(address) {
 				this.person_id                   = null;
@@ -76,7 +76,7 @@
 				this.person_address_type         = null;
 				this.person_address_public_place = null;
 				this.person_address_number       = null;
-				this.icms_type                   = null;
+				this.icms_type                   = Globals.get('default-icms-type');
 				this.city                        = new City();
 				this.district                    = new District();
 				this.person_address_contact      = new Array();

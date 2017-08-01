@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:10:42
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 16:21:01
+* @Last Modified time: 2017-08-01 13:49:13
 */
 
 .open-order-container-nav {
@@ -136,20 +136,22 @@
 	}
 
 	.order-table-header-container {
-		background-color: white;
+		background-color: #7b99a7;
 		padding-top: 14px;
 		padding-right: 10px;
-		// box-shadow: 0 0 2px rgba(#000, .2);
-		border-bottom: 1px solid whitesmoke;
+		// border-bottom: 1px solid whitesmoke;
 	}
 
 	.order-table {
 		width: 100%;
 
 		tr {
-			th, td {
-				// border: 1px solid red;
+			th {
+				background-color: #7b99a7;
+				color: white !important;
+			}
 
+			th, td {
 				&:nth-child(1) {
 					width: 4%;
 					vertical-align: middle;
@@ -187,7 +189,7 @@
 
 		tbody tr {
 			&:nth-child(odd) {
-				background-color: #f6f8f9;
+				background-color: darken(#f6f8f9, 3%);
 			}
 
 			td {

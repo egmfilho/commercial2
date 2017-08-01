@@ -9,7 +9,20 @@
 
 		md-tab
 			md-tab-label 
+				i.fa.fa-globe &nbsp;
+				| Conexões
+			md-tab-body
+				div(flex layout-fill layout='column' ng-include='"./partials/config/connections.html"' ng-controller='ConfigCtrl.Connections as connections')
+
+		md-tab
+			md-tab-label 
 				i.fa.fa-cogs &nbsp;
 				| Geral
 			md-tab-body
 				div(flex layout-fill layout='column' ng-include='"./partials/config/general.html"' ng-controller='ConfigCtrl.General as general')
+
+		md-tab
+			md-tab-label 
+				i.fa.fa-question-circle-o &nbsp;
+				| Sobre
+			md-tab-body

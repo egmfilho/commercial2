@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 17:20:17
+* @Last Modified time: 2017-08-01 12:16:44
 */
 
 (function() {
@@ -17,7 +17,7 @@
 		function OpenOrderCtrl($rootScope, $scope, $location, $q, $timeout, providerOrder, Order, providerPerson, Person, Globals, constants, ElectronWindow) {
 
 			var self = this,
-				Mousetrap = require('mousetrap');
+				Mousetrap = null;
 
 			self.seller = null;
 			self.companyId = Globals.get('user').user_company[0].company_id;
@@ -42,6 +42,7 @@
 			}
 
 			if (constants.isElectron) {
+				Mousetrap = require('mousetrap');
 				Mousetrap.bind(['command+f', 'ctrl+f'], function() {
 					$timeout(function() { $scope.setSearchOpen(true); });
 					return false;
@@ -66,11 +67,28 @@
 				$location.path('/order/edit').search('code', code);
 			};
 
+			$scope.delete = function(order) {
+				$rootScope.customDialog().showConfirm('Aviso', 'Excluir o orçamento <b>' + order.order_code + '</b>?')
+					.then(function(success) {
+						$rootScope.loading.load();
+						providerOrder.remove(order.order_id).then(function(success) {
+							$rootScope.loading.unload();
+							// $rootScope.customDialog().showMessage('Sucesso', 'Orçamento excluído!');
+							self.getOrders();
+						}, function(error) { 
+							$rootScope.loading.unload();
+							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+						});
+					}, function(error) { });
+			}
+
 			$scope.setSearchOpen = function(value) {
 				$scope.isSearchOpened = value;
 
 				if (value)
 					jQuery('.search-container .search input').focus().select();
+				else 
+					jQuery('.search-container .search input').blur();
 			};
 
 			self.companies = Globals.get('user').user_company;

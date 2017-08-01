@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-19 08:59:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-28 17:53:11
+* @Last Modified time: 2017-08-01 10:32:43
 */
 
 (function() {
@@ -56,6 +56,10 @@
 				Globals.set('default-price-table', success.data.data.price.default_price);
 				Globals.set('credit-limit', success.data.data.credit_limit.authorized_modality_id);
 				Globals.set('mail-contact-id', success.data.data.contact_mail.contact_mail_type_id);
+				Globals.set('default-customer', {
+					name: success.data.data.default_customer.default_customer_code,
+					code: success.data.data.default_customer.default_customer_name
+				});
 				
 				deferred.resolve();
 			}, function(error) {
@@ -88,11 +92,7 @@
 			Globals.set('server-host', constants.api);
 
 			Globals.set('default-person-type', 'F');
-
-			Globals.set('default-customer', {
-				'name': 'CONSUMIDOR',
-				'code': 3354
-			});
+			Globals.set('default-icms-type', 2);
 
 			Globals.set('order-status-labels', {
 				'1001': 'Aberto',

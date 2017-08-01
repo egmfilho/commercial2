@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 17:03:32
+* @Last Modified time: 2017-08-01 13:07:59
 */
 
 (function() {
@@ -490,6 +490,8 @@
 							constants.debug && console.log(error);
 							$rootScope.loading.unload();
 						});
+					} else {
+						_backup = new Order(self.budget);
 					}
 
 					constants.debug && console.log('orcamento carregado', self.budget);
@@ -598,7 +600,11 @@
 									
 									case 'mail': {
 										self.mail();
-										$scope.open(true);
+										$rootScope.loading.load();
+										$timeout(function() { 
+											$rootScope.loading.unload();
+											$scope.open(true);
+										}, 1000);
 										break;
 									}
 									
@@ -624,6 +630,8 @@
 							$rootScope.loading.unload();
 							$rootScope.customDialog().showMessage('Sucesso', 'Orçamento editado!');
 
+							_backup = new Order(self.budget);
+
 							/* Modal de confirmacao */
 							afterSave('Orçamento editado!');
 						}, function(error) {
@@ -637,6 +645,7 @@
 							self.budget.order_id = success.data.order_id;
 							self.budget.order_code = success.data.order_code;
 							self.budget.order_date = moment().toDate();
+							_backup = new Order(self.budget);
 							$rootScope.loading.unload();
 
 							/* Modal de confirmacao */
@@ -717,7 +726,7 @@
 		 * Verifica se o orcamento pode ser salvo.
 		 */
 		function canSave() {
-			var isEqualsBackup = _backup ? self.budget.equals(_backup) : false;
+			var isEqualsBackup = _backup && self.budget ? self.budget.equals(_backup) : false;
 			return !isEqualsBackup && self.budget.order_company_id && self.budget.order_status_id == Globals.get('order-status-values').open;
 		}
 
@@ -732,7 +741,7 @@
 		 * Verifica se o orcamento pode ser impresso.
 		 */
 		function canPrint() {
-			return self.budget.order_code && self.budget.equals(_backup);
+			return self.budget.order_code && (_backup &&self.budget.equals(_backup));
 		}
 
 		/**
@@ -1461,7 +1470,7 @@
 			if (!self.canPrint()) return;
 
 			var options = {
-				zoomFactor: 0.8
+				// zoomFactor: 0.8
 			};
 
 			if (constants.isElectron)
@@ -1485,7 +1494,7 @@
 			if (constants.isElectron)
 				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/mail/' + self.budget.order_code, options);
 			else
-				$location.path('/order/print/' + self.budget.order_code)
+				$location.path('/order/mail/' + self.budget.order_code)
 		}
 
 		/**
@@ -1567,7 +1576,11 @@
 						
 						case 'mail': {
 							self.mail();
-							$scope.open(true);
+							$rootScope.loading.load();
+							$timeout(function() { 
+								$rootScope.loading.unload();
+								$scope.open(true);
+							}, 1000);
 							break;
 						}
 					}
@@ -2391,6 +2404,8 @@
 					limit: 100
 				};
 
+			jQuery('input[name="seller-code"]').blur();
+
 			_isToolbarLocked = true;
 			ModalPerson.show('Localizar Vendedor', category, options)
 				.then(function(success) {
@@ -2411,6 +2426,8 @@
 					module: 'Cliente',
 					limit: 200
 				};
+
+			jQuery('input[name="customer-code"]').blur();
 
 			_isToolbarLocked = true;
 			ModalPerson.show('Localizar Cliente', category, options)
@@ -2445,6 +2462,8 @@
 				getStock: 1,
 				limit: 200
 			};
+
+			jQuery('input[name="product-code"]').blur();
 
 			_isToolbarLocked = true;
 			ModalProduct.show('Localizar Produto',self.budget.order_company_id,self.internal.tempItem.price_id,options)

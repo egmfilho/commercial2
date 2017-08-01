@@ -1,50 +1,23 @@
-div(flex layout='row')
-	.side-menu.md-whiteframe-3dp(flex='20' layout='column')
-		md-button.md-primary(ng-click='')
-			i.fa.fa-database &nbsp;
-			| Conexão
+.general(flex layout='row')
 
-		md-button.md-primary(ng-click='')
-			i.fa.fa-envelope-o &nbsp;
-			| Email
-
-		md-button.md-primary(ng-click='')
-			i.fa.fa-file-text-o &nbsp;
-			| Aviso da impressão
-
-	.content(name='conexao' flex layout='column')
-		.title.md-whiteframe-1dp 
-			span
-				i.fa.fa-angle-right &nbsp;
-				| Conexão
-			.subtitle
-				| Configuração de conexão com o banco de dados.
+	.content(flex layout='column')
 		
-		.connection.md-whiteframe-1dp(ng-if='false')
-			div(layout='row' layout-wrap)
-				md-input-container(flex='100')
-					label Servidor
-					input()
+		div(layout='row' layout-wrap)
 
-				md-input-container(flex='100')
-					label Base
-					input()
+			.form-container(flex='50')
+				.form(name='order-warning').md-whiteframe-1dp
+					.title
+						| Mensagem do orçamento
 
-				md-input-container(flex='50')
-					label Usuário
-					input()
+					div(layout='column')
+						.icon-input(layout='row' layout-align='start center')
+							md-input-container(flex style='height: auto')
+								label Mensagem
+								textarea(rows='3')
 
-				md-input-container(flex='50')
-					label Senha
-					input()
+						div(layout='row')
+							span(flex)
 
-			div(layout='row')
-				span(flex)
-
-				md-button.md-raised.text-primary(ng-click='')
-					i.fa.fa-retweet &nbsp;
-					| Testar
-
-				md-button.md-raised.md-primary(ng-click='')
-					i.fa.fa-floppy-o &nbsp;
-					| Salvar
+							md-button.md-raised.md-primary(ng-click='')
+								i.fa.fa-floppy-o &nbsp;
+								| Salvar

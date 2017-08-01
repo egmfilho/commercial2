@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-22 13:23:08
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 14:11:02
+* @Last Modified time: 2017-08-01 12:15:38
 */
 
 (function() {
@@ -29,6 +29,7 @@
 					getAll: getAll,
 					save: save,
 					edit: edit,
+					remove: remove,
 					exportDAV: exportDAV,
 					saveAndExportDAV: saveAndExportDAV,
 					editAndExportDAV: editAndExportDAV,
@@ -130,6 +131,14 @@
 					return provider.save({
 						action: 'edit'
 					}, order).$promise;
+				}
+
+				function remove(id) {
+					return provider.save({
+						action: 'del'
+					}, {
+						order_id: id
+					}).$promise;
 				}
 
 				function exportDAV(id) {

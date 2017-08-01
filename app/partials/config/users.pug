@@ -1,60 +1,90 @@
-div(flex layout='row')
-	.side-menu.md-whiteframe-3dp(flex='20' layout='column')
-		md-button.md-primary(ng-click='')
-			i.fa.fa-users &nbsp;
-			| Usuários
+.users(layout='row' layout-fill)
 
-		md-button.md-primary(ng-click='')
-			i.fa.fa-id-badge &nbsp;
-			| Perfis
+	.content(layout='row')
+		.form-container(flex='30')
+			.form.md-whiteframe-1dp(layout='column')
+				.title
+					| Perfis de usuários
 
-	.content(name='conexao' flex layout='column')
-		.title
-			span
-				//- i.fa.fa-users &nbsp;
-				| Usuários
-			.subtitle
-				| Cadastro e edição de usuários do sistema.
+				.profiles-table-header-container
+					table.table.profiles-table
+						thead
+							tr
+								th NOME
+								th CADASTRO
+								th ATUALIZAÇÃO
+								th &nbsp;
+								th &nbsp;
 
-		.form(flex layout='column' layout-fill)
+				.container-table(flex)
+					table.table.profiles-table
+						tbody
+							tr(ng-repeat='n in getNumber(12) track by $index')
+								td NOME
+								td DATA
+								td DATA
+								td 
+									md-button.md-icon-button(ng-click='' md-no-ink)
+										md-icon.text-primary(md-font-icon='fa fa-pencil')
+								td 
+									md-button.md-icon-button(ng-click='' md-no-ink)
+										md-icon.text-primary(md-font-icon='material-icons') delete_forever
 
-			.users-table-header-container
-				table.table.credit-table
-					thead
-						tr
-							th PERFIL
-							th NOME
-							th USUÁRIO
-							th EMAIL
-							th ÚLTIMO ACESSO
-							th &nbsp;
-							th &nbsp;
+				.profiles-table-footer(layout='row')
+					span(flex)
 
-			.container-table(flex)
-				table.table.users-table
-					tbody
-						tr(ng-repeat='u in users.users track by $index' ng-dblclick='')
-							td {{u.user_profile.user_profile_name}}
-							td {{u.user_name}}
-							td {{u.user_user}}
-							td {{u.user_mail}}
-							td {{u.user_login | date: 'dd/MM/yyyy HH:mm:ss'}}
-							td 
-								md-button.md-icon-button(ng-click='' md-no-ink)
-									md-icon.text-primary(md-font-icon='fa fa-pencil')
-							td 
-								md-button.md-icon-button(ng-click='' md-no-ink)
-									md-icon.text-primary(md-font-icon='material-icons') delete_forever
+					md-button.md-primary(ng-click='')
+						md-tooltip(md-direction='top') Atualiza a tabela de perfis.
+						i.fa.fa-refresh &nbsp;
+						| Atualizar
 
-			.users-table-footer(layout='row')
-				span(flex)
+					md-button.md-primary(ng-click='')
+						md-tooltip(md-direction='top') Cria um novo perfil de usuário.
+						i.fa.fa-plus-square-o &nbsp;
+						| Novo perfil
 
-				md-button.md-primary(ng-click='')
-					md-tooltip(md-direction='top') Atualiza a tabela de usuários.
-					i.fa.fa-refresh &nbsp;
-					| Atualizar
+		.form-container(flex='70')
+			.form.md-whiteframe-1dp(layout='column')
+				.title
+					| Lista de usuários
 
-				md-button.md-primary(ng-click='')
-					md-tooltip(md-direction='top') Adiciona um novo usuário
-					i.fa.fa-plus-square-o &nbsp;
-					| Novo usuário
+				.users-table-header-container
+					table.table.users-table
+						thead
+							tr
+								th PERFIL
+								th NOME
+								th USUÁRIO
+								th EMAIL
+								th ÚLTIMO ACESSO
+								th &nbsp;
+								th &nbsp;
+
+				.container-table(flex)
+					table.table.users-table
+						tbody
+							tr(ng-repeat='u in users.users track by $index' ng-dblclick='')
+								td {{u.user_profile.user_profile_name}}
+								td {{u.user_name}}
+								td {{u.user_user}}
+								td {{u.user_mail}}
+								td {{u.user_login | date: 'dd/MM/yyyy HH:mm:ss'}}
+								td 
+									md-button.md-icon-button(ng-click='' md-no-ink)
+										md-icon.text-primary(md-font-icon='fa fa-pencil')
+								td 
+									md-button.md-icon-button(ng-click='' md-no-ink)
+										md-icon.text-primary(md-font-icon='material-icons') delete_forever
+
+				.users-table-footer(layout='row')
+					span(flex)
+
+					md-button.md-primary(ng-click='')
+						md-tooltip(md-direction='top') Atualiza a tabela de usuários.
+						i.fa.fa-refresh &nbsp;
+						| Atualizar
+
+					md-button.md-primary(ng-click='')
+						md-tooltip(md-direction='top') Adiciona um novo usuário
+						i.fa.fa-plus-square-o &nbsp;
+						| Novo usuário

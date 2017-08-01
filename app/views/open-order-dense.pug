@@ -20,6 +20,7 @@
 
 				.clown(layout='row' layout-fill)
 					md-autocomplete(flex='80' 
+									md-delay='300'
 									md-input-name='autocompleteSeller'
 									md-no-cache='true'
 									md-autoselect='true'
@@ -116,7 +117,7 @@
 						md-button.md-icon-button(ng-click='open(o.order_code)' md-no-ink)
 							md-icon.text-primary(md-font-icon='fa fa-pencil')
 					td 
-						md-button.md-icon-button(ng-click='open(o.order_code)' md-no-ink)
+						md-button.md-icon-button(ng-click='delete(o)' md-no-ink)
 							md-icon.text-primary(md-font-icon='material-icons') delete_forever
 
 	.search-container(layout='row' ng-class='{ "opened": isSearchOpened }')
