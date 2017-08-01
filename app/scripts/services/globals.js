@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-16 17:49:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-06-27 08:58:40
+* @Last Modified time: 2017-08-01 15:22:48
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.service('Globals', Globals);
 
-	Globals.$inject = [ 'Constants' ];
+	Globals.$inject = [ '$q', 'Constants' ];
 
-	function Globals(constants) {
+	function Globals($q, constants) {
 
 		var remote;
 
@@ -59,14 +59,20 @@
 		}
 
 		function clear() {
+			var deferred = $q.defer();
+
 			if (!constants.isElectron) {
 				angular.forEach(window.sessionStorage, function(value, key) {
 					if (key.indexOf('shared.') == 0)
 						remove(key);
 				});
+				deferred.resolve();
 			} else {
 				remote.getGlobal('globals').shared = '{ }';
+				deferred.resolve();
 			}
+
+			return deferred.promise;
 		}
 		
 	}

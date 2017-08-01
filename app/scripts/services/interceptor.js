@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 11:04:49
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 13:47:25
+* @Last Modified time: 2017-08-01 15:25:37
 */
 
 (function() {
@@ -48,12 +48,10 @@
 
 		function responseError(rejection) {
 			if (rejection.status == 401) {
-				if (Cookies.get(constants['cookie'])) {
-					Cookies.remove(constants['cookie']);
-				}
-				Globals.clear();
-
-				$location.path('/login');
+				$q.all([Cookies.remove(constants['cookie']), Globals.clear()])
+					.then(function(success) {
+						$location.path('/login');
+					});
 			}
 
 			return $q.reject(rejection);
