@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 13:07:59
+* @Last Modified time: 2017-08-01 16:25:50
 */
 
 (function() {
@@ -1050,8 +1050,7 @@
 		 */
 		function getProductByCode(code) {
 			if (!code) {
-				constants.debug && console.log('Sem codigo informado');
-				self.focusOn('input[name="autocompleteProduct"]');
+				// self.focusOn('input[name="autocompleteProduct"]');
 				return;
 			}
 

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 14:26:10
+* @Last Modified time: 2017-08-01 15:38:44
 */
 
 'use strict';
@@ -226,14 +226,18 @@ angular.module('commercial2', [
 	.config(['$routeProvider', function($routeProvider) {
 
 		$routeProvider
-			.when('/login', {				
+			.when('/login', {
 				templateUrl: 'views/login.html',
 				controller: 'LoginCtrl',
 				controllerAs: 'login',
 				resolve: {
 					redirect: ['$location', 'Globals', function($location, Globals) {
-						if (!!Globals.get('session-token'))
+						if (!!Globals.get('session-token')) {
 							$location.path('/open-order');
+						} else {
+							Globals.clear();
+							$location.path('/login');
+						}
 					}]
 				}
 			})

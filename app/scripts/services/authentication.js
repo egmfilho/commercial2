@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:03:59
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-18 17:02:08
+* @Last Modified time: 2017-08-01 15:49:20
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('Authentication', Authentication);
 
-	Authentication.$inject = [ '$http', 'Cookies', 'User', 'Constants', 'Globals' ];
+	Authentication.$inject = [ '$q', '$http', 'Cookies', 'User', 'Constants', 'Globals' ];
 
-	function Authentication($http, cookies, User, constants, Globals) {
+	function Authentication($q, $http, cookies, User, constants, Globals) {
 
 		function login(username, password, callback) {
 			$http({
@@ -28,9 +28,10 @@
 					cookies.set({ 
 						name: constants['cookie'], 
 						value: window.btoa(JSON.stringify(user)) 
+					}).then(function(success) {
+						callback(res.data);
 					});
 				}
-				callback(res.data);
 			}, function(res) {
 				if (constants.debug) console.log(res);
 				callback(res.data);
@@ -42,9 +43,10 @@
 				method: 'POST',
 				url: constants.api + 'logout.php'
 			}).then(function(res) {
-				cookies.clear();
-				Globals.clear();
-				callback(res);
+				$q.all([cookies.clear(), Globals.clear()])
+					.then(function(success) {
+						callback(res);
+					});
 			}, function(res) {
 				constants.debug && console.log(res);
 				callback(res);
