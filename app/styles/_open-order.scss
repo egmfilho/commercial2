@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:10:42
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-02 08:47:21
+* @Last Modified time: 2017-08-02 11:59:57
 */
 
 .open-order-container-nav {
@@ -188,7 +188,7 @@
 		}
 
 		tbody tr {
-			&:nth-child(odd) {
+			&:nth-child(even) {
 				background-color: lighten($main-color-lighter, 50%);
 			}
 
