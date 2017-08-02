@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 09:39:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 10:28:10
+* @Last Modified time: 2017-08-02 16:48:32
 */
 
 (function() {
@@ -72,11 +72,11 @@
 				this.person_address_active       = 'Y';
 				this.person_address_main         = 'N';
 				this.person_address_delivery     = 'Y';
-				this.person_address_ie           = null;
+				this.person_address_ie           = Globals.get('default-icms-type').value;
 				this.person_address_type         = null;
 				this.person_address_public_place = null;
 				this.person_address_number       = null;
-				this.icms_type                   = Globals.get('default-icms-type');
+				this.icms_type                   = Globals.get('default-icms-type').code;
 				this.city                        = new City();
 				this.district                    = new District();
 				this.person_address_contact      = new Array();

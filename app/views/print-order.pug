@@ -65,7 +65,7 @@ md-content.print-order(layout-fill ng-if='print.order.order_code')
 					b {{contact.person_address_contact_label}}: 
 					| {{contact.person_address_contact_value}}
 
-	table.products
+	table.print-table.products
 		thead
 			tr
 				th PRODUTO
@@ -86,16 +86,37 @@ md-content.print-order(layout-fill ng-if='print.order.order_code')
 				td {{(i.order_item_value_total / i.order_item_amount) | currency:'R$ '}}
 				td {{i.order_item_value_total | currency:'R$ '}}
 
-	div(layout='row' layout-align='end center')
-		table.payments
-			thead
-				tr
-					th(colspan='3') PAGAMENTO
-			tbody
-				tr(ng-repeat='i in print.order.order_payments' layout='row')
-					td {{i.modality.modality_description}}
-					td {{i.order_payment_value | currency:'R$ '}}
-					td {{i.order_payment_installment}}x
+	.offset-top-30(layout='row')
+		.note(flex='60')
+			b OBSERVAÇÕES
+			p {{print.order.order_note_doc || 'Sem observações'}}
 
-	.message
-		p {{globals('print-message')[print.order.order_company_id].order_message}}
+		span(flex)
+
+		div(flex='30')
+			table.print-table(style='width: 100%')
+				thead
+					tr
+						th DESCONTO TOTAL
+						th VALOR TOTAL
+				tbody
+					tr
+						td.text-center {{print.order.order_vl_discount | currency:'R$ '}}
+						td.text-center {{print.order.order_value_total | currency:'R$ '}}
+
+	.offset-top-30(layout='row')
+		.message(flex= '60')
+			p {{globals('print-message')[print.order.order_company_id].order_message}}
+
+		span(flex)
+
+		div(flex='30')
+			table.print-table.borderless.payment(style='width: 100%')
+				thead
+					tr
+						th.text-left(colspan='3') PAGAMENTO
+				tbody
+					tr(ng-repeat='i in print.order.order_payments' layout='row')
+						td {{i.modality.modality_description}}
+						td {{i.order_payment_value | currency:'R$ '}}
+						td {{i.order_payment_installment}}x

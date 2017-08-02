@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-02 09:01:16
+* @Last Modified time: 2017-08-02 16:57:41
 */
 
 (function() {
@@ -141,6 +141,41 @@
 		}
 
 		function submit() {
+			if (!self.newAddress.person_address_cep) {
+				$rootScope.customDialog().showMessage('Aviso', 'Informe o CEP!');
+				return;
+			}
+
+			if (!self.newAddress.person_address_type) {
+				$rootScope.customDialog().showMessage('Aviso', 'Informe o tipo do logradouro!');
+				return;
+			}
+
+			if (!self.newAddress.person_address_public_place) {
+				$rootScope.customDialog().showMessage('Aviso', 'Informe o logradouro!');
+				return;
+			}
+
+			if (!self.newAddress.person_address_number) {
+				$rootScope.customDialog().showMessage('Aviso', 'Informe o número do endereço!');
+				return;
+			}
+
+			if (!self.newAddress.district_id) {
+				$rootScope.customDialog().showMessage('Aviso', 'Informe o bairro!');
+				return;
+			}
+
+			if (!self.newAddress.city_id) {
+				$rootScope.customDialog().showMessage('Aviso', 'Informe a cidade!');
+				return;
+			}
+
+			if (!self.newAddress.person_address_ie) {
+				$rootScope.customDialog().showMessage('Aviso', 'Informe a inscrição estadual!');
+				return;
+			}
+
 			$rootScope.loading.load();
 			providerAddress.save(self.newAddress).then(function(success) {
 				self.newAddress.person_address_code = success.data.address_code;

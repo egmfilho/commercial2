@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-27 09:49:09
+* @Last Modified time: 2017-08-02 17:43:44
 */
 
 (function() {
@@ -115,7 +115,8 @@
 			getPaymentAliquot: getPaymentAliquot,
 			getPaymentValue: getPaymentValue,
 			getChange: getChange,
-			removeAudit: removeAudit
+			removeAudit: removeAudit,
+			getMainContact: getMainContact
 		};
 
 		return _Order;
@@ -310,6 +311,19 @@
 
 		function removeAudit() {
 			this.order_audit = new OrderAudit();
+		}
+
+		/**
+		 * Retorna o contato principal do endereco.
+		 */
+		function getMainContact() {
+			if (this.address_delivery && this.address_delivery.person_address_contact.length) {
+				return this.address_delivery.person_address_contact.filter(function(c) {
+					return c.person_address_contact_main == 'Y';
+				})[0];
+			} else {
+				return null;
+			}
 		}
 
 	}
