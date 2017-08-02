@@ -69,7 +69,7 @@
 									| Código: {{ctrl.deliveryAddress.person_address_code}}
 								span {{ctrl.deliveryAddress.toString()}}
 
-		md-tab(label='Novo endereço' ng-disabled='!globals("default-customer").code == order.budget.order_client.person_code')
+		md-tab(label='Novo endereço' ng-disabled='ctrl.globals("default-customer").code == ctrl.customer.person_code')
 			md-content
 				form(layout='row' name='newAddressForm')
 					md-card.new-address-card(flex)
