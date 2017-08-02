@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-02 08:53:31
+* @Last Modified time: 2017-08-02 08:59:33
 */
 
 
@@ -136,7 +136,7 @@ table.table {
 			transition: 0s none;
 		}
 
-		&:hover, .active {
+		&:hover, .active, :focus {
 			background-color: lighten($main-color-lighter, 20%) !important;
 			td {
 				color: white !important;
@@ -163,10 +163,6 @@ table.table {
 				padding: 0 !important;
 				font-size: 17px;
 			}
-		}
-
-		&:focus {
-			background-color: #e0e7eb;
 		}
 	}
 }
