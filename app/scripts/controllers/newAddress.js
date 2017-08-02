@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 11:12:03
+* @Last Modified time: 2017-08-02 09:01:16
 */
 
 (function() {
@@ -31,7 +31,7 @@
 
 		var self = this, _personId = null;
 
-		self.types               = [ 'AV', 'EST', 'PC', 'RUA', 'ROD' ];
+		self.types               = Globals.get('public-place-types');
 		
 		self.newAddress          = new Address();
 
