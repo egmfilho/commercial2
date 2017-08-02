@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 15:38:44
+* @Last Modified time: 2017-08-02 08:30:42
 */
 
 'use strict';
@@ -111,39 +111,39 @@ angular.module('commercial2', [
 
 		/* https://angular-md-color.com/#/ */
 
-		// $mdThemingProvider.definePalette('custom-primary', {
-		// 	'50': '#8a8a8d',
-		// 	'100': '#7d7d81',
-		// 	'200': '#717174',
-		// 	'300': '#646467',
-		// 	'400': '#58585a',
-		// 	'500': '#4b4b4d',
-		// 	'600': '#3e3e40',
-		// 	'700': '#323233',
-		// 	'800': '#252526',
-		// 	'900': '#191919',
-		// 	'A100': '#97979a',
-		// 	'A200': '#a4a4a6',
-		// 	'A400': '#b1b1b3',
-		// 	'A700': '#0c0c0c',
-		// 	'contrastDefaultColor': 'light'
-		// });
+		$mdThemingProvider.definePalette('custom-primary', {
+			'50': '#8a8a8d',
+			'100': '#7d7d81',
+			'200': '#717174',
+			'300': '#646467',
+			'400': '#58585a',
+			'500': '#4b4b4d',
+			'600': '#3e3e40',
+			'700': '#323233',
+			'800': '#252526',
+			'900': '#191919',
+			'A100': '#97979a',
+			'A200': '#a4a4a6',
+			'A400': '#b1b1b3',
+			'A700': '#0c0c0c',
+			'contrastDefaultColor': 'light'
+		});
 
 		$mdThemingProvider.definePalette('custom-accent', {
-			'50': '#893e07',
-			'100': '#a24908',
-			'200': '#ba5409',
-			'300': '#d25f0a',
-			'400': '#ea6a0c',
-			'500': '#f4771c',
-			'600': '#f6944c',
-			'700': '#f7a365',
-			'800': '#f9b17d',
-			'900': '#fac095',
-			'A100': '#f6944c',
-			'A200': '#f58634',
-			'A400': '#f4771c',
-			'A700': '#fbcead',
+			'50': '#9f3b05',
+			'100': '#b84506',
+			'200': '#d04e07',
+			'300': '#e95707',
+			'400': '#f76313',
+			'500': '#f8742b',
+			'600': '#fa945d',
+			'700': '#fba475',
+			'800': '#fbb58e',
+			'900': '#fcc5a7',
+			'A100': '#fa945d',
+			'A200': '#f98444',
+			'A400': '#f8742b',
+			'A700': '#fdd5c0',
 			'contrastDefaultColor': 'light'
 		});
 
@@ -220,7 +220,7 @@ angular.module('commercial2', [
 		});
 
 		$mdThemingProvider.theme('default')
-			.primaryPalette('blue-grey')
+			.primaryPalette('custom-primary')
 			.accentPalette('custom-accent');
 	}])
 	.config(['$routeProvider', function($routeProvider) {

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-08-01 08:42:58
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 10:15:29
+* @Last Modified time: 2017-08-02 08:12:53
 */
 
 .users {
@@ -12,13 +12,13 @@
 			.users-table-header-container, .profiles-table-header-container {
 				padding-top: 14px;
 				padding-right: 10px;
-				border: 1px solid #d7d7d7;
+				border: 1px solid $border-color;
 				border-bottom: none;
 			}
 
 			.container-table {
 				height: 300px;
-				border: 1px solid #d7d7d7;
+				border: 1px solid $border-color;
 			}
 
 			.users-table {
@@ -66,7 +66,7 @@
 			}
 
 			.users-table-footer, .profiles-table-footer {
-				border: 1px solid #d7d7d7;
+				border: 1px solid $border-color;
 				border-top: none;	
 			}
 		}

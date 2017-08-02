@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 17:57:37
+* @Last Modified time: 2017-08-02 08:53:31
 */
 
 
@@ -17,18 +17,22 @@ $success-color: #4CAF50;
 $info-color: #2196f3;
 $teal-color: #009688;
 
-$main-color: #607d8b;
+// $main-color: #607d8b; original
+$main-color: #4b4b4d;
 $main-color-darker: darken($main-color, 15%);
 $main-color-dark: darken($main-color, 10%);
 $main-color-light: lighten($main-color, 8%);
 $main-color-lighter: lighten($main-color, 13%);
 
-$secondary-color: #F99F57;
+// $secondary-color: #F99F57; original
+$secondary-color: #f98444;
 $secondary-color-darker: darken($secondary-color, 15%);
 $secondary-color-dark: darken($secondary-color, 10%);
 $secondary-color-light: lighten($secondary-color, 10%);;
 $secondary-color-lighter: lighten($secondary-color, 15%);;
 // $secondary-color: #f58634;
+
+$border-color: darken(#d7d7d7, 30%);
 
 body {
 	min-width: $min-width !important;
@@ -92,7 +96,7 @@ footer {
 }
 
 .container-table {
-	border-color: #d7d7d7 !important;
+	border-color: $border-color !important;
 }
 
 table.table {
@@ -126,18 +130,21 @@ table.table {
 	}
 
 	tbody tr {
-		transition: background-color .5s ease;
+		// transition: background-color .5s ease;
 
 		&.ng-animate {
 			transition: 0s none;
 		}
 
-		&:hover {
-			background-color: darken(#e0e7eb, 4%) !important;
-		}
+		&:hover, .active {
+			background-color: lighten($main-color-lighter, 20%) !important;
+			td {
+				color: white !important;
 
-		&.active {
-			background-color: darken(#e0e7eb, 4%) !important;
+				button .text-primary{
+					color: white !important;
+				}
+			}
 		}
 
 		td {
@@ -249,7 +256,7 @@ table.table {
 	margin: 0;
 	padding: 5px;
 	background-color: whitesmoke;
-	border: 1px solid #d7d7d7;
+	border: 1px solid $border-color;
 	font-weight: 300;
 
 	&.well-sm {
@@ -262,10 +269,14 @@ table.table {
 }
 
 md-tabs.mussum {		
-	border: 1px solid #e1e1e1;
+	border: 1px solid $border-color;
 	border-radius: 0;
 	background-color: #f5f5f5;
 	height: 365px;
+
+	md-tabs-wrapper {
+		border-color: $border-color;
+	}
 
 	.inner-text {
 		text-shadow: -1px -1px 1px rgba(0,0,0,0.3);
@@ -283,7 +294,7 @@ md-tabs.mussum {
 				background-color: white;
 				color: $main-color;
 				font-size: .7em;
-				border-top: 1px solid #e1e1e1;
+				border-top: 1px solid $border-color;
 			}
 		}
 	}
@@ -394,6 +405,6 @@ md-select md-select-value span{
 
 md-input-container {
 	&:not(.md-input-invalid) .md-input:enabled, md-select:not([disabled]) .md-select-value {
-		border-color: #aaa !important;
+		border-color: $border-color;
 	}
 }

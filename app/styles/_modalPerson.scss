@@ -1,7 +1,7 @@
 .person-table-header-container{
 	padding-top: 14px;
 	padding-right: 10px;
-	border: 1px solid #d7d7d7;
+	border: 1px solid $border-color;
 	border-bottom: none;
 }
 
@@ -54,7 +54,7 @@
 		background-color: white;
 		color: $main-color;
 		font-size: .7em;
-		border: 1px solid #e1e1e1;
+		border: 1px solid $border-color;
 		border-top: none;
 
 		.legend{

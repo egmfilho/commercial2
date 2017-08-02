@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:10:42
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 13:49:13
+* @Last Modified time: 2017-08-02 08:47:21
 */
 
 .open-order-container-nav {
@@ -136,7 +136,7 @@
 	}
 
 	.order-table-header-container {
-		background-color: #7b99a7;
+		background-color: $main-color-lighter;
 		padding-top: 14px;
 		padding-right: 10px;
 		// border-bottom: 1px solid whitesmoke;
@@ -147,7 +147,7 @@
 
 		tr {
 			th {
-				background-color: #7b99a7;
+				background-color: $main-color-lighter;
 				color: white !important;
 			}
 
@@ -189,7 +189,7 @@
 
 		tbody tr {
 			&:nth-child(odd) {
-				background-color: darken(#f6f8f9, 3%);
+				background-color: lighten($main-color-lighter, 50%);
 			}
 
 			td {
@@ -247,14 +247,18 @@
 				text-align: center;
 				border-radius: 4px;
 				transition: box-shadow .5s;
+				border: 1px solid transparent;
 
 				&.active {
-					background-color: whitesmoke;
+					background-color: $main-color-lighter;
+					color: white;
 					box-shadow: 0 0 4px rgba(#000, .4);
+					// border: 1px solid $main-color-lighter;
 				}
 
 				&:hover {
-					background-color: whitesmoke;
+					// background-color: whitesmoke;
+					border: 1px solid $main-color-lighter;
 				}
 
 				md-icon {

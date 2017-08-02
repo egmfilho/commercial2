@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-19 08:59:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 10:32:43
+* @Last Modified time: 2017-08-02 08:36:58
 */
 
 (function() {
@@ -57,8 +57,8 @@
 				Globals.set('credit-limit', success.data.data.credit_limit.authorized_modality_id);
 				Globals.set('mail-contact-id', success.data.data.contact_mail.contact_mail_type_id);
 				Globals.set('default-customer', {
-					name: success.data.data.default_customer.default_customer_code,
-					code: success.data.data.default_customer.default_customer_name
+					name: success.data.data.default_customer.default_customer_name,
+					code: success.data.data.default_customer.default_customer_code
 				});
 				
 				deferred.resolve();
