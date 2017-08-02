@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 13:43:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 12:29:14
+* @Last Modified time: 2017-08-02 11:56:14
 */
 
 .custom-dialog {
@@ -78,7 +78,10 @@
 		left: 0;
 		top: 0;
 		min-width: 100%;
-		min-height: calc(100% - 129px);
+		// min-height: calc(100% - 129px);
+		// max-height: calc(100% - 129px);
+		min-height: calc(100% - 115px*1.15);
+		// max-height: calc(100% - (129px * 1.15px));
 		margin-top: 40px;
 	}
 }
