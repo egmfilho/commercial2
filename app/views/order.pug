@@ -354,7 +354,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 										td {{i.getValueTotal() | currency:'R$ '}}
 										td
 											md-button.md-icon-button(tabindex='-1' ng-click='order.removeItem(i)')
-												md-icon(md-font-set='material-icons' md-menu-align-target) delete_forever
+												md-icon.text-primary(md-font-set='material-icons' md-menu-align-target) delete_forever
 
 					.items-summary(layout='row')
 						span(flex)
@@ -594,7 +594,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 											td {{p.order_payment_value_total | currency:'R$ '}}
 											td
 												md-button.md-icon-button(ng-click='order.removePayment(p)')
-													md-icon(md-font-set='material-icons' md-menu-align-target) delete_forever
+													md-icon.text-primary(md-font-set='material-icons' md-menu-align-target) delete_forever
 
 							.payment-table-footer(layout='row')
 								md-button.md-primary(ng-click='order.addPayment()' ng-disabled='!order.budget.order_items.length')

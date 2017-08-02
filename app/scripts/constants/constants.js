@@ -11,7 +11,7 @@
 
 	angular.module('commercial2.constants')
 		.constant('Constants', {
-			'api': 'http://172.16.0.82/commercial2.api/',
+			'api': 'http://172.16.0.6/commercial2.api/',
 			'version': '2.0.0 rc2',
 			'cookie': 'commercial.currentUser',
 			'debug': false,

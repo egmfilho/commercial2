@@ -136,7 +136,7 @@ table.table {
 			transition: 0s none;
 		}
 
-		&:hover, .active, :focus {
+		&:hover, .active, &:focus {
 			background-color: lighten($main-color-lighter, 20%) !important;
 			td {
 				color: white !important;
