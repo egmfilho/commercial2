@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-02 08:37:37
+* @Last Modified time: 2017-08-02 09:36:37
 */
 
 (function() {
@@ -1611,6 +1611,8 @@
 							providerOrder.exportOrder(self.budget.order_id).then(function(success) {
 								self.budget.order_erp = success.data.budget_code;
 								$rootScope.loading.unload();
+								
+								_backup = new Order(self.budget);
 
 								deferred.resolve(success);
 
@@ -1623,7 +1625,10 @@
 						} else {
 							/* Edita e exporta. */
 							providerOrder.editAndExportOrder(filterBudget()).then(function(success) {
+								self.budget.order_erp = success.data.budget_code;
 								$rootScope.loading.unload();
+								
+								_backup = new Order(self.budget);
 
 								deferred.resolve(success);
 								
@@ -1642,6 +1647,8 @@
 							self.budget.order_date = moment().toDate();
 							self.budget.order_erp = success.data.budget_code;
 							$rootScope.loading.unload();
+
+							_backup = new Order(self.budget);
 
 							deferred.resolve(success);
 							
@@ -1682,7 +1689,10 @@
 						if (!self.canSave()) {
 							/* Apenas exporta. */
 							providerOrder.exportDAV(self.budget.order_id).then(function(success) {
-								$rootScope.loading.unload(success);
+								self.budget.order_erp = success.data.budget_code;
+								$rootScope.loading.unload();
+								
+								_backup = new Order(self.budget);
 
 								deferred.resolve(success);
 
@@ -1695,8 +1705,10 @@
 						} else {
 							/* Edita e exporta. */
 							providerOrder.editAndExportDAV(filterBudget()).then(function(success) {
-								$rootScope.loading.unload(success);
 								self.budget.order_erp = success.data.budget_code;
+								$rootScope.loading.unload();
+								
+								_backup = new Order(self.budget);
 								
 								deferred.resolve(success);
 								
@@ -1716,6 +1728,8 @@
 							self.budget.order_date = moment().toDate();
 							self.budget.order_erp = success.data.budget_code;
 							
+							_backup = new Order(self.budget);
+
 							deferred.resolve(success);
 							
 							self.afterExportDialog('Orçamento exportado!', success.data.dav_code);
