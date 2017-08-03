@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 11:04:49
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 15:51:06
+* @Last Modified time: 2017-08-03 18:07:48
 */
 
 (function() {
@@ -48,10 +48,11 @@
 
 		function responseError(rejection) {
 			if (rejection.status == 401) {
-				$q.all([Cookies.clear(), Globals.clear()])
-					.then(function(success) {
-						$location.path('/login');
-					});
+				$location.path('/logout');
+
+				if (constants.isElectron) {
+					require('electron').ipcRenderer.send('shutdown', null);
+				}
 			}
 
 			return $q.reject(rejection);

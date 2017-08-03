@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 08:16:50
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-03 14:31:23
+* @Last Modified time: 2017-08-03 18:00:43
 */
 
 (function() {
@@ -31,7 +31,8 @@
 		// Running on Electron
 		// ******************************
 		var _electron = require('electron'),
-			_BrowserWindow = _electron.remote.BrowserWindow;
+			_BrowserWindow = _electron.remote.BrowserWindow,
+			_remote = _electron.remote;
 
 		return {
 			createWindow: createWindow
@@ -65,6 +66,8 @@
 					}
 				}, options));
 
+			_remote.getGlobal('children').array = _remote.getGlobal('children').array.concat([win]);
+
 			win.loadURL(url);
 			
 			win.on('ready-to-show', function() {
@@ -73,6 +76,9 @@
 
 			win.on('close', function() {
 				parent.focus();
+				_remote.getGlobal('children').array = _remote.getGlobal('children').array.filter(function(w) {
+					w != win;
+				})
 			});
 
 			return win;

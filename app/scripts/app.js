@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-02 08:30:42
+* @Last Modified time: 2017-08-03 18:11:08
 */
 
 'use strict';
@@ -387,4 +387,11 @@ angular.module('commercial2', [
 			return new customDialog();
 		};
 		
+	}])
+	.run(['$location', 'Constants', function($location, constants) {
+		if (constants.isElectron) {
+			require('electron').ipcRenderer.on('shutdown', function(e, a) {
+				$location('/logout');
+			});
+		}
 	}]);

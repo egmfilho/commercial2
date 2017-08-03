@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-03 13:37:05
+* @Last Modified time: 2017-08-03 16:45:34
 */
 
 (function() {
@@ -1905,8 +1905,11 @@
 							order_id: self.budget.order_id,
 							order_payment_value: self.budget.getChange(),
 							order_payment_value_total: self.budget.getChange(),
-							order_payment_deadline: dateCalc(0, term.term_delay, 0),
+							/* Checa se a modalidade é do tipo entrada e se é a primeira das parcelas para saber qual data inicial pegar. */
+							order_payment_deadline: dateCalc(0, modality.modality_term_type == 'E' && i == 0 ? term.term_deposit_delay : term.term_delay, term.term_interval),
 							order_payment_installment: term.term_installment,
+							/* Checa se a modalidade é do tipo entrada e marca como inicial */
+							order_payment_initial: modality.modality_term_type == 'E' ? 'Y' : 'N',
 							modality_id: modality.modality_id,
 							modality: new PaymentModality(modality)
 						}));
@@ -1917,9 +1920,11 @@
 							order_id: self.budget.order_id,
 							order_payment_value: parseFloat((self.budget.getChange() / term.term_installment).toFixed(2)),
 							order_payment_value_total: parseFloat((self.budget.getChange() / term.term_installment).toFixed(2)),
-							order_payment_deadline: dateCalc(i, term.term_delay, term.term_interval),
+							/* Checa se a modalidade é do tipo entrada e se é a primeira das parcelas para saber qual data inicial pegar. */
+							order_payment_deadline: dateCalc(i, modality.modality_term_type == 'E' && i == 0 ? term.term_deposit_delay : term.term_delay, term.term_interval),
 							order_payment_installment: 1,
-							order_payment_initial: i == 0 ? 'Y' : 'N',
+							/* Checa se a modalidade é do tipo entrada e marca como inicial */
+							order_payment_initial: i == 0 && modality.modality_term_type == 'E' ? 'Y' : 'N',
 							modality_id: modality.modality_id,
 							modality: new PaymentModality(modality)
 						}));

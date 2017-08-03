@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-03 14:41:14
+* @Last Modified time: 2017-08-03 18:13:16
 */
 
 const electron = require('electron');
@@ -10,6 +10,8 @@ const electron = require('electron');
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
+
+const ipcMain = electron.ipcMain;
 
 const path = require('path');
 const url = require('url');
@@ -21,6 +23,28 @@ let mainWindow;
 global.globals = {
 	shared: '{ }'
 };
+
+global.children = {
+	array: new Array()
+};
+
+ipcMain.on('shutdown', function(event, arg) {
+	console.log('Kill\'em all!');
+	console.log(global.children.array);
+
+	for (var i = 0; i < global.children.array.length; i++) {
+		global.children.array[i] && global.children.array[i].close();
+	}
+
+	global.children.array = new Array();
+
+	// mainWindow.webContents.send('shutdown', null);
+	mainWindow.loadURL(url.format({
+		pathname: path.join(__dirname, '/www/index.html/#/logout'),
+		protocol: 'file:',
+		slashes: true
+	}));
+});
 
 function order66(token, host) {
 	var querystring = require('querystring'),

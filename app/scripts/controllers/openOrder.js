@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-03 14:26:36
+* @Last Modified time: 2017-08-03 17:22:01
 */
 
 (function() {
@@ -55,12 +55,9 @@
 				$rootScope.titleBarText = 'Abrir Orçamento';
 				
 				$rootScope.loading.load();
-				console.log('carregando on');
 				get().then(function(success) {
 					$rootScope.loading.unload();
-					console.log('carregando off');
 				}, function(error) {
-					console.log('carregando off');
 					$rootScope.loading.unload();
 				});
 			});
