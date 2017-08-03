@@ -376,10 +376,11 @@
 				}
 			}
 			
-			if( !self.budget.order_audit.user_id && debtor > 0 && debtor > self.budget.order_client.person_credit_limit.person_credit_limit_balance ){
+			if( !self.budget.order_audit.user_id && debtor > 0 && ( self.budget.order_client.person_credit_limit.blocked_days_limit == 1 || debtor > self.budget.order_client.person_credit_limit.person_credit_limit_balance ) ){
 				authorizeCredit().then(function(success){
 					if( success.user_max_credit_authorization > 0 ){
 						self.setOrderAudit({
+							title: self.budget.order_client.person_credit_limit.blocked_days_limit == 1 ? 'Liberação de títulos vencidos' : 'Liberação de crédito',
 							user_id: success.user_id,
 							user_name: success.user_name,
 							person_name: self.budget.order_client.person_name,
@@ -1288,7 +1289,8 @@
 			function controller($rootScope, providerPermission, Audit) {
 				var ctrl = this;
 
-				this.text = msg;
+				this.text = msg.msg;
+				this.icon = msg.icon;
 				this.user = null;
 				this.pass = null;
 				this.authorize = authorize;
@@ -1346,9 +1348,16 @@
 		}
 
 		function authorizeCredit() {
-			var msg = 'O valor da compra ultrapassa o limite de crédito.';
+			var msg = {};
+			if( self.budget.order_client.person_credit_limit.blocked_days_limit == 1 ){
+				msg.msg = 'Atenção! O cliente possui títulos vencidos em aberto.';
+				msg.icon = 'fa-2x fa-exclamation-triangle text-danger';
+			} else{
+				msg.msg = 'O valor da compra ultrapassa o limite de crédito.';
+				msg.icon = 'fa-2x fa-exclamation-triangle text-warning';
+			}
 
-			return self.authorizationDialog(msg, 'order', 'user_credit_authorization');	
+			return self.authorizationDialog(msg, 'order', 'user_credit_authorization');
 		}
 
 		/**

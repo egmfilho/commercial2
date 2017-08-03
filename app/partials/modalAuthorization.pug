@@ -1,5 +1,7 @@
 .body(layout='column')
-	p {{ctrl.text}}
+	p 
+		i.fa(ng-if='ctrl.icon' ng-class='ctrl.icon')
+		| {{ctrl.text}}
 
 	md-input-container
 		label 

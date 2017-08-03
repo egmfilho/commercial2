@@ -13,6 +13,7 @@
 		.factory('OrderAudit', [function() {
 
 			function _OrderAudit(audit) {
+				this.title      = null;
 				this.user_id     = null;
 				this.date        = new Date();
 				this.user_name   = null;
