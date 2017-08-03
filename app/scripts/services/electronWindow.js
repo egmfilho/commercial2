@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 08:16:50
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 15:27:41
+* @Last Modified time: 2017-08-03 14:31:23
 */
 
 (function() {
@@ -48,20 +48,28 @@
 		*/
 		function createWindow(url, options) {
 
+			var url = window.location.href.split('#')[0] + url;
+
 			var parent = _electron.remote.getCurrentWindow(),
 				win = new _BrowserWindow(angular.extend({ }, { 
 					devTools: constants.debug,
 					width: 1024, 
 					height: 768, 
 					show: false,
-					title: 'Commercial 2',
+					title: constants['app-name'],
 					parent: parent,
 					modal: false,
-					contextIsolation: false
+					contextIsolation: false,
+					webPreferences: {
+						zoomFactor: constants.zoomFactor
+					}
 				}, options));
 
 			win.loadURL(url);
-			win.show();
+			
+			win.on('ready-to-show', function() {
+				win.show();
+			});
 
 			win.on('close', function() {
 				parent.focus();

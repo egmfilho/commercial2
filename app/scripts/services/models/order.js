@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-02 17:43:44
+* @Last Modified time: 2017-08-03 11:42:27
 */
 
 (function() {
@@ -14,7 +14,7 @@
 
 			function _OrderAudit(audit) {
 				this.user_id     = null;
-				this.date        = new Date();
+				this.date        = moment().toDate();
 				this.user_name   = null;
 				this.person_name = null;
 				this.person_code = null;

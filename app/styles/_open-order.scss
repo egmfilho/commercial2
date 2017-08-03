@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:10:42
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-02 11:59:57
+* @Last Modified time: 2017-08-03 14:01:42
 */
 
 .open-order-container-nav {
@@ -20,7 +20,7 @@
 			padding: 16px;
 
 			.logo {
-				background-image: url('../images/LOGO 2017.png');
+				background-image: url('../images/logo-full.png');
 				background-position: center;
 				background-size: contain;
 				background-repeat: no-repeat;
@@ -132,14 +132,13 @@
 	.open-order-dense-container {
 		background-color: white;
 		overflow-y: scroll;
-		background-color: rgba(#000, .05);;
+		background-color: rgba(#000, .25);
 	}
 
 	.order-table-header-container {
 		background-color: $main-color-lighter;
 		padding-top: 14px;
 		padding-right: 10px;
-		// border-bottom: 1px solid whitesmoke;
 	}
 
 	.order-table {
@@ -220,7 +219,7 @@
 			
 			input {
 				width: 280px;
-				border: 1px solid #e7e7e7;
+				border: 1px solid $border-color;
 				padding: 4px;
 			}
 

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-22 13:23:08
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 12:15:38
+* @Last Modified time: 2017-08-03 11:26:05
 */
 
 (function() {
@@ -53,6 +53,7 @@
 						get_order_client: options && options.getCustomer,
 						get_person_address: options && options.getCustomer,
 						get_person_credit: options && options.getCustomer,
+						get_person_credit_limit: options && options.getCreditLimit,
 						get_person_contact: options && options.getContacts,
 						contact_type_id: options && options.contactType,
 						get_order_seller: options && options.getSeller,
@@ -78,6 +79,7 @@
 						get_order_client: options && options.getCustomer,
 						get_person_address: options && options.getCustomer,
 						get_person_credit: options && options.getCustomer,
+						get_person_credit_limit: options && options.getCreditLimit,
 						get_person_contact: options && options.getContacts,
 						contact_type_id: options && options.contactType,
 						get_order_seller: options && options.getSeller,

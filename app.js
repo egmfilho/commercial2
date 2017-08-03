@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 16:13:31
+* @Last Modified time: 2017-08-03 14:41:14
 */
 
 const electron = require('electron');
@@ -60,6 +60,7 @@ function createWindow() {
 		width: 1024, 
 		height: 768,
 		devTools: false,
+		title: 'Commercial - Gestor de vendas',
 		webPreferences: {
 			zoomFactor: 1.15
 		}
@@ -67,15 +68,16 @@ function createWindow() {
 
 	mainWindow.maximize();
 
+	mainWindow.on('page-title-updated', function(e) {
+		e.preventDefault();
+	});
+
 	// and load the index.html of the app.
 	mainWindow.loadURL(url.format({
 		pathname: path.join(__dirname, '/www/index.html'),
 		protocol: 'file:',
 		slashes: true
 	}));
-
-	// Open the DevTools.
-	// mainWindow.webContents.openDevTools()
 
 	mainWindow.on('close', function(e) {
 		var choice = electron.dialog.showMessageBox(this, {

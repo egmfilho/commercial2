@@ -15,10 +15,9 @@
 							| &nbsp; Cadastrar &nbsp;
 					
 					//- card de endereco
-					div(flex='25' 
+					div(flex='33' flex-gt-md='25' 
 							ng-repeat='a in ctrl.customer.person_address track by $index'
-							ng-if='ctrl.customer.person_address.length > 0' 
-							ng-show='a.person_address_active == "Y"')
+							ng-if='ctrl.customer.person_address.length > 0')
 						md-card(ng-class='{"active": a.person_address_code == ctrl.deliveryAddress.person_address_code}')
 							md-card-content(layout='column' layout-fill) 
 								div(flex='15' layout='row')
@@ -49,7 +48,7 @@
 											md-icon(md-font-icon='fa fa-check')
 
 					//- card vazio 
-					div(flex='25' ng-if='ctrl.customer.person_address.length > 0 && ctrl.globals("default-customer").code != ctrl.customer.person_code')
+					div(flex='33' flex-gt-md='25' ng-if='ctrl.customer.person_address.length > 0 && ctrl.globals("default-customer").code != ctrl.customer.person_code')
 						md-card.dashed-empty-card
 							md-card-content(layout='column' layout-align='center center' layout-fill)
 								div
@@ -61,23 +60,19 @@
 
 				.delivery-address
 					md-toolbar
-						.md-toolbar-tools
+						.md-toolbar-tools(layout='row')
 							i.fa.fa-2x.fa-truck &nbsp;
 							p(ng-if='!ctrl.deliveryAddress.person_address_code') Nenhum endereço informado!
-							div(layout='column' ng-if='ctrl.deliveryAddress.person_address_code') 
+							div(flex layout='column' ng-if='ctrl.deliveryAddress.person_address_code') 
 								span(style='font-size: 11px')
 									| Código: {{ctrl.deliveryAddress.person_address_code}}
 								span {{ctrl.deliveryAddress.toString()}}
+							div(flex='nogrow')
+								md-button.md-raised.md-primary(ng-click='ctrl._close(ctrl.deliveryAddress)' style='margin-right: 0')
+									| &nbsp; Ok &nbsp;
 
 		md-tab(label='Novo endereço' ng-disabled='ctrl.globals("default-customer").code == ctrl.customer.person_code')
-			md-content
+			md-content(layout='column' layout-fill layout-align='center center')
 				form(layout='row' name='newAddressForm')
 					md-card.new-address-card(flex)
 						md-card-content(ng-include='"./partials/newAddress.html"')
-
-.footer(layout='row' layout-align='end center')
-	md-button.md-raised(ng-click='ctrl._close(ctrl.deliveryAddress)' md-colors='{background: "commercialGreen"}')
-		| &nbsp; Ok &nbsp;
-
-	md-button.md-raised.md-primary(ng-click='ctrl._cancel()')
-		| &nbsp; Cancelar &nbsp;
