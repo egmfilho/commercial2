@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 17:25:12
+* @Last Modified time: 2017-08-03 11:42:28
 */
 
 (function() {
@@ -12,7 +12,7 @@
 
 			function _Audit(audit) {
 				this.user_id      = null;
-				this.date         = new Date();
+				this.date         = moment().toDate();
 				this.user_name    = null;
 				this.product_name = null;
 				this.product_code = null;

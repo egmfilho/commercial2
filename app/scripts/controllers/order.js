@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-02 09:36:37
+* @Last Modified time: 2017-08-03 13:37:05
 */
 
 (function() {
@@ -90,7 +90,7 @@
 		ElectronWindow,
 		ElectronOS) {
 
-		var self = this, _backup, _focusOn, _isToolbarLocked = false;
+		var self = this, _backup, _focusOn, _isToolbarLocked = false, _preventClosing = true;
 
 		$scope.debug = constants.debug;
 		$scope.globals = Globals.get;
@@ -135,10 +135,10 @@
 			});
 
 			/* Abrir orcamento */
-			Mousetrap.bind(['command+a', 'ctrl+a'], function() {
-				$scope.open();
-				return false;
-			});
+			// Mousetrap.bind(['command+a', 'ctrl+a'], function() {
+			// 	$scope.open();
+			// 	return false;
+			// });
 
 			/* Salvar orcamento */
 			Mousetrap.bind(['command+s', 'ctrl+s'], function() {
@@ -213,7 +213,7 @@
 
 			Mousetrap.unbind('shift+enter');
 			Mousetrap.unbind(['command+n', 'ctrl+n']);
-			Mousetrap.unbind(['command+a', 'ctrl+a']);
+			// Mousetrap.unbind(['command+a', 'ctrl+a']);
 			Mousetrap.unbind(['command+s', 'ctrl+s']);
 			Mousetrap.unbind(['command+p', 'ctrl+p']);
 			Mousetrap.unbind(['command+e', 'ctrl+e']);
@@ -225,6 +225,14 @@
 
 		/* Cria os atalhos do teclado */
 		if (constants.isElectron) {
+			window.addEventListener('beforeunload', function(e) {
+				if (_preventClosing && self.canSave()) {
+					e.returnValue = false;
+					require('electron').remote.getCurrentWindow().focus();
+				}
+
+				$scope.close();
+			});
 			bindKeys();
 		}
 
@@ -456,6 +464,7 @@
 					getCompany: true,
 					getUser: true,
 					getCustomer: true,
+					getCreditLimit: true,
 					getSeller: true,
 					getItems: true,
 					getPayments: true,
@@ -468,7 +477,7 @@
 					self.budget = new Order(success.data);
 
 					/* Configura a barra de titulo interna do Commercial */
-					$rootScope.titleBarText = 'Editar orçamento - Código: ' + self.budget.order_code + ' (' + $filter('date')(self.budget.order_date, 'short') + ')';
+					// $rootScope.titleBarText = 'Editar orçamento - Código: ' + self.budget.order_code + ' (' + $filter('date')(self.budget.order_date, 'short') + ')';
 					
 					/* copia os valores para as variaveis temporarias dos autocompletes */
 					self.internal.tempSeller = new Person(self.budget.order_seller);					
@@ -562,6 +571,23 @@
 			}
 		};
 
+		$scope.close = function(skip) {
+			if (!constants.isElectron) {
+				$scope.open(skip);
+				return;
+			}
+
+			if (!self.canSave() || !!skip) {
+				require('electron').remote.getCurrentWindow().close();
+			} else {
+				$rootScope.customDialog().showConfirm('Aviso', 'Todas as alterações não salvas serão perdidas. Deseja continuar?')
+					.then(function(success) {
+						_preventClosing = false;
+						require('electron').remote.getCurrentWindow().close();
+					}, function(error) { });
+			}
+		}
+
 		$scope.save = function() {
 			if (_backup && self.budget.equals(_backup)) {
 				$rootScope.customDialog().showMessage('Aviso', 'Nenhuma alteração!');
@@ -595,7 +621,7 @@
 								switch (res) {
 									case 'print': {
 										self.print();
-										$scope.open(true);
+										$scope.close(true);
 										break;
 									}
 									
@@ -604,7 +630,7 @@
 										$rootScope.loading.load();
 										$timeout(function() { 
 											$rootScope.loading.unload();
-											$scope.open(true);
+											$scope.close(true);
 										}, 1000);
 										break;
 									}
@@ -620,7 +646,7 @@
 									}
 								}
 							}, function(res) {
-								$scope.open(true);
+								$scope.close(true);
 							});
 					}
 
@@ -1466,7 +1492,7 @@
 			if (!self.canPrint()) return;
 
 			if (constants.isElectron)
-				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + self.budget.order_code + '?action=pdf');
+				ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=pdf');
 			else
 				$location.path('/order/print/' + self.budget.order_code)
 		}
@@ -1482,7 +1508,7 @@
 			};
 
 			if (constants.isElectron)
-				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + self.budget.order_code + '?action=print', options);
+				ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=print', options);
 			else
 				$location.path('/order/print/' + self.budget.order_code)
 		}
@@ -1500,7 +1526,7 @@
 			}
 
 			if (constants.isElectron)
-				ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/mail/' + self.budget.order_code, options);
+				ElectronWindow.createWindow('#/order/mail/' + self.budget.order_code, options);
 			else
 				$location.path('/order/mail/' + self.budget.order_code)
 		}
@@ -1578,7 +1604,7 @@
 					switch (res) {
 						case 'print': {
 							self.print();
-							$scope.open(true);
+							$scope.close(true);
 							break;
 						}
 						
@@ -1587,13 +1613,13 @@
 							$rootScope.loading.load();
 							$timeout(function() { 
 								$rootScope.loading.unload();
-								$scope.open(true);
+								$scope.close(true);
 							}, 1000);
 							break;
 						}
 					}
 				}, function(res) {
-					$scope.open(true);
+					$scope.close(true);
 				});
 		}
 

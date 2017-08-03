@@ -55,7 +55,7 @@
 				span(flex)
 
 				div(layout='row' layout-align='center center')
-					md-button.md-raised(redirect-to='/order/new' query-key='company' query-value='{{openOrder.companyId}}' md-colors='{ background: "commercialGreen" }')
+					md-button.md-raised(ng-click='newOrder(openOrder.companyId)' md-colors='{ background: "commercialGreen" }')
 						i.material-icons(style='font-size: 16px; vertical-align: text-top') note_add&nbsp;
 						| Novo
 
@@ -90,7 +90,7 @@
 	md-content.open-order-dense-container(flex)
 		table.table.order-table
 			tbody
-				tr(ng-repeat='o in openOrder.orders | orderBy:openOrder.grid.propertyName:openOrder.grid.reverse | filter: { queryable: openOrder.filters.query, order_status_id: openOrder.filters.status, order_export_type: openOrder.filters.exportType }' ng-dblclick='open(o.order_code)')
+				tr(ng-repeat='o in openOrder.orders | orderBy:openOrder.grid.propertyName:openOrder.grid.reverse | filter: { queryable: openOrder.filters.query, order_status_id: openOrder.filters.status, order_export_type: openOrder.filters.exportType }' ng-dblclick='open(o)')
 					td 
 						md-icon(
 							md-font-set='material-icons' 
@@ -114,7 +114,7 @@
 					td {{o.order_value_total | currency:'R$ '}}
 					td {{o.order_date | date:'dd/MM/yyyy'}}
 					td 
-						md-button.md-icon-button(ng-click='open(o.order_code)' md-no-ink)
+						md-button.md-icon-button(ng-click='open(o)' md-no-ink)
 							md-icon.text-primary(md-font-icon='fa fa-pencil')
 					td 
 						md-button.md-icon-button(ng-click='delete(o)' md-no-ink)

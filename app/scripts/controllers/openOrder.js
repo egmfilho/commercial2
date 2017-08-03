@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 12:16:44
+* @Last Modified time: 2017-08-03 14:26:36
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.controllers')
 		.controller('OpenOrderCtrl', OpenOrderCtrl);
 
-		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', '$location', '$q', '$timeout', 'ProviderOrder', 'Order', 'ProviderPerson', 'Person', 'Globals', 'Constants', 'ElectronWindow' ];
+		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', '$location', '$q', '$timeout', '$filter', 'ProviderOrder', 'Order', 'ProviderPerson', 'Person', 'Globals', 'Constants', 'ElectronWindow' ];
 
-		function OpenOrderCtrl($rootScope, $scope, $location, $q, $timeout, providerOrder, Order, providerPerson, Person, Globals, constants, ElectronWindow) {
+		function OpenOrderCtrl($rootScope, $scope, $location, $q, $timeout, $filter, providerOrder, Order, providerPerson, Person, Globals, constants, ElectronWindow) {
 
 			var self = this,
 				Mousetrap = null;
@@ -53,7 +53,16 @@
 
 			$scope.$on('$viewContentLoaded', function() {
 				$rootScope.titleBarText = 'Abrir Orçamento';
-				self.getOrders();
+				
+				$rootScope.loading.load();
+				console.log('carregando on');
+				get().then(function(success) {
+					$rootScope.loading.unload();
+					console.log('carregando off');
+				}, function(error) {
+					console.log('carregando off');
+					$rootScope.loading.unload();
+				});
 			});
 
 			$scope.$on('$destroy', function() {
@@ -63,8 +72,27 @@
 					Mousetrap.unbind(['command+f', 'ctrl+f']);
 			});
 
-			$scope.open = function(code) {
-				$location.path('/order/edit').search('code', code);
+			$scope.newOrder = function(companyId) {
+				var options = {
+					title: 'Novo orçamento'
+				};
+
+				if (constants.isElectron)
+					ElectronWindow.createWindow('#/order/new?company=' + companyId, options);
+				else
+					$location.path('/order/new').search('company', companyId);
+			}
+
+			$scope.open = function(order) {
+
+				var options = {
+					title: 'Cód: ' + order.order_code + ' (' + $filter('date')(order.order_date, 'short') + ')'
+				};
+
+				if (constants.isElectron)
+					ElectronWindow.createWindow('#/order/edit?code=' + order.order_code, options);
+				else
+					$location.path('/order/edit').search('code', order.order_code);
 			};
 
 			$scope.delete = function(order) {
@@ -122,34 +150,46 @@
 				self.grid.propertyName = propertyName;
 			};
 
-			self.getOrders = function(){
+			self.getOrders = function() {
+				$rootScope.loading.load();
+				get().then(function(success) {
+					$rootScope.loading.unload();
+				}, function(error) {
+					$rootScope.loading.unload();
+				});
+			};
+
+			function get(){
 				self.orders = [];
 
-				var options = {
-					company_id: self.companyId,
-					start_date: self.calendar.start.value,
-					end_date: self.calendar.end.value,
-					order_seller_id: self.seller && self.seller.person_id,
-					getCustomer: true,
-					getSeller: true,
-					limit: 30
-				};
+				var deferred = $q.defer(),
+					options = {
+						company_id: self.companyId,
+						start_date: self.calendar.start.value,
+						end_date: self.calendar.end.value,
+						order_seller_id: self.seller && self.seller.person_id,
+						getCustomer: true,
+						getSeller: true,
+						limit: 30
+					};
 
-				$rootScope.loading.load();
 				providerOrder.getAll(options).then(function(success) {
 					self.orders = success.data.map(function(order) {
 						return new Order(order);
 					});
 					constants.debug && console.log(self.orders);
-					$rootScope.loading.unload();
+
+					deferred.resolve();
 
 					if (!self.orders.length) {
 						$rootScope.customDialog().showMessage('Aviso', 'Nenhum orçamento encontrado!');
 					}
 				}, function(error) {
 					constants.debug && console.log(error);
-					$rootScope.loading.unload();
+					deferred.reject();
 				});
+
+				return deferred.promise;
 			}
 
 			function getPersonByName(name, category) {

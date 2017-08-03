@@ -14,7 +14,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								md-icon(md-font-icon='fa fa-file-o')
 								|  Novo
 								span.md-alt-text {{ 'M-N' | keyboardShortcut }}
-						md-menu-item
+						//- md-menu-item
 							md-button(ng-click='open()')
 								md-icon(md-font-icon='fa fa-folder-open-o')
 								|  Abrir
@@ -52,7 +52,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								|  Enviar por email
 						md-menu-divider
 						md-menu-item
-							md-button(ng-click='open()')
+							md-button(ng-click='close()')
 								md-icon(md-font-icon='fa fa-remove')
 								|  Cancelar
 				md-menu
@@ -128,7 +128,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 						span.md-alt-text ({{ 'M-N' | keyboardShortcut }})
 					md-icon(md-font-icon='fa fa-file-o')
 
-				md-button.toolbar-btn(ng-click='open()')
+				//- md-button.toolbar-btn(ng-click='open()')
 					md-tooltip(md-direction='bottom') 
 						| Abrir orçamento &nbsp;
 						span.md-alt-text ({{ 'M-A' | keyboardShortcut }})
@@ -140,7 +140,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 						span.md-alt-text ({{ 'M-S' | keyboardShortcut }})
 					md-icon(md-font-icon='fa fa-floppy-o' style='color: steelblue')
 
-				md-button.toolbar-btn.pull-right(ng-click='open()')
+				md-button.toolbar-btn.pull-right(ng-click='close()')
 					md-tooltip(md-direction='bottom') Cancelar
 					md-icon(md-font-icon='fa fa-remove' style='color: red')
 
@@ -690,7 +690,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 			md-card(layout-align='center')
 				md-card-content.offset-top-5
 					.offset-top-5(layout='row')
-						md-button.md-raised.md-primary(flex='25' ng-click='open()' md-colors='{background: "commercialRed"}')
+						md-button.md-raised.md-primary(flex='25' ng-click='close()' md-colors='{background: "commercialRed"}')
 							i.fa.fa-remove &nbsp;
 							| Cancelar
 						
