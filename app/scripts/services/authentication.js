@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:03:59
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 09:14:16
+* @Last Modified time: 2017-08-04 09:38:40
 */
 
 (function() {
@@ -23,7 +23,9 @@
 				data: { user_user: username, user_pass: password }
 			}).then(function(res) {
 				if (res.status == 200) {
-					__isValidSession = true;
+					if (constants.isElectron) {
+						require('electron').remote.getGlobal('isValidSession').value = true;
+					}
 
 					var user = new User(res.data.data);
 					constants.debug && console.log(user);
@@ -49,7 +51,6 @@
 					.then(function(success) {
 						$q.all([cookies.clear(), Globals.clear()])
 							.then(function(success) {
-								__isValidSession = false;
 								callback(res);
 							});
 					});

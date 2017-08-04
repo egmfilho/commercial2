@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 09:02:25
+* @Last Modified time: 2017-08-04 09:38:40
 */
 
 const electron = require('electron');
@@ -28,8 +28,14 @@ global.children = {
 	array: new Array()
 };
 
+global.isValidSession = {
+	value: false
+};
+
 ipcMain.on('shutdown', function(event, arg) {
 	console.log('Kill\'em all!');
+
+	global.isValidSession.value = false;
 
 	for (var i = 0; i < global.children.array.length; i++) {
 		global.children.array[i] && global.children.array[i].close();

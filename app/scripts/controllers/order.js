@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 09:18:17
+* @Last Modified time: 2017-08-04 09:47:11
 */
 
 (function() {
@@ -90,7 +90,7 @@
 		ElectronWindow,
 		ElectronOS) {
 
-		var self = this, _backup, _focusOn, _isToolbarLocked = false, _preventClosing = true;
+		var self = this, _remote, _backup, _focusOn, _isToolbarLocked = false, _preventClosing = true;
 
 		$scope.debug = constants.debug;
 		$scope.globals = Globals.get;
@@ -225,10 +225,14 @@
 
 		/* Cria os atalhos do teclado */
 		if (constants.isElectron) {
+			_remote = require('electron').remote;
+
 			window.addEventListener('beforeunload', function(e) {
-				if (_preventClosing && self.canSave() || __isValidSession) {
-					e.returnValue = false;
-					require('electron').remote.getCurrentWindow().focus();
+				if (_remote.getGlobal('isValidSession').value) {
+					if (_preventClosing && self.canSave()) {
+						e.returnValue = false;
+						_remote.getCurrentWindow().focus();
+					}
 				}
 
 				$scope.close();
@@ -436,8 +440,10 @@
 		}
 
 		$scope.$on('$destroy', function() {
-			if (constants.isElectron)
+			if (constants.isElectron) {
 				unbindKeys();
+				window.removeEventListener('beforeunload');
+			}
 			
 			$location.search('code', null);
 			$location.search('company', null);
@@ -578,12 +584,12 @@
 			}
 
 			if (!self.canSave() || !!skip) {
-				require('electron').remote.getCurrentWindow().close();
+				_remote.getCurrentWindow().close();
 			} else {
 				$rootScope.customDialog().showConfirm('Aviso', 'Todas as alterações não salvas serão perdidas. Deseja continuar?')
 					.then(function(success) {
 						_preventClosing = false;
-						require('electron').remote.getCurrentWindow().close();
+						_remote.getCurrentWindow().close();
 					}, function(error) { });
 			}
 		}
@@ -621,17 +627,17 @@
 								switch (res) {
 									case 'print': {
 										self.print();
-										$scope.close(true);
+										// $scope.close(true);
 										break;
 									}
 									
 									case 'mail': {
 										self.mail();
 										$rootScope.loading.load();
-										$timeout(function() { 
-											$rootScope.loading.unload();
-											$scope.close(true);
-										}, 1000);
+										// $timeout(function() { 
+										// 	$rootScope.loading.unload();
+										// 	$scope.close(true);
+										// }, 1000);
 										break;
 									}
 									
@@ -1491,8 +1497,12 @@
 		function savePDF() {
 			if (!self.canPrint()) return;
 
+			var options = {
+				parent: null
+			};
+
 			if (constants.isElectron)
-				ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=pdf');
+				ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=pdf', options);
 			else
 				$location.path('/order/print/' + self.budget.order_code)
 		}
@@ -1504,7 +1514,7 @@
 			if (!self.canPrint()) return;
 
 			var options = {
-				// zoomFactor: 0.8
+				parent: null
 			};
 
 			if (constants.isElectron)
@@ -1522,7 +1532,8 @@
 			var options = {
 				width: 920, 
 				height: 650,
-				resizeable: false
+				resizeable: false,
+				parent: null
 			}
 
 			if (constants.isElectron)
@@ -1604,17 +1615,17 @@
 					switch (res) {
 						case 'print': {
 							self.print();
-							$scope.close(true);
+							// $scope.close(true);
 							break;
 						}
 						
 						case 'mail': {
 							self.mail();
 							$rootScope.loading.load();
-							$timeout(function() { 
-								$rootScope.loading.unload();
-								$scope.close(true);
-							}, 1000);
+							// $timeout(function() { 
+							// 	$rootScope.loading.unload();
+							// 	$scope.close(true);
+							// }, 1000);
 							break;
 						}
 					}

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 09:06:19
+* @Last Modified time: 2017-08-04 09:31:36
 */
 
 'use strict';
@@ -64,16 +64,7 @@ Object.defineProperty(Object.prototype, 'equals', {
 	}
 });
 
-/* 
- * Variavel global que permite o fechamento imediato das janelas.
- * Atualizado para TRUE pelo script authentication.
- * Atualizado para FALSE pela funcao global shutdown().
- * Utilizado pelo Controller order.js para controlar o encerramento das janelas.
- */
-var __isValidSession = false;
-
 function shutdown() {
-	__isValidSession = false;
 	window.location.href = window.location.href.split('#')[0] + '#/logout';
 }
 
