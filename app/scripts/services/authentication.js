@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:03:59
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 09:06:20
+* @Last Modified time: 2017-08-04 09:14:16
 */
 
 (function() {
@@ -24,7 +24,7 @@
 			}).then(function(res) {
 				if (res.status == 200) {
 					__isValidSession = true;
-					
+
 					var user = new User(res.data.data);
 					constants.debug && console.log(user);
 					cookies.set({ 
@@ -45,9 +45,13 @@
 				method: 'POST',
 				url: constants.api + 'logout.php'
 			}).then(function(res) {
-				$q.all([providerPersonCredit.order66(), cookies.clear(), Globals.clear()])
+				providerPersonCredit.order66()
 					.then(function(success) {
-						callback(res);
+						$q.all([cookies.clear(), Globals.clear()])
+							.then(function(success) {
+								__isValidSession = false;
+								callback(res);
+							});
 					});
 			}, function(res) {
 				constants.debug && console.log(res);

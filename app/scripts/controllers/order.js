@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 09:06:46
+* @Last Modified time: 2017-08-04 09:18:17
 */
 
 (function() {
@@ -226,7 +226,7 @@
 		/* Cria os atalhos do teclado */
 		if (constants.isElectron) {
 			window.addEventListener('beforeunload', function(e) {
-				if (_preventClosing && self.canSave() && !__isValidSession) {
+				if (_preventClosing && self.canSave() || __isValidSession) {
 					e.returnValue = false;
 					require('electron').remote.getCurrentWindow().focus();
 				}
