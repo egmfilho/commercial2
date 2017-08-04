@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:03:59
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 15:49:20
+* @Last Modified time: 2017-08-04 09:06:20
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('Authentication', Authentication);
 
-	Authentication.$inject = [ '$q', '$http', 'Cookies', 'User', 'Constants', 'Globals' ];
+	Authentication.$inject = [ '$q', '$http', 'Cookies', 'User', 'ProviderPersonCredit', 'Constants', 'Globals' ];
 
-	function Authentication($q, $http, cookies, User, constants, Globals) {
+	function Authentication($q, $http, cookies, User, providerPersonCredit, constants, Globals) {
 
 		function login(username, password, callback) {
 			$http({
@@ -23,6 +23,8 @@
 				data: { user_user: username, user_pass: password }
 			}).then(function(res) {
 				if (res.status == 200) {
+					__isValidSession = true;
+					
 					var user = new User(res.data.data);
 					constants.debug && console.log(user);
 					cookies.set({ 
@@ -43,7 +45,7 @@
 				method: 'POST',
 				url: constants.api + 'logout.php'
 			}).then(function(res) {
-				$q.all([cookies.clear(), Globals.clear()])
+				$q.all([providerPersonCredit.order66(), cookies.clear(), Globals.clear()])
 					.then(function(success) {
 						callback(res);
 					});

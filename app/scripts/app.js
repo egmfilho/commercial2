@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-03 18:11:08
+* @Last Modified time: 2017-08-04 09:06:19
 */
 
 'use strict';
@@ -63,6 +63,19 @@ Object.defineProperty(Object.prototype, 'equals', {
 		return true;
 	}
 });
+
+/* 
+ * Variavel global que permite o fechamento imediato das janelas.
+ * Atualizado para TRUE pelo script authentication.
+ * Atualizado para FALSE pela funcao global shutdown().
+ * Utilizado pelo Controller order.js para controlar o encerramento das janelas.
+ */
+var __isValidSession = false;
+
+function shutdown() {
+	__isValidSession = false;
+	window.location.href = window.location.href.split('#')[0] + '#/logout';
+}
 
 angular.module('commercial2.constants', [ ]);
 angular.module('commercial2.filters', [ ]);
@@ -391,7 +404,7 @@ angular.module('commercial2', [
 	.run(['$location', 'Constants', function($location, constants) {
 		if (constants.isElectron) {
 			require('electron').ipcRenderer.on('shutdown', function(e, a) {
-				$location('/logout');
+				shutdown();
 			});
 		}
 	}]);

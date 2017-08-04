@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-03 17:22:01
+* @Last Modified time: 2017-08-04 08:49:43
 */
 
 (function() {
@@ -211,14 +211,14 @@
 
 			self.print = function(code) {
 				if (constants.isElectron)
-					ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + code + '?action=print');
+					ElectronWindow.createWindow('#/order/print/' + code + '?action=print');
 				else
 					$location.path('/order/print/'+code)
 			}
 
 			self.savePDF = function(code) {
 				if (constants.isElectron)
-					ElectronWindow.createWindow(window.location.href.split('#')[0] + '#/order/print/' + code + '?action=pdf');
+					ElectronWindow.createWindow('#/order/print/' + code + '?action=pdf');
 				else
 					$location.path('/order/print/'+code)
 			}

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 08:10:34
+* @Last Modified time: 2017-08-04 09:02:25
 */
 
 const electron = require('electron');
@@ -30,7 +30,6 @@ global.children = {
 
 ipcMain.on('shutdown', function(event, arg) {
 	console.log('Kill\'em all!');
-	console.log(global.children.array);
 
 	for (var i = 0; i < global.children.array.length; i++) {
 		global.children.array[i] && global.children.array[i].close();
@@ -38,13 +37,7 @@ ipcMain.on('shutdown', function(event, arg) {
 
 	global.children.array = new Array();
 
-	// mainWindow.webContents.send('shutdown', null);
-	global.globals.shared = '{ }';
-	mainWindow.loadURL(url.format({
-		pathname: path.join(__dirname, '/www/index.html'),
-		protocol: 'file:',
-		slashes: true
-	}));
+	mainWindow.webContents.send('shutdown', null);
 });
 
 function order66(token, host) {
