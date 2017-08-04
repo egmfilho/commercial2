@@ -676,7 +676,6 @@
 						/* Edita o orcamento */
 						providerOrder.edit(filtered).then(function(success) {
 							$rootScope.loading.unload();
-							$rootScope.customDialog().showMessage('Sucesso', 'Orçamento editado!');
 
 							_backup = new Order(self.budget);
 
