@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 10:47:50
+* @Last Modified time: 2017-08-04 11:35:43
 */
 
 (function() {
@@ -648,7 +648,7 @@
 									
 									case 'mail': {
 										self.mail();
-										$rootScope.loading.load();
+										// $rootScope.loading.load();
 										// $timeout(function() { 
 										// 	$rootScope.loading.unload();
 										// 	$scope.close(true);
@@ -1637,7 +1637,7 @@
 						
 						case 'mail': {
 							self.mail();
-							$rootScope.loading.load();
+							// $rootScope.loading.load();
 							// $timeout(function() { 
 							// 	$rootScope.loading.unload();
 							// 	$scope.close(true);
