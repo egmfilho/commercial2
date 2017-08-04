@@ -32,6 +32,21 @@
 		.clown {
 			height: 50px;
 			max-height: 50px;
+
+			.autocomplete{
+				position: relative;
+
+				button{
+					border: none;
+					background-color: transparent;
+					position: absolute;
+					right: 6px;
+					top: 16px;
+					margin: 0;
+					padding: 0;
+					z-index: 4;
+				}
+			}
 		}
 
 		.end-menu {

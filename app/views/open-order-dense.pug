@@ -27,24 +27,28 @@
 								keys-shortcuts
 								enter='openOrder.getSellerByCode($event.target.value)')
 
-					md-autocomplete(flex='60' 
-									md-delay='300'
-									md-input-name='autocompleteSeller'
-									md-no-cache='true'
-									md-autoselect='true'
-									md-escape-options='none'
-									md-selected-item='openOrder.seller'
-									md-search-text='sellerQuery'
-									md-items='item in openOrder.getSellerByName(sellerQuery)'
-									md-item-text='item.person_name'
-									md-min-length='3'
-									md-require-match='true'
-									md-floating-label='Vendedor')
-						md-item-template
-							div(md-highlight-text='sellerQuery' style='line-height: 2') {{item.person_name}}
-							div(style='font-size: 11px;line-height: 1')
-								| Código: 
-								| {{item.person_code}}
+					.autocomplete(flex="60" layout="row")
+						button(ng-show='openOrder.seller.person_id' ng-click='openOrder.seller=null')
+							i.fa.fa-times-circle
+
+						md-autocomplete(flex
+										md-delay='300'
+										md-input-name='autocompleteSeller'
+										md-no-cache='true'
+										md-autoselect='true'
+										md-escape-options='none'
+										md-selected-item='openOrder.seller'
+										md-search-text='sellerQuery'
+										md-items='item in openOrder.getSellerByName(sellerQuery)'
+										md-item-text='item.person_name'
+										md-min-length='3'
+										md-require-match='true'
+										md-floating-label='Vendedor')
+							md-item-template
+								div(md-highlight-text='sellerQuery' style='line-height: 2') {{item.person_name}}
+								div(style='font-size: 11px;line-height: 1')
+									| Código: 
+									| {{item.person_code}}
 
 					md-input-container.datepicker(flex ng-click='openOrder.calendar.end.isCalendarOpen = true')
 						label Fim

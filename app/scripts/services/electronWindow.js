@@ -66,9 +66,9 @@
 					}
 				}, options));
 
-			_remote.getGlobal('children').array = _remote.getGlobal('children').array.concat([win]);
-
-			win.loadURL(url);
+			win.on('page-title-updated', function(e) {
+				e.preventDefault();
+			});
 			
 			win.on('ready-to-show', function() {
 				win.show();
@@ -80,6 +80,10 @@
 					w != win;
 				})
 			});
+
+			win.loadURL(url);
+
+			_remote.getGlobal('children').array = _remote.getGlobal('children').array.concat([win]);
 
 			return win;
 		}
