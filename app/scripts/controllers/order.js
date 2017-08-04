@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 09:47:11
+* @Last Modified time: 2017-08-04 10:47:50
 */
 
 (function() {
@@ -90,10 +90,20 @@
 		ElectronWindow,
 		ElectronOS) {
 
-		var self = this, _remote, _backup, _focusOn, _isToolbarLocked = false, _preventClosing = true;
+		var self = this, _remote, _ipcRenderer, _backup, _focusOn, _isToolbarLocked = false, _preventClosing = true;
 
 		$scope.debug = constants.debug;
 		$scope.globals = Globals.get;
+
+		self.propagateSaveOrder = function(id) {
+			if (constants.isElectron && _ipcRenderer) {
+				_ipcRenderer.send('propagate-save-order', id);
+				console.log('propagating save order')
+			}
+			else {
+				console.log('could not propagate save order');
+			}
+		}
 
 		/**
 		 * Cria os atalhos globais de teclado.
@@ -225,7 +235,10 @@
 
 		/* Cria os atalhos do teclado */
 		if (constants.isElectron) {
-			_remote = require('electron').remote;
+			var electron = require('electron');
+
+			_remote = electron.remote;
+			_ipcRenderer = electron.ipcRenderer;
 
 			window.addEventListener('beforeunload', function(e) {
 				if (_remote.getGlobal('isValidSession').value) {
@@ -442,7 +455,6 @@
 		$scope.$on('$destroy', function() {
 			if (constants.isElectron) {
 				unbindKeys();
-				window.removeEventListener('beforeunload');
 			}
 			
 			$location.search('code', null);
@@ -585,6 +597,7 @@
 
 			if (!self.canSave() || !!skip) {
 				_remote.getCurrentWindow().close();
+
 			} else {
 				$rootScope.customDialog().showConfirm('Aviso', 'Todas as alterações não salvas serão perdidas. Deseja continuar?')
 					.then(function(success) {
@@ -621,6 +634,8 @@
 								this.order_code = self.budget.order_code;
 								this.msg = msg;
 							};
+
+						self.propagateSaveOrder(self.budget.order_company_id);
 
 						$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderSaved.html', controller)
 							.then(function(res) {
@@ -1609,6 +1624,8 @@
 					this.code = code;
 					this.msg = msg;
 				};
+
+			self.propagateSaveOrder(self.budget.order_company_id);
 
 			$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderExported.html', controller)
 				.then(function(res) {

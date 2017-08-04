@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 09:38:40
+* @Last Modified time: 2017-08-04 10:29:04
 */
 
 const electron = require('electron');
@@ -31,6 +31,10 @@ global.children = {
 global.isValidSession = {
 	value: false
 };
+
+ipcMain.on('propagate-save-order', function(event, arg) {
+	mainWindow.webContents.send('refresh-orders', arg);
+});
 
 ipcMain.on('shutdown', function(event, arg) {
 	console.log('Kill\'em all!');
