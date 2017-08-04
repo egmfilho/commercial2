@@ -21,7 +21,7 @@
 						td 
 							md-checkbox(ng-model='c.checked' ng-disabled='!!c.pawn')
 						td.text-right {{c.company_id}}
-						td {{ctrl.person.person_name}}
+						td.text-danger {{ctrl.person.person_name}}
 						td {{c.payable_code}}
 						td {{c.credit_value | currency:'R$ '}}
 						td {{c.credit_value_utilized | currency:'R$ '}}

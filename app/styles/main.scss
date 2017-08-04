@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-03 14:01:42
+* @Last Modified time: 2017-08-04 16:03:15
 */
 
 
@@ -362,6 +362,12 @@ md-tabs.mussum {
 table.table tr{
 	th, td{
 		color: rgba(0, 0, 0, .65) !important;
+	}
+
+	&.text-danger td {
+		&, * {
+			color: $error-color !important;
+		}
 	}
 }
 

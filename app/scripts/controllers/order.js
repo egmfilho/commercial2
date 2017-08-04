@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 11:35:43
+* @Last Modified time: 2017-08-04 16:50:00
 */
 
 (function() {
@@ -460,8 +460,8 @@
 			$location.search('code', null);
 			$location.search('company', null);
 
-			if (self.budget.creditPayment)
-				providerCredit.order66();
+			// if (self.budget.creditPayment)
+				// providerCredit.order66();
 		});
 
 		$scope.$on('$viewContentLoaded', function() {
@@ -642,17 +642,11 @@
 								switch (res) {
 									case 'print': {
 										self.print();
-										// $scope.close(true);
 										break;
 									}
 									
 									case 'mail': {
 										self.mail();
-										// $rootScope.loading.load();
-										// $timeout(function() { 
-										// 	$rootScope.loading.unload();
-										// 	$scope.close(true);
-										// }, 1000);
 										break;
 									}
 									
@@ -1631,17 +1625,11 @@
 					switch (res) {
 						case 'print': {
 							self.print();
-							// $scope.close(true);
 							break;
 						}
 						
 						case 'mail': {
 							self.mail();
-							// $rootScope.loading.load();
-							// $timeout(function() { 
-							// 	$rootScope.loading.unload();
-							// 	$scope.close(true);
-							// }, 1000);
 							break;
 						}
 					}
@@ -1682,6 +1670,7 @@
 							}, function(error) {
 								constants.debug && console.log(error);
 								$rootScope.loading.unload();
+								$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 								deferred.reject(error);
 							});
 						} else {
@@ -1698,6 +1687,7 @@
 							}, function(error) {
 								constants.debug && console.log(error);
 								$rootScope.loading.unload();
+								$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 								deferred.reject(error);
 							});
 						}
@@ -1718,6 +1708,7 @@
 						}, function(error) {
 							constants.debug && console.log(error);
 							$rootScope.loading.unload();
+							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 							deferred.reject(error);
 						});
 					}
@@ -1762,6 +1753,7 @@
 							}, function(error) {
 								constants.debug && console.log(error);
 								$rootScope.loading.unload();
+								$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 								deferred.reject(error);
 							});	
 						} else {
@@ -1778,6 +1770,7 @@
 							}, function(error) {
 								constants.debug && console.log(error);
 								$rootScope.loading.unload();
+								$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 								deferred.reject(error);
 							});
 						}
@@ -1798,6 +1791,7 @@
 						}, function(error) {
 							constants.debug && console.log(error);
 							$rootScope.loading.unload();
+							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 							deferred.reject(error);
 						});
 					}

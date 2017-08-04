@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 08:16:50
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-03 18:00:43
+* @Last Modified time: 2017-08-04 17:00:55
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('ElectronWindow', ElectronWindow);
 
-	ElectronWindow.$inject = [ 'Constants' ];
+	ElectronWindow.$inject = [ 'Constants', 'Globals' ];
 
-	function ElectronWindow(constants) {
+	function ElectronWindow(constants, Globals) {
 
 		// ******************************************
 		// Check if it's running on Electron
@@ -74,8 +74,14 @@
 				win.show();
 			});
 
-			win.on('close', function() {
+			win.on('closed', function() {
 				parent.focus();
+
+				_electron.ipcRenderer.send('redeem', {
+					token: Globals.get('session-token'),
+					host: constants.api
+				});
+
 				_remote.getGlobal('children').array = _remote.getGlobal('children').array.filter(function(w) {
 					w != win;
 				})

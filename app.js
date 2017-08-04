@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 10:29:04
+* @Last Modified time: 2017-08-04 16:54:48
 */
 
 const electron = require('electron');
@@ -50,7 +50,12 @@ ipcMain.on('shutdown', function(event, arg) {
 	mainWindow.webContents.send('shutdown', null);
 });
 
-function order66(token, host) {
+ipcMain.on('redeem', function(event, arg) {
+	console.log('redeem fired');
+	order66(arg.token, arg.host);
+});
+
+function order66(token, host, callback) {
 	var querystring = require('querystring'),
 		http = require('http');
 
@@ -64,19 +69,20 @@ function order66(token, host) {
 		}
 	};
 
+	console.log('Order 66 in progress...');
 	var post_req = http.request(post_options, function(res) {
 		res.setEncoding('utf8');
 		console.log('Status: ', res.statusCode);
 
 		res.on('data', function(chunk) {
 			console.log('Response: ' + chunk);
-			app.quit();
+			callback && callback();
 		});
 	});
 
 	post_req.on('error', function(e) {
 		console.log('deu erro: ' + e.message );
-		app.quit();
+		callback && callback();
 	});
 
 	post_req.end();
@@ -149,7 +155,7 @@ app.on('before-quit', function (event) {
 		host = parsed ? parsed['server-host'] : null;
 
 	if (token) {
-		order66(token, host);
+		order66(token, host, app.quit);
 		global.globals = null;
 		event.preventDefault();
 	}
