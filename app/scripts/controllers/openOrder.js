@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 08:49:43
+* @Last Modified time: 2017-08-04 10:07:52
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.controllers')
 		.controller('OpenOrderCtrl', OpenOrderCtrl);
 
-		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', '$location', '$q', '$timeout', '$filter', 'ProviderOrder', 'Order', 'ProviderPerson', 'Person', 'Globals', 'Constants', 'ElectronWindow' ];
+		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', '$routeParams', '$location', '$q', '$timeout', '$filter', 'ProviderOrder', 'Order', 'ProviderPerson', 'Person', 'Globals', 'Constants', 'ElectronWindow' ];
 
-		function OpenOrderCtrl($rootScope, $scope, $location, $q, $timeout, $filter, providerOrder, Order, providerPerson, Person, Globals, constants, ElectronWindow) {
+		function OpenOrderCtrl($rootScope, $scope, $routeParams, $location, $q, $timeout, $filter, providerOrder, Order, providerPerson, Person, Globals, constants, ElectronWindow) {
 
 			var self = this,
 				Mousetrap = null;
@@ -53,13 +53,15 @@
 
 			$scope.$on('$viewContentLoaded', function() {
 				$rootScope.titleBarText = 'Abrir Orçamento';
+
+				if ($routeParams.company)
+					self.companyId = $routeParams.company;
+
+				if ($routeParams.start)
+					self.calendar.start.value = $routeParams.company;
+
 				
-				$rootScope.loading.load();
-				get().then(function(success) {
-					$rootScope.loading.unload();
-				}, function(error) {
-					$rootScope.loading.unload();
-				});
+				self.getOrders();
 			});
 
 			$scope.$on('$destroy', function() {
@@ -147,20 +149,10 @@
 				self.grid.propertyName = propertyName;
 			};
 
-			self.getOrders = function() {
-				$rootScope.loading.load();
-				get().then(function(success) {
-					$rootScope.loading.unload();
-				}, function(error) {
-					$rootScope.loading.unload();
-				});
-			};
-
-			function get(){
+			self.getOrders = function (){
 				self.orders = [];
 
-				var deferred = $q.defer(),
-					options = {
+				var options = {
 						company_id: self.companyId,
 						start_date: self.calendar.start.value,
 						end_date: self.calendar.end.value,
@@ -170,23 +162,21 @@
 						limit: 30
 					};
 
+				$rootScope.loading.load();
 				providerOrder.getAll(options).then(function(success) {
 					self.orders = success.data.map(function(order) {
 						return new Order(order);
 					});
-					constants.debug && console.log(self.orders);
 
-					deferred.resolve();
+					$rootScope.loading.unload();
 
 					if (!self.orders.length) {
 						$rootScope.customDialog().showMessage('Aviso', 'Nenhum orçamento encontrado!');
 					}
 				}, function(error) {
 					constants.debug && console.log(error);
-					deferred.reject();
+					$rootScope.loading.unload();
 				});
-
-				return deferred.promise;
 			}
 
 			function getPersonByName(name, category) {

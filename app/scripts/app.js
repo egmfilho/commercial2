@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 09:31:36
+* @Last Modified time: 2017-08-04 10:49:26
 */
 
 'use strict';
@@ -63,6 +63,11 @@ Object.defineProperty(Object.prototype, 'equals', {
 		return true;
 	}
 });
+
+function refreshOrders(company) {
+	var x = Math.random();
+	window.location.href = window.location.href.split('#')[0] + '#/open-order?company=' + company + '&x=' + x;
+}
 
 function shutdown() {
 	window.location.href = window.location.href.split('#')[0] + '#/logout';
@@ -394,7 +399,13 @@ angular.module('commercial2', [
 	}])
 	.run(['$location', 'Constants', function($location, constants) {
 		if (constants.isElectron) {
-			require('electron').ipcRenderer.on('shutdown', function(e, a) {
+			var electron = require('electron');
+
+			electron.ipcRenderer.on('refresh-orders', function(e, a) {
+				refreshOrders(a);
+			});
+
+			electron.ipcRenderer.on('shutdown', function(e, a) {
 				shutdown();
 			});
 		}
