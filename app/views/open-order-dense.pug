@@ -19,7 +19,15 @@
 						md-datepicker(ng-model='openOrder.calendar.start.value' md-hide-icons='all' md-is-open='openOrder.calendar.start.isCalendarOpen' ng-change='openOrder.calendar.start.update()' md-max-date='openOrder.calendar.start.maxDate')
 
 				.clown(layout='row' layout-fill)
-					md-autocomplete(flex='80' 
+					md-input-container(flex='20')
+						label Código
+						input(name='seller-code'
+								ng-value='openOrder.seller.person_code' 
+								blur-to='openOrder.seller.person_code'
+								keys-shortcuts
+								enter='openOrder.getSellerByCode($event.target.value)')
+
+					md-autocomplete(flex='60' 
 									md-delay='300'
 									md-input-name='autocompleteSeller'
 									md-no-cache='true'
@@ -28,7 +36,7 @@
 									md-selected-item='openOrder.seller'
 									md-search-text='sellerQuery'
 									md-items='item in openOrder.getSellerByName(sellerQuery)'
-									md-item-text='item.queryable'
+									md-item-text='item.person_name'
 									md-min-length='3'
 									md-require-match='true'
 									md-floating-label='Vendedor')

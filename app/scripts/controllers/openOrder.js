@@ -209,6 +209,34 @@
 				return getPersonByName(name, Globals.get('person-categories').seller);
 			}
 
+			self.getSellerByCode = function(code) {
+				if (!code) {
+					self.focusOn('input[name="autocompleteSeller"]');
+					return;
+				}
+
+				if ( ( self.seller && code == self.seller.person_code ) || !parseInt(code))
+					return;
+
+				$rootScope.loading.load();
+				self.getPersonByCode(code, Globals.get('person-categories').seller).then(function(success) {
+					self.seller = new Person(success.data);
+					$rootScope.loading.unload();
+				}, function(error){
+					constants.debug && console.log(error);
+					$rootScope.loading.unload();
+
+					if (error.status == 404)
+						self.showNotFound();
+				});
+			}
+
+			self.getPersonByCode = function(code, category, options) {
+				if (!code) return;
+
+				return providerPerson.getByCode(code, category, options);
+			}
+
 			self.print = function(code) {
 				if (constants.isElectron)
 					ElectronWindow.createWindow('#/order/print/' + code + '?action=print');
