@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-07 11:25:10
+* @Last Modified time: 2017-08-07 12:35:07
 */
 
 (function() {
@@ -777,7 +777,7 @@
 		 */
 		function canSave() {
 			var isEqualsBackup = _backup && self.budget ? self.budget.equals(_backup) : false;
-			return !isEqualsBackup && self.budget.order_company_id && self.budget.order_status_id == Globals.get('order-status-values').open;
+			return !isEqualsBackup && self.budget.order_company_id && self.budget.order_status_id != Globals.get('order-status-values').billed;
 		}
 
 		/**
