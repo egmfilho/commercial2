@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-19 08:59:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 09:31:36
+* @Last Modified time: 2017-08-07 11:12:26
 */
 
 (function() {
@@ -27,7 +27,7 @@
 				]).then(function(success) {
 					$timeout(function() {
 						$rootScope.loading.unload();
-						$location.path('home');
+						$location.path('/');
 					}, 1000);
 				}, function(error) {
 					$rootScope.loading.unload();

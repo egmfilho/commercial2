@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 17:03:59
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 09:38:40
+* @Last Modified time: 2017-08-07 11:53:02
 */
 
 (function() {
@@ -47,13 +47,17 @@
 				method: 'POST',
 				url: constants.api + 'logout.php'
 			}).then(function(res) {
-				providerPersonCredit.order66()
-					.then(function(success) {
+				if (constants.isElectron) {
+					require('electron').ipcRenderer.send('shutdown');
+				}
+
+				// providerPersonCredit.order66()
+					// .then(function(success) {
 						$q.all([cookies.clear(), Globals.clear()])
 							.then(function(success) {
 								callback(res);
 							});
-					});
+					// });
 			}, function(res) {
 				constants.debug && console.log(res);
 				callback(res);

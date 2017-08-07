@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 08:16:50
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 17:00:55
+* @Last Modified time: 2017-08-07 11:22:04
 */
 
 (function() {
@@ -74,17 +74,12 @@
 				win.show();
 			});
 
-			win.on('closed', function() {
+			win.on('close', function() {
 				parent.focus();
-
-				_electron.ipcRenderer.send('redeem', {
-					token: Globals.get('session-token'),
-					host: constants.api
-				});
 
 				_remote.getGlobal('children').array = _remote.getGlobal('children').array.filter(function(w) {
 					w != win;
-				})
+				});
 			});
 
 			win.loadURL(url);

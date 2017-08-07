@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 16:54:48
+* @Last Modified time: 2017-08-07 12:06:55
 */
 
 const electron = require('electron');
@@ -51,11 +51,17 @@ ipcMain.on('shutdown', function(event, arg) {
 });
 
 ipcMain.on('redeem', function(event, arg) {
-	console.log('redeem fired');
-	order66(arg.token, arg.host);
+	if (arg.guid) {
+		console.log('redeem fired by: ' + arg.guid);
+		order66(arg.guid);
+	}
 });
 
-function order66(token, host, callback) {
+function order66(guid, callback) {
+	var parsed = global.globals ? JSON.parse(global.globals.shared) : null,
+		token = parsed ? parsed['session-token'] : null,
+		host = parsed ? parsed['server-host'] : null;
+
 	var querystring = require('querystring'),
 		http = require('http');
 
@@ -64,7 +70,7 @@ function order66(token, host, callback) {
 		path: '/commercial2.api/person_credit.php?action=order66',
 		method: 'GET',
 		headers: {
-			'x-session-token': token,
+			'x-session-token': token + (guid ? ':' + guid : ''),
 			'Content-Type': 'application/x-www-form-urlencoded'
 		}
 	};
@@ -150,12 +156,10 @@ app.on('window-all-closed', function () {
 });
 
 app.on('before-quit', function (event) {
-	var parsed = global.globals ? JSON.parse(global.globals.shared) : null,
-		token = parsed ? parsed['session-token'] : null,
-		host = parsed ? parsed['server-host'] : null;
+	var parsed = global.globals ? JSON.parse(global.globals.shared) : null;
 
-	if (token) {
-		order66(token, host, app.quit);
+	if (parsed && parsed['session-token']) {
+		order66(null, app.quit);
 		global.globals = null;
 		event.preventDefault();
 	}

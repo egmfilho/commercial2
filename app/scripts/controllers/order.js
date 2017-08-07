@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 16:50:00
+* @Last Modified time: 2017-08-07 11:25:10
 */
 
 (function() {
@@ -48,7 +48,8 @@
 		'ModalProduct',
 		'ModalCustomerAddress',
 		'ElectronWindow',
-		'ElectronOS'
+		'ElectronOS',
+		'GUID'
 	];
 
 	function OrderCtrl(
@@ -88,7 +89,8 @@
 		ModalProduct,
 		ModalCustomerAddress,
 		ElectronWindow,
-		ElectronOS) {
+		ElectronOS, 
+		GUID) {
 
 		var self = this, _remote, _ipcRenderer, _backup, _focusOn, _isToolbarLocked = false, _preventClosing = true;
 
@@ -595,14 +597,21 @@
 				return;
 			}
 
-			if (!self.canSave() || !!skip) {
-				_remote.getCurrentWindow().close();
+			function closeWindow() {
+				_ipcRenderer.send('redeem', {
+					guid: GUID.get()
+				});
 
+				_remote.getCurrentWindow().close();
+			}
+
+			if (!self.canSave() || !!skip) {
+				closeWindow();
 			} else {
 				$rootScope.customDialog().showConfirm('Aviso', 'Todas as alterações não salvas serão perdidas. Deseja continuar?')
 					.then(function(success) {
 						_preventClosing = false;
-						_remote.getCurrentWindow().close();
+						closeWindow();
 					}, function(error) { });
 			}
 		}

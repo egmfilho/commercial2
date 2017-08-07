@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-01 15:57:25
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-03 13:56:05
+* @Last Modified time: 2017-08-07 12:18:43
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('MainMenu', MainMenu)
 
-	MainMenu.$inject = [ '$mdPanel', 'Cookies', 'Constants' ];
+	MainMenu.$inject = [ '$rootScope', '$mdPanel', 'Cookies', 'Constants' ];
 
-	function MainMenu($mdPanel, Cookies, constants) {
+	function MainMenu($rootScope, $mdPanel, Cookies, constants) {
 
 		var _instance;
 
@@ -51,9 +51,10 @@
 						if (mdPanelRef) mdPanelRef.close();
 					}
 					else {
+						if (mdPanelRef) mdPanelRef.close();
 						$location.path('/order/new').search('company', companyId);
 					}
-				}
+				};
 
 				this.newUserPass = function() {
 					ModalUserPass.show('Atualizar senha')
@@ -62,7 +63,20 @@
 						}, function(error){
 							console.log(success);
 						});
-				};;
+				};
+
+				this.logout = function() {
+					$rootScope.customDialog().showConfirm('Aviso', 'Ao efetuar logout todas as alterações não salvas serão perdidas. Deseja continuar?')
+						.then(function(success) {
+							if (constants.isElectron) {
+								if (mdPanelRef) mdPanelRef.close();
+								require('electron').ipcRenderer.send('shutdown');
+							} else {
+								if (mdPanelRef) mdPanelRef.close();
+								$location.path('/logout');
+							}
+						}, function(error) { });
+				};
 			};
 			controller.$inject = [ '$location', 'mdPanelRef', 'ModalUserPass', 'ElectronWindow' ];
 

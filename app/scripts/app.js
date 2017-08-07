@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 10:49:26
+* @Last Modified time: 2017-08-07 11:22:04
 */
 
 'use strict';
@@ -333,7 +333,7 @@ angular.module('commercial2', [
 			Globals.clear();
 		};
 	}])
-	.run(['$rootScope', '$mdToast', 'MainMenu', 'CustomDialog', 'Constants', function($rootScope, $mdToast, mainMenu, customDialog, constants) {
+	.run(['$rootScope', '$mdToast', 'MainMenu', 'CustomDialog', 'Constants', 'GUID', function($rootScope, $mdToast, mainMenu, customDialog, constants, GUID) {
 
 		/* Numero de versao atual do sistema. */
 		$rootScope.version = constants.version;
@@ -397,7 +397,7 @@ angular.module('commercial2', [
 		};
 		
 	}])
-	.run(['$location', 'Constants', function($location, constants) {
+	.run(['$location', 'Constants', 'GUID', function($location, constants, GUID) {
 		if (constants.isElectron) {
 			var electron = require('electron');
 
