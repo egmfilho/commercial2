@@ -6,7 +6,7 @@
 		.factory('ModalProduct', [ '$rootScope', '$timeout', 'Globals', 'Constants', function($rootScope, $timeout, Globals, constants) {
 
 			return {
-				show: function( title, companyId, priceId, options ) {
+				show: function( title, companyId, userPrice, options ) {
 					
 					var controller;
 					
@@ -14,8 +14,8 @@
 						jQuery('input[ng-model="ctrl.filter.name"]').focus();
 					},100);
 
-					controller = function(providerProduct, Product) {
-						var vm = this;
+					controller = function(providerProduct, Product, OrderItem) {
+						var vm = this, selection = new Array();
 
 						this.hoverIndex = -1;
 
@@ -49,7 +49,7 @@
 						};
 						
 						this.companyId = companyId;
-						this.priceId = priceId;
+						this.userPrice = userPrice;
 						this.options = options;
 
 						this.grid = {
@@ -74,7 +74,7 @@
 								return;
 							}							
 							$rootScope.loading.load();
-							providerProduct.getByFilter(vm.filter, vm.companyId, vm.priceId, vm.options).then(function(success) {
+							providerProduct.getByFilter(vm.filter, vm.companyId, vm.userPrice.price_id, vm.options).then(function(success) {
 								vm.result = success.data.map(function(p) { return new Product(p); });
 								endSearch();
 								$rootScope.loading.unload();
@@ -87,19 +87,79 @@
 							});
 						}
 
-						this.get = function(p){
+						this.select = function(p){
 							if( p.product_active == 'Y'){
 								if (constants.isElectron) {
 									Mousetrap.unbind('up');
 									Mousetrap.unbind('down');
 								}
 
-								vm._close(p);
+								$rootScope.loading.load();
+								getByCode(p.product_code).then(function(success) {
+									$rootScope.loading.unload();
+									var item = new OrderItem({ price_id: vm.userPrice.price_id, user_price: vm.userPrice });
+									item.setProduct(new Product(success.data));
+									vm._close([ item ]);
+								}, function(error) {
+									constants.debug && console.log(error);
+									$rootScope.loading.unload();
+									$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+								});
 							}
 						}
+
+						function getByCode(code) {
+							var options = {
+								getUnit: true,
+								getPrice: true,
+								getStock: true
+							};
+
+							return providerProduct.getByCode(code, vm.companyId, vm.userPrice.price_id, options);
+						}
+
+						this.addProduct = function(product) {
+							if (product.product_active == 'N')
+								return;
+
+							if (!this.isSelected(product)) {
+								$rootScope.loading.load();
+								getByCode(product.product_code).then(function(success) {
+									$rootScope.loading.unload();
+									var item = new OrderItem({ price_id: vm.userPrice.price_id, user_price: vm.userPrice });
+									item.setProduct(new Product(success.data));
+									selection.push(item);
+								}, function(error) {
+									constants.debug && console.log(error);
+									$rootScope.loading.unload();
+									$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+								});
+							} else {
+								selection.splice(selection.indexOf(this.isSelected(product)), 1);
+							}
+						};
+
+						this.isSelected = function(product) {
+							return selection.find(function(item) {
+								return item.product.product_id == product.product_id;
+							});
+						};
+
+						this.getSelectionLength = function() {
+							return selection.length;
+						}
+
+						this.close = function() {
+							if (constants.isElectron) {
+								Mousetrap.unbind('up');
+								Mousetrap.unbind('down');
+							}
+
+							vm._close(selection);
+						};
 					};
 
-					controller.$inject = [ 'ProviderProduct', 'Product' ];
+					controller.$inject = [ 'ProviderProduct', 'Product', 'OrderItem' ];
 
 					var modalOptions = {
 						attatchTo: angular.element(document.getElementById('order')),

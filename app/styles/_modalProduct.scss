@@ -26,27 +26,37 @@
 		}
 
 		th, td {
-			
+
 			&:nth-child(1){
+				width: 30px;
+				vertical-align: middle;
+				padding: 0;
+
+				md-checkbox {
+					margin: 0 5px;
+				}
+			}
+			
+			&:nth-child(2){
 				width: 14%;
 				text-align: center;
 			}
 
-			&:nth-child(2){
+			&:nth-child(3){
 				width: 18%;
 				text-align: center;
 			}
 
-			&:nth-child(3){
+			&:nth-child(4){
 				width: auto;
 			}
 
-			&:nth-child(4){
+			&:nth-child(5){
 				width: 15%;
 				text-align: center;
 			}
 
-			&:nth-child(5){
+			&:nth-child(6){
 				width: 15%;
 				text-align: center;
 			}

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-07 12:35:07
+* @Last Modified time: 2017-08-07 18:01:27
 */
 
 (function() {
@@ -751,14 +751,9 @@
 		}
 
 		function getMainUserPriceId() {
-			var i, uPrices = Globals.get('user-prices-raw');
-
-			for (i = 0; i < uPrices.length; i++) {
-				if (uPrices[i].user_price_main == 'Y')
-					return uPrices[i];
-			}
-
-			return null;
+			return Globals.get('user-prices-raw').find(function(up) {
+				return up.user_price_main == 'Y';
+			});
 		}
 
 		// ******************************
@@ -2549,9 +2544,16 @@
 			jQuery('input[name="product-code"]').blur();
 
 			_isToolbarLocked = true;
-			ModalProduct.show('Localizar Produto',self.budget.order_company_id,self.internal.tempItem.price_id,options)
+			ModalProduct.show('Localizar Produto',self.budget.order_company_id,getMainUserPriceId(),options)
 				.then(function(success) {
-					self.getProductByCode(success.product_code);
+					// if (success.length == 1) {
+						// self.getProductByCode(success.product.product_code);
+					// } else {
+						angular.forEach(success, function(item, index) {
+							self.budget.addItem(new OrderItem(item));
+						});
+					// }
+					
 					_isToolbarLocked = false;
 				},function(error) {
 					_isToolbarLocked = false;
