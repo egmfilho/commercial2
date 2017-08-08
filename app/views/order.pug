@@ -97,17 +97,13 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								| Produtos
 								span.md-alt-text {{ 'M-1' | keyboardShortcut }}
 						md-menu-item
-							md-button(ng-click='order.scrollTo("section[name=\'seller\']")')
-								| Vendedor
-								span.md-alt-text {{ 'M-2' | keyboardShortcut }}
-						md-menu-item
 							md-button(ng-click='order.scrollTo("section[name=\'customer\']")')
 								| Cliente
-								span.md-alt-text {{ 'M-3' | keyboardShortcut }}
+								span.md-alt-text {{ 'M-2' | keyboardShortcut }}
 						md-menu-item
 							md-button(ng-click='order.scrollTo("section[name=\'payment\']")')
 								| Pagamento
-								span.md-alt-text {{ 'M-4' | keyboardShortcut }}
+								span.md-alt-text {{ 'M-3' | keyboardShortcut }}
 				md-menu
 					button(ng-click='$mdMenu.open()') Ajuda
 					md-menu-content
@@ -178,9 +174,9 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					md-tooltip(md-direction='bottom') Informações do cliente
 					md-icon(md-font-icon='fa fa-id-card-o' style='color: tomato')
 
-				md-button.toolbar-btn(ng-click='order.showModalNotes()')
+				md-button.toolbar-btn(ng-click='order.showModalNotes()' ng-disabled='order.isToolbarLocked()')
 					md-tooltip(md-direction='bottom') Observações
-					md-icon(md-font-icon='fa fa-sticky-note-o' ng-disabled='order.isToolbarLocked()')
+					md-icon(md-font-icon='fa fa-sticky-note-o')
 
 				md-button.toolbar-btn(ng-click='' ng-disabled='true || order.isToolbarLocked()')
 					md-tooltip(md-direction='bottom') Aplicar desconto geral
@@ -372,7 +368,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 							span {{order.budget.order_value_total | currency:'R$ '}}
 
 		//- Vendedor
-		section(name='seller')
+		//- section(name='seller')
 			md-card
 				md-card-header.header-green
 					md-card-header-text
@@ -702,7 +698,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 							i.fa.fa-upload &nbsp;
 							| Exportar DAV
 						
-						md-button.md-raised.md-primary(flex='25' ng-click='save()' ng-disabled='!order.canSave()' md-colors='{background: "commercialGreen"}')
+						md-button.md-raised.md-primary(name='save' flex='25' ng-click='save()' ng-disabled='!order.canSave()' md-colors='{background: "commercialGreen"}')
 							i.fa.fa-floppy-o &nbsp;
 							| Salvar
 

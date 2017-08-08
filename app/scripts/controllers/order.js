@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-08 08:31:04
+* @Last Modified time: 2017-08-08 14:04:03
 */
 
 (function() {
@@ -117,12 +117,12 @@
 			Mousetrap.bind('shift+enter', function(e, combo) {
 				if (!_isToolbarLocked) {
 					switch(_focusOn) {
-						case 'products':
-							self.scrollTo('section[name="seller"]');
-							self.focusOn('input[name="seller-code"]');
-							break;
+						// case 'products':
+						// 	self.scrollTo('section[name="seller"]');
+						// 	self.focusOn('input[name="seller-code"]');
+						// 	break;
 
-						case 'seller':
+						case 'products':
 							self.scrollTo('section[name="customer"]');
 							self.focusOn('input[name="customer-code"]');
 							break;
@@ -133,6 +133,8 @@
 							break;
 
 						case 'payment':
+							self.scrollTo('section[name="control"]');
+							self.focusOn('button[name="save"]');
 							break;
 					}
 				}
@@ -187,17 +189,17 @@
 			});
 
 			/* Ir para vendedor */
-			Mousetrap.bind(['command+2', 'ctrl+2'], function() {
-				if (!_isToolbarLocked) {
-					self.scrollTo("section[name=\'seller\']");
-					self.focusOn('input[name="seller-code"]');
-				}
+			// Mousetrap.bind(['command+2', 'ctrl+2'], function() {
+			// 	if (!_isToolbarLocked) {
+			// 		self.scrollTo("section[name=\'seller\']");
+			// 		self.focusOn('input[name="seller-code"]');
+			// 	}
 
-				return false;
-			});
+			// 	return false;
+			// });
 
 			/* Ir para cliente */
-			Mousetrap.bind(['command+3', 'ctrl+3'], function() {
+			Mousetrap.bind(['command+2', 'ctrl+2'], function() {
 				if (!_isToolbarLocked) {
 					self.scrollTo("section[name=\'customer\']");
 					self.focusOn('input[name="customer-code"]');
@@ -207,7 +209,7 @@
 			});
 
 			/* Ir para pagamento */
-			Mousetrap.bind(['command+4', 'ctrl+4'], function() {
+			Mousetrap.bind(['command+3', 'ctrl+3'], function() {
 				if (!_isToolbarLocked) {
 					self.scrollTo("section[name=\'payment\']");
 					self.focusOn('input[name="term-code"]');
@@ -232,7 +234,7 @@
 			Mousetrap.unbind(['command+1', 'ctrl+1']);
 			Mousetrap.unbind(['command+2', 'ctrl+2']);
 			Mousetrap.unbind(['command+3', 'ctrl+3']);
-			Mousetrap.unbind(['command+4', 'ctrl+4']);
+			// Mousetrap.unbind(['command+4', 'ctrl+4']);
 		}
 
 		/* Cria os atalhos do teclado */
@@ -472,7 +474,7 @@
 				jQuery('section[name="products"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'products' });
 				jQuery('section[name="customer"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'customer' });
 				jQuery('section[name="notes"] textarea').addClass('mousetrap').on('focus', function() { _focusOn = 'notes' });
-				jQuery('section[name="payment"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'customer' });
+				jQuery('section[name="payment"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'payment' });
 
 				self.focusOn('input[name=\'product-code\']');
 			}, 200);
@@ -554,7 +556,7 @@
 					self.budget.setCompany(new UserCompany(company).company_erp);
 				}
 
-				if( Globals.get('user')['user_seller'] ) {
+				if( Globals.get('user')['user_seller'].user_id ) {
 					self.budget.setSeller(new Person(Globals.get('user')['user_seller']));
 					self.internal.tempSeller = new Person(Globals.get('user')['user_seller']);
 				}
@@ -617,6 +619,61 @@
 		}
 
 		$scope.save = function() {
+			var options = {
+					hasBackdrop: true,
+					escapeToClose: false,
+					clickOutsideToClose: false,
+					zIndex: 1,
+					width: 500
+				},
+				controller = function(scope) {
+					var vm = this;
+
+					this.load = function() {
+						this.budget = self.budget;
+						this.tempSeller = self.internal.tempSeller;
+						this.getSellerByCode = self.getSellerByCode;
+						this.getSellerByName = self.getSellerByName;
+						
+						this.blurSeller = function() { 
+							if (vm.budget.order_seller.person_id) 
+								vm.tempSeller = new Person(vm.budget.order_seller);
+						};
+					};
+
+					this.showModalSeller = function() {
+						var category = Globals.get('person-categories').seller,
+							options = {
+								module: 'Representante',
+								limit: 100
+							};
+
+						showModalPerson('Localizar Vendedor', category, options)
+							.then(function(success) {
+								vm.budget.setSeller(new Person(success));
+								vm.tempSeller = new Person(success);
+								self.internal.tempSeller = new Person(success);
+							}, function(error) { });
+					};
+
+					this.load();
+				};
+
+				controller.$inject = [ '$scope' ];
+
+			_isToolbarLocked = true;
+			$rootScope.customDialog().showTemplate('Finalizar orçamento', './partials/modalOrderSeller.html', controller, options)
+				.then(function(success) {
+					_isToolbarLocked = false;
+					save();
+				}, function(error) {
+					_isToolbarLocked = false;
+					save();
+				});
+		}
+
+		function save() {
+
 			if (_backup && self.budget.equals(_backup)) {
 				$rootScope.customDialog().showMessage('Aviso', 'Nenhuma alteração!');
 				return;
@@ -2203,7 +2260,7 @@
 					};
 
 					/* Modalidade */
-					this.queryModality = payment ? payment.modality.modality_description : '';
+					this.queryModality = '';
 					this.queryModalityResult = _modalities;
 
 					this.getModalityById = function(id) {
@@ -2472,6 +2529,10 @@
 			self.budget.order_payments[self.budget.order_payments.length - 1].order_payment_value_total = parseFloat((temp + diff).toFixed(2));;
 		}
 
+		function showModalPerson(title, category, options) {
+			return ModalPerson.show(title, category, options);
+		}
+
 		/**
 		 * Exibe a tela de localizacao de vendedores.
 		 */
@@ -2485,7 +2546,7 @@
 			jQuery('input[name="seller-code"]').blur();
 
 			_isToolbarLocked = true;
-			ModalPerson.show('Localizar Vendedor', category, options)
+			showModalPerson('Localizar Vendedor', category, options)
 				.then(function(success) {
 					self.budget.setSeller(new Person(success));
 					self.internal.tempSeller = new Person(success);
@@ -2508,7 +2569,7 @@
 			jQuery('input[name="customer-code"]').blur();
 
 			_isToolbarLocked = true;
-			ModalPerson.show('Localizar Cliente', category, options)
+			showModalPerson('Localizar Cliente', category, options)
 				.then(function(success) {
 					self.getCustomerByCode(success.person_code);
 					_isToolbarLocked = false;
