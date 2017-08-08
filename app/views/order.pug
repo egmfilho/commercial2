@@ -290,7 +290,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 								input(name='amount' ng-model='order.internal.tempItem.order_item_amount'
 										ng-change='order.setItemAmount(order.internal.tempItem.order_item_amount)'
 										keys-shortcuts enter='order.focusOn("input[name=\'al-discount\']")'
-										currency trim min-fraction-size='0' number-only 
+										currency trim min-fraction-size='0' number-only separator=',.' replace-text replace-from='.' replace-to=','
 										ng-disabled='!order.internal.tempItem.product.product_code')
 						
 						md-input-container(flex='25')
@@ -298,7 +298,8 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 								| Desconto %
 							input(name='al-discount' ng-model='order.internal.tempItemAlDiscount' 
 									ng-blur='order.internal.tempItemAlDiscount = order.internal.tempItem.order_item_al_discount.toString()'
-									currency trim max-fraction-size='4' number-only 
+									currency trim max-fraction-size='4' number-only separator=',.' 
+									replace-text replace-from='.' replace-to=','
 									ng-disabled='!order.internal.tempItem.product.product_code'
 									keys-shortcuts enter='order.setItemAlDiscount(order.internal.tempItemAlDiscount)')
 						
@@ -307,7 +308,8 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 								| Desconto R$
 							input(name='vl-discount' ng-model='order.internal.tempItemVlDiscount' 
 									ng-blur='order.internal.tempItemVlDiscount = order.internal.tempItem.order_item_vl_discount'
-									currency number-only ng-disabled='!order.internal.tempItem.product.product_code'
+									currency number-only separator=',.' replace-text replace-from='.' replace-to=','
+									ng-disabled='!order.internal.tempItem.product.product_code'
 									keys-shortcuts enter='order.setItemVlDiscount(order.internal.tempItemVlDiscount)')
 						
 						.well(flex='25' layout='row' layout-align='center center' style='margin-left: 5px;')
@@ -343,7 +345,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									tr(ng-repeat='i in order.budget.order_items track by $index' layout='row' ng-dblclick='order.editItem(i)')
 										td {{i.product.product_code}} - {{i.product.product_name}}
 										td {{i.product.unit.unit_initials}}
-										td {{i.order_item_amount}}
+										td {{i.order_item_amount | currency:''}}
 										td {{i.order_item_value_unitary | currency:'R$ '}}
 										td {{i.order_item_al_discount | currency:''}}%
 										td {{i.order_item_vl_discount | currency:'R$ '}}

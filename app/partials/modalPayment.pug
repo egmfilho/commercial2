@@ -42,7 +42,8 @@
 
 		md-input-container(flex='20')
 			label Valor
-			input.text-right(ng-model='ctrl.payment.order_payment_value' ng-change='ctrl.payment.setValue()' currency='"R$ "' number-only)
+			input.text-right(ng-model='ctrl.payment.order_payment_value' ng-change='ctrl.payment.setValue()' currency='"R$ "' 
+				number-only separator=',.' replace-text replace-from='.' replace-to=',')
 
 	div(layout='row')
 		md-input-container(flex='50')
