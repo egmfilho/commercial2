@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-02 16:57:41
+* @Last Modified time: 2017-08-08 17:48:15
 */
 
 (function() {
@@ -171,7 +171,7 @@
 				return;
 			}
 
-			if (!self.newAddress.person_address_ie) {
+			if (!self.newAddress.person_address_ie && self.newAddress.icms_type != Globals.get('elective-icms-type').code) {
 				$rootScope.customDialog().showMessage('Aviso', 'Informe a inscrição estadual!');
 				return;
 			}

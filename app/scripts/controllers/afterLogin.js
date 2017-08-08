@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-19 08:59:02
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-07 11:12:26
+* @Last Modified time: 2017-08-08 17:48:15
 */
 
 (function() {
@@ -93,6 +93,7 @@
 
 			Globals.set('default-person-type', 'F');
 			Globals.set('default-icms-type', { code: 2, value: 'ISENTO' });
+			Globals.set('elective-icms-type', { code: 9 });
 			Globals.set('public-place-types', [ 'AV', 'EST', 'PC', 'R', 'RUA', 'ROD' ]);
 
 			Globals.set('order-status-labels', {
