@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-07 18:01:27
+* @Last Modified time: 2017-08-08 08:31:04
 */
 
 (function() {
@@ -2546,13 +2546,16 @@
 			_isToolbarLocked = true;
 			ModalProduct.show('Localizar Produto',self.budget.order_company_id,getMainUserPriceId(),options)
 				.then(function(success) {
-					// if (success.length == 1) {
-						// self.getProductByCode(success.product.product_code);
-					// } else {
+					if (success.length == 1) {
+						self.internal.tempProduct = new Product(success[0].product);
+						self.internal.tempItem = success[0];
+						self.internal.tempPrice = new Price(self.internal.tempItem.price);
+						self.focusOn('input[name="amount"]');
+					} else {
 						angular.forEach(success, function(item, index) {
 							self.budget.addItem(new OrderItem(item));
 						});
-					// }
+					}
 					
 					_isToolbarLocked = false;
 				},function(error) {

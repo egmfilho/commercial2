@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 14:03:46
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 15:41:58
+* @Last Modified time: 2017-08-08 11:27:00
 */
 
 (function() {
@@ -10,9 +10,13 @@
 	'use strict';
 
 	angular.module('commercial2.controllers')
-		.controller('LoginCtrl', ['$rootScope', '$location', 'Authentication', function($rootScope, $location, authentication) {
+		.controller('LoginCtrl', ['$rootScope', '$scope', '$location', 'Authentication', function($rootScope, $scope, $location, authentication) {
 
 			var self = this;
+
+			$scope.$on('$viewContentLoaded', function() {
+				jQuery('input[name="user"]').select().focus();
+			});
 
 			this.advance = function() {
 				jQuery('input[name="pass"]').select().focus();

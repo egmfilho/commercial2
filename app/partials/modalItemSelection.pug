@@ -1,0 +1,31 @@
+.body(layout='column' layout-fill)
+	
+	.items-selection-header-container.items-selection-table
+		table.table
+			thead
+				tr
+					th CÓDIGO
+					th NOME
+					th QTD
+					th VALOR
+					th TOTAL
+					th &nbsp;
+	.container-table
+		table.table.items-selection-table
+			tbody
+				tr(ng-repeat='i in ctrl.selection')
+					td {{i.product.product_code}}
+					td {{i.product.product_name}}
+					td
+						input.text-right(ng-model='i.order_item_amount' ng-change='i.setItemAmount(i.order_item_amount)'
+							currency trim min-fraction-size='0' number-only)
+					td {{i.order_item_value_unitary | currency:'R$ '}}
+					td {{i.getValueTotal() | currency:'R$ '}}
+					td
+						md-button.md-icon-button(tabindex='-1' ng-click='ctrl.removeItem(i)')
+							md-icon.text-primary(md-font-set='material-icons' md-menu-align-target) delete_forever
+
+
+.footer(layout='row' layout-align='end center' style='border-top: 1px solid $border-color')
+	md-button.md-primary(ng-click='ctrl._close()')
+		| &nbsp; Ok &nbsp;

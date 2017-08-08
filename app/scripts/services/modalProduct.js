@@ -122,20 +122,21 @@
 							if (product.product_active == 'N')
 								return;
 
-							if (!this.isSelected(product)) {
+							if (!vm.isSelected(product)) {
 								$rootScope.loading.load();
 								getByCode(product.product_code).then(function(success) {
 									$rootScope.loading.unload();
 									var item = new OrderItem({ price_id: vm.userPrice.price_id, user_price: vm.userPrice });
 									item.setProduct(new Product(success.data));
 									selection.push(item);
+									showSelection();
 								}, function(error) {
 									constants.debug && console.log(error);
 									$rootScope.loading.unload();
 									$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 								});
 							} else {
-								selection.splice(selection.indexOf(this.isSelected(product)), 1);
+								selection.splice(selection.indexOf(vm.isSelected(product)), 1);
 							}
 						};
 
@@ -157,6 +158,20 @@
 
 							vm._close(selection);
 						};
+
+						function showSelection() {
+							var ctrl = function() {
+								this.selection = selection;
+								this._showCloseButton = true;
+								this.removeItem = vm.addProduct;
+
+								setTimeout(function() {
+									jQuery('input').on('focus', function() { this.select(); });
+								}, 500);
+							};
+
+							$rootScope.customDialog().showTemplate('Seleção de itens', './partials/modalItemSelection.html', ctrl, {width: 800});
+						}
 					};
 
 					controller.$inject = [ 'ProviderProduct', 'Product', 'OrderItem' ];
