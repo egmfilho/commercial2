@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 09:39:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-02 16:48:32
+* @Last Modified time: 2017-08-08 16:02:20
 */
 
 (function() {
@@ -76,6 +76,8 @@
 				this.person_address_type         = null;
 				this.person_address_public_place = null;
 				this.person_address_number       = null;
+				this.person_address_note         = null;
+				this.person_address_reference    = null;
 				this.icms_type                   = Globals.get('default-icms-type').code;
 				this.city                        = new City();
 				this.district                    = new District();

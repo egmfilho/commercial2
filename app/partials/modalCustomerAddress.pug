@@ -72,7 +72,7 @@
 									| &nbsp; Ok &nbsp;
 
 		md-tab(label='Novo endereço' ng-disabled='ctrl.globals("default-customer").code == ctrl.customer.person_code')
-			md-content(layout='column' layout-fill layout-align='center center')
+			md-content(layout='column' layout-align='center center' style='min-height: 100%; height: auto;')
 				form(layout='row' name='newAddressForm')
 					md-card.new-address-card(flex)
 						md-card-content(ng-include='"./partials/newAddress.html"')
