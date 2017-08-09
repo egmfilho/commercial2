@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 14:03:46
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-08 11:27:00
+* @Last Modified time: 2017-08-09 13:34:03
 */
 
 (function() {
@@ -41,6 +41,10 @@
 					}
 				});
 			}
+
+			this.forgottenPassword = function() {
+				$rootScope.customDialog().showMessage('Aviso', 'Por favor entre em contato com o suporte!');
+			};
 
 		}]);
 

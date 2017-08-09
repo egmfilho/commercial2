@@ -1,0 +1,27 @@
+/*
+* @Author: egmfilho
+* @Date:   2017-08-09 09:36:07
+* @Last Modified by:   egmfilho
+* @Last Modified time: 2017-08-09 09:44:22
+*/
+
+.cep-table {
+	@extend .table;
+
+	tr {
+		th, td {
+			&:nth-child(1) {
+				width: 70px;
+			}
+
+			&:nth-child(2) {
+				width: 30px;
+				text-align: center;
+			}
+
+			&:nth-child(3), &:nth-child(4) {
+				width: 25%;
+			}
+		}
+	}
+}

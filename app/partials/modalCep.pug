@@ -1,0 +1,75 @@
+.body(layout='column' layout-fill)
+	
+	div(layout='row')
+		div(flex layout='row' layout-wrap)
+			md-input-container(flex='20')
+				label CEP
+				input(ui-mask='99999-999' model-view-value='true' ng-model='ctrl.filters.cep_code')
+
+			md-input-container(flex='80')
+				label Logradouro
+				input(ng-model='ctrl.filters.public_place')
+
+			md-input-container(flex)
+				label Bairro
+				md-select(ng-model='ctrl.filters.district_id'
+						data-md-container-class='query-select-container'
+						ng-model-options='{ trackBy: "$value.district_id" }')
+					md-select-header.select-header
+						input.md-text(ng-model='queryDistrict' 
+								type='search' placeholder='Digite aqui o nome do bairro'
+								ng-keydown="ctrl.searchDistrict($event, queryDistrict)")
+					md-opt-group(label='Bairros')
+						md-option(ng-value='d' 
+								ng-repeat='d in ctrl.queryDistrictResult')
+							| {{d.district_name}}
+
+			md-input-container(flex)
+				label Cidade
+				md-select(ng-model='ctrl.filters.city_id'
+						data-md-container-class='query-select-container'
+						ng-model-options='{ trackBy: "$value.city_id" }')
+					md-select-header.select-header
+						input.md-text(ng-model='queryCity' 
+								type='search' placeholder='Digite aqui o nome da cidade'
+								ng-keydown="ctrl.searchCity($event, queryCity)")
+					md-opt-group(label='Cidades')
+						md-option(ng-value='c' 
+								ng-repeat='c in ctrl.queryCityResult'
+								ng-click='ctrl.filters.uf_id = c.uf_id')
+							| {{c.city_name}} - {{c.uf_id}}
+
+			md-input-container(flex='10')
+				label UF
+				input(ng-model='ctrl.filters.uf_id' ng-disabled='!!ctrl.filters.city_id')
+
+		div(layout='column')
+			md-button.md-raised(ng-click='ctrl.clear()')
+				| Limpar
+			md-button.md-raised(ng-click='ctrl.search()')
+				| Buscar
+
+
+	.container-table-header.offset-top-15
+		table.cep-table
+			thead
+				tr
+					th CEP
+					th UF
+					th CIDADE
+					th BAIRRO
+					th LOGRADOURO
+
+	.container-table
+		table.cep-table
+			tbody
+				tr(ng-repeat='c in ctrl.result' ng-click='ctrl.select(c)' ng-dblclick='ctrl._close(c)')
+					td {{c.cep_code}}
+					td {{c.uf_id}}
+					td {{c.city.city_name}}
+					td {{c.district.district_name}}
+					td {{c.public_place}}
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-primary.md-raised(ng-click='ctrl._close(ctrl.selected)')
+		| &nbsp; Ok &nbsp;

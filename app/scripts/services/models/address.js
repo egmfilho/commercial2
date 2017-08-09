@@ -2,29 +2,11 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 09:39:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-08 16:02:20
+* @Last Modified time: 2017-08-09 12:20:18
 */
 
 (function() {
 	'use strict';
-
-	angular.module('commercial2.services')
-		.factory('Cep', [function() {
-
-			function Cep(cep) {
-				this.cep_code          = null;
-				this.uf_id             = null;
-				this.city_id           = null;
-				this.district_id       = null;
-				this.public_place      = null;
-				this.public_place_type = null;
-
-				Object.assign(this, cep);
-			}
-
-			return Cep;
-
-		}]);
 
 	angular.module('commercial2.services')
 		.factory('District', [function() {
@@ -56,6 +38,29 @@
 			}
 
 			return City;
+
+		}]);
+
+	angular.module('commercial2.services')
+		.factory('Cep', ['District', 'City', function(District, City) {
+
+			function Cep(cep) {
+				this.cep_code          = null;
+				this.uf_id             = null;
+				this.city_id           = null;
+				this.district_id       = null;
+				this.public_place      = null;
+				this.public_place_type = null;
+
+				if (cep) {
+					Object.assign(this, cep, {
+						district: new District(cep.district),
+						city: new City(cep.city)
+					});
+				}
+			}
+
+			return Cep;
 
 		}]);
 

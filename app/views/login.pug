@@ -22,7 +22,7 @@ md-content.login(flex)
 					md-button.md-raised.md-primary(ng-disabled='!LoginForm.$valid' type='submit')
 						| &nbsp; Login &nbsp;
 		.lost-pass
-			a(href='#/login') Esqueci a senha
+			a(href='' ng-click='login.forgottenPassword()') Esqueci a senha
 
 	.ver 
 		span Versão {{version}}
