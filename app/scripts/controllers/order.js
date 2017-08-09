@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-08 14:04:03
+* @Last Modified time: 2017-08-09 11:20:38
 */
 
 (function() {
@@ -1025,7 +1025,7 @@
 		 */
 		function clearPayments() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja remover todos os pagamentos?').then(function() {
-				self.budget.term_id = null;
+				self.clearTerm();
 				self.budget.order_payments = new Array();
 				self.clearTerm();
 			}, function() { });
@@ -2055,8 +2055,7 @@
 			}
 
 			self.paymentDialog('Adicionar parcela').then(function(success) {
-				self.budget.term_id = null;
-				self.internal.term.clear();
+				self.clearTerm();
 
 				var payment = new OrderPayment(success);
 
@@ -2117,8 +2116,7 @@
 				/* coloca no pagamento e manda pro modal */
 				temp.modality = new PaymentModality(success.data);
 				self.paymentDialog('Editar parcela', temp).then(function(success) {
-					self.budget.term_id = null;
-					self.internal.term.clear();
+					self.clearTerm();
 
 					var index = self.budget.order_payments.indexOf(payment),
 						newPayment = new OrderPayment(success);
@@ -2171,8 +2169,7 @@
 			msg += payment.modality.modality_description + '</b>';
 
 			$rootScope.customDialog().showConfirm('Aviso', msg).then(function(success) {
-				self.budget.term_id = null;
-				self.internal.term.clear();
+				self.clearTerm();
 
 				var index = self.budget.order_payments.indexOf(payment);
 				
@@ -2198,7 +2195,7 @@
 		 * Remove todos os pagamentos do orcamento
 		 */
 		function removeAllPayments() {
-			self.budget.term_id = null;
+			self.clearTerm();
 			
 			var msg = 'Deseja remover todos os pagamentos?';
 

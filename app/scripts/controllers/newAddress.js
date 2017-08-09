@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-08 17:48:15
+* @Last Modified time: 2017-08-09 12:54:42
 */
 
 (function() {
@@ -18,6 +18,9 @@
 		'$http',
 		'ProviderAddress',
 		'Address', 
+		'ModalCep',
+		'ProviderCep',
+		'Cep',
 		'ProviderDistrict', 
 		'District', 
 		'ProviderCity', 
@@ -27,7 +30,7 @@
 		'Constants' 
 	];
 
-	function NewAddressCtrl($rootScope, $scope, $http, providerAddress, Address, providerDistrict, District, providerCity, City, Contact, Globals, constants) {
+	function NewAddressCtrl($rootScope, $scope, $http, providerAddress, Address, ModalCep, providerCep, Cep, providerDistrict, District, providerCity, City, Contact, Globals, constants) {
 
 		var self = this, _personId = null;
 
@@ -36,6 +39,7 @@
 		self.newAddress          = new Address();
 
 		self.getCep              = getCep;
+		self.showModalCep        = showModalCep;
 		self.queryDistrict       = null;
 		self.queryDistrictResult = [ ];
 		self.queryCity           = null;
@@ -80,6 +84,25 @@
 				searchCity();
 		});
 
+		function setCepFromSource(source) {
+			self.newAddress.person_address_cep = source.cep_code;
+			self.newAddress.person_address_type = source.public_place_type;
+			self.newAddress.person_address_public_place = source.public_place;
+			self.queryDistrict = source.district_name;
+			self.newAddress.district_id = source.district_id;
+			self.newAddress.district = new District({
+				district_id: source.district_id, 
+				district_name: source.district_name
+			});
+			self.queryCity = source.city_name;
+			self.newAddress.city_id = source.city_id;
+			self.newAddress.city = new City({ 
+				city_id: source.city_id, 
+				city_name: source.city_name
+			});
+			self.newAddress.uf_id = source.uf_id;
+		}
+
 		// ******************************
 		// Methods declaration
 		// ******************************
@@ -88,33 +111,19 @@
 			if (!cep) return;
 
 			$rootScope.loading.load();
-			$http({
-				method: 'POST',
-				url: constants.api + 'cep.php?action=get',
-				data: { 
-					cep_code: cep
-				}
-			}).then(function(success) {
-				self.newAddress.person_address_type = success.data.data.public_place_type;
-				self.newAddress.person_address_public_place = success.data.data.public_place;
-				self.queryDistrict = success.data.data.district_name;
-				self.newAddress.district_id = success.data.data.district_id;
-				self.newAddress.district = new District({
-					district_id: success.data.data.district_id, 
-					district_name: success.data.data.district_name
-				});
-				self.queryCity = success.data.data.city_name;
-				self.newAddress.city_id = success.data.data.city_id;
-				self.newAddress.city = new City({ 
-					city_id: success.data.data.city_id, 
-					city_name: success.data.data.city_name
-				});
-				self.newAddress.uf_id = success.data.data.uf_id;
+			providerCep.getByCode(cep).then(function(success) {
+				setCepFromSource(success.data);
 				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);
 				$rootScope.loading.unload();
 			});
+		}
+
+		function showModalCep() {
+			ModalCep.show().then(function(success) {
+				setCepFromSource(success);
+			}, function(error) { });
 		}
 
 		function clear() {

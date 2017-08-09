@@ -7,13 +7,17 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 					ng-model='address.newAddress.person_address_delivery')
 				| Endereço de Entrega
 
-	md-input-container(flex='15')
+	md-input-container.buttonned(flex='15')
 		label 
 			| CEP
 		input(ng-model='address.newAddress.person_address_cep' 
 				ui-mask='99999-999' model-view-value='true'
-				keys-shortcuts enter='address.focusOn("select[name=\'address-type\']")'
+				keys-shortcuts prevent-default 
+				enter='address.focusOn("select[name=\'address-type\']")'
+				f2='address.showModalCep()'
 				ng-blur='address.getCep(address.newAddress.person_address_cep)')
+		button(ng-click='address.showModalCep()')
+			i.material-icons search
 
 	md-input-container(flex='10')
 		label 
