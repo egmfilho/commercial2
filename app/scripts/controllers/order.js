@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-09 17:28:26
+* @Last Modified time: 2017-08-09 17:47:29
 */
 
 (function() {
@@ -649,7 +649,8 @@
 						var controller = function() {
 								this._showCloseButton = true;
 								this.order_code = self.budget.order_code;
-								this.isExported = !!self.budget.order_code_erp;
+								this.order_code_erp = self.budget.order_code_erp;
+								this.order_export_type = self.budget.order_export_type;
 								this.msg = msg;
 							};
 

@@ -2,6 +2,9 @@
 	span.md-title
 		| Cód: {{ctrl.order_code}}
 
+	span.md-title(ng-if='ctrl.order_code_erp')
+		| {{ctrl.order_export_type == 'dav' ? 'DAV' : 'Pedido'}}: {{ctrl.order_code_erp}}
+
 	span.md-subhead.offset-top-5
 		| {{ctrl.msg}}
 	
@@ -14,14 +17,14 @@
 			md-tooltip(md-direction='bottom') Enviar por email
 			md-icon(md-font-icon='fa fa-2x fa-envelope-o')
 	
-		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("order")' md-colors="{background: 'blue'}" ng-if='!ctrl.isExported')
+		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("order")' md-colors="{background: 'blue'}" ng-if='!ctrl.order_code_erp')
 			md-tooltip(md-direction='bottom') Exportar Pedido
 			md-icon(md-font-icon='fa fa-2x fa-cloud-upload')
 	
-		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("dav")' md-colors="{background: 'green'}" ng-if='!ctrl.isExported')
+		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("dav")' md-colors="{background: 'green'}" ng-if='!ctrl.order_code_erp')
 			md-tooltip(md-direction='bottom') Exportar DAV
 			md-icon(md-font-icon='fa fa-2x fa-upload')
 
 .footer(layout='row' layout-align='end center' style='border-top: 1px solid $border-color;')
-	md-button.md-primary(name='positive' ng-click='ctrl._cancel()')
+	md-button.md-primary.md-raised(name='positive' ng-click='ctrl._cancel()')
 		| &nbsp; Fechar &nbsp;
