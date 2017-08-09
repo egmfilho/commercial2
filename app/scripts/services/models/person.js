@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 10:32:39
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 14:30:24
+* @Last Modified time: 2017-08-09 16:19:32
 */
 
 (function() {
@@ -15,6 +15,7 @@
 				this.person_id            = null;
 				this.person_code          = null;
 				this.person_name          = null;
+				this.person_shortname     = null;
 				this.person_cpf           = null;
 				this.person_cnpj          = null;
 				this.person_type          = Globals.get('default-person-type');

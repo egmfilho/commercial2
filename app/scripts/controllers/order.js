@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-09 11:20:38
+* @Last Modified time: 2017-08-09 17:28:26
 */
 
 (function() {
@@ -333,6 +333,7 @@
 		self.showModalProduct      = showModalProduct;
 		self.showModalNotes        = showModalNotes;
 		self.goToSection           = goToSection;
+		self.showModalOrderSeller  = showModalOrderSeller;
 
 		function validateBudgetToSave(callback) {
 			/*if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
@@ -619,58 +620,8 @@
 		}
 
 		$scope.save = function() {
-			var options = {
-					hasBackdrop: true,
-					escapeToClose: false,
-					clickOutsideToClose: false,
-					zIndex: 1,
-					width: 500
-				},
-				controller = function(scope) {
-					var vm = this;
-
-					this.load = function() {
-						this.budget = self.budget;
-						this.tempSeller = self.internal.tempSeller;
-						this.getSellerByCode = self.getSellerByCode;
-						this.getSellerByName = self.getSellerByName;
-						
-						this.blurSeller = function() { 
-							if (vm.budget.order_seller.person_id) 
-								vm.tempSeller = new Person(vm.budget.order_seller);
-						};
-					};
-
-					this.showModalSeller = function() {
-						var category = Globals.get('person-categories').seller,
-							options = {
-								module: 'Representante',
-								limit: 100
-							};
-
-						showModalPerson('Localizar Vendedor', category, options)
-							.then(function(success) {
-								vm.budget.setSeller(new Person(success));
-								vm.tempSeller = new Person(success);
-								self.internal.tempSeller = new Person(success);
-							}, function(error) { });
-					};
-
-					this.load();
-				};
-
-				controller.$inject = [ '$scope' ];
-
-			_isToolbarLocked = true;
-			$rootScope.customDialog().showTemplate('Finalizar orçamento', './partials/modalOrderSeller.html', controller, options)
-				.then(function(success) {
-					_isToolbarLocked = false;
-					save();
-				}, function(error) {
-					_isToolbarLocked = false;
-					save();
-				});
-		}
+			self.showModalOrderSeller(save);
+		};
 
 		function save() {
 
@@ -679,7 +630,7 @@
 				return;
 			}
 
-			if (!validateBudgetToSave($scope.save)) {
+			if (!validateBudgetToSave(save)) {
 				return;
 			}
 
@@ -698,6 +649,7 @@
 						var controller = function() {
 								this._showCloseButton = true;
 								this.order_code = self.budget.order_code;
+								this.isExported = !!self.budget.order_code_erp;
 								this.msg = msg;
 							};
 
@@ -1568,7 +1520,10 @@
 			if (!self.canPrint()) return;
 
 			var options = {
-				parent: null
+				parent: null,
+				webPreferences: {
+					zoomFactor: 1
+				}
 			};
 
 			if (constants.isElectron)
@@ -1584,7 +1539,10 @@
 			if (!self.canPrint()) return;
 
 			var options = {
-				parent: null
+				parent: null,
+				webPreferences: {
+					zoomFactor: 1
+				}
 			};
 
 			if (constants.isElectron)
@@ -1603,7 +1561,10 @@
 				width: 920, 
 				height: 650,
 				resizeable: false,
-				parent: null
+				parent: null,
+				webPreferences: {
+					zoomFactor: 1
+				}
 			}
 
 			if (constants.isElectron)
@@ -1701,10 +1662,17 @@
 		}
 
 		/**
-		 * Exporta o orcamento para pedido.
+		 * Encapsula a funcao de exportar dentro do modal de vendedor.
 		 */
 		function exportOrder() {
-			if (!validateBudgetToSave(self.exportOrder) || !validateBudgetToExport()) {
+			self.showModalOrderSeller(_exportOrder);
+		}
+
+		/**
+		 * Exporta o orcamento para pedido.
+		 */
+		function _exportOrder() {
+			if (!validateBudgetToSave(_exportOrder) || !validateBudgetToExport()) {
 				return;
 			}
 
@@ -1784,10 +1752,17 @@
 		}
 
 		/**
-		 * Exporta o orcamento para DAV.
+		 * Encapsula a funcao de exportar dentro do modal de vendedor.
 		 */
 		function exportDAV() {
-			if (!validateBudgetToSave(self.exportDAV) || !validateBudgetToExport()) {
+			self.showModalOrderSeller(_exportDAV);
+		}
+
+		/**
+		 * Exporta o orcamento para DAV.
+		 */
+		function _exportDAV() {
+			if (!validateBudgetToSave(_exportDAV) || !validateBudgetToExport()) {
 				return;
 			}
 
@@ -2645,6 +2620,69 @@
 		function goToSection(section,focus) {
 			self.scrollTo('section[name="'+section+'"]');
 			self.focusOn('input[name="'+focus+'"]');
+		}
+
+		/*
+		 * Exibe o modal de informacao do vendedor.
+		 */
+		function showModalOrderSeller(callback) {
+			var options = {
+					hasBackdrop: true,
+					escapeToClose: false,
+					clickOutsideToClose: false,
+					zIndex: 1,
+					width: 500
+				},
+				controller = function(scope) {
+					var vm = this;
+
+					this.load = function() {
+						this.budget = self.budget;
+						this.tempSeller = self.internal.tempSeller;
+						this.getSellerByCode = self.getSellerByCode;
+						this.getSellerByName = self.getSellerByName;
+
+						scope.$watch(function() {
+							return self.internal.tempSeller;
+						}, function() {
+							vm.tempSeller = self.internal.tempSeller;
+						});
+						
+						this.blurSeller = function() { 
+							if (vm.budget.order_seller.person_id) 
+								vm.tempSeller = new Person(vm.budget.order_seller);
+						};
+					};
+
+					this.showModalSeller = function() {
+						var category = Globals.get('person-categories').seller,
+							options = {
+								module: 'Representante',
+								limit: 100
+							};
+
+						showModalPerson('Localizar Vendedor', category, options)
+							.then(function(success) {
+								vm.budget.setSeller(new Person(success));
+								vm.tempSeller = new Person(success);
+								self.internal.tempSeller = new Person(success);
+							}, function(error) { });
+					};
+
+					this.load();
+				};
+
+				controller.$inject = [ '$scope' ];
+
+			_isToolbarLocked = true;
+			$rootScope.customDialog().showTemplate('Finalizar orçamento', './partials/modalOrderSeller.html', controller, options)
+				.then(function(success) {
+					_isToolbarLocked = false;
+					callback && callback();
+				}, function(error) {
+					_isToolbarLocked = false;
+					callback && callback();
+				});
 		}
 	}
 }());

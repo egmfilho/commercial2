@@ -122,12 +122,18 @@
 					td {{o.order_code}}
 					td {{o.order_code_erp}}
 					td {{o.order_client.person_name}}
-					td {{o.order_seller.person_name}}
+					td {{o.order_seller.person_shortname || (o.order_seller.person_name | truncate: 15 : ' ')}}
 					td {{o.order_value_total | currency:'R$ '}}
 					td {{o.order_date | date:'dd/MM/yyyy'}}
 					td 
 						md-button.md-icon-button(ng-click='open(o)' md-no-ink)
 							md-icon.text-primary(md-font-icon='fa fa-pencil')
+					td 
+						md-button.md-icon-button(ng-click='openOrder.print(o.order_code)' md-no-ink)
+							md-icon.text-primary(md-font-icon='fa fa-print')
+					td 
+						md-button.md-icon-button(ng-click='openOrder.mail(o.order_code)' md-no-ink)
+							md-icon.text-primary(md-font-icon='fa fa-envelope')
 					td 
 						md-button.md-icon-button(ng-click='delete(o)' md-no-ink)
 							md-icon.text-primary(md-font-icon='material-icons') delete_forever

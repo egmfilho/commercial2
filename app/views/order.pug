@@ -63,15 +63,15 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								md-icon(md-font-set='material-icons') business
 								| Informar empresa
 								span.md-alt-text {{ 'M-E' | keyboardShortcut }}
-						//- md-menu-divider
+						md-menu-item
+							md-button(ng-click='order.showModalOrderSeller()' ng-disabled='order.isToolbarLocked()')
+								md-icon(md-font-icon='fa fa-id-badge')
+								| Informar vendedor
+						md-menu-divider
 						md-menu-item
 							md-button(ng-click='order.showModalProduct()' ng-disabled='order.isToolbarLocked()')
 								md-icon(md-font-set='material-icons') shopping_cart
 								| Localizar produto
-						md-menu-item
-							md-button(ng-click='order.showModalSeller()' ng-disabled='order.isToolbarLocked()')
-								md-icon(md-font-icon='fa fa-id-badge')
-								| Localizar vendedor
 						md-menu-item
 							md-button(ng-click='order.showModalCustomer()' ng-disabled='order.isToolbarLocked()')
 								md-icon(md-font-icon='fa fa-user')
@@ -158,17 +158,19 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 
 				.separator
 
+				md-button.toolbar-btn(ng-click='order.showModalOrderSeller()' ng-disabled='order.isToolbarLocked()')
+					md-tooltip(md-direction='bottom') Informar vendedor
+					md-icon.text-secondary(md-font-icon='fa fa-id-badge')
+
+				.separator
+
 				md-button.toolbar-btn(ng-click='order.showModalProduct()' ng-disabled='order.isToolbarLocked()')
 					md-tooltip(md-direction='bottom') Localizar produto
 					md-icon(md-font-set='material-icons' style='color: chocolate') shopping_cart
 
-				md-button.toolbar-btn(ng-click='order.showModalSeller()' ng-disabled='order.isToolbarLocked()')
-					md-tooltip(md-direction='bottom') Localizar vendedor
-					md-icon(md-font-icon='fa fa-id-badge' style='color: lightseagreen')
-
 				md-button.toolbar-btn(ng-click='order.showModalCustomer()' ng-disabled='order.isToolbarLocked()')
 					md-tooltip(md-direction='bottom') Localizar cliente
-					md-icon(md-font-icon='fa fa-user' style='color: darkseagreen')
+					md-icon(md-font-icon='fa fa-user' style='color: seagreen')
 
 				md-button.toolbar-btn(ng-click='order.showModalCustomerInfo()' ng-disabled='!order.budget.order_client.person_id || order.isToolbarLocked()')
 					md-tooltip(md-direction='bottom') Informações do cliente
@@ -176,7 +178,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 
 				md-button.toolbar-btn(ng-click='order.showModalNotes()' ng-disabled='order.isToolbarLocked()')
 					md-tooltip(md-direction='bottom') Observações
-					md-icon(md-font-icon='fa fa-sticky-note-o')
+					md-icon.text-warning(md-font-icon='fa fa-sticky-note-o')
 
 				md-button.toolbar-btn(ng-click='' ng-disabled='true || order.isToolbarLocked()')
 					md-tooltip(md-direction='bottom') Aplicar desconto geral
@@ -388,7 +390,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									i.fa.fa-remove &nbsp; 
 									| Limpar
 				md-card-content
-					div(layout-gt-xs='row')
+					div(layout='row')
 						md-input-container(flex='25')
 							label Código ( F2 para localizar )
 							input(name='seller-code'
@@ -448,7 +450,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									| Limpar
 				
 				md-card-content
-					div(layout-gt-xs='row' layout-wrap)
+					div(layout='row' layout-wrap)
 						md-input-container(flex='25')
 							label Código ( F2 para localizar )
 							input(name='customer-code'

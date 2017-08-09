@@ -14,11 +14,11 @@
 			md-tooltip(md-direction='bottom') Enviar por email
 			md-icon(md-font-icon='fa fa-2x fa-envelope-o')
 	
-		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("order")' md-colors="{background: 'blue'}")
+		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("order")' md-colors="{background: 'blue'}" ng-if='!ctrl.isExported')
 			md-tooltip(md-direction='bottom') Exportar Pedido
 			md-icon(md-font-icon='fa fa-2x fa-cloud-upload')
 	
-		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("dav")' md-colors="{background: 'green'}")
+		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("dav")' md-colors="{background: 'green'}" ng-if='!ctrl.isExported')
 			md-tooltip(md-direction='bottom') Exportar DAV
 			md-icon(md-font-icon='fa fa-2x fa-upload')
 

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 10:07:52
+* @Last Modified time: 2017-08-09 16:20:56
 */
 
 (function() {
@@ -228,17 +228,29 @@
 			}
 
 			self.print = function(code) {
+				var options = {
+					webPreferences: {
+						zoomFactor: 1
+					}
+				};
+
 				if (constants.isElectron)
-					ElectronWindow.createWindow('#/order/print/' + code + '?action=print');
+					ElectronWindow.createWindow('#/order/print/' + code + '?action=print', options);
 				else
 					$location.path('/order/print/'+code)
 			}
 
-			self.savePDF = function(code) {
+			self.mail = function(code) {
+				var options = {
+					webPreferences: {
+						zoomFactor: 1
+					}
+				};
+
 				if (constants.isElectron)
-					ElectronWindow.createWindow('#/order/print/' + code + '?action=pdf');
+					ElectronWindow.createWindow('#/order/mail/' + code, options);
 				else
-					$location.path('/order/print/'+code)
+					$location.path('/order/mail/' + code);
 			}
 
 		}

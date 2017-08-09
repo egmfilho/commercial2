@@ -10,7 +10,8 @@
 			label Código
 			input(name='seller-code'
 					ng-value='ctrl.budget.order_seller.person_code' 
-					blur-to='ctrl.budget.order_seller.person_code')
+					blur-to='ctrl.budget.order_seller.person_code'
+					keys-shortcuts enter='ctrl.getSellerByCode($event.target.value)')
 		md-autocomplete(flex='85' 
 						md-delay='300'
 						md-input-name='autocompleteSeller'
