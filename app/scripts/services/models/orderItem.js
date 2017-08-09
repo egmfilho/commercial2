@@ -32,6 +32,7 @@
 
 			function Item(item) {
 				this.order_item_id            = null;
+				this.order_item_erp_id        = null;
 				this.order_id                 = null;
 				this.product_id               = null;
 				this.price_id                 = null;

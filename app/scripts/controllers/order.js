@@ -335,10 +335,10 @@
 		self.goToSection           = goToSection;
 
 		function validateBudgetToSave(callback) {
-			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
+			/*if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
 				$rootScope.customDialog().showMessage('Erro', 'Este orçamento já foi exportado e não pode mais ser editado!');
 				return false;
-			}
+			}*/
 
 			if (!self.budget.order_company_id) {
 				$rootScope.customDialog().showMessage('Erro', 'A empresa do orçamento deverá ser informada!');
@@ -556,7 +556,7 @@
 					self.budget.setCompany(new UserCompany(company).company_erp);
 				}
 
-				if( Globals.get('user')['user_seller'].user_id ) {
+				if( Globals.get('user')['user_seller'].person_id ) {
 					self.budget.setSeller(new Person(Globals.get('user')['user_seller']));
 					self.internal.tempSeller = new Person(Globals.get('user')['user_seller']);
 				}
@@ -734,6 +734,7 @@
 					$rootScope.loading.load();
 					if (self.budget.order_code && self.budget.order_id) {
 						/* Edita o orcamento */
+						console.log(angular.toJson(filtered));
 						providerOrder.edit(filtered).then(function(success) {
 							$rootScope.loading.unload();
 

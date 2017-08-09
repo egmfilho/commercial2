@@ -18,6 +18,7 @@
 
 		function _OrderPayment(payment) {
 			this.order_payment_id                     = null;
+			this.order_payment_erp_id                 = null;
 			this.order_id                             = null;
 			this.order_payment_value                  = 0;
 			this.order_payment_al_discount            = 0;

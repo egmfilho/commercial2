@@ -39,6 +39,7 @@
 
 		function _Order(order) {
 			this.order_id                    = null;
+			this.order_erp_id                = null;
 			this.order_company_id            = null;
 			this.order_user_id               = null;
 			this.order_status_id             = Globals.get('order-status-values')['open']; 
