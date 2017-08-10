@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-09 17:47:29
+* @Last Modified time: 2017-08-10 18:23:16
 */
 
 (function() {
@@ -96,6 +96,12 @@
 
 		$scope.debug = constants.debug;
 		$scope.globals = Globals.get;
+		$scope.isDisabled = true;
+		$scope.$watch(function() {
+			return $scope.isDisabled;
+		}, function(newVal, oldVal) {
+			_isToolbarLocked = newVal;
+		});
 
 		self.propagateSaveOrder = function(id) {
 			if (constants.isElectron && _ipcRenderer) {
@@ -334,6 +340,7 @@
 		self.showModalNotes        = showModalNotes;
 		self.goToSection           = goToSection;
 		self.showModalOrderSeller  = showModalOrderSeller;
+		self.showLockModal         = showLockModal;
 
 		function validateBudgetToSave(callback) {
 			/*if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
@@ -464,10 +471,21 @@
 			
 			$location.search('code', null);
 			$location.search('company', null);
-
-			// if (self.budget.creditPayment)
-				// providerCredit.order66();
 		});
+
+		function lockOrder() {
+			_isToolbarLocked = true;
+			$timeout(function() {
+				jQuery('* input, * button')
+					.removeAttr('ng-click')
+					.prop('disabled', true);
+			}, 1000);
+		}
+
+		$scope.isLocked = function(target) {
+			console.log(target);
+			jQuery(target).hasClass('disabled');
+		};
 
 		$scope.$on('$viewContentLoaded', function() {
 			$timeout(function() {
@@ -482,7 +500,7 @@
 
 			self.searchTerm();
 
-			if ($routeParams.action && $routeParams.action == 'edit' && $routeParams.code) {
+			if (!!$routeParams.action && $routeParams.action == 'edit' && !!$routeParams.code) {
 				var options = {
 					getCompany: true,
 					getUser: true,
@@ -498,6 +516,8 @@
 				$rootScope.loading.load();
 				providerOrder.getByCode($routeParams.code, options).then(function(success) {
 					self.budget = new Order(success.data);
+
+					self.showLockModal();
 
 					/* Configura a barra de titulo interna do Commercial */
 					// $rootScope.titleBarText = 'Editar orçamento - Código: ' + self.budget.order_code + ' (' + $filter('date')(self.budget.order_date, 'short') + ')';
@@ -538,8 +558,9 @@
 						});
 					$rootScope.loading.unload();
 				});
-			} else if ($routeParams.action && $routeParams.action == 'new') {
+			} else if (!!$routeParams.action && $routeParams.action == 'new') {
 				$rootScope.titleBarText = 'Novo orçamento';
+				$scope.isDisabled = false;
 
 				if ($routeParams.company) {
 					var company = Globals.get('user-companies-raw').find(function(company) {
@@ -687,7 +708,6 @@
 					$rootScope.loading.load();
 					if (self.budget.order_code && self.budget.order_id) {
 						/* Edita o orcamento */
-						console.log(angular.toJson(filtered));
 						providerOrder.edit(filtered).then(function(success) {
 							$rootScope.loading.unload();
 
@@ -946,7 +966,9 @@
 		function clearItems() {
 			$rootScope.customDialog().showConfirm('Aviso', 'Deseja limpar os campos e esvaziar a lista de itens?').then(function() {
 				self.budget.order_items = [ ];
+				self.budget.updateValues();
 				clearProductSearch();
+				self.recalcPayments();
 			}, function() { });
 		}
 
@@ -1059,7 +1081,9 @@
 		 * @returns {object} - Uma promise com o resultado.
 		 */
 		function getSellerByName(name) {
-			return getPersonByName(name, Globals.get('person-categories').seller);
+			var deferred = $q.defer();
+			return deferred.promise;
+			// return getPersonByName(name, Globals.get('person-categories').seller);
 		}
 
 		/**
@@ -1420,6 +1444,8 @@
 		 * @param {object} item - O item a ser editado.
 		 */
 		function editItem(item) {
+			if ($scope.isDisabled)
+				return;
 
 			if (!item.product.product_prices.find(function(p) { return p.price_id == item.price_id })) {
 				var msg = 'Este item está usando uma tabela de preços restrita, ';
@@ -2064,6 +2090,9 @@
 		 * @param {object} payment - O pagamento a ser editado.
 		 */
 		function editPayment(payment) {
+			if ($scope.isDisabled)
+				return;
+
 			if (self.budget.term_id) {
 			// 	$rootScope.customDialog().showConfirm('Aviso', 'Para editar um pagamento o prazo deve ser removido do orçamento. Deseja remover o prazo?')
 			// 		.then(function(success) {
@@ -2322,7 +2351,7 @@
 
 				$rootScope.loading.load();
 				var scope = this;
-				providerCredit.get(this.person.person_id).then(function(success) {
+				providerCredit.get(this.person.person_id, { orderId: self.budget.order_id }).then(function(success) {
 					scope.creditArray = success.data.map(function(c) {
 						var newC = new PersonCredit(c);
 						newC.checked = self.budget.creditPayment && !!self.budget.creditPayment.credit.find(function(pc) { return pc.payable_id == newC.payable_id; });
@@ -2676,7 +2705,7 @@
 				controller.$inject = [ '$scope' ];
 
 			_isToolbarLocked = true;
-			$rootScope.customDialog().showTemplate('Finalizar orçamento', './partials/modalOrderSeller.html', controller, options)
+			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalOrderSeller.html', controller, options)
 				.then(function(success) {
 					_isToolbarLocked = false;
 					callback && callback();
@@ -2684,6 +2713,41 @@
 					_isToolbarLocked = false;
 					callback && callback();
 				});
+		}
+
+		/*
+		 * Exibe o modal de desbloqueio de edicao.
+		 */
+		function showLockModal() {
+			if (self.budget.order_filled == 'N') {
+				$scope.isDisabled = false;
+				return;
+			}
+
+			var options = {
+				zIndex: 1,
+				escapeToClose: false,
+				clickOutsideToClose: false,
+				hasBackdrop: true
+			};
+
+			function ctrl() {
+				this._showCloseButton = false;
+			}
+
+			$rootScope.customDialog().showTemplate('Aviso', './partials/modalUnlockOrder.html', ctrl, options)
+				.then(function(success) {
+					$rootScope.loading.load();
+					providerOrder.unlock(self.budget.order_id)
+						.then(function(success) {
+							$rootScope.loading.unload();
+							location.reload();
+						}, function(error) {
+							constants.debug && console.log(error);
+							$rootScope.loading.unload();
+							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+						});
+				}, function(error) { }); 
 		}
 	}
 }());

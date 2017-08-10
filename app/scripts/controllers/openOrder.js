@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-09 16:20:56
+* @Last Modified time: 2017-08-10 10:33:41
 */
 
 (function() {
@@ -17,7 +17,8 @@
 		function OpenOrderCtrl($rootScope, $scope, $routeParams, $location, $q, $timeout, $filter, providerOrder, Order, providerPerson, Person, Globals, constants, ElectronWindow) {
 
 			var self = this,
-				Mousetrap = null;
+				Mousetrap = null,
+				dateRange = 31;
 
 			self.seller = null;
 			self.companyId = Globals.get('user').user_company[0].company_id;
@@ -59,6 +60,10 @@
 
 				if ($routeParams.start)
 					self.calendar.start.value = $routeParams.company;
+
+				if (Globals.get('user')['user_seller'].person_id) {
+					self.seller = new Person(Globals.get('user')['user_seller']);
+				}
 
 				
 				self.getOrders();
@@ -128,7 +133,7 @@
 				update: function(){
 					self.calendar.end.value = moment(self.calendar.start.value).toDate();
 					self.calendar.end.minDate = moment(self.calendar.start.value).toDate();
-					self.calendar.end.maxDate = moment(self.calendar.start.value).add(7,'days').toDate();
+					self.calendar.end.maxDate = moment(self.calendar.start.value).add(dateRange,'days').toDate();
 				}
 			};
 
@@ -136,7 +141,7 @@
 				isCalendarOpen: false,
 				value: moment().toDate(),
 				minDate: moment(self.calendar.start.value).toDate(),
-				maxDate: moment(self.calendar.start.value).add(7,'days').toDate()
+				maxDate: moment(self.calendar.start.value).add(dateRange,'days').toDate()
 			};
 
 			self.grid = {

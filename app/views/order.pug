@@ -1,3 +1,4 @@
+
 md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 	div(layout='row' layout-fill)
 		md-toolbar-filler(layout layout-align='center center' ng-class='order.budget.order_code ? "edit" : "new"')
@@ -191,7 +192,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 
 md-content#order(flex layout-padding style='background-color: #a9a9a9')
 
-	.order-container
+	.order-container(disable-all='isDisabled')
 		//- Info
 		section(name='control' ng-if='order.isExported()' ng-cloak)
 			md-card(layout-align='center')
@@ -273,7 +274,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 							label
 								span Tabela de preços
 							md-select(ng-model='order.internal.tempPrice'
-									ng-disabled='!order.internal.tempItem.product.product_code'
+									ng-disabled='!order.internal.tempItem.product.product_code || isDisabled'
 									ng-model-options='{ trackBy: "$value.price_id" }')
 								md-option(ng-value='p' ng-repeat='p in order.internal.tempProduct.product_prices' 
 										ng-click='order.priceTableChanged(p)')
@@ -560,7 +561,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									md-select(ng-model='order.internal.term.tempTerm'
 											data-md-container-class='query-select-container'
 											ng-model-options='{ trackBy: "$value.term_id" }'
-											ng-disabled='!order.budget.order_items.length')
+											ng-disabled='!order.budget.order_items.length || isDisabled')
 										md-select-header.select-header
 											input.md-text(ng-model='order.internal.term.queryTerm' 
 													type='search' placeholder='Buscar prazo'
@@ -690,7 +691,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 			md-card(layout-align='center')
 				md-card-content.offset-top-5
 					.offset-top-5(layout='row')
-						md-button.md-raised.md-primary(flex='25' ng-click='close()' md-colors='{background: "commercialRed"}')
+						md-button.md-raised.md-primary(flex='25' ng-click='close()' md-colors='{background: "commercialRed"}' skip-disable)
 							i.fa.fa-remove &nbsp;
 							| Cancelar
 						

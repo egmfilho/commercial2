@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-07-20 08:24:35
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-03 12:50:57
+* @Last Modified time: 2017-08-10 09:41:01
 */
 
 (function() {
@@ -52,6 +52,10 @@
 							}
 
 							$rootScope.customDialog().showMessage('Contatos', html);
+						};
+
+						this.showAddressNote = function(note) {
+							$rootScope.customDialog().showMessage('Observações', note || 'Nenhuma informação disponível.');
 						};
 
 						$scope.$on('newAddress', function(event, args) {

@@ -1,0 +1,13 @@
+.irineu(layout='row' layout-align='start center' layout-fill)
+	span(flex) Orçamento bloqueado
+
+.body(layout='column' layout-fill)
+
+	p Este orçamento está bloqueado para edição. Para editar, o crédito do cliente será removido do pagamento.
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-raised(ng-click='ctrl._cancel()')
+		| &nbsp; Apenas visualizar &nbsp;
+
+	md-button.md-primary.md-raised(ng-click='ctrl._close()')
+		| &nbsp; Editar &nbsp;

@@ -37,8 +37,14 @@
 										md-button.md-primary(
 												style='margin: 0'
 												ng-click='ctrl.showAddressContact(a.person_address_contact)')
-											| {{a.person_address_contact.length}}
-											| {{a.person_address_contact.length == 1 ? 'Contato' : 'Contatos'}}
+											i.material-icons.text-info(style='font-size: 30px; vertical-align: middle') contact_phone
+											| &nbsp;{{a.person_address_contact.length}}
+											//- | {{a.person_address_contact.length == 1 ? 'Contato' : 'Contatos'}}
+										md-button.md-primary(
+												style='margin: 0'
+												ng-click='ctrl.showAddressNote(a.person_address_note)')
+											i.fa.fa-sticky-note.text-warning(style='font-size: 26px; vertical-align: middle')
+											| &nbsp; Obs.
 									span(flex)
 									div(flex='30' layout='row' layout-align='end end')
 										md-button.md-icon-button.md-raised.md-primary(

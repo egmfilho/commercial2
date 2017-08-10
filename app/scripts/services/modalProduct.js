@@ -129,7 +129,7 @@
 									var item = new OrderItem({ price_id: vm.userPrice.price_id, user_price: vm.userPrice });
 									item.setProduct(new Product(success.data));
 									selection.push(item);
-									showSelection();
+									this.showSelection();
 								}, function(error) {
 									constants.debug && console.log(error);
 									$rootScope.loading.unload();
@@ -159,7 +159,7 @@
 							vm._close(selection);
 						};
 
-						function showSelection() {
+						this.showSelection = function() {
 							var ctrl = function() {
 								this.selection = selection;
 								this._showCloseButton = true;

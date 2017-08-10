@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-07-17 12:10:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-18 17:32:11
+* @Last Modified time: 2017-08-10 12:21:24
 */
 
 (function() {
@@ -39,6 +39,7 @@
 						action: 'getList'
 					}, {
 						person_id: person_id,
+						order_id: options && options.orderId,
 						get_person_credit_pawn: options && options.getPawn
 					}).$promise;
 				}

@@ -54,7 +54,8 @@
 						| {{ctrl.result.length > 0 ? ctrl.result.length : 'Nenhum' }} Produto{{ctrl.result.length > 1 ? 's' : '' }} Localizado{{ctrl.result.length > 1 ? 's' : '' }}
 						
 					.text-center(flex)
-						| {{ctrl.getSelectionLength() > 0 ? ctrl.getSelectionLength() : 'Nenhum'}} {{ctrl.getSelectionLength() > 1 ? 'selecionados' : 'selecionado'}}
+						md-button(ng-click='ctrl.showSelection()')
+							| {{ctrl.getSelectionLength() > 0 ? ctrl.getSelectionLength() : 'Nenhum'}} {{ctrl.getSelectionLength() > 1 ? 'selecionados' : 'selecionado'}}
 
 					.legend.text-right(flex='35')
 						i.fa.fa-stop

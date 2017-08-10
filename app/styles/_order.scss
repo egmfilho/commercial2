@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-03 14:01:42
+* @Last Modified time: 2017-08-10 10:30:21
 */
 
 .customer-credit-modal {
@@ -136,9 +136,7 @@
 			padding: 8px 16px 16px 16px;
 		}
 
-		md-autocomplete md-progress-linear.md-inline {
-			bottom: 6px;
-		}
+		@extend .gatito;
 
 		md-input-container {
 			// line-height: 10px;

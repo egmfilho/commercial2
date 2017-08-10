@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-03 11:42:27
+* @Last Modified time: 2017-08-10 18:00:50
 */
 
 (function() {
@@ -69,6 +69,7 @@
 			this.order_payments              = new Array();
 			this.creditPayment               = null;
 			this.order_audit                 = new OrderAudit();
+			this.order_filled                = 'N';
 			this.queryable                   = '';
 
 			if (order) {
@@ -274,7 +275,7 @@
 			});
 
 			this.order_vl_discount = this.order_value - this.order_value_total;
-			this.order_al_discount = (this.order_vl_discount * 100) / this.order_value;
+			this.order_al_discount = this.order_value == 0 ? 0 : (this.order_vl_discount * 100) / this.order_value;
 		}
 
 		/**

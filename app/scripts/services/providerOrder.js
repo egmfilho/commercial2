@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-22 13:23:08
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-03 11:26:05
+* @Last Modified time: 2017-08-10 17:29:55
 */
 
 (function() {
@@ -29,13 +29,14 @@
 					getAll: getAll,
 					save: save,
 					edit: edit,
+					unlock: unlock,
 					remove: remove,
 					exportDAV: exportDAV,
 					saveAndExportDAV: saveAndExportDAV,
 					editAndExportDAV: editAndExportDAV,
 					exportOrder: exportOrder,
 					saveAndExportOrder: saveAndExportOrder,
-					editAndExportOrder: editAndExportOrder
+					editAndExportOrder: editAndExportOrder,
 				}
 
 				// ******************************
@@ -133,6 +134,14 @@
 					return provider.save({
 						action: 'edit'
 					}, order).$promise;
+				}
+
+				function unlock(id) {
+					return provider.save({
+						action: 'unlock'
+					}, {
+						order_id: id
+					}).$promise;
 				}
 
 				function remove(id) {

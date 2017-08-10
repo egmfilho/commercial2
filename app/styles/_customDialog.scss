@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 13:43:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-04 15:37:36
+* @Last Modified time: 2017-08-10 09:04:16
 */
 
 .custom-dialog {
@@ -66,6 +66,10 @@
 
 	.footer {
 		padding: 5px;
+
+		&.bordered {
+			border-top: 1px solid $border-color;
+		}
 	}
 
 	&.custom-dialog-inner {

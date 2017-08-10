@@ -76,9 +76,9 @@
 			label Número do cheque
 			input.text-right(ng-model='ctrl.payment.order_payment_check_number' ng-disabled='!ctrl.isCheck()')
 	
-.footer(layout='row' layout-align='end center')
-	md-button.md-primary(name='positive' ng-click='ctrl._close(ctrl.payment)' ng-disabled='!ctrl.payment.modality_id')
+.footer.bordered(layout='row' layout-align='end center')
+	md-button.md-primary.md-raised(name='positive' ng-click='ctrl._close(ctrl.payment)' ng-disabled='!ctrl.payment.modality_id')
 		| &nbsp; Confirmar &nbsp;
 
-	md-button.md-primary(name='positive' ng-click='ctrl._cancel()')
+	md-button.md-raised(name='positive' ng-click='ctrl._cancel()')
 		| &nbsp; Fechar &nbsp;

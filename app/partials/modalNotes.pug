@@ -10,6 +10,6 @@
 		label Observações da Nota
 		textarea(ng-model='ctrl.order_note_doc' rows='3')
 
-.footer(layout='row' layout-align='end center' style='border-top: 1px solid $border-color')
-	md-button.md-primary.md-raised(ng-click='ctrl._close({ order_note: ctrl.order_note, order_note_doc: ctrl.order_note_doc })')
+.footer.bordered(layout='row' layout-align='end center')
+	md-button.md-raised(ng-click='ctrl._close({ order_note: ctrl.order_note, order_note_doc: ctrl.order_note_doc })')
 		| &nbsp; Ok &nbsp;

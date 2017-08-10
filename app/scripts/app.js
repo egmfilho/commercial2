@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-07 11:22:04
+* @Last Modified time: 2017-08-10 13:59:26
 */
 
 'use strict';
@@ -94,7 +94,8 @@ angular.module('commercial2', [
 		'commercial2.filters',
 		'commercial2.services',
 		'commercial2.directives',
-		'commercial2.controllers'
+		'commercial2.controllers',
+		'disableAll'
 	])
 	.config(['$httpProvider', '$locationProvider', function($httpProvider, $locationProvider) {
 		$httpProvider.interceptors.push('Interceptor');

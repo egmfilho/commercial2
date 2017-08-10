@@ -46,7 +46,7 @@
 		div(layout='column')
 			md-button.md-raised(ng-click='ctrl.clear()')
 				| Limpar
-			md-button.md-raised(ng-click='ctrl.search()')
+			md-button.md-raised.md-primary(ng-click='ctrl.search()')
 				| Buscar
 
 
@@ -54,22 +54,36 @@
 		table.cep-table
 			thead
 				tr
-					th CEP
-					th UF
-					th CIDADE
-					th BAIRRO
-					th LOGRADOURO
+					th.sortable(ng-click='ctrl.sort(\'cep_code\')') 
+						| CEP
+						i.fa(ng-show='ctrl.isOrderedBy(\'cep_code\')' ng-class="!ctrl.orderBy.inverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+					
+					th.sortable(ng-click='ctrl.sort(\'uf_id\')') 
+						| UF
+						i.fa(ng-show='ctrl.isOrderedBy(\'uf_id\')' ng-class="!ctrl.orderBy.inverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+					
+					th.sortable(ng-click='ctrl.sort(\'city_name\')') 
+						| CIDADE
+						i.fa(ng-show='ctrl.isOrderedBy(\'city_name\')' ng-class="!ctrl.orderBy.inverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+					
+					th.sortable(ng-click='ctrl.sort(\'district_name\')') 
+						| BAIRRO
+						i.fa(ng-show='ctrl.isOrderedBy(\'district_name\')' ng-class="!ctrl.orderBy.inverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+					
+					th.sortable(ng-click='ctrl.sort(\'public_place\')') 
+						| LOGRADOURO
+						i.fa(ng-show='ctrl.isOrderedBy(\'public_place\')' ng-class="!ctrl.orderBy.inverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 
 	.container-table
 		table.cep-table
 			tbody
-				tr(ng-repeat='c in ctrl.result' ng-click='ctrl.select(c)' ng-dblclick='ctrl._close(c)')
+				tr(ng-repeat='c in ctrl.result | orderBy:ctrl.orderBy.property:ctrl.orderBy.inverse' ng-click='ctrl.select(c)' ng-dblclick='ctrl._close(c)')
 					td {{c.cep_code}}
 					td {{c.uf_id}}
 					td {{c.city.city_name}}
 					td {{c.district.district_name}}
 					td {{c.public_place}}
 
-.footer(layout='row' layout-align='end center')
-	md-button.md-primary.md-raised(ng-click='ctrl._close(ctrl.selected)')
+.footer.bordered(layout='row' layout-align='end center')
+	md-button.md-raised(ng-click='ctrl._close(ctrl.selected)')
 		| &nbsp; Ok &nbsp;

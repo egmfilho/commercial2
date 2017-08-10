@@ -41,9 +41,9 @@ form(name='newCostumerForm')
 			div(ng-messages='newCostumerForm.cnpj.$error')
 				div(ng-message='pattern') CNPJ inválido!
 
-	.footer(layout='row' layout-align='end center')
-		md-button.md-primary(ng-click='ctrl._close(ctrl.newCustomer)')
+	.footer.bordered(layout='row' layout-align='end center')
+		md-button.md-primary.md-raised(ng-click='ctrl._close(ctrl.newCustomer)')
 			| &nbsp; Cadastrar &nbsp;
 
-		md-button.md-primary(ng-click='ctrl._cancel()')
+		md-button.md-raised(ng-click='ctrl._cancel()')
 			| &nbsp; Fechar &nbsp;

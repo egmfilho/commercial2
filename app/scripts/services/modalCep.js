@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-08-09 08:39:25
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-09 12:27:22
+* @Last Modified time: 2017-08-10 08:56:26
 */
 
 (function() {
@@ -71,6 +71,20 @@
 
 					this.clear = function() {
 						scope.filters = new Cep();
+					};
+
+					this.orderBy = {
+						property: 'public_place',
+						inverse: false
+					};
+
+					this.isOrderedBy = function(propertyName) {
+						return scope.orderBy.property === propertyName;
+					};
+
+					this.sort = function(propertyName) {
+						scope.orderBy.inverse = (scope.orderBy.property === propertyName) ? !scope.orderBy.inverse : false;
+						scope.orderBy.property = propertyName;
 					};
 
 					(function(vm) {
