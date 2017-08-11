@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-11 08:34:26
+* @Last Modified time: 2017-08-11 10:35:19
 */
 
 (function() {
@@ -472,15 +472,6 @@
 			$location.search('code', null);
 			$location.search('company', null);
 		});
-
-		function lockOrder() {
-			_isToolbarLocked = true;
-			$timeout(function() {
-				jQuery('* input, * button')
-					.removeAttr('ng-click')
-					.prop('disabled', true);
-			}, 1000);
-		}
 
 		$scope.isLocked = function(target) {
 			console.log(target);
@@ -1154,6 +1145,12 @@
 					return;
 				}
 
+				if (!success.data.product_prices || !success.data.product_prices.length) {
+					$rootScope.customDialog().showMessage('Aviso', 'Produto sem preço!');
+					$rootScope.loading.unload();
+					return;
+				}
+
 				self.internal.tempProduct = new Product(success.data);
 				self.internal.tempItem.setProduct(new Product(success.data));
 				self.internal.tempPrice = new Price(self.internal.tempItem.price);
@@ -1421,7 +1418,10 @@
 		 * @returns {object} - Uma promise com o resultado.
 		 */
 		function authorizeDiscount(value) {
-			var msg = 'Desconto acima do permitido: ' + value.toFixed(2) + '%';
+			var msg = {
+				msg: 'Desconto acima do permitido: ' + value.toFixed(2) + '%',
+				icon: 'fa-2x fa-exclamation-triangle text-warning'
+			};
 
 			return self.authorizationDialog(msg, 'order', 'user_discount');
 		}
@@ -1734,6 +1734,7 @@
 							/* Edita e exporta. */
 							providerOrder.editAndExportOrder(filterBudget()).then(function(success) {
 								self.budget.order_erp = success.data.budget_code;
+								self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 								$rootScope.loading.unload();
 								
 								_backup = new Order(self.budget);
@@ -1755,6 +1756,7 @@
 							self.budget.order_code = success.data.order_code;
 							self.budget.order_date = moment().toDate();
 							self.budget.order_erp = success.data.budget_code;
+							self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 							$rootScope.loading.unload();
 
 							_backup = new Order(self.budget);
