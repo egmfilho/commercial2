@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-11 13:42:09
+* @Last Modified time: 2017-08-11 15:58:18
 */
 
 (function() {
@@ -243,6 +243,17 @@
 			// Mousetrap.unbind(['command+4', 'ctrl+4']);
 		}
 
+		function beforeUnload(e) {
+			if (_remote.getGlobal('isValidSession').value) {
+				if (_preventClosing && self.canSave()) {
+					e.returnValue = false;
+					_remote.getCurrentWindow().focus();
+				}
+			}
+
+			$scope.close();
+		}
+
 		/* Cria os atalhos do teclado */
 		if (constants.isElectron) {
 			var electron = require('electron');
@@ -250,16 +261,7 @@
 			_remote = electron.remote;
 			_ipcRenderer = electron.ipcRenderer;
 
-			window.addEventListener('beforeunload', function(e) {
-				if (_remote.getGlobal('isValidSession').value) {
-					if (_preventClosing && self.canSave()) {
-						e.returnValue = false;
-						_remote.getCurrentWindow().focus();
-					}
-				}
-
-				$scope.close();
-			});
+			window.onbeforeunload = beforeUnload;
 			bindKeys();
 		}
 
@@ -512,6 +514,7 @@
 
 					/* Configura a barra de titulo interna do Commercial */
 					// $rootScope.titleBarText = 'Editar orçamento - Código: ' + self.budget.order_code + ' (' + $filter('date')(self.budget.order_date, 'short') + ')';
+					_remote.getCurrentWindow().setTitle('Editar orçamento - Código: ' + self.budget.order_code + ' (' + $filter('date')(self.budget.order_date, 'short') + ')');
 					
 					/* copia os valores para as variaveis temporarias dos autocompletes */
 					self.internal.tempSeller = new Person(self.budget.order_seller);					
@@ -550,7 +553,9 @@
 					$rootScope.loading.unload();
 				});
 			} else if (!!$routeParams.action && $routeParams.action == 'new') {
+				_remote.getCurrentWindow().setTitle('Novo orçamento');
 				$rootScope.titleBarText = 'Novo orçamento';
+
 				$scope.isDisabled = false;
 
 				if ($routeParams.company) {
@@ -621,6 +626,7 @@
 			}
 
 			if (!self.canSave() || !!skip) {
+				_preventClosing = false;
 				closeWindow();
 			} else {
 				$rootScope.customDialog().showConfirm('Aviso', 'Todas as alterações não salvas serão perdidas. Deseja continuar?')

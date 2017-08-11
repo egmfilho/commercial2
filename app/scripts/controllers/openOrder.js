@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-10 10:33:41
+* @Last Modified time: 2017-08-11 16:23:01
 */
 
 (function() {
@@ -52,6 +52,11 @@
 
 			$scope.globals = Globals.get;
 
+			$scope.info = {
+				count: 0,
+				sum: 0
+			};
+
 			$scope.$on('$viewContentLoaded', function() {
 				$rootScope.titleBarText = 'Abrir Orçamento';
 
@@ -78,7 +83,7 @@
 
 			$scope.newOrder = function(companyId) {
 				var options = {
-					title: 'Novo orçamento'
+					// title: 'Novo orçamento'
 				};
 
 				if (constants.isElectron)
@@ -90,7 +95,7 @@
 			$scope.open = function(order) {
 
 				var options = {
-					title: 'Cód: ' + order.order_code + ' (' + $filter('date')(order.order_date, 'short') + ')'
+					// title: 'Cód: ' + order.order_code + ' (' + $filter('date')(order.order_date, 'short') + ')'
 				};
 
 				if (constants.isElectron)
@@ -169,6 +174,9 @@
 
 				$rootScope.loading.load();
 				providerOrder.getAll(options).then(function(success) {
+					$scope.info.count = success.info.quantity;
+					$scope.info.sum = success.info.value_total;
+
 					self.orders = success.data.map(function(order) {
 						return new Order(order);
 					});

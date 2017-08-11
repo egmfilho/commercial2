@@ -149,12 +149,12 @@
 
 	md-toolbar.info(layout='column')
 		.md-toolbar-tools(flex layout='row' layout-fill)
-			.filters(flex='80' layout='row')
+			.filters(flex='30' layout='row' layout-align='start')
 				.status-filter(ng-click='openOrder.filters.setStatus("open", globals("order-status-values")["open"], 1)')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-export-type-colors")["open"] }') cloud_queue
-					span.md-subhead 
+					md-tooltip(md-direction='top') 
 						| Salvo
 		
 				span(flex)
@@ -163,7 +163,7 @@
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-export-type-colors")["order"] }') cloud
-					span.md-subhead 
+					md-tooltip(md-direction='top') 
 						| Export. Pedido
 
 				span(flex)
@@ -172,7 +172,7 @@
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-export-type-colors")["order"] }') cloud_done
-					span.md-subhead 
+					md-tooltip(md-direction='top') 
 						| Fat. Pedido
 
 				span(flex)
@@ -181,7 +181,7 @@
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-export-type-colors")["dav"] }') cloud
-					span.md-subhead 
+					md-tooltip(md-direction='top') 
 						| Export. Dav
 
 				span(flex)
@@ -190,10 +190,13 @@
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-export-type-colors")["dav"] }') cloud_done
-					span.md-subhead 
+					md-tooltip(md-direction='top') 
 						| Fat. Dav
-			
-			div(flex layout='row' layout-align='end center')
+
+			div(flex layout='row' layout-align='center center')
+				span.md-subhead Orçamentos: {{info.count}} &nbsp; Valor total: {{ info.sum | currency:'R$ '}}
+
+			div(flex='30' layout='row' layout-align='end center')
 				md-button.md-icon-button.search-button(ng-click='setSearchOpen(true)')
 					md-tooltip(md-direction='left') 
 						| Pesquisar ({{ 'M-F' | keyboardShortcut }})

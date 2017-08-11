@@ -34,7 +34,7 @@
 				| {{ctrl.tempNote}}
 
 	.footer(layout='row' layout-align='end center')
-		md-button.md-raised(name='positive' ng-click='ctrl.close()' md-colors='{ background: "commercialGreen" }')
+		md-button.md-raised.md-primary(name='positive' ng-click='ctrl.close()')
 			| &nbsp; Ok &nbsp;
-		md-button.md-raised.md-primary(name='negative' ng-click='ctrl._cancel()')
+		md-button.md-raised(name='negative' ng-click='ctrl._cancel()')
 			| &nbsp; Cancelar &nbsp;
