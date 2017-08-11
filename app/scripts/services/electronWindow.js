@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 08:16:50
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-11 09:38:24
+* @Last Modified time: 2017-08-11 13:32:45
 */
 
 (function() {
@@ -31,8 +31,8 @@
 		// Running on Electron
 		// ******************************
 		var _electron = require('electron'),
-			_BrowserWindow = _electron.remote.BrowserWindow,
-			_remote = _electron.remote;
+			_remote = _electron.remote,
+			_BrowserWindow = _remote.BrowserWindow
 
 		return {
 			createWindow: createWindow
@@ -60,7 +60,6 @@
 					title: constants['app-name'],
 					parent: parent,
 					modal: false,
-					contextIsolation: false,
 					webPreferences: {
 						zoomFactor: constants.zoomFactor
 					}

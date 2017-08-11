@@ -97,6 +97,18 @@
 								$rootScope.loading.load();
 								getByCode(p.product_code).then(function(success) {
 									$rootScope.loading.unload();
+									if (success.data.product_active == 'N') {
+										$rootScope.customDialog().showMessage('Aviso', 'Produto inativo!');
+										$rootScope.loading.unload();
+										return;
+									}
+
+									if (!success.data.product_prices || !success.data.product_prices.length) {
+										$rootScope.customDialog().showMessage('Aviso', 'Produto sem preço!');
+										$rootScope.loading.unload();
+										return;
+									}
+									
 									var item = new OrderItem({ price_id: vm.userPrice.price_id, user_price: vm.userPrice });
 									item.setProduct(new Product(success.data));
 									vm._close([ item ]);

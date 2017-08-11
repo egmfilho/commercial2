@@ -695,15 +695,15 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 							i.fa.fa-remove &nbsp;
 							| Cancelar
 						
-						md-button.md-raised.md-primary(flex='25' ng-click='order.exportOrder()' ng-disabled='!order.canExport()' md-colors='{background: "commercialOrange"}')
+						md-button.md-raised.md-primary(flex='25' ng-click='order.exportOrder()' ng-disabled='!order.canExport()' md-colors='{background: "commercialOrange"}' skip-disable)
 							i.fa.fa-cloud-upload &nbsp;	
 							| Exportar Pedido
 						
-						md-button.md-raised.md-primary(flex='25' ng-click='order.exportDAV()' ng-disabled='!order.canExport()' md-colors='{background: "commercialBlue"}')
+						md-button.md-raised.md-primary(flex='25' ng-click='order.exportDAV()' ng-disabled='!order.canExport()' md-colors='{background: "commercialBlue"}' skip-disable)
 							i.fa.fa-upload &nbsp;
 							| Exportar DAV
 						
-						md-button.md-raised.md-primary(name='save' flex='25' ng-click='save()' ng-disabled='!order.canSave()' md-colors='{background: "commercialGreen"}')
+						md-button.md-raised.md-primary(name='save' flex='25' ng-click='save()' ng-disabled='!order.canSave()' md-colors='{background: "commercialGreen"}' skip-disable)
 							i.fa.fa-floppy-o &nbsp;
 							| Salvar
 

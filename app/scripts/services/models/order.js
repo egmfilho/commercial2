@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-10 18:00:50
+* @Last Modified time: 2017-08-11 12:07:29
 */
 
 (function() {
@@ -70,6 +70,7 @@
 			this.creditPayment               = null;
 			this.order_audit                 = new OrderAudit();
 			this.order_filled                = 'N';
+			this.order_credit                = null;
 			this.queryable                   = '';
 
 			if (order) {

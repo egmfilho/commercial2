@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-11 10:35:19
+* @Last Modified time: 2017-08-11 13:42:09
 */
 
 (function() {
@@ -673,21 +673,23 @@
 								switch (res) {
 									case 'print': {
 										self.print();
+										$scope.close(true);
 										break;
 									}
 									
 									case 'mail': {
 										self.mail();
+										$scope.close(true);
 										break;
 									}
 									
 									case 'order': {
-										exportOrder(self.budget.order_id);
+										exportOrder(true);
 										break;
 									}
 									
 									case 'dav': {
-										exportDAV(self.budget.order_id);
+										exportDAV(true);
 										break;
 									}
 								}
@@ -801,7 +803,8 @@
 		 * Verifica se o orcamento pode ser exportado.
 		 */
 		function canExport() {
-			return self.budget.order_status_id == Globals.get('order-status-values').open;
+			var isEqualsBackup = _backup && self.budget ? self.budget.equals(_backup) : false;
+			return !isEqualsBackup && self.budget.order_company_id &&self.budget.order_status_id == Globals.get('order-status-values').open;
 		}
 
 		/**
@@ -1072,9 +1075,7 @@
 		 * @returns {object} - Uma promise com o resultado.
 		 */
 		function getSellerByName(name) {
-			var deferred = $q.defer();
-			return deferred.promise;
-			// return getPersonByName(name, Globals.get('person-categories').seller);
+			return getPersonByName(name, Globals.get('person-categories').seller);
 		}
 
 		/**
@@ -1547,7 +1548,7 @@
 			if (!self.canPrint()) return;
 
 			var options = {
-				parent: null,
+				parent: _remote.getGlobal('mainWindow').instance,
 				webPreferences: {
 					zoomFactor: 1
 				}
@@ -1565,17 +1566,19 @@
 		function print() {
 			if (!self.canPrint()) return;
 
-			var options = {
-				parent: null,
-				webPreferences: {
-					zoomFactor: 1
-				}
-			};
+			if (constants.isElectron) {
+				var options = {
+					parent: _remote.getGlobal('mainWindow').instance,
+					webPreferences: {
+						zoomFactor: 1
+					}
+				};
 
-			if (constants.isElectron)
 				ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=print', options);
-			else
-				$location.path('/order/print/' + self.budget.order_code)
+			}
+			else {
+				$location.path('/order/print/' + self.budget.order_code);
+			}
 		}
 
 		/**
@@ -1588,7 +1591,7 @@
 				width: 920, 
 				height: 650,
 				resizeable: false,
-				parent: null,
+				parent: _remote.getGlobal('mainWindow').instance,
 				webPreferences: {
 					zoomFactor: 1
 				}
@@ -1675,11 +1678,13 @@
 					switch (res) {
 						case 'print': {
 							self.print();
+							$scope.close(true);
 							break;
 						}
 						
 						case 'mail': {
 							self.mail();
+							$scope.close(true);
 							break;
 						}
 					}
@@ -1691,8 +1696,11 @@
 		/**
 		 * Encapsula a funcao de exportar dentro do modal de vendedor.
 		 */
-		function exportOrder() {
-			self.showModalOrderSeller(_exportOrder);
+		function exportOrder(skip) {
+			if (skip) 
+				_exportOrder();
+			else
+				self.showModalOrderSeller(_exportOrder);
 		}
 
 		/**
@@ -1717,6 +1725,7 @@
 							/* Apenas exporta. */
 							providerOrder.exportOrder(self.budget.order_id).then(function(success) {
 								self.budget.order_erp = success.data.budget_code;
+								self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 								$rootScope.loading.unload();
 								
 								_backup = new Order(self.budget);
@@ -1783,8 +1792,11 @@
 		/**
 		 * Encapsula a funcao de exportar dentro do modal de vendedor.
 		 */
-		function exportDAV() {
-			self.showModalOrderSeller(_exportDAV);
+		function exportDAV(skip) {
+			if (skip)
+				_exportDAV();
+			else
+				self.showModalOrderSeller(_exportDAV);
 		}
 
 		/**
@@ -1809,6 +1821,7 @@
 							/* Apenas exporta. */
 							providerOrder.exportDAV(self.budget.order_id).then(function(success) {
 								self.budget.order_erp = success.data.budget_code;
+								self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 								$rootScope.loading.unload();
 								
 								_backup = new Order(self.budget);
@@ -1826,6 +1839,7 @@
 							/* Edita e exporta. */
 							providerOrder.editAndExportDAV(filterBudget()).then(function(success) {
 								self.budget.order_erp = success.data.budget_code;
+								self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 								$rootScope.loading.unload();
 								
 								_backup = new Order(self.budget);
@@ -1848,6 +1862,7 @@
 							self.budget.order_code = success.data.order_code;
 							self.budget.order_date = moment().toDate();
 							self.budget.order_erp = success.data.budget_code;
+							self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 							
 							_backup = new Order(self.budget);
 
@@ -2431,7 +2446,7 @@
 							/* Checa se creditos foram retornados do modal.*/
 							if (res.length) {
 								var payment = new OrderPayment(),
-									modality = new PaymentModality(success.data); console.log(modality);
+									modality = new PaymentModality(success.data);
 
 								payment.setModality(modality);
 								payment.order_payment_deadline = moment().add(modality.modality_item[0].modality_item_installment, 'days').toDate();
@@ -2668,11 +2683,14 @@
 				controller = function(scope) {
 					var vm = this;
 
+					this._showCloseButton = true;
+
 					this.load = function() {
 						this.budget = self.budget;
 						this.tempSeller = self.internal.tempSeller;
 						this.getSellerByCode = self.getSellerByCode;
 						this.getSellerByName = self.getSellerByName;
+
 
 						scope.$watch(function() {
 							return self.internal.tempSeller;
@@ -2721,7 +2739,7 @@
 		 * Exibe o modal de desbloqueio de edicao.
 		 */
 		function showLockModal() {
-			if (self.budget.order_filled == 'N') {
+			if (self.budget.order_credit == 'N') {
 				$scope.isDisabled = false;
 				return;
 			}
@@ -2743,7 +2761,7 @@
 					providerOrder.unlock(self.budget.order_id)
 						.then(function(success) {
 							$rootScope.loading.unload();
-							location.reload();
+							window.location.href = window.location.href + '&reloaded=true';
 						}, function(error) {
 							constants.debug && console.log(error);
 							$rootScope.loading.unload();
