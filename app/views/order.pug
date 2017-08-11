@@ -192,7 +192,8 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 
 md-content#order(flex layout-padding style='background-color: #a9a9a9')
 
-	.order-container(disable-all='isDisabled')
+	//- .order-container(disable-all='isDisabled')
+	.order-container
 		//- Info
 		section(name='control' ng-if='order.isExported()' ng-cloak)
 			md-card(layout-align='center')

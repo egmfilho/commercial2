@@ -195,7 +195,7 @@
 						}
 					}).then(function(success) {
 						$rootScope.loading.unload();
-						$rootScope.customDialog().showMessage('Sucesso', 'O email foi enviado!')
+						$rootScope.customDialog().showMessage('Sucesso', 'O email será enviado.')
 							.then(function(success){ }, function(error) {
 								closeWindow();
 							});

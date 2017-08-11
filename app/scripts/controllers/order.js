@@ -652,7 +652,7 @@
 				return;
 			}
 
-			if (self.budget.creditPayment) {
+			if (self.budget.creditPayment && self.budget.order_status_id == 1001 ) {
 				$rootScope.customDialog().showMessage('Aviso', 'Este orçamento está utilizando uma Carta de Crédito como forma de pagamento e por isso não é mais possível salvá-lo, você ainda pode exportá-lo.');
 				return;		
 			}
