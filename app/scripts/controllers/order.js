@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-10 18:23:16
+* @Last Modified time: 2017-08-11 08:34:26
 */
 
 (function() {
@@ -578,10 +578,10 @@
 					self.budget.setCompany(new UserCompany(company).company_erp);
 				}
 
-				if( Globals.get('user')['user_seller'].person_id ) {
-					self.budget.setSeller(new Person(Globals.get('user')['user_seller']));
-					self.internal.tempSeller = new Person(Globals.get('user')['user_seller']);
-				}
+				// if( Globals.get('user')['user_seller'].person_id ) {
+				// 	self.budget.setSeller(new Person(Globals.get('user')['user_seller']));
+				// 	self.internal.tempSeller = new Person(Globals.get('user')['user_seller']);
+				// }
 
 				/* Cria uma copia de backup para saber se o orcamento foi modificado no final */
 				_backup = new Order(self.budget);

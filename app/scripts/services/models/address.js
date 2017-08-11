@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 09:39:24
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-09 12:20:18
+* @Last Modified time: 2017-08-11 08:49:05
 */
 
 (function() {
@@ -51,6 +51,8 @@
 				this.district_id       = null;
 				this.public_place      = null;
 				this.public_place_type = null;
+				this.district          = new District();
+				this.city              = new City();
 
 				if (cep) {
 					Object.assign(this, cep, {
@@ -59,6 +61,21 @@
 					});
 				}
 			}
+
+			Cep.prototype = {
+				toAddress: function() {
+					return {
+						person_address_cep: this.cep_code,
+						uf_id: this.uf_id,
+						city_id: this.city_id,
+						district_id: this.district_id,
+						person_address_public_place: this.public_place,
+						person_address_type: this.public_place_type,
+						city: this.city,
+						district: this.district
+					}
+				}
+			};
 
 			return Cep;
 
@@ -99,8 +116,9 @@
 			Address.prototype = {
 				toString: toString,
 				setDistrict: setDistrict,
-				setCity: setCity
-			}
+				setCity: setCity,
+				merge: merge
+			};
 
 			return Address;
 
@@ -134,6 +152,13 @@
 					this.city = new City(city);
 
 				this.city_id = this.city.city_id;
+			}
+
+			function merge(address) {
+				Object.assign(this, address, { 
+					city: new City(address.city), 
+					district: new District(address.district),
+				});
 			}
 
 		}]);

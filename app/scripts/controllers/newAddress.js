@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-09 12:54:42
+* @Last Modified time: 2017-08-11 08:52:46
 */
 
 (function() {
@@ -85,22 +85,9 @@
 		});
 
 		function setCepFromSource(source) {
-			self.newAddress.person_address_cep = source.cep_code;
-			self.newAddress.person_address_type = source.public_place_type;
-			self.newAddress.person_address_public_place = source.public_place;
-			self.queryDistrict = source.district_name;
-			self.newAddress.district_id = source.district_id;
-			self.newAddress.district = new District({
-				district_id: source.district_id, 
-				district_name: source.district_name
-			});
-			self.queryCity = source.city_name;
-			self.newAddress.city_id = source.city_id;
-			self.newAddress.city = new City({ 
-				city_id: source.city_id, 
-				city_name: source.city_name
-			});
-			self.newAddress.uf_id = source.uf_id;
+			self.newAddress.merge(source);
+			self.queryDistrict = source.district.district_name;
+			self.queryCity = source.city.city_name;
 		}
 
 		// ******************************
@@ -112,7 +99,7 @@
 
 			$rootScope.loading.load();
 			providerCep.getByCode(cep).then(function(success) {
-				setCepFromSource(success.data);
+				setCepFromSource(new Cep(success.data).toAddress());
 				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-08-09 08:39:25
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-10 08:56:26
+* @Last Modified time: 2017-08-11 09:19:55
 */
 
 (function() {
@@ -54,7 +54,19 @@
 						$rootScope.loading.load();
 						scope.result = new Array();
 						this.selected = null;
-						providerCep.get(scope.filters, { limit: 200 }).then(function(success) {
+						var options = {
+								getUF: true,
+								getCity: true,
+								getDistrict: true,
+								limit: 200
+							}, filters = {
+								cep_code: scope.filters.cep_code,
+								public_place: scope.filters.public_place,
+								district_id: scope.filters.district.district_id,
+								city_id: scope.filters.city.city_id,
+								uf_id: scope.filters.uf_id
+							};
+						providerCep.get(filters, options).then(function(success) {
 							scope.result = success.data.map(function(c) {
 								return new Cep(c);
 							});
@@ -62,6 +74,7 @@
 						}, function(error) {
 							constants.debug && console.log(error);
 							$rootScope.loading.unload();
+							$rootScope.customDialog.showMessage('Erro', error.data.status.description);
 						});
 					};
 

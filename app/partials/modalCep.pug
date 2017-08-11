@@ -12,7 +12,7 @@
 
 			md-input-container(flex)
 				label Bairro
-				md-select(ng-model='ctrl.filters.district_id'
+				md-select(ng-model='ctrl.filters.district'
 						data-md-container-class='query-select-container'
 						ng-model-options='{ trackBy: "$value.district_id" }')
 					md-select-header.select-header
@@ -26,7 +26,7 @@
 
 			md-input-container(flex)
 				label Cidade
-				md-select(ng-model='ctrl.filters.city_id'
+				md-select(ng-model='ctrl.filters.city'
 						data-md-container-class='query-select-container'
 						ng-model-options='{ trackBy: "$value.city_id" }')
 					md-select-header.select-header
@@ -77,7 +77,7 @@
 	.container-table
 		table.cep-table
 			tbody
-				tr(ng-repeat='c in ctrl.result | orderBy:ctrl.orderBy.property:ctrl.orderBy.inverse' ng-click='ctrl.select(c)' ng-dblclick='ctrl._close(c)')
+				tr(ng-repeat='c in ctrl.result | orderBy:ctrl.orderBy.property:ctrl.orderBy.inverse' ng-click='ctrl.select(c)' ng-dblclick='ctrl._close(c.toAddress())')
 					td {{c.cep_code}}
 					td {{c.uf_id}}
 					td {{c.city.city_name}}
@@ -85,5 +85,5 @@
 					td {{c.public_place}}
 
 .footer.bordered(layout='row' layout-align='end center')
-	md-button.md-raised(ng-click='ctrl._close(ctrl.selected)')
+	md-button.md-raised(ng-click='ctrl._close(ctrl.selected.toAddress())')
 		| &nbsp; Ok &nbsp;
