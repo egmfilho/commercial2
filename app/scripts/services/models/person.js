@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 10:32:39
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-14 17:02:48
+* @Last Modified time: 2017-08-14 17:15:24
 */
 
 (function() {
@@ -32,7 +32,6 @@
 						person_credit_limit: person.person_credit_limit ? new PersonCreditLimit(person.person_credit_limit) : new PersonCreditLimit(),
 						queryable: person.person_code + ' - ' + person.person_name + ' ' + person.person_shortname
 					});
-					console.log(this);
 				}
 			}
 
