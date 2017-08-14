@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-14 11:17:55
+* @Last Modified time: 2017-08-14 16:04:45
 */
 
 (function() {
@@ -690,12 +690,20 @@
 									}
 									
 									case 'order': {
-										exportOrder(true);
+										exportOrder(true).then(function(success) {
+											$scope.close(true);
+										}, function(error) {
+											$scope.close(true);
+										});
 										break;
 									}
 									
 									case 'dav': {
-										exportDAV(true);
+										exportDAV(true).then(function(success) {
+											$scope.close(true);
+										}, function(error) {
+											$scope.close(true);
+										});;
 										break;
 									}
 								}
@@ -809,15 +817,14 @@
 		 * Verifica se o orcamento pode ser exportado.
 		 */
 		function canExport() {
-			var isEqualsBackup = _backup && self.budget ? self.budget.equals(_backup) : false;
-			return !isEqualsBackup && self.budget.order_company_id &&self.budget.order_status_id == Globals.get('order-status-values').open;
+			return self.budget.order_company_id && self.budget.order_status_id == Globals.get('order-status-values').open;
 		}
 
 		/**
 		 * Verifica se o orcamento pode ser impresso.
 		 */
 		function canPrint() {
-			return self.budget.order_code && (_backup &&self.budget.equals(_backup));
+			return self.budget.order_code && (_backup && self.budget.equals(_backup));
 		}
 
 		/**
@@ -1100,9 +1107,16 @@
 			
 			$rootScope.loading.load();
 			getPersonByCode(code, Globals.get('person-categories').customer, options).then(function(success) {
-				setCustomer(success.data);
-				if (self.budget.order_client.person_address.length)
-					self.budget.setDeliveryAddress(self.budget.order_client.person_address[0])
+				var customer = new Person(success.data);
+				
+				if (customer.isActive) {
+					$rootScope.customDialog().showMessage('Erro', 'Cliente inativo!');
+					self.internal.tempCustomer = null;
+				} else {
+					setCustomer(customer);
+					if (self.budget.order_client.person_address.length)
+						self.budget.setDeliveryAddress(self.budget.order_client.person_address[0])
+				}
 				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);
@@ -1704,7 +1718,7 @@
 		 */
 		function exportOrder(skip) {
 			if (skip) 
-				_exportOrder();
+				return _exportOrder();
 			else
 				self.showModalOrderSeller(_exportOrder);
 		}
@@ -1790,6 +1804,7 @@
 					self.budget.removeAudit();
 				}, function(error) {
 					self.budget.removeAudit();
+					deferred.reject();
 				});
 
 			return deferred.promise;
@@ -1800,7 +1815,7 @@
 		 */
 		function exportDAV(skip) {
 			if (skip)
-				_exportDAV();
+				return _exportDAV();
 			else
 				self.showModalOrderSeller(_exportDAV);
 		}

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-14 09:16:47
+* @Last Modified time: 2017-08-14 14:39:57
 */
 
 (function() {
@@ -175,6 +175,9 @@
 				providerOrder.getAll(options).then(function(success) {
 					$scope.info.count = success.info.quantity;
 					$scope.info.sum = success.info.value_total;
+
+					$scope.setSearchOpen(false);
+					self.filters.query = '';
 
 					self.orders = success.data.map(function(order) {
 						return new Order(order);

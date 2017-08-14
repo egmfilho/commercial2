@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-11 12:07:29
+* @Last Modified time: 2017-08-14 17:09:39
 */
 
 (function() {
@@ -94,6 +94,7 @@
 						+ order.order_client.person_name + ' '
 						+ order.order_seller.person_code + ' '
 						+ order.order_seller.person_name + ' '
+						+ order.order_seller.person_shortname + ' '
 						+ $filter('currency')(order.order_value_total, "R$ ") + ' '
 						+ $filter('date')(order.order_date, "dd/MM/yyyy")) : ''
 				});
