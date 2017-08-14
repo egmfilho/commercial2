@@ -4,11 +4,11 @@
 		div(flex layout='row' layout-wrap)
 			md-input-container(flex='20')
 				label CEP
-				input(ui-mask='99999-999' model-view-value='true' ng-model='ctrl.filters.cep_code')
+				input(ui-mask='99999-999' model-view-value='true' ng-model='ctrl.filters.cep_code' keys-shortcuts enter='ctrl.search()')
 
 			md-input-container(flex='80')
 				label Logradouro
-				input(ng-model='ctrl.filters.public_place')
+				input(ng-model='ctrl.filters.public_place' keys-shortcuts enter='ctrl.search()')
 
 			md-input-container(flex)
 				label Bairro
@@ -41,7 +41,7 @@
 
 			md-input-container(flex='10')
 				label UF
-				input(ng-model='ctrl.filters.uf_id' ng-disabled='!!ctrl.filters.city_id')
+				input(ng-model='ctrl.filters.uf_id' ng-disabled='!!ctrl.filters.city_id' keys-shortcuts enter='ctrl.search()')
 
 		div(layout='column')
 			md-button.md-raised(ng-click='ctrl.clear()')

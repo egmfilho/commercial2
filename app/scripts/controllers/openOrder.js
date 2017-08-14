@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-11 16:23:01
+* @Last Modified time: 2017-08-14 09:16:47
 */
 
 (function() {
@@ -69,7 +69,6 @@
 				if (Globals.get('user')['user_seller'].person_id) {
 					self.seller = new Person(Globals.get('user')['user_seller']);
 				}
-
 				
 				self.getOrders();
 			});

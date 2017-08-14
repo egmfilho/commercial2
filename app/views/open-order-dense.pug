@@ -164,7 +164,7 @@
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-export-type-colors")["order"] }') cloud
 					md-tooltip(md-direction='top') 
-						| Export. Pedido
+						| Pedido exportado
 
 				span(flex)
 
@@ -173,7 +173,7 @@
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-export-type-colors")["order"] }') cloud_done
 					md-tooltip(md-direction='top') 
-						| Fat. Pedido
+						| Pedido faturado
 
 				span(flex)
 
@@ -182,7 +182,7 @@
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-export-type-colors")["dav"] }') cloud
 					md-tooltip(md-direction='top') 
-						| Export. Dav
+						| Dav exportado
 
 				span(flex)
 
@@ -191,7 +191,7 @@
 						md-font-set='material-icons' 
 						ng-style='{ "color": globals("order-export-type-colors")["dav"] }') cloud_done
 					md-tooltip(md-direction='top') 
-						| Fat. Dav
+						| Dav faturado
 
 			div(flex layout='row' layout-align='center center')
 				span.md-subhead Orçamentos: {{info.count}} &nbsp; Valor total: {{ info.sum | currency:'R$ '}}

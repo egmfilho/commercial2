@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-11 17:26:49
+* @Last Modified time: 2017-08-14 11:17:55
 */
 
 (function() {
@@ -2683,11 +2683,16 @@
 					hasBackdrop: true,
 					escapeToClose: false,
 					clickOutsideToClose: false,
+					focusOnOpen: false,
 					zIndex: 1,
 					width: 500
 				},
 				controller = function(scope) {
 					var vm = this;
+
+					$timeout(function(){
+						jQuery('input[name="seller-code"]').focus();
+					},100);
 
 					this._showCloseButton = true;
 

@@ -141,7 +141,7 @@
 									var item = new OrderItem({ price_id: vm.userPrice.price_id, user_price: vm.userPrice });
 									item.setProduct(new Product(success.data));
 									selection.push(item);
-									this.showSelection();
+									vm.showSelection();
 								}, function(error) {
 									constants.debug && console.log(error);
 									$rootScope.loading.unload();
@@ -168,7 +168,7 @@
 								Mousetrap.unbind('down');
 							}
 
-							vm._close(selection);
+							vm._close(selection.filter(function(i) { return i.order_item_amount > 0 }));
 						};
 
 						this.showSelection = function() {
