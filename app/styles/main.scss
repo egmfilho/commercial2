@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:09:13
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-10 10:31:00
+* @Last Modified time: 2017-08-15 12:02:28
 */
 
 
@@ -191,6 +191,50 @@ table.table {
 				max-height: 24px;
 				padding: 0 !important;
 				font-size: 17px;
+			}
+		}
+	}
+}
+
+table.contacts-table {
+	@extend .table;
+
+	tbody tr {
+		border-bottom: 1px solid $border-color;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		&:hover {
+			td {
+				color: $main-color !important;
+			}
+		}
+		
+		td {
+			padding: 0 !important;
+			height: 26px;
+
+			&:first-child {
+				text-align: right;
+				padding-right: 5px !important;
+				background-color: #e7e7e7;
+				border-right: 1px solid $border-color;
+			}
+
+			&:last-child {
+				display: block;
+				
+				input {
+					box-sizing: border-box;
+					display: block;
+					width: 100%;
+					height: 100%;
+					padding: 0 2px;
+					border: none;
+					padding-left: 5px !important;
+				}
 			}
 		}
 	}

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-14 16:04:45
+* @Last Modified time: 2017-08-15 17:11:23
 */
 
 (function() {
@@ -45,6 +45,7 @@
 		'ProviderBank',
 		'Bank',
 		'ModalPerson',
+		'ModalNewPerson',
 		'ModalProduct',
 		'ModalCustomerAddress',
 		'ElectronWindow',
@@ -86,6 +87,7 @@
 		providerBank,
 		Bank,
 		ModalPerson,
+		ModalNewPerson,
 		ModalProduct,
 		ModalCustomerAddress,
 		ElectronWindow,
@@ -907,14 +909,20 @@
 		 */
 		function newCustomer(person) {
 			var dialog = $rootScope.customDialog(),
-				controller = function () { };
+				controller = function () { },
+				options = {
+					width: 900,
+					hasBackdrop: true
+				};
 
 			controller.prototype = {
 				newCustomer: new Person(person),
 				_showCloseButton: true
 			};
 
-			dialog.showTemplate('Novo cliente', './partials/modalNewPerson.html', controller)
+			ModalNewPerson.show(); return;
+
+			dialog.showTemplate('Novo cliente', './partials/modalNewPerson.html', controller, options)
 				.then(function(res) {
 					$rootScope.loading.load();
 					providerPerson.save(res, Globals.get('person-categories').customer).then(function(success) {
@@ -2525,6 +2533,8 @@
 				slice = (self.budget.order_value_total - (self.budget.creditPayment ? self.budget.creditPayment.order_payment_value_total : 0)) / paymentLen,
 				total = self.budget.creditPayment ? self.budget.creditPayment.order_payment_value_total : 0,
 				diff = 0, temp;
+
+			console.log('slice: ' + slice);
 
 			if (paymentLen == 0)
 				return;

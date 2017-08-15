@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-03 11:42:28
+* @Last Modified time: 2017-08-15 16:32:08
 */
 
 (function() {
@@ -136,8 +136,23 @@
 				this.order_item_audit = new Audit();	
 			}
 
+			/*
+			 * Antigamente, nos tempos mais primordios, o Commercial nao arrendondava os valores em seus 
+			 * calculos de precos deixando para arredondar apenas o valor final, mantendo assim a integridade
+			 * dos valores. Depois de algumas inconsistencias em relacao a orcamentos DAVs do Commercial e
+			 * DAVs do ERP (Alterdata), verificou-se que no ERP os valores sao todos arredondados antes de calculados
+			 * gerando assim um valor final acima ou abaixo do valor final do Commercial. 
+			 * A partir de hoje, 15/08/2017, o Commercial passara a arredondadar os valores propositalmente errados 
+			 * somente para manter regularidade com o ERP (Alterdata).
+			 */
+
 			function getValue() {
-				return this.order_item_amount * this.order_item_value_unitary;
+				// return this.order_item_amount * this.order_item_value_unitary;
+				
+				if (!this.order_item_value_unitary)
+					return 0;
+				else
+					return parseFloat(( this.order_item_amount * parseFloat((this.order_item_value_unitary).toFixed(2)) ).toFixed(2));
 			}
 
 			function getValueTotal() {
