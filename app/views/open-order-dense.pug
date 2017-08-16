@@ -79,66 +79,69 @@
 					tr
 						th.sortable &nbsp;
 						th.sortable(ng-click="openOrder.sortBy('order_code')")
-							| CÓDIGO &nbsp;
+							| CÓDIGO
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_code'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						th.sortable(ng-click="openOrder.sortBy('order_code_erp')")
-							| ERP &nbsp;
+							| ERP
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_code_erp'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						th.sortable(ng-click="openOrder.sortBy('order_client.person_name')")
-							| CLIENTE &nbsp;
+							| CLIENTE
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_client.person_name'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						th.sortable(ng-click="openOrder.sortBy('order_seller.person_name')")
-							| VENDEDOR &nbsp;
+							| VENDEDOR
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_seller.person_name'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						th.sortable(ng-click="openOrder.sortBy('order_value_total')")
-							| TOTAL &nbsp;
+							| TOTAL
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_value_total'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						th.sortable(ng-click="openOrder.sortBy('order_date')")
-							| DATA &nbsp;
+							| DATA
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_date'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						th &nbsp;
 						th &nbsp;
 						th &nbsp;
 						th &nbsp;
 
-	md-content.open-order-dense-container(flex)
-		table.table.order-table
+	//- md-content.open-order-dense-container(flex)
+		//- table.table.order-table
 			tbody
 				tr(ng-repeat='o in openOrder.orders | orderBy:openOrder.grid.propertyName:openOrder.grid.reverse | filter: { queryable: openOrder.filters.query, order_status_id: openOrder.filters.status, order_export_type: openOrder.filters.exportType }' ng-dblclick='open(o)')
-					td 
-						md-icon(
-							md-font-set='material-icons' 
-							ng-style='{ "color": globals("order-export-type-colors")[o.order_export_type] }'
-							ng-if='o.order_status_id == globals("order-status-values").open') cloud_queue
-					
-						md-icon(
-							md-font-set='material-icons' 
-							ng-style='{ "color": globals("order-export-type-colors")[o.order_export_type] }'
-							ng-if='o.order_status_id == globals("order-status-values").exported') cloud
+	div(flex)
+		md-virtual-repeat-container#virtual-repeat-container
+			.repeated-item(layout='row' layout-align='start center' md-virtual-repeat='o in openOrder.orders | orderBy:openOrder.grid.propertyName:openOrder.grid.reverse | filter: { queryable: openOrder.filters.query, order_status_id: openOrder.filters.status, order_export_type: openOrder.filters.exportType }' ng-dblclick='open(o)')
+				span 
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": globals("order-export-type-colors")[o.order_export_type] }'
+						ng-if='o.order_status_id == globals("order-status-values").open') cloud_queue
+				
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": globals("order-export-type-colors")[o.order_export_type] }'
+						ng-if='o.order_status_id == globals("order-status-values").exported') cloud
 
-						md-icon(
-							md-font-set='material-icons' 
-							ng-style='{ "color": globals("order-export-type-colors")[o.order_export_type] }'
-							ng-if='o.order_status_id == globals("order-status-values").billed') cloud_done
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": globals("order-export-type-colors")[o.order_export_type] }'
+						ng-if='o.order_status_id == globals("order-status-values").billed') cloud_done
 
-					td {{o.order_code}}
-					td {{o.order_code_erp}}
-					td {{o.order_client.person_name}}
-					td {{o.order_seller.person_shortname || (o.order_seller.person_name | truncate: 15 : ' ')}}
-					td {{o.order_value_total | currency:'R$ '}}
-					td {{o.order_date | date:'dd/MM/yyyy'}}
-					td 
-						md-button.md-icon-button(ng-click='open(o)' md-no-ink)
-							md-icon.text-primary(md-font-icon='fa fa-pencil')
-					td 
-						md-button.md-icon-button(ng-click='openOrder.print(o.order_code)' md-no-ink)
-							md-icon.text-primary(md-font-icon='fa fa-print')
-					td 
-						md-button.md-icon-button(ng-click='openOrder.mail(o.order_code)' md-no-ink)
-							md-icon.text-primary(md-font-icon='fa fa-envelope')
-					td 
-						md-button.md-icon-button(ng-click='delete(o)' md-no-ink)
-							md-icon.text-primary(md-font-icon='material-icons') delete_forever
+				span {{o.order_code}}
+				span {{o.order_code_erp}}
+				span {{o.order_client.person_name}}
+				span {{o.order_seller.person_shortname || (o.order_seller.person_name | truncate: 15 : ' ')}}
+				span {{o.order_value_total | currency:'R$ '}}
+				span {{o.order_date | date:'dd/MM/yyyy'}}
+				span 
+					button(ng-click='open(o)' md-no-ink)
+						i.fa.fa-pencil
+				span
+					button(ng-click='openOrder.print(o.order_code)' md-no-ink)
+						i.fa.fa-print
+				span
+					button(ng-click='openOrder.mail(o.order_code)' md-no-ink)
+						i.fa.fa-envelope
+				span
+					button(ng-click='delete(o)' md-no-ink)
+						i.fa.fa-remove
 
 	.search-container(layout='row' ng-class='{ "opened": isSearchOpened }')
 		span(flex)

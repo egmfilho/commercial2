@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-14 14:39:57
+* @Last Modified time: 2017-08-16 17:34:07
 */
 
 (function() {
@@ -158,17 +158,47 @@
 				self.grid.propertyName = propertyName;
 			};
 
-			self.getOrders = function (){
+			self.infiniteItems = {
+				numLoaded_: 0,
+				toLoad_: 0,
+				items: [ ],
+				getItemAtIndex: function(index) {
+					if (index > this.numLoaded_) {
+						this.fetchMoreItems_(index)
+						return null;
+					}
+
+					return this.items[index];
+				},
+				getLength: function() {
+					return this.numLoaded_ + 15;
+				},
+				fetchMoreItems_: function(index) {
+					if (this.toLoad_ < index) {
+						console.log('fetch ' + index);
+						this.toLoad_ += 15;
+						self.getOrders(index - 1, 15).then(angular.bind(this, function(obj) {
+							this.items = this.items.concat(obj);
+							this.numLoaded_ = this.toLoad_;
+						}));
+					}
+				}
+			} 
+
+			self.getOrders = function (index, quantity){
 				self.orders = [];
 
+				var deferred = $q.defer();
 				var options = {
 						company_id: self.companyId,
-						start_date: self.calendar.start.value,
-						end_date: self.calendar.end.value,
-						order_seller_id: self.seller && self.seller.person_id,
+						// start_date: self.calendar.start.value,
+						start_date: new Date('2017-08-08'),
+						// end_date: self.calendar.end.value,
+						end_date: new Date('2017-08-16'),
+						// order_seller_id: self.seller && self.seller.person_id,
 						getCustomer: true,
 						getSeller: true,
-						limit: 30
+						// limit: index + ',' + quantity
 					};
 
 				$rootScope.loading.load();
@@ -184,14 +214,16 @@
 					});
 
 					$rootScope.loading.unload();
-
-					if (!self.orders.length) {
-						$rootScope.customDialog().showMessage('Aviso', 'Nenhum orçamento encontrado!');
-					}
+					deferred.resolve(success.data.map(function(order) {
+						return new Order(order);
+					}));
 				}, function(error) {
 					constants.debug && console.log(error);
 					$rootScope.loading.unload();
+					deferred.reject();
 				});
+
+				return deferred.promise;
 			}
 
 			function getPersonByName(name, category) {

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:10:42
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-11 16:40:08
+* @Last Modified time: 2017-08-16 17:41:06
 */
 
 .open-order-container-nav {
@@ -156,6 +156,75 @@
 		padding-right: 10px;
 	}
 
+	#virtual-repeat-container {
+		height: 100%;
+		min-height: 100%;
+
+		.repeated-item {
+			background: white;
+			height: 40px;
+			box-sizing: border-box;
+			font-size: 13px;
+			display: table;
+			width: 100%;
+			border-bottom: 1px solid $border-color;
+
+			span {
+				display: table-cell;
+				color: $main-color;
+				vertical-align: middle;
+
+				&:nth-child(1) {
+					width: 30px;
+					text-align: center;
+
+					md-icon {
+						font-size: 20px;
+					}
+				}
+
+				&:nth-child(2), &:nth-child(3) {
+					text-align: center;
+					width: 9%;
+				}
+
+				&:nth-child(5) {
+					width: 12%;
+				}
+
+				&:nth-child(6), &:nth-child(7) {
+					width: 10%;
+				}
+
+				&:nth-child(8), &:nth-child(9), &:nth-child(10), &:nth-child(11) {
+					width: 30px;
+					padding: 0;
+					text-align: center;
+
+					button {
+						border: none;
+						background: none;
+						max-width: 30px;
+						color: $main-color;
+						font-size: 15px;
+						line-height: 30px;
+					}
+				}
+			}
+
+			&:hover, &:focus, .active {
+				background-color: lighten($main-color-lighter, 20%) !important;
+				span {
+					color: white !important;
+
+					button {
+						color: white !important;
+					}
+				}
+			}
+		}
+	}
+
 	.order-table {
 		width: 100%;
 
@@ -163,11 +232,15 @@
 			th {
 				background-color: $main-color-lighter;
 				color: white !important;
+				
+				.fa {
+					margin-left: 4px;
+				}
 			}
 
 			th, td {
 				&:nth-child(1) {
-					width: 4%;
+					width: 30px;
 					vertical-align: middle;
 					text-align: center;
 
@@ -177,6 +250,7 @@
 				}
 
 				&:nth-child(2), &:nth-child(3) {
+					text-align: center;
 					width: 9%;
 				}
 
