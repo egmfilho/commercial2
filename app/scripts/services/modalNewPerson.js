@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-08-15 11:17:54
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-15 17:57:47
+* @Last Modified time: 2017-08-16 09:19:09
 */
 
 (function() {
@@ -37,7 +37,50 @@
 					}
 
 					this.save = function() {
-						providerPerson.save(scope.customer, Globals.get('person-categories').customer).then(function(success) {
+						if (!scope.customer.person_name) {
+							$rootScope.customDialog().showMessage('Erro', 'Informe o nome do cliente!');
+							return;
+						}
+
+						if (!scope.customer.person_cpf && !scope.customer.person_cnpj) {
+							$rootScope.customDialog().showMessage('Erro', 'Informe o ' + (scope.customer.person_type == 'F' ? 'CPF' : 'CNPJ') + ' do cliente!');
+							return;
+						}
+
+						if (!scope.customer.person_address[0].person_address_cep) {
+							$rootScope.customDialog().showMessage('Erro', 'Informe o CEP do cliente!');
+							return;
+						}
+
+						if (!scope.customer.person_address[0].person_address_type || !scope.customer.person_address[0].person_address_public_place || !scope.customer.person_address[0].person_address_number) {
+							$rootScope.customDialog().showMessage('Erro', 'Informe corretamente o endereço do cliente!');
+							return;
+						}
+
+						if (!scope.customer.person_address[0].district_id) {
+							$rootScope.customDialog().showMessage('Erro', 'Informe o bairro!');
+							return;
+						}
+
+						if (!scope.customer.person_address[0].city_id) {
+							$rootScope.customDialog().showMessage('Erro', 'Informe a cidade!');
+							return;
+						}
+
+						if (scope.customer.person_address[0].icms_type == 1 && !scope.customer.person_address[0].person_address_ie) {
+							$rootScope.customDialog().showMessage('Erro', 'Informe a inscrição estadual!');
+							return;
+						}
+
+						var filtered = new Person(scope.customer);
+						filtered.person_credit = null;
+						filtered.person_credit_limit = null;
+						filtered.queryable = null;
+						filtered.person_address[0].person_address_contact = scope.customer.person_address[0].person_address_contact.filter(function(c) {
+							return !!c.person_address_contact_value;
+						}); 
+
+						providerPerson.save(filtered, Globals.get('person-categories').customer).then(function(success) {
 							$rootScope.loading.unload();
 							scope._close(success.data);
 						}, function(error) {
@@ -53,7 +96,7 @@
 
 					this.showModalCep = function() {
 						ModalCep.show().then(function(success) {
-							setCepFromSource(success);
+							success && setCepFromSource(success);
 						}, function(error) { });
 					};
 
@@ -94,6 +137,18 @@
 						});
 					};
 
+					this.icmsChanged = function() {
+						console.log('zikachu');
+						if (scope.customer.person_address[0].icms_type == 2) {
+							scope.customer.person_address[0].person_address_ie = 'ISENTO';
+						} else {
+							if (scope.customer.person_address[0].person_address_ie == 'ISENTO') {
+								console.log('popeye');
+								scope.customer.person_address[0].person_address_ie = null;
+							}
+						}
+					}
+
 					// Inicializador
 					(function() {
 						scope.searchDistrict();
@@ -122,7 +177,9 @@
 				controller.$inject = [ 'ProviderPerson', 'Person', 'Address', 'Contact', 'ProviderCep', 'Cep', 'ModalCep', 'ProviderDistrict', 'District', 'ProviderCity', 'City' ];
 
 				return $rootScope.customDialog().showTemplate('Novo cliente', './partials/modalNewPerson.html', controller, {
-					hasBackdrop: true,
+					hasBackdrop: false,
+					innerDialog: true,
+					zIndex: 1,
 					width: 900
 				});
 			}

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 10:32:39
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-14 17:15:24
+* @Last Modified time: 2017-08-16 12:25:33
 */
 
 (function() {
@@ -36,7 +36,7 @@
 			}
 
 			Person.prototype = {
-				isActive: this.person_active != 'N',
+				isActive: this.person_active == 'Y',
 				getType: getType,
 				getMainAddress: getMainAddress
 			};

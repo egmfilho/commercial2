@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-08-09 08:39:25
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-11 09:19:55
+* @Last Modified time: 2017-08-16 09:07:18
 */
 
 (function() {
@@ -109,7 +109,9 @@
 				controller.$inject = [ 'ProviderCep', 'Cep', 'ProviderDistrict', 'District', 'ProviderCity', 'City' ];
 
 				return $rootScope.customDialog().showTemplate('Buscar CEP', './partials/modalCep.html', controller, {
-					width: 800
+					width: 800,
+					zIndex: 2,
+					hasBackdrop: true
 				});
 			}
 

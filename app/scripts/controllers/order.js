@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-15 17:11:23
+* @Last Modified time: 2017-08-16 09:06:18
 */
 
 (function() {
@@ -920,7 +920,13 @@
 				_showCloseButton: true
 			};
 
-			ModalNewPerson.show(); return;
+			_isToolbarLocked = true;
+			ModalNewPerson.show().then(function(success) {
+				_isToolbarLocked = false;
+			}, function(error) {
+				_isToolbarLocked = false;
+			}); 
+			return;
 
 			dialog.showTemplate('Novo cliente', './partials/modalNewPerson.html', controller, options)
 				.then(function(res) {
