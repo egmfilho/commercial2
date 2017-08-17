@@ -6,7 +6,8 @@
   "scripts": {
     "start": "electron ./app.js",
     "build-mac": "node ./builder.js darwin",
-    "build-win32": "node ./builder.js win32"
+    "build-win32": "node ./builder.js win32",
+    "build-linux": "node ./builder.js linux ia32"
   },
   "author": "@egmfilho",
   "license": "ISC",

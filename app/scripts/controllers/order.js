@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-16 09:06:18
+* @Last Modified time: 2017-08-17 13:19:18
 */
 
 (function() {
@@ -1290,7 +1290,7 @@
 				};
 
 			if (value > productMaxAl) {
-				authorizeDiscount(value).then(function(success) {
+				authorizeDiscount(value, productMaxAl).then(function(success) {
 					if (value > success.user_max_discount) {
 						$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
 						setAl(self.internal.tempItem.order_item_al_discount);
@@ -1337,7 +1337,7 @@
 			}
 
 			if (currentAl > productMaxAl) {
-				authorizeDiscount(currentAl).then(function(success) {
+				authorizeDiscount(currentAl, productMaxAl).then(function(success) {
 					if (currentAl > success.user_max_discount) {
 						$rootScope.customDialog().showMessage('Não autorizado', 'Desconto acima do permitido.');
 						setVl(self.internal.tempItem.order_item_vl_discount);
@@ -1452,9 +1452,9 @@
 		 * @param {float} value - O valor do desconto.
 		 * @returns {object} - Uma promise com o resultado.
 		 */
-		function authorizeDiscount(value) {
+		function authorizeDiscount(value, allowed) {
 			var msg = {
-				msg: 'Desconto acima do permitido: ' + value.toFixed(2) + '%',
+				msg: 'Desconto acima do permitido. <br>Permitido: ' + allowed.toFixed(2) + '% - Desejado: ' + value.toFixed(2) + '%',
 				icon: 'fa-2x fa-exclamation-triangle text-warning'
 			};
 
@@ -1621,20 +1621,22 @@
 		function mail() {
 			if (!self.canPrint()) return;
 
-			var options = {
-				width: 920, 
-				height: 650,
-				resizeable: false,
-				parent: _remote.getGlobal('mainWindow').instance,
-				webPreferences: {
-					zoomFactor: 1
-				}
-			}
+			if (constants.isElectron) {
+				var options = {
+					width: 920, 
+					height: 650,
+					resizeable: false,
+					parent: _remote.getGlobal('mainWindow').instance,
+					webPreferences: {
+						zoomFactor: 1
+					}
+				};
 
-			if (constants.isElectron)
 				ElectronWindow.createWindow('#/order/mail/' + self.budget.order_code, options);
-			else
-				$location.path('/order/mail/' + self.budget.order_code)
+			}
+			else {
+				$location.path('/order/mail/' + self.budget.order_code);
+			}
 		}
 
 		/**

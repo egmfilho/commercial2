@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-01 15:57:25
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-07 12:18:43
+* @Last Modified time: 2017-08-17 14:12:26
 */
 
 (function() {
@@ -61,7 +61,7 @@
 						.then(function(success) {
 							$rootScope.customDialog().showMessage('Aviso', 'Senha atualizada com sucesso!');
 						}, function(error){
-							console.log(success);
+							constants.debug && console.log(error);
 						});
 				};
 

@@ -16,12 +16,14 @@
 			| Confirme sua nova senha
 		input(name='user_new_pass_confirm' type='password' ng-model='ctrl.data.user_new_pass_confirm' keys-shortcuts enter='ctrl.update(ctrl.data)')
 
-.footer(layout='row' layout-align='end center')
-	md-button.md-primary.button-red(ng-click='ctrl._cancel()')
+.footer(layout='row' layout-align='center center')
+	md-button.md-raised(ng-click='ctrl._cancel()')
+		| &nbsp;
 		i.fa.fa-remove &nbsp; 
-		| &nbsp; Cancelar &nbsp;
+		| Cancelar &nbsp;
 
-	md-button.md-primary.button-green(ng-click='ctrl.update(ctrl.data)')
+	md-button.md-raised(ng-click='ctrl.update(ctrl.data)' md-colors='{background: "commercialGreen"}')
+		| &nbsp;
 		i.fa.fa-check &nbsp;
-		| &nbsp; Atualizar &nbsp;
+		| Atualizar &nbsp;
 	

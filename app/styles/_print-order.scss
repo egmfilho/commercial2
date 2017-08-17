@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-26 12:02:03
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-02 18:14:50
+* @Last Modified time: 2017-08-17 12:10:56
 */
 
 .print-window {
@@ -66,10 +66,19 @@
 		font-size: 11px;
 		text-align: center;
 		// margin: 25px 10%;
+		padding-left: 16px;
 	}
 
 	.print-table {
 		border-collapse: collapse;
+
+		thead {
+			tr {
+				&:first-child {
+					background-color: #cdcdcd;
+				}
+			}
+		}
 		
 		tr {
 			display: table-row;
@@ -136,13 +145,26 @@
 		tr {
 			th, td {
 				text-align: left !important;
+				border: 1px solid black !important;
+
+				&:first-child {
+					width: 20px;
+				}
 
 				&:nth-child(2) {
 					width: 80px;
 				}
 
 				&:last-child {
-					width: 20px;
+					width: 50px;
+				}
+			}
+		}
+
+		thead {
+			tr {
+				&:first-child {
+					background-color: #cdcdcd;
 				}
 			}
 		}
@@ -150,12 +172,13 @@
 
 	.note {
 		border: 1px solid black;
-		font-size: 12px;
 		padding: 4px;
-		margin-right: 16px;
+		margin-left: 16px;
+		min-height: 40px;
 
 		p {
-			margin: 8px;
+			margin: 0px;
+			font-size: 11px;
 		}
 	}
 }

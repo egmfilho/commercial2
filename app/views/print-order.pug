@@ -89,38 +89,37 @@ md-content.print-order(layout-fill ng-if='print.order.order_code')
 				td {{i.order_item_value_total | currency:'R$ '}}
 
 	.offset-top-15(layout='row')
-		div(layout='column' flex='65')
-			.note
-				b OBSERVAÇÕES
-				p {{print.order.order_note || 'Sem observações'}}
-
-			.message.offset-top-15(flex= '60')
-				p {{globals('print-message')[print.order.order_company_id].order_message}}
-
-		span(flex)
-
-		div(layout='column' flex='30')
+		div(layout='column' flex='35')
 			div
-				table.print-table(style='width: 100%')
-					thead
-						tr
-							th DESCONTO TOTAL
-							th VALOR TOTAL
-					tbody
-						tr
-							td.text-center {{print.order.order_vl_discount | currency:'R$ '}}
-							td.text-center {{print.order.order_value_total | currency:'R$ '}}
-			
-			.offset-top-15
 				table.print-table.borderless.payment(style='width: 100%')
 					thead
 						tr
-							th.text-left(colspan='3') PAGAMENTO
+							th.text-left(colspan='4') PAGAMENTO
 								span.pull-right {{print.order.term.term_description}}
 					tbody
 						tr(ng-repeat='i in print.order.order_payments' layout='row')
+							td
+								.text-center {{i.order_payment_installment}}x
 							td {{i.modality.modality_description}}
-							td {{i.order_payment_value | currency:'R$ '}}
-							td {{i.order_payment_installment}}x
-
+							td 
+								.text-center {{i.order_payment_value | currency:'R$ '}}
+							td 
+								.text-center {{i.order_payment_deadline | date:'dd/MM/yyyy'}}
 		span(flex)
+
+		div(layout='column' flex='65')
+			div(style='padding-left: 16px;')
+				table.print-table(style='width: 100%')
+					tr
+						td 
+							.text-center DESCONTO TOTAL: {{print.order.order_vl_discount | currency:'R$ '}}
+						td 
+							.text-center VALOR TOTAL: {{print.order.order_value_total | currency:'R$ '}}
+			
+			.note.offset-top-15
+				p 
+					b OBSERVAÇÕES - &nbsp;
+					| {{print.order.order_note || 'Sem observações'}}
+
+			.message(flex= '60')
+				p {{globals('print-message')[print.order.order_company_id].order_message}}

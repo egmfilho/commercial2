@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-11 13:32:54
+* @Last Modified time: 2017-08-17 16:52:34
 */
 
 const electron = require('electron');
@@ -105,6 +105,7 @@ function createWindow() {
 		height: 768,
 		devTools: false,
 		title: 'Commercial - Gestor de vendas',
+		icon: './www/images/logo-icon.png',
 		webPreferences: {
 			zoomFactor: 1.15
 		}

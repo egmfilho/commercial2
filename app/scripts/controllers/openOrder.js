@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-17 08:05:20
+* @Last Modified time: 2017-08-17 12:52:10
 */
 
 (function() {
@@ -121,10 +121,12 @@
 			$scope.setSearchOpen = function(value) {
 				$scope.isSearchOpened = value;
 
-				if (value)
+				if (value) {
 					jQuery('.search-container .search input').focus().select();
-				else 
+				} else {
 					jQuery('.search-container .search input').blur();
+					self.filters.query = '';
+				}
 			};
 
 			self.companies = Globals.get('user').user_company;

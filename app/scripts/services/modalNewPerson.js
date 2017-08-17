@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-08-15 11:17:54
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-16 09:19:09
+* @Last Modified time: 2017-08-17 09:18:04
 */
 
 (function() {
@@ -136,18 +136,6 @@
 							constants.debug && console.log(error);
 						});
 					};
-
-					this.icmsChanged = function() {
-						console.log('zikachu');
-						if (scope.customer.person_address[0].icms_type == 2) {
-							scope.customer.person_address[0].person_address_ie = 'ISENTO';
-						} else {
-							if (scope.customer.person_address[0].person_address_ie == 'ISENTO') {
-								console.log('popeye');
-								scope.customer.person_address[0].person_address_ie = null;
-							}
-						}
-					}
 
 					// Inicializador
 					(function() {

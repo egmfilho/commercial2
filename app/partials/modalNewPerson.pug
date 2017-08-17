@@ -121,11 +121,10 @@ form(name='newCostumerForm' flex layout='column')
 			md-input-container.md-icon-float(flex='20')
 				label
 					span Contribuição de ICMS
-				md-select(name='category' ng-model='ctrl.customer.person_address[0].icms_type'
-						ng-change='ctrl.icmsChanged()')
-					md-option(value='1') Contribuinte ICMS
-					md-option(value='2') Contribuinte Isento
-					md-option(value='9') Não contribuinte
+				md-select(name='category' ng-model='ctrl.customer.person_address[0].icms_type')
+					md-option(value='1' ng-click='ctrl.customer.person_address[0].person_address_ie = \'\'') Contribuinte ICMS
+					md-option(value='2' ng-click='ctrl.customer.person_address[0].person_address_ie = \'ISENTO\'') Contribuinte Isento
+					md-option(value='9' ng-click='ctrl.customer.person_address[0].person_address_ie = \'\'') Não contribuinte
 
 			md-input-container(flex='20')
 				label 
