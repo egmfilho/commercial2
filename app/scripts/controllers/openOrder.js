@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-16 17:34:07
+* @Last Modified time: 2017-08-17 08:05:20
 */
 
 (function() {
@@ -191,11 +191,11 @@
 				var deferred = $q.defer();
 				var options = {
 						company_id: self.companyId,
-						// start_date: self.calendar.start.value,
-						start_date: new Date('2017-08-08'),
-						// end_date: self.calendar.end.value,
-						end_date: new Date('2017-08-16'),
-						// order_seller_id: self.seller && self.seller.person_id,
+						start_date: self.calendar.start.value,
+						// start_date: new Date('2017-08-08'),
+						end_date: self.calendar.end.value,
+						// end_date: new Date('2017-08-16'),
+						order_seller_id: self.seller && self.seller.person_id,
 						getCustomer: true,
 						getSeller: true,
 						// limit: index + ',' + quantity
