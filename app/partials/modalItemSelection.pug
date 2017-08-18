@@ -17,10 +17,10 @@
 					td {{i.product.product_code}}
 					td {{i.product.product_name}}
 					td
-						input.text-right(ng-model='i.order_item_amount' ng-change='i.setItemAmount(i.order_item_amount)'
+						input.text-right(ng-model='i.order_item_amount' ng-change='ctrl.updateItemValues(i)'
 							currency trim min-fraction-size='0' number-only separator=',.' replace-text replace-from='.' replace-to=',')
 					td {{i.order_item_value_unitary | currency:'R$ '}}
-					td {{i.getValueTotal() | currency:'R$ '}}
+					td {{i.order_item_value_total | currency:'R$ '}}
 					td
 						md-button.md-icon-button(tabindex='-1' ng-click='ctrl.removeItem(i)')
 							md-icon.text-primary(md-font-set='material-icons' md-menu-align-target) delete_forever

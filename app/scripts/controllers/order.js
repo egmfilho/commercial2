@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-17 13:19:18
+* @Last Modified time: 2017-08-18 11:53:58
 */
 
 (function() {
@@ -436,10 +436,10 @@
 		}
 
 		function validateBudgetToExport() {
-			if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
-				$rootScope.customDialog().showMessage('Erro', 'Este orçamento já foi exportado!');
-				return;
-			}
+			// if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
+			// 	$rootScope.customDialog().showMessage('Erro', 'Este orçamento já foi exportado!');
+			// 	return;
+			// }
 
 			if (!self.budget.order_payments.length) {
 				$rootScope.customDialog().showMessage('Erro', 'O orçamento precisa ter ao menos uma forma de pagamento informada!');
@@ -654,6 +654,12 @@
 				return;
 			}
 
+			if (self.budget.order_status_id == Globals.get('order-status-values').exported) {
+				if (!validateBudgetToExport()) {
+					return;
+				}
+			}
+
 			if (self.budget.creditPayment && self.budget.order_status_id == 1001 ) {
 				$rootScope.customDialog().showMessage('Aviso', 'Este orçamento está utilizando uma Carta de Crédito como forma de pagamento e por isso não é mais possível salvá-lo, você ainda pode exportá-lo.');
 				return;		
@@ -812,7 +818,7 @@
 		 */
 		function canSave() {
 			var isEqualsBackup = _backup && self.budget ? self.budget.equals(_backup) : false;
-			return !isEqualsBackup && self.budget.order_company_id && self.budget.order_status_id != Globals.get('order-status-values').billed;
+			return !isEqualsBackup && self.budget.order_company_id && self.budget.order_status_id != Globals.get('order-status-values').billed && self.budget.status.editable == 'Y';
 		}
 
 		/**
@@ -2783,6 +2789,13 @@
 		 * Exibe o modal de desbloqueio de edicao.
 		 */
 		function showLockModal() {
+			if (self.budget.order_status_id == Globals.get('order-status-values').billed || self.budget.status.editable == 'N') {
+				if (self.budget.status.message) {
+					$rootScope.customDialog().showMessage('Aviso', self.budget.status.message);
+				}
+				return;
+			}
+
 			if (self.budget.order_credit == 'N') {
 				$scope.isDisabled = false;
 				return;

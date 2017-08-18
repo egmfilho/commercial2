@@ -55,7 +55,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 						md-menu-item
 							md-button(ng-click='close()')
 								md-icon(md-font-icon='fa fa-remove')
-								|  Cancelar
+								|  Fechar
 				md-menu
 					button(ng-click='$mdMenu.open()') Orçamento
 					md-menu-content
@@ -138,7 +138,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					md-icon(md-font-icon='fa fa-floppy-o' style='color: steelblue')
 
 				md-button.toolbar-btn.pull-right(ng-click='close()')
-					md-tooltip(md-direction='bottom') Cancelar
+					md-tooltip(md-direction='bottom') Fechar
 					md-icon(md-font-icon='fa fa-remove' style='color: red')
 
 				.separator
@@ -352,7 +352,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 										td {{i.order_item_value_unitary | currency:'R$ '}}
 										td {{i.order_item_al_discount | currency:''}}%
 										td {{i.order_item_vl_discount | currency:'R$ '}}
-										td {{i.getValueTotal() | currency:'R$ '}}
+										td {{i.order_item_value_total | currency:'R$ '}}
 										td
 											md-button.md-icon-button(tabindex='-1' ng-click='order.removeItem(i)')
 												md-icon.text-primary(md-font-set='material-icons' md-menu-align-target) delete_forever
@@ -693,7 +693,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 					.offset-top-5(layout='row')
 						md-button.md-raised.md-primary(flex='25' ng-click='close()' md-colors='{background: "commercialRed"}' skip-disable)
 							i.fa.fa-remove &nbsp;
-							| Cancelar
+							| Fechar
 						
 						md-button.md-raised.md-primary(flex='25' ng-click='order.exportOrder()' ng-disabled='!order.canExport()' md-colors='{background: "commercialOrange"}' skip-disable)
 							i.fa.fa-cloud-upload &nbsp;	

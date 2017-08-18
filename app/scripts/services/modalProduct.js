@@ -176,6 +176,10 @@
 								this.selection = selection;
 								this._showCloseButton = true;
 								this.removeItem = vm.addProduct;
+								this.updateItemValues = function(i) { 
+									var n = i.order_item_amount;
+									i.setAmount(n);
+								};
 
 								setTimeout(function() {
 									jQuery('input').on('focus', function() { this.select(); });
