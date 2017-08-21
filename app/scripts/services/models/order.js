@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-14 17:09:39
+* @Last Modified time: 2017-08-18 16:43:27
 */
 
 (function() {
@@ -13,7 +13,7 @@
 		.factory('OrderAudit', [function() {
 
 			function _OrderAudit(audit) {
-				this.title      = null;
+				this.title       = null;
 				this.user_id     = null;
 				this.date        = moment().toDate();
 				this.user_name   = null;
@@ -31,11 +31,27 @@
 		}]);
 
 	angular.module('commercial2.services')
+		.factory('OrderStatus', [function() {
+
+			function _OrderStatus(status) {
+				this.billed   = null;
+				this.editable = 'Y';
+				this.status   = null;
+				this.type     = null;
+
+				if (status)
+					Object.assign(this, status);
+			}
+
+			return _OrderStatus;
+		}]);
+
+	angular.module('commercial2.services')
 		.factory('Order', Order);
 
-	Order.$inject = [ '$filter', 'OrderItem', 'Person', 'Address', 'CompanyERP', 'OrderPayment', 'OrderAudit', 'Globals' ];
+	Order.$inject = [ '$filter', 'OrderItem', 'Person', 'Address', 'CompanyERP', 'OrderPayment', 'OrderAudit', 'OrderStatus', 'Globals' ];
 
-	function Order($filter, OrderItem, Person, Address, CompanyERP, OrderPayment, OrderAudit, Globals) {
+	function Order($filter, OrderItem, Person, Address, CompanyERP, OrderPayment, OrderAudit, OrderStatus, Globals) {
 
 		function _Order(order) {
 			this.order_id                    = null;
@@ -71,6 +87,9 @@
 			this.order_audit                 = new OrderAudit();
 			this.order_filled                = 'N';
 			this.order_credit                = null;
+			this.order_value_icms            = 0;
+			this.order_value_st              = 0;
+			this.status                      = new OrderStatus(),
 			this.queryable                   = '';
 
 			if (order) {
@@ -87,6 +106,7 @@
 					order_client: new Person(order.order_client),
 					address_delivery: new Address(order.address_delivery),
 					order_payments: order.order_payments ? order.order_payments.map(function(op) { return new OrderPayment(op) }) : new Array(),
+					status: order.status ? new OrderStatus(order.status) : new OrderStatus(),
 					queryable: order.order_id ?
 						(order.order_code + ' '
 						+ order.order_client.person_code + ' '
@@ -115,7 +135,7 @@
 			setDeliveryAddress: setDeliveryAddress,
 			removeDeliveryAddress: removeDeliveryAddress,
 			setAlDiscount: setAlDiscount,
-			setVlDiscount: setVlDiscount,			
+			setVlDiscount: setVlDiscount,
 			updateValues: updateValues,
 			getPaymentAliquot: getPaymentAliquot,
 			getPaymentValue: getPaymentValue,
