@@ -128,7 +128,7 @@
 				span {{o.order_code_erp}}
 				span {{o.order_client.person_name}}
 				span {{o.order_seller.person_shortname || (o.order_seller.person_name | truncate: 15 : ' ')}}
-				span {{o.order_value_total | currency:'R$ '}}
+				span {{(o.order_value_total+o.order_value_st) | currency:'R$ '}}
 				span {{o.order_date | date:'dd/MM/yyyy'}}
 				span 
 					button(ng-click='open(o)' md-no-ink)
