@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-21 09:46:15
+* @Last Modified time: 2017-08-21 12:50:03
 */
 
 (function() {
@@ -2796,7 +2796,7 @@
 				return;
 			}
 
-			if (self.budget.order_credit == 'N') {
+			if (self.budget.order_status_id == Globals.get('order-status-values').open) {
 				$scope.isDisabled = false;
 				return;
 			}

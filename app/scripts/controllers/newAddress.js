@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-21 10:31:00
+* @Last Modified time: 2017-08-21 11:32:10
 */
 
 (function() {
@@ -54,13 +54,12 @@
 		self.focusOn             = focusOn;
 
 		$scope.$on('modalCustomerAddress', function() {
-			console.log('new address controller loaded!');
+			constants.debug && console.log('new address controller loaded!');
 
 			$http({
 				method: 'GET',
 				url: constants.api + 'contact_type.php?action=getList'
 			}).then(function(success) {
-				console.log('forever bolado');
 				success.data.data.map(function(c) {
 					_contacts.push(new Contact({
 						person_address_contact_type_id: c.contact_type_id,
