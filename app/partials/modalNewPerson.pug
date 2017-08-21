@@ -1,4 +1,4 @@
-form(name='newCostumerForm' flex layout='column')
+div(flex layout='column')
 	.body(layout='column' flex)
 		div(layout='row' layout-wrap)
 			div(flex='100' layout='row')
@@ -6,18 +6,14 @@ form(name='newCostumerForm' flex layout='column')
 
 			md-input-container(flex='55')
 				label Nome
-				input(name='name' ng-model='ctrl.customer.person_name' required)
-				div(ng-messages='newCostumerForm.name.$error')
-					div(ng-message='required') Campo obrigatório!
+				input(name='name' ng-model='ctrl.customer.person_name')
 
 			md-input-container.md-icon-float(flex='15')
 				label
 					span Tipo
-				md-select(name='type' ng-model='ctrl.customer.person_type' required)
+				md-select(name='type' ng-model='ctrl.customer.person_type')
 					md-option(value='F') Pessoa Física
 					md-option(value='J') Pessoa Jurídica
-				div(ng-messages='newCostumerForm.type.$error')
-					div(ng-message='required') Campo obrigatório!
 
 			md-input-container(flex='15')
 				label 

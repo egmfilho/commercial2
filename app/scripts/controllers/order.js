@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-18 11:53:58
+* @Last Modified time: 2017-08-21 09:46:15
 */
 
 (function() {
@@ -927,26 +927,12 @@
 			};
 
 			_isToolbarLocked = true;
-			ModalNewPerson.show().then(function(success) {
+			ModalNewPerson.show().then(function(res) {
 				_isToolbarLocked = false;
+				self.getCustomerByCode(res.person_code);
 			}, function(error) {
 				_isToolbarLocked = false;
 			}); 
-			return;
-
-			dialog.showTemplate('Novo cliente', './partials/modalNewPerson.html', controller, options)
-				.then(function(res) {
-					$rootScope.loading.load();
-					providerPerson.save(res, Globals.get('person-categories').customer).then(function(success) {
-						self.setCustomer(angular.extend({ }, res, success.data));
-						$rootScope.loading.unload();
-					}, function(error) {
-						$rootScope.loading.unload();
-						console.log(error);
-						$rootScope.customDialog().showMessage('Aviso!',error.data.status.description);
-						newCustomer(res);
-					});
-				}, function(res) { });
 		}
 
 		/**
@@ -1399,7 +1385,7 @@
 		 * @param {string} access - O nome da permissao.
 		 * @returns {object} - Uma promise com o resultado.
 		 */
-		function authorizationDialog(msg, module, access) {
+		function authorizationDialog(title, msg, module, access) {
 			var deferred = $q.defer(),
 				options = null;
 
@@ -1443,7 +1429,7 @@
 				zIndex: 1
 			};
 			
-			$rootScope.customDialog().showTemplate('Autorização', './partials/modalAuthorization.html', controller, options)
+			$rootScope.customDialog().showTemplate(title, './partials/modalAuthorization.html', controller, options)
 				.then(function(success) {
 					deferred.resolve(success);
 				}, function(error) {
@@ -1458,13 +1444,27 @@
 		 * @param {float} value - O valor do desconto.
 		 * @returns {object} - Uma promise com o resultado.
 		 */
-		function authorizeDiscount(value, allowed) {
-			var msg = {
-				msg: 'Desconto acima do permitido. <br>Permitido: ' + allowed.toFixed(2) + '% - Desejado: ' + value.toFixed(2) + '%',
+		function authorizeDiscount(value, allowed) {			
+			var msg = { },
+				dummy = new OrderItem(self.internal.tempItem),
+				html = ''; 
+
+			dummy.setAlDiscount(value);
+
+			html += '<div style="margin-left: 5px; max-width: 250px">';
+			html += dummy.product.product_name + '<br><span class="text-primary">';
+			html += 'Quantidade: ' + dummy.order_item_amount + '<br>';
+			html += 'Desconto: ' + dummy.order_item_al_discount + '% / ';
+			html += $filter('currency')(dummy.order_item_vl_discount, 'R$ ') + '<br>';
+			html += 'Total: ' + $filter('currency')(dummy.order_item_value_total, 'R$ ');
+			html += '</span></div>';
+
+			msg = {
+				msg: html,
 				icon: 'fa-2x fa-exclamation-triangle text-warning'
 			};
 
-			return self.authorizationDialog(msg, 'order', 'user_discount');
+			return self.authorizationDialog('Desconto máximo permitido: ' + allowed.toFixed(2) + '%', msg, 'order', 'user_discount');
 		}
 
 		function authorizeCredit() {
@@ -1477,7 +1477,7 @@
 				msg.icon = 'fa-2x fa-exclamation-triangle text-warning';
 			}
 
-			return self.authorizationDialog(msg, 'order', 'user_credit_authorization');
+			return self.authorizationDialog('Autorização', msg, 'order', 'user_credit_authorization');
 		}
 
 		/**

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-18 11:27:40
+* @Last Modified time: 2017-08-18 16:38:30
 */
 
 (function() {
@@ -44,6 +44,8 @@
 				this.order_item_value_total   = 0;
 				this.order_item_update        = null;
 				this.order_item_date          = null;
+				this.order_item_value_icms    = 0;
+				this.order_item_value_st      = 0;
 				this.order_item_audit         = new Audit();
 				this.product                  = new Product();
 				this.price                    = new Price();
@@ -107,7 +109,8 @@
 			}
 
 			function setAlDiscount(value) {
-				if (value == null) return;
+				if (value == null) 
+					value = this.order_item_al_discount;
 
 				this.order_item_al_discount = value;
 
@@ -116,7 +119,8 @@
 			}
 
 			function setVlDiscount(value) {
-				if (value == null) return;
+				if (value == null) 
+					value = this.order_item_vl_discount;
 
 				value = Math.max(parseFloat(value), 0);
 				this.order_item_vl_discount = value;
