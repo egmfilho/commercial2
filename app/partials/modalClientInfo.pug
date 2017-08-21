@@ -1,0 +1,13 @@
+.body(layout='column')
+	div(style="margin-bottom:10px")
+		| {{ctrl.client_code}} - {{ctrl.client_name}}
+		br
+		| Limite de crédito: {{ctrl.person_credit_limit_value}}
+		br
+		|Títulos em aberto vencidos: {ctrl.person_expired_quantity}}
+		|Títulos em aberto a vencer: {ctrl.person_expiring_quantity}}
+		|Saldo de crédito: {ctrl.person_credit_limit_balance}}
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-primary(ng-click='ctrl._close(ctrl.company)')
+		| &nbsp; Ok &nbsp;

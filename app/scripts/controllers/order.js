@@ -2647,13 +2647,26 @@
 		 * Exibe a tela de informação de clientes.
 		 */
 		function showModalCustomerInfo() {
-			var message = '';
+			/*var message = '';
 			message += '<div style="margin-bottom:10px;"><b>Cliente</b>: ' + self.budget.order_client.person_code + ' - ' + self.budget.order_client.person_name + '</div>';
 			message += '<b>Limite de crédito</b>: ' + self.budget.order_client.person_credit_limit.person_credit_limit_value + '<br/>';
 			message += '<b>Títulos em aberto vencidos</b>: ' + self.budget.order_client.person_credit_limit.person_expired_quantity + '<br/>';
 			message += '<b>Títulos em aberto a vencer</b>: ' + self.budget.order_client.person_credit_limit.person_expiring_quantity + '<br/>';
 			message += '<div style="border-top:1px dashed black;margin-top:10px;padding-top:10px;"><b>Saldo de crédito</b>: ' + self.budget.order_client.person_credit_limit.person_credit_limit_balance + '</div>';
-			$rootScope.customDialog().showMessage('Informação', message);
+			$rootScope.customDialog().showMessage('Informação', message);*/
+			var controller = function(){
+				this._showCloseButton = true;
+				this.client_code = self.budget.order_client.person_code;
+				this.client_name = self.budget.order_client.person_name;
+				this.person_credit_limit = self.budget.order_client.person_credit_limit;
+			};
+
+			$rootScope.customDialog().showTemplate('Informações do Cliente', './partials/modalClientInfo.html', controller, { width: 500 })
+				.then(function(success){
+
+				}, function(error) { 
+
+				});
 		}
 
 		/**
