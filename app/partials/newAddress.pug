@@ -84,19 +84,23 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 		input(ng-model='address.newAddress.person_address_ie' 
 				ng-disabled='address.newAddress.icms_type == 2')
 
-	div(flex='50' layout='row' layout-wrap style='padding-right: 8px')
-		div(flex='100') 
-			p.md-subhead(style='margin: 15px 0') Contatos
+	div(layout='row' layout-wrap layout-fill)
+		.offset-top-15(flex='50' layout='row' layout-wrap style='padding-right: 8px')
+			div(flex='100') 
+				p.md-subhead(style='margin: 0') Contatos
 
-		md-input-container(flex='50' ng-repeat='contact in address.newAddress.person_address_contact')
-			label 
-				| {{contact.person_address_contact_label}}
-			input(ng-model='contact.person_address_contact_value')
+			.container-table(flex style='max-height: 100px')
+				table.contacts-table
+					tbody
+						tr(ng-repeat='contact in address.newAddress.person_address_contact')
+							td {{contact.person_address_contact_label}}
+							td 
+								input(type='text' ng-model='contact.person_address_contact_value')
 
-	div(flex='50' style='padding-left: 8px')
-		.custom-textarea.offset-top-15.offset-bottom-15
-			p(style='margin: 0').md-subhead Observações
-			textarea.offset-top-15(ng-model='address.newAddress.person_address_note')
+		div(flex='50' style='padding-left: 8px')
+			.custom-textarea.offset-top-15.offset-bottom-15
+				p(style='margin: 0').md-subhead Observações
+				textarea.offset-top-15(ng-model='address.newAddress.person_address_note')
 
 	div(layout='row' layout-fill layout-align='end center')
 		md-button.md-raised.text-primary(ng-click='address.clear()')

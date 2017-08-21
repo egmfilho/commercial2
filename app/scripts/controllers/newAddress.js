@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 09:24:23
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-11 08:52:46
+* @Last Modified time: 2017-08-21 10:31:00
 */
 
 (function() {
@@ -32,7 +32,7 @@
 
 	function NewAddressCtrl($rootScope, $scope, $http, providerAddress, Address, ModalCep, providerCep, Cep, providerDistrict, District, providerCity, City, Contact, Globals, constants) {
 
-		var self = this, _personId = null;
+		var self = this, _personId = null, _contacts = [];
 
 		self.types               = Globals.get('public-place-types');
 		
@@ -53,9 +53,26 @@
 		self.icmsChanged         = icmsChanged;
 		self.focusOn             = focusOn;
 
-		$scope.$on('orderViewLoaded', function() {
-			constants.debug && console.log('new address controller loaded!');
-			clear();
+		$scope.$on('modalCustomerAddress', function() {
+			console.log('new address controller loaded!');
+
+			$http({
+				method: 'GET',
+				url: constants.api + 'contact_type.php?action=getList'
+			}).then(function(success) {
+				console.log('forever bolado');
+				success.data.data.map(function(c) {
+					_contacts.push(new Contact({
+						person_address_contact_type_id: c.contact_type_id,
+						person_address_contact_label: c.contact_type_name
+					}));
+				});
+
+				clear();
+			}, function(error) {
+				constants.debug && console.log(error);
+				$rootScope.customDialog().showMessage('Erro', error.data.data.status.description);
+			});
 		});
 
 		$scope.$on('customerAdded', function(event, args) {
@@ -117,18 +134,8 @@
 			self.newAddress           = new Address();
 			self.newAddress.person_id = _personId;
 
-			/* Carrega e insere a propriedade key */
-			angular.forEach(Globals.get('contact-types'), function(value, key) {
-				self.newAddress.person_address_contact.push(new Contact({
-					person_address_contact_type_id: value.contact_type_id,
-					person_address_contact_label: value.contact_type_label,
-					key: key
-				}));
-			});
-			/* Ordena pela propriedade key */
-			self.newAddress.person_address_contact = self.newAddress.person_address_contact.sort(function(a, b) {
-				return a.key < b.key ? -1 : 1;
-			});
+			/* Carrega os tipos de contatos */
+			self.newAddress.person_address_contact = JSON.parse(JSON.stringify(_contacts));
 
 			self.queryDistrict = null;
 			self.queryCity = null;
