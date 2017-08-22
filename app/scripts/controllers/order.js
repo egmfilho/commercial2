@@ -105,9 +105,9 @@
 			_isToolbarLocked = newVal;
 		});
 
-		self.propagateSaveOrder = function(id) {
+		self.propagateSaveOrder = function(company_id) {
 			if (constants.isElectron && _ipcRenderer) {
-				_ipcRenderer.send('propagate-save-order', id);
+				_ipcRenderer.send('propagate-save-order', company_id);
 				console.log('propagating save order')
 			}
 			else {
@@ -687,36 +687,50 @@
 								switch (res) {
 									case 'print': {
 										self.print();
-										$scope.close(true);
+										$timeout(function(){
+											$scope.close(true);
+										},1000);
 										break;
 									}
 									
 									case 'mail': {
 										self.mail();
-										$scope.close(true);
+										$timeout(function(){
+											$scope.close(true);
+										},1000);
 										break;
 									}
 									
 									case 'order': {
 										exportOrder(true).then(function(success) {
-											$scope.close(true);
+											/*$timeout(function(){
+												$scope.close(true);
+											},1000);*/
 										}, function(error) {
-											$scope.close(true);
+											/*$timeout(function(){
+												$scope.close(true);
+											},1000);*/
 										});
 										break;
 									}
 									
 									case 'dav': {
 										exportDAV(true).then(function(success) {
-											$scope.close(true);
+											/*$timeout(function(){
+												$scope.close(true);
+											},1000);*/
 										}, function(error) {
-											$scope.close(true);
+											/*$timeout(function(){
+												$scope.close(true);
+											},1000);*/
 										});;
 										break;
 									}
 								}
 							}, function(res) {
-								$scope.close(true);
+								$timeout(function(){
+									$scope.close(true);
+								},1000);
 							});
 					}
 
@@ -1720,13 +1734,17 @@
 					switch (res) {
 						case 'print': {
 							self.print();
-							$scope.close(true);
+							$timeout(function(){
+								$scope.close(true);
+							},1000);
 							break;
 						}
 						
 						case 'mail': {
 							self.mail();
-							$scope.close(true);
+							$timeout(function(){
+								$scope.close(true);
+							},1000);
 							break;
 						}
 					}
@@ -2857,7 +2875,25 @@
 					providerOrder.unlock(self.budget.order_id)
 						.then(function(success) {
 							$rootScope.loading.unload();
-							window.location.href = window.location.href + '&reloaded=true';
+							//window.location.href = window.location.href + '&reloaded=true';
+							///location.reload();
+							if (constants.isElectron) {
+								var options = {
+									parent: _remote.getGlobal('mainWindow').instance,
+									webPreferences: {
+										zoomFactor: 1
+									}
+								};
+
+								ElectronWindow.createWindow('#/order/edit?code=' + self.budget.order_code, options);
+							}
+							else {
+								$location.path('/order/edit?code=' + self.budget.order_code);
+							}
+							$timeout(function() {
+								window.close();
+							}, 1000);
+							self.propagateSaveOrder(self.budget.order_company_id);
 						}, function(error) {
 							constants.debug && console.log(error);
 							$rootScope.loading.unload();
