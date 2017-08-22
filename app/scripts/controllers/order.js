@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-21 12:50:03
+* @Last Modified time: 2017-08-22 08:47:25
 */
 
 (function() {
@@ -2805,11 +2805,22 @@
 				zIndex: 1,
 				escapeToClose: false,
 				clickOutsideToClose: false,
+				width: 500,
 				hasBackdrop: true
 			};
 
 			function ctrl() {
 				this._showCloseButton = false;
+				this.confirm = function() {
+					var msg, scope = this;
+
+					msg = 'Ao recuperar este orçamento seu pedido deixará de existir. O mesmo poderá ser reexportado futuramente.<br><br>Deseja continuar?'
+
+					$rootScope.customDialog().showConfirm('Recuperação de orçamento', msg)
+						.then(function(success) {
+							scope._close();
+						});
+				};
 			}
 
 			$rootScope.customDialog().showTemplate('Aviso', './partials/modalUnlockOrder.html', ctrl, options)
