@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-17 16:52:34
+* @Last Modified time: 2017-08-22 16:26:03
 */
 
 const electron = require('electron');
@@ -59,6 +59,36 @@ ipcMain.on('redeem', function(event, arg) {
 		console.log('redeem fired by: ' + arg.guid);
 		order66(arg.guid);
 	}
+});
+
+ipcMain.on('update', function(event, arg) {
+	var readFile = require('fs').readFile,
+		downloader = require('./downloader.js'),
+		status = downloader.downloadStatus;
+
+	readFile('./config.ini', 'utf8', function(err, data) {
+		if (err) return console.log(err);
+
+		var lines = data.split('\n');
+
+		if (!lines.length || lines.length < 3) return console.log('Missing config data!');
+
+		event.sender.send('update');
+
+		downloader.download({
+			url: lines[0], 
+			filename: lines[1]
+		}, function(s) {
+			event.sender.send('update-progress', {
+				progress: s.progress,
+				total: s.total
+			});
+		}, function(res) {
+			var cp = require('child_process');
+			cp.exec(lines[2]);
+			process.exit(0);
+		});
+	});
 });
 
 function order66(guid, callback) {

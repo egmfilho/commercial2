@@ -1,0 +1,3 @@
+.body(layout='column' layout-align='center center')
+	md-progress-linear.offset-bottom-15(md-mode='determinate' value='{{ctrl.percent}}')
+	| Baixando {{ctrl.progress || 'desconhecido'}} Mb de {{ctrl.total || 'desconhecido'}} Mb

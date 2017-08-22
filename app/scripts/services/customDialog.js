@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-27 10:09:51
+* @Last Modified time: 2017-08-22 13:00:06
 */
 
 (function() {
@@ -43,12 +43,12 @@
 		// Internal methods
 		// ******************************
 
-		function showUnclosable(title, message) {
-			function controller() {
+		function showUnclosable(title, message, controller) {
+			var _controller = function() {
 				this._showProgress = true;
-			}
+			};
 
-			return show(this, title, message, null, controller, {
+			return show(this, title, message, null, controller || _controller, {
 				hasBackdrop: true,
 				trapFocus: true,
 				clickOutsideToClose: false,
