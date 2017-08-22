@@ -645,7 +645,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									| Adicionar
 							
 							.summary(layout='column')
-								md-toolbar.md-toolbar-tools.toolbar-orange(style=';z-index:0')
+								md-toolbar.md-toolbar-tools.toolbar-orange(style='z-index:0')
 									h2 Resumo do orçamento
 
 								table.md-subhead
@@ -672,6 +672,16 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 											b Valor total líquido:
 										td.text-primary
 											| {{order.budget.order_value_total | currency:'R$ '}}
+									tr
+										td.text-right.text-light
+											b ICMS:
+										td.text-primary
+											| {{order.budget.order_value_icms ? (order.budget.order_value_icms | currency:'R$ ') : 'Indisponível'}}
+									tr
+										td.text-right.text-light
+											b Subist. Tributária:
+										td.text-primary
+											| {{order.budget.order_value_st ? (order.budget.order_value_st | currency:'R$ ') : 'Indisponível'}}
 
 								.order-button-container(flex layout='row' layout-align='center center')
 									md-button.md-raised.md-primary.button-orange(ng-click='order.showModalNotes()')

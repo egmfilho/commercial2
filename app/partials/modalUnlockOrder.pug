@@ -1,13 +1,16 @@
-.irineu(layout='row' layout-align='start center' layout-fill)
+.irineu(layout='row' layout-align='start center' layout-fill style='margin-bottom: 0')
 	span(flex) Orçamento bloqueado
 
 .body(layout='column' layout-fill)
 
-	p Este orçamento está bloqueado para edição. Para editar, o crédito do cliente será removido do pagamento.
+	p(style='margin-top: 0') Este orçamento está bloqueado para edição pois já encontra-se exportado. Para editar um orçamento exportado é preciso recuperá-lo.
+
+	p.well.offset-top-15 Obs. Ao recuperar um orçamento que possui carta de crédito, o mesmo perderá esta forma de pagamento tendo o crédito devolvido ao cliente.
+	//- p.well Um orçamento recuperado pode ser exportado novamente para qualquer uma das opções (Pedido / DAV).
 
 .footer(layout='row' layout-align='end center')
 	md-button.md-raised(ng-click='ctrl._cancel()')
 		| &nbsp; Apenas visualizar &nbsp;
 
-	md-button.md-primary.md-raised(ng-click='ctrl._close()')
-		| &nbsp; Editar &nbsp;
+	md-button.md-primary.md-raised(ng-click='ctrl.confirm()')
+		| &nbsp; Recuperar &nbsp;
