@@ -1,13 +1,75 @@
 .body(layout='column')
-	div(style="margin-bottom:10px")
+	.well.well-receivables(style="margin-bottom:10px")
 		| {{ctrl.client_code}} - {{ctrl.client_name}}
-		br
-		| Limite de crédito: {{ctrl.person_credit_limit_value}}
-		br
-		|Títulos em aberto vencidos: {ctrl.person_expired_quantity}}
-		|Títulos em aberto a vencer: {ctrl.person_expiring_quantity}}
-		|Saldo de crédito: {ctrl.person_credit_limit_balance}}
+	
+	div(flex layout='column' style='margin-top: 20px')
+		.receivables-table-header-container
+			table.receivables-table.table
+				thead
+					tr
+						th.sortable(ng-click="ctrl.sortBy('modality_name')")
+							| MODALIDADE &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'modality_name'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-click="ctrl.sortBy('receivable_code')")
+							| TÍTULO &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'receivable_code'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-click="ctrl.sortBy('receivable_date')")
+							| EMISSÃO &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'receivable_date'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-click="ctrl.sortBy('receivable_deadline')")
+							| VENCIMENTO &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'receivable_deadline'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-click="ctrl.sortBy('receivable_value')")
+							| VALOR &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'receivable_value'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-click="ctrl.sortBy('receivable_paid')")
+							| BAIXADO &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'receivable_paid'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-click="ctrl.sortBy('receivable_delay')")
+							| ATRASO &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'receivable_delay'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+		.container-table(flex)
+			table.receivables-table.table(name='')
+				tbody
+					tr(ng-repeat='r in ctrl.receivables | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-class="{'blocked':r.receivable_delay > ctrl.debit_day_limit,'expired':r.receivable_delay && r.receivable_delay <= ctrl.debit_day_limit}")
+						td {{r.modality_name}}
+						td {{r.receivable_code}}
+						td {{r.receivable_date | date:'dd/MM/yyyy'}}
+						td {{r.receivable_deadline | date:'dd/MM/yyyy'}}
+						td {{r.receivable_value | currency: 'R$ '}}
+						td {{r.receivable_paid | currency: 'R$ '}}
+						td {{r.receivable_delay}} dias
+	div(layout='column')
+		.bar
+			md-toolbar
+				.md-toolbar-tools(layout='row')
+					.info
+						md-tooltip(md-direction='top') Limite de crédito
+						i.fa.fa-credit-card &nbsp;
+						| {{ctrl.person_credit_limit.person_credit_limit_value | currency: 'R$ '}}
+					.info
+						md-tooltip(md-direction='top') Títulos em aberto vencidos
+						i.fa.fa-files-o.danger &nbsp;						
+						| {{ctrl.person_credit_limit.person_expired_quantity}}
+					.info
+						md-tooltip(md-direction='top') Títulos em aberto a vencer
+						i.fa.fa-files-o.warning &nbsp;						
+						| {{ctrl.person_credit_limit.person_expiring_quantity}}
+					.info
+						md-tooltip(md-direction='top') Saldo de crédito
+						i.fa.fa-money &nbsp;						
+						| {{ctrl.person_credit_limit.person_credit_limit_balance | currency: 'R$ '}}
+					.legend-receivables
+						.danger.pull-right
+							i.fa.fa-stop
+							| Bloqueado
+						.warning.pull-right
+							i.fa.fa-stop
+							| Vencido
+						.default.pull-right
+							i.fa.fa-stop
+							| Aberto
 
 .footer(layout='row' layout-align='end center')
-	md-button.md-primary(ng-click='ctrl._close(ctrl.company)')
-		| &nbsp; Ok &nbsp;
+	md-button.md-primary.md-raised(ng-click='ctrl._close()')
+		| &nbsp; Fechar &nbsp;

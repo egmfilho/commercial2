@@ -54,6 +54,7 @@
 				Globals.set('logo', success.data.data.logo);
 				Globals.set('print-message', success.data.data.order);
 				Globals.set('default-price-table', success.data.data.price.default_price);
+				Globals.set('debit-day-limit', success.data.data.credit_limit.debit_day_limit);
 				Globals.set('credit-limit', success.data.data.credit_limit.authorized_modality_id);
 				Globals.set('mail-contact-id', success.data.data.contact_mail.contact_mail_type_id);
 				Globals.set('default-customer', {

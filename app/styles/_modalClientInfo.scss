@@ -1,0 +1,94 @@
+.well-receivables{
+	padding: 14px 20px;
+	margin: 0;
+}
+
+.receivables-table-header-container{
+	padding-top: 14px;
+	padding-right: 10px;
+	border: 1px solid $border-color;
+	border-bottom: none;
+}
+
+.receivables-table {
+	
+	tbody{
+		tr{
+			&.blocked td{
+				@extend .text-danger;
+			}
+			&.expired td{
+				color: #a53013 !important;
+			}
+		}
+	}
+
+	tr {
+		th{
+			padding: 0 5px 10px;
+		}
+
+		td{
+			padding: 10px 5px;
+		}
+
+		th, td {
+			
+			&:nth-child(1) {
+				width: auto;
+				text-align: center;
+			}
+
+			&:nth-child(2), &:nth-child(3), &:nth-child(5), &:nth-child(6), &:nth-child(7){
+				width: 13%;
+			}
+
+			&:nth-child(4){
+				width: 16%;
+			}
+		}
+	}
+}
+
+.bar {
+	z-index: 0;
+
+	.md-toolbar-tools {
+		background-color: white;
+		color: $main-color;
+		font-size: .7em;
+		border: 1px solid $border-color;
+		border-top: none;
+
+		.info{
+			margin-right: 20px;
+		}
+
+		.danger{
+			@extend .text-danger;
+		}
+
+		.warning{
+			color: #a53013;
+		}
+
+		.default, .default i{
+			color: $main-color !important;
+		}
+
+		.legend-receivables{
+			
+			position: absolute;
+			right: 15px;
+			top: 15px;
+
+			> div{
+				margin-left: 8px;
+			}		
+
+			i{
+				margin-right: 4px;
+			}
+		}
+	}
+}

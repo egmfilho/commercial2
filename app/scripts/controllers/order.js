@@ -2655,13 +2655,28 @@
 			message += '<div style="border-top:1px dashed black;margin-top:10px;padding-top:10px;"><b>Saldo de crédito</b>: ' + self.budget.order_client.person_credit_limit.person_credit_limit_balance + '</div>';
 			$rootScope.customDialog().showMessage('Informação', message);*/
 			var controller = function(){
+				
+				var vm = this;
+
 				this._showCloseButton = true;
 				this.client_code = self.budget.order_client.person_code;
 				this.client_name = self.budget.order_client.person_name;
 				this.person_credit_limit = self.budget.order_client.person_credit_limit;
+				this.receivables = self.budget.order_client.person_credit_limit.receivables;
+				this.debit_day_limit = Globals.get('debit-day-limit');
+
+				this.grid = {
+					propertyName: 'receivable_delay',
+					reverse: true
+				}
+
+				this.sortBy = function(propertyName){
+					vm.grid.reverse = (vm.grid.propertyName === propertyName) ? !vm.grid.reverse : false;
+					vm.grid.propertyName = propertyName;
+				};
 			};
 
-			$rootScope.customDialog().showTemplate('Informações do Cliente', './partials/modalClientInfo.html', controller, { width: 500 })
+			$rootScope.customDialog().showTemplate('Informações do Cliente', './partials/modalClientInfo.html', controller, { width: 720 })
 				.then(function(success){
 
 				}, function(error) { 
