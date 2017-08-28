@@ -19,8 +19,8 @@
 				tbody
 					tr(ng-repeat='c in ctrl.creditArray track by $index' ng-click='ctrl.setActive(c)' ng-dblclick='ctrl.selectCredit(c)' ng-class='{"active": $index == ctrl.activeRow, "text-danger": !!c.pawn}')
 						td 
-							md-checkbox(ng-model='c.checked' ng-disabled='!!c.pawn')
-						td.text-right {{c.company_id}}
+							md-checkbox(ng-model='c.checked' ng-disabled='!!c.pawn || ctrl.viewOnly')
+						td.text-center {{c.company_id}}
 						td.text-danger {{ctrl.person.person_name}}
 						td {{c.payable_code}}
 						td {{c.credit_value | currency:'R$ '}}
@@ -34,7 +34,7 @@
 				| {{ctrl.tempNote}}
 
 	.footer(layout='row' layout-align='end center')
-		md-button.md-raised.md-primary(name='positive' ng-click='ctrl.close()')
+		md-button.md-raised.md-primary(name='positive' ng-click='ctrl.close()' ng-disabled='ctrl.viewOnly')
 			| &nbsp; Ok &nbsp;
 		md-button.md-raised(name='negative' ng-click='ctrl._cancel()')
 			| &nbsp; Cancelar &nbsp;

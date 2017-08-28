@@ -345,7 +345,8 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 						.container-table
 							table.table.products-table
 								tbody
-									tr(ng-repeat='i in order.budget.order_items track by $index' layout='row' ng-dblclick='order.editItem(i)')
+									tr(ng-repeat='i in order.budget.order_items track by $index' layout='row' ng-dblclick='order.editItem(i)'
+										ng-class='{"sold-out": i.product.stock.product_stock <= 0}')
 										td {{i.product.product_code}} - {{i.product.product_name}}
 										td {{i.product.unit.unit_initials}}
 										td {{i.order_item_amount | currency:''}}
@@ -640,7 +641,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									| {{order.budget.creditPayment.order_payment_credit_available || '0' | currency:"R$ "}}
 
 								md-button.md-primary.md-raised(style='margin: 0;' ng-click='order.addCredit()' 
-										ng-disabled='!order.budget.order_client.person_credit.length || !order.budget.order_items.length')
+										ng-disabled='!order.budget.order_client.person_credit.length')
 									i.fa.fa-plus &nbsp;
 									| Adicionar
 							

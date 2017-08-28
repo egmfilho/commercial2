@@ -48,7 +48,7 @@
 							category: category,
 							name: '',
 							doc: '',
-							active: true
+							active: false
 						};
 						
 						this.options = options;

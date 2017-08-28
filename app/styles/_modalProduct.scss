@@ -12,6 +12,11 @@
 			&.inactive td{
 				@extend .text-danger;
 			}
+
+			&.sold-out td {
+				color: white !important;
+				background-color: rgba(#F00, .8);
+			}
 		}
 	}
 

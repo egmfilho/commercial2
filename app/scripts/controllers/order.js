@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-22 08:47:25
+* @Last Modified time: 2017-08-28 17:05:10
 */
 
 (function() {
@@ -2424,6 +2424,7 @@
 			var controller = function() {
 				this._showCloseButton = true;
 				this.person = self.budget.order_client;
+				this.viewOnly = !self.budget.order_items.length;
 
 				this.creditArray = new Array();
 
@@ -2442,6 +2443,9 @@
 				});
 
 				this.selectCredit = function(c) {
+					if (this.viewOnly)
+						return;
+
 					if (c.credit_value_available < 0.01) {
 						$rootScope.customDialog().showMessage('Aviso', 'Esta carta de crédito não possui valor disponível!');
 						return;
@@ -2467,6 +2471,9 @@
 				};
 
 				this.close = function() {
+					if (this.viewOnly)
+						return;
+
 					var result = new Array(),
 						pawned = { };
 
