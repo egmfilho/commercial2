@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 08:16:50
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-21 13:23:28
+* @Last Modified time: 2017-08-24 15:58:49
 */
 
 (function() {
@@ -60,6 +60,7 @@
 					title: constants['app-name'],
 					parent: parent,
 					modal: false,
+					minimizable: true,
 					icon: './images/logo-icon.png',
 					webPreferences: {
 						zoomFactor: constants.zoomFactor

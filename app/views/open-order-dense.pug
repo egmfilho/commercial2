@@ -32,17 +32,16 @@
 							i.fa.fa-times-circle
 
 						md-autocomplete(flex
-										md-delay='300'
+										ng-model-options='{ debounce: 250 }'
+										md-delay='250'
 										md-input-name='autocompleteSeller'
-										md-no-cache='true'
+										md-no-cache='false'
 										md-autoselect='true'
-										md-escape-options='none'
 										md-selected-item='openOrder.seller'
 										md-search-text='sellerQuery'
 										md-items='item in openOrder.getSellerByName(sellerQuery)'
 										md-item-text='item.person_name'
 										md-min-length='3'
-										md-require-match='true'
 										md-floating-label='Vendedor')
 							md-item-template
 								div(md-highlight-text='sellerQuery' style='line-height: 2') {{item.person_name}}
@@ -101,35 +100,17 @@
 						th &nbsp;
 						th &nbsp;
 
-	//- md-content.open-order-dense-container(flex)
-		//- table.table.order-table
-			tbody
-				tr(ng-repeat='o in openOrder.orders | orderBy:openOrder.grid.propertyName:openOrder.grid.reverse | filter: { queryable: openOrder.filters.query, order_status_id: openOrder.filters.status, order_export_type: openOrder.filters.exportType }' ng-dblclick='open(o)')
 	div(flex)
 		md-virtual-repeat-container#virtual-repeat-container
 			.repeated-item(layout='row' layout-align='start center' md-virtual-repeat='o in openOrder.orders | orderBy:openOrder.grid.propertyName:openOrder.grid.reverse | filter: { queryable: openOrder.filters.query, order_status_id: openOrder.filters.status, order_export_type: openOrder.filters.exportType }' ng-dblclick='open(o)')
-				span 
-					md-icon(
-						md-font-set='material-icons' 
-						ng-style='{ "color": globals("order-export-type-colors")[o.order_export_type] }'
-						ng-if='o.order_status_id == globals("order-status-values").open') cloud_queue
-				
-					md-icon(
-						md-font-set='material-icons' 
-						ng-style='{ "color": globals("order-export-type-colors")[o.order_export_type] }'
-						ng-if='o.order_status_id == globals("order-status-values").exported') cloud
-
-					md-icon(
-						md-font-set='material-icons' 
-						ng-style='{ "color": globals("order-export-type-colors")[o.order_export_type] }'
-						ng-if='o.order_status_id == globals("order-status-values").billed') cloud_done
-
+				span &nbsp;
+					i.material-icons(ng-style='{ "color": o.cloudColor}' ng-class='{ "cloud-open": o.isOpen, "cloud-exported": o.isExported, "cloud-billed": o.isBilled }') &nbsp;
 				span {{o.order_code}}
 				span {{o.order_code_erp}}
 				span {{o.order_client.person_name}}
-				span {{o.order_seller.person_shortname || (o.order_seller.person_name | truncate: 15 : ' ')}}
-				span {{(o.order_value_total+o.order_value_st) | currency:'R$ '}}
-				span {{o.order_date | date:'dd/MM/yyyy'}}
+				span {{o.order_seller_name}}
+				span {{o.order_value_total_plus_st_formatted}}
+				span {{o.order_date_formatted}}
 				span 
 					button(ng-click='open(o)' md-no-ink)
 						i.fa.fa-pencil

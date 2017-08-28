@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-17 12:52:10
+* @Last Modified time: 2017-08-28 14:36:51
 */
 
 (function() {
@@ -70,7 +70,11 @@
 					self.seller = new Person(Globals.get('user')['user_seller']);
 				}
 				
-				self.getOrders();
+				$timeout(function() {
+					$rootScope.loading.load();
+					self.getOrders();
+					$rootScope.loading.unload();
+				}, 1000);
 			});
 
 			$scope.$on('$destroy', function() {
@@ -190,17 +194,14 @@
 			self.getOrders = function (index, quantity){
 				self.orders = [];
 
-				var deferred = $q.defer();
+				// var deferred = $q.defer();
 				var options = {
 						company_id: self.companyId,
 						start_date: self.calendar.start.value,
-						// start_date: new Date('2017-08-08'),
 						end_date: self.calendar.end.value,
-						// end_date: new Date('2017-08-16'),
 						order_seller_id: self.seller && self.seller.person_id,
 						getCustomer: true,
-						getSeller: true,
-						// limit: index + ',' + quantity
+						getSeller: true
 					};
 
 				$rootScope.loading.load();
@@ -211,21 +212,32 @@
 					$scope.setSearchOpen(false);
 					self.filters.query = '';
 
+					var orderExportTypeColors = Globals.get('order-export-type-colors'),
+						orderStatusValues = Globals.get("order-status-values");
+
 					self.orders = success.data.map(function(order) {
-						return new Order(order);
+						return new Order(angular.extend({}, order, {
+							order_value_total_plus_st_formatted: $filter('currency')(order.order_value_total + order.order_value_st, 'R$ '),
+							order_date_formatted: $filter('date')(new Date(order.order_date), 'dd/MM/yyyy'),
+							order_seller_name: order.order_seller.person_shortname ? order.order_seller.person_shortname : $filter('truncate')(order.order_seller.person_name, 15, ' '),
+							cloudColor: orderExportTypeColors[order.order_export_type],
+							isOpen: order.order_status_id == orderStatusValues.open,
+							isExported: order.order_status_id == orderStatusValues.exported,
+							isBilled: order.order_status_id == orderStatusValues.billed
+						}));
 					});
 
 					$rootScope.loading.unload();
-					deferred.resolve(success.data.map(function(order) {
-						return new Order(order);
-					}));
+					// deferred.resolve(success.data.map(function(order) {
+						// return new Order(order);
+					// }));
 				}, function(error) {
 					constants.debug && console.log(error);
 					$rootScope.loading.unload();
-					deferred.reject();
+					// deferred.reject();
 				});
 
-				return deferred.promise;
+				// return deferred.promise;
 			}
 
 			function getPersonByName(name, category) {

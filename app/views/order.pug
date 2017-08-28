@@ -435,7 +435,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 								span.md-title 
 									i.fa.fa-exclamation-triangle.text-warning(ng-if='order.budget.order_client.person_id && ( order.budget.order_client.person_credit_limit.blocked_days_limit == 1 || order.budget.order_client.person_credit_limit.person_credit_limit_balance <= 0 )') &nbsp;
 									| Cliente
-									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-3' | keyboardShortcut }})
+									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-2' | keyboardShortcut }})
 								span.md-subhead Informe o cliente e seu endereço de entrega
 							div(layout='row' layout-align='end center' layout-fill)
 								//- md-button.md-raised.text-primary(ng-click='order.showModalCustomer()')
@@ -535,7 +535,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 						div(layout='row')
 							div(flex='90' layout='column')
 								span.md-title Pagamento
-									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-4' | keyboardShortcut }})
+									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-3' | keyboardShortcut }})
 								span.md-subhead Informe as formas de pagamento
 							div(layout='column' layout-align='center end' layout-fill)
 								md-button.md-raised.button-red(ng-click='order.clearPayments()' md-colors='{background: "commercialRed"}')

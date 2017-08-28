@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-18 16:43:27
+* @Last Modified time: 2017-08-28 10:24:51
 */
 
 (function() {
@@ -71,6 +71,7 @@
 			this.order_al_discount           = 0;
 			this.order_vl_discount           = 0;
 			this.order_value_total           = 0;
+			this.order_value_total_plus_st   = 0;
 			this.order_note                  = null;
 			this.order_note_doc              = null;
 			this.order_mail_sent             = new Array();
@@ -107,6 +108,7 @@
 					address_delivery: new Address(order.address_delivery),
 					order_payments: order.order_payments ? order.order_payments.map(function(op) { return new OrderPayment(op) }) : new Array(),
 					status: order.status ? new OrderStatus(order.status) : new OrderStatus(),
+					order_value_total_plus_st: order.order_value_total + order.order_value_st,
 					queryable: order.order_id ?
 						(order.order_code + ' '
 						+ order.order_client.person_code + ' '
