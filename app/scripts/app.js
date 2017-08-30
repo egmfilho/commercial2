@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-10 13:59:26
+* @Last Modified time: 2017-08-29 17:02:53
 */
 
 'use strict';
@@ -348,11 +348,11 @@ angular.module('commercial2', [
 			dialog: null,
 			count: 0,
 			isLoading: function() { return this.count > 0 },
-			load: function(title, message) { 
+			load: function(title, message, options) { 
 				if (this.count == 0) {
 					if (!this.dialog) 
 						this.dialog = $rootScope.customDialog();
-					this.dialog.showUnclosable(title || 'Aguarde', message || 'Carregando informações...');
+					this.dialog.showUnclosable(title || 'Aguarde', message || 'Carregando informações...', null, options);
 				}
 				this.count++; 
 			},

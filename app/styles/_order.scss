@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 16:01:34
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-28 17:49:17
+* @Last Modified time: 2017-08-30 12:59:11
 */
 
 .customer-credit-modal {
@@ -152,11 +152,18 @@
 		.delivery-address {
 			z-index: 0;
 			
-			.md-toolbar-tools {
-				background-color: white;
-				color: $main-color;
-				font-size: .7em;
-				border: 1px solid $border-color;
+			md-toolbar {
+				height: 60px !important;
+
+				.md-toolbar-tools {
+					background-color: white;
+					color: $main-color;
+					font-size: .7em;
+					border: 1px solid $border-color;
+					height: 64px !important;
+					min-height: 64px;
+					box-sizing: border-box;				
+				}
 			}
 		}
 	}

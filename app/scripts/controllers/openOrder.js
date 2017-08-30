@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-28 14:36:51
+* @Last Modified time: 2017-08-30 13:43:20
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.controllers')
 		.controller('OpenOrderCtrl', OpenOrderCtrl);
 
-		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', '$routeParams', '$location', '$q', '$timeout', '$filter', 'ProviderOrder', 'Order', 'ProviderPerson', 'Person', 'Globals', 'Constants', 'ElectronWindow' ];
+		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', '$routeParams', '$location', '$q', '$timeout', '$filter', 'ProviderOrder', 'Order', 'ProviderPerson', 'Person', 'WebWorker', 'Globals', 'Constants', 'ElectronWindow' ];
 
-		function OpenOrderCtrl($rootScope, $scope, $routeParams, $location, $q, $timeout, $filter, providerOrder, Order, providerPerson, Person, Globals, constants, ElectronWindow) {
+		function OpenOrderCtrl($rootScope, $scope, $routeParams, $location, $q, $timeout, $filter, providerOrder, Order, providerPerson, Person, WebWorker, Globals, constants, ElectronWindow) {
 
 			var self = this,
 				Mousetrap = null,
@@ -33,8 +33,7 @@
 					if (status == self.filters.status && exportType == self.filters.exportType) {
 						self.filters.status = '';
 						self.filters.exportType = '';
-					}
-					else {
+					} else {
 						self.filters.status = status;
 						self.filters.exportType = exportType;
 						jQuery('.filters .status-filter:nth-child(' + child + ')').addClass('active');
@@ -71,7 +70,7 @@
 				}
 				
 				$timeout(function() {
-					$rootScope.loading.load();
+					$rootScope.loading.load(null, null, { zIndex: 1 });
 					self.getOrders();
 					$rootScope.loading.unload();
 				}, 1000);
@@ -110,7 +109,7 @@
 			$scope.delete = function(order) {
 				$rootScope.customDialog().showConfirm('Aviso', 'Excluir o orçamento <b>' + order.order_code + '</b>?')
 					.then(function(success) {
-						$rootScope.loading.load();
+						$rootScope.loading.load(null, null, { zIndex: 1 });
 						providerOrder.remove(order.order_id).then(function(success) {
 							$rootScope.loading.unload();
 							// $rootScope.customDialog().showMessage('Sucesso', 'Orçamento excluído!');
@@ -164,38 +163,12 @@
 				self.grid.propertyName = propertyName;
 			};
 
-			self.infiniteItems = {
-				numLoaded_: 0,
-				toLoad_: 0,
-				items: [ ],
-				getItemAtIndex: function(index) {
-					if (index > this.numLoaded_) {
-						this.fetchMoreItems_(index)
-						return null;
-					}
-
-					return this.items[index];
-				},
-				getLength: function() {
-					return this.numLoaded_ + 15;
-				},
-				fetchMoreItems_: function(index) {
-					if (this.toLoad_ < index) {
-						console.log('fetch ' + index);
-						this.toLoad_ += 15;
-						self.getOrders(index - 1, 15).then(angular.bind(this, function(obj) {
-							this.items = this.items.concat(obj);
-							this.numLoaded_ = this.toLoad_;
-						}));
-					}
-				}
-			} 
-
 			self.getOrders = function (index, quantity){
 				self.orders = [];
 
-				// var deferred = $q.defer();
 				var options = {
+						// start_date: moment('08-18-2017').toDate(),
+						// end_date: moment('08-20-2017').toDate(),
 						company_id: self.companyId,
 						start_date: self.calendar.start.value,
 						end_date: self.calendar.end.value,
@@ -204,7 +177,7 @@
 						getSeller: true
 					};
 
-				$rootScope.loading.load();
+				$rootScope.loading.load(null, null, { zIndex: 1 });
 				providerOrder.getAll(options).then(function(success) {
 					$scope.info.count = success.info.quantity;
 					$scope.info.sum = success.info.value_total;
@@ -213,10 +186,10 @@
 					self.filters.query = '';
 
 					var orderExportTypeColors = Globals.get('order-export-type-colors'),
-						orderStatusValues = Globals.get("order-status-values");
+						orderStatusValues = Globals.get('order-status-values');
 
 					self.orders = success.data.map(function(order) {
-						return new Order(angular.extend({}, order, {
+						return new Order(Object.assign({}, order, {
 							order_value_total_plus_st_formatted: $filter('currency')(order.order_value_total + order.order_value_st, 'R$ '),
 							order_date_formatted: $filter('date')(new Date(order.order_date), 'dd/MM/yyyy'),
 							order_seller_name: order.order_seller.person_shortname ? order.order_seller.person_shortname : $filter('truncate')(order.order_seller.person_name, 15, ' '),
@@ -228,16 +201,11 @@
 					});
 
 					$rootScope.loading.unload();
-					// deferred.resolve(success.data.map(function(order) {
-						// return new Order(order);
-					// }));
+
 				}, function(error) {
 					constants.debug && console.log(error);
 					$rootScope.loading.unload();
-					// deferred.reject();
 				});
-
-				// return deferred.promise;
 			}
 
 			function getPersonByName(name, category) {
@@ -269,7 +237,7 @@
 				if ( ( self.seller && code == self.seller.person_code ) || !parseInt(code))
 					return;
 
-				$rootScope.loading.load();
+				$rootScope.loading.load(null, null, { zIndex: 1 });
 				self.getPersonByCode(code, Globals.get('person-categories').seller).then(function(success) {
 					self.seller = new Person(success.data);
 					$rootScope.loading.unload();

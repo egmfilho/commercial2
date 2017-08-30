@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-29 10:46:07
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-19 13:42:11
+* @Last Modified time: 2017-08-30 16:51:31
 */
 
 (function() {
@@ -28,7 +28,8 @@
 					getByName:   getByName,
 					getByFilter: getByFilter,
 					getByType:   getByType,
-					save:        save
+					save:        save,
+					check:       check
 				}
 
 				// ******************************
@@ -116,6 +117,15 @@
 					return provider.save({
 						action: 'insert'
 					}, person).$promise;
+				}
+
+				function check(cpf, cnpj) {
+					return provider.save({
+						action: 'check'
+					}, {
+						person_cpf: cpf,
+						person_cnpj: cnpj
+					}).$promise;
 				}
 
 			}];

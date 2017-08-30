@@ -39,16 +39,16 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 
 						md-menu-divider
 						md-menu-item
-							md-button(ng-click='order.print()' ng-disabled='!order.canPrint() || order.isToolbarLocked()')
+							md-button(ng-click='order.print()' ng-disabled='!order.canPrint()')
 								md-icon(md-font-set='material-icons') print
 								|  Imprimir
 								span.md-alt-text {{ 'M-P' | keyboardShortcut }}
 						md-menu-item
-							md-button(ng-click='order.savePDF()' ng-disabled='!order.canPrint() || order.isToolbarLocked()')
+							md-button(ng-click='order.savePDF()' ng-disabled='!order.canPrint()')
 								md-icon(md-font-icon='fa fa-file-pdf-o')
 								|  Salvar PDF
 						md-menu-item
-							md-button(ng-click='order.mail()' ng-disabled='!order.canPrint() || order.isToolbarLocked()')
+							md-button(ng-click='order.mail()' ng-disabled='!order.canPrint()')
 								md-icon(md-font-set='material-icons') mail
 								|  Enviar por email
 						md-menu-divider
@@ -143,17 +143,17 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 
 				.separator
 
-				md-button.toolbar-btn(ng-click='order.print()' ng-disabled='!order.canPrint() || order.isToolbarLocked()')
+				md-button.toolbar-btn(ng-click='order.print()' ng-disabled='!order.canPrint()')
 					md-tooltip(md-direction='bottom') 
 						| Imprimir orçamento &nbsp;
 						span.md-alt-text ({{ 'M-P' | keyboardShortcut }})
 					md-icon(md-font-set='material-icons' style='color: deepskyblue') print
 
-				md-button.toolbar-btn(ng-click='order.savePDF()' ng-disabled='!order.canPrint() || order.isToolbarLocked()')
+				md-button.toolbar-btn(ng-click='order.savePDF()' ng-disabled='!order.canPrint()')
 					md-tooltip(md-direction='bottom') Salvar como PDF
 					md-icon(md-font-icon='fa fa-file-pdf-o' style='color: red')
 
-				md-button.toolbar-btn(ng-click='order.mail()' ng-disabled='!order.canPrint() || order.isToolbarLocked()')
+				md-button.toolbar-btn(ng-click='order.mail()' ng-disabled='!order.canPrint()')
 					md-tooltip(md-direction='bottom') Enviar por email
 					md-icon(md-font-set='material-icons' style='color: dodgerblue') mail
 
@@ -522,8 +522,9 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 											| Código: {{order.budget.order_address_delivery_code}}
 										span {{order.budget.address_delivery.toString()}}
 
-									md-button.md-icon-button.md-raised(ng-click='order.addressDialog()' ng-if='order.budget.order_client_id' md-colors='{background: "commercialOrange"}')
-										md-icon.text-white(md-font-icon='fa fa-pencil' style='font-size: 20px')
+									md-button.md-raised.text-white(ng-click='order.addressDialog()' ng-if='order.budget.order_client_id' md-colors='{background: "commercialOrange"}')
+										i.fa.fa-address-book-o &nbsp; 
+										| Endereços
 
 					pre(ng-if='debug')
 						| {{order.budget.order_client | json}}

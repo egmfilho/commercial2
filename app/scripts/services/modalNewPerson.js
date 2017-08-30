@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-08-15 11:17:54
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-17 09:18:04
+* @Last Modified time: 2017-08-30 17:13:37
 */
 
 (function() {
@@ -35,6 +35,16 @@
 						scope.queryCity = source.city.city_name;
 						scope.searchCity();
 					}
+
+					this.checkDocument = function() {
+						providerPerson.check(this.customer.person_cpf, this.customer.person_cnpj)
+							.then(function(success) {
+								$rootScope.customDialog().showMessage('Aviso', 'Usuário já cadastrado!');
+							}, function(error) {
+								if (error.status != 404 && error.status != 417)
+									$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+							});
+					};
 
 					this.save = function() {
 						if (!scope.customer.person_name) {

@@ -57,9 +57,14 @@
 						md-button(ng-click='ctrl.showSelection()')
 							| {{ctrl.getSelectionLength() > 0 ? ctrl.getSelectionLength() : 'Nenhum'}} {{ctrl.getSelectionLength() > 1 ? 'selecionados' : 'selecionado'}}
 
-					.legend.text-right(flex='35')
-						i.fa.fa-stop
-						| Inativo
+					.text-right(flex='35')
+						.legend.inactive
+							i.fa.fa-stop
+							| Inativo
+
+						.legend.sold-out
+							i.fa.fa-stop
+							| Sem estoque
 
 
 .footer(layout='row' layout-align='end center')

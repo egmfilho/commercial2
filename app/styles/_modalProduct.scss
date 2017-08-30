@@ -9,13 +9,12 @@
 	
 	tbody{
 		tr{
-			&.inactive td{
-				@extend .text-danger;
+			&.sold-out td {
+				color: red !important;
 			}
 
-			&.sold-out td {
-				color: white !important;
-				background-color: rgba(#F00, .8);
+			&.inactive td{
+				color: #ccc !important;
 			}
 		}
 	}
@@ -131,7 +130,20 @@
 		border-top: none;
 
 		.legend{
-			@extend .text-danger;
+			display: inline-block;
+
+			&.sold-out {
+				color: red !important;
+			}
+
+			&.inactive {
+				margin-right: 30px;
+				color: $main-color !important;
+
+				.fa.fa-stop {
+					color: #ccc !important;
+				}
+			}
 
 			i{
 				margin-right: 4px;

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-28 17:05:10
+* @Last Modified time: 2017-08-30 15:39:55
 */
 
 (function() {
@@ -294,8 +294,6 @@
 		self.clearTerm             = clearTerm;
 		self.getPersonByCode       = getPersonByCode;
 		self.getPersonByName       = getPersonByName;
-		self.getSellerByCode       = getSellerByCode;
-		self.getSellerByName       = getSellerByName;
 		self.getCustomerByCode     = getCustomerByCode;
 		self.getCustomerByName     = getCustomerByName;
 		self.getProductByCode      = getProductByCode;
@@ -643,6 +641,23 @@
 			self.showModalOrderSeller(save);
 		};
 
+		function soldOutWarning() {
+			var message = '';
+
+			for (var i = 0; i < self.budget.order_items.length; i++) {
+				if (self.budget.order_items[i].product.stock.product_stock <= 0) {
+					message += '<br><br><div class="well">';
+					message += '<span class="text-danger">ATENÇÃO</span><br><br>';
+					message += 'Este orçamento possui 1 ou mais itens sem estoque.';
+					message += '</div>';
+
+					break;
+				}
+			}
+
+			return message;
+		}
+
 		function save() {
 
 			if (_backup && self.budget.equals(_backup)) {
@@ -665,7 +680,7 @@
 				return;		
 			}
 
-			$rootScope.customDialog().showConfirm('Aviso', 'Deseja salvar o orçamento atual?')
+			$rootScope.customDialog().showConfirm('Aviso', 'Deseja salvar o orçamento atual?' + soldOutWarning())
 				.then(function(success) {
 					var filtered = filterBudget();
 
@@ -846,6 +861,12 @@
 		 * Verifica se o orcamento pode ser impresso.
 		 */
 		function canPrint() {
+			if (self.budget.printable)
+				return true;
+
+			if (isToolbarLocked())
+				return false;
+
 			return self.budget.order_code && (_backup && self.budget.equals(_backup));
 		}
 
@@ -1073,42 +1094,6 @@
 			});
 
 			return deferred.promise;
-		}
-
-		/**
-		 * Pesquisa o vendedor pelo codigo.
-		 * @param {string} code - O codio do vendedor.
-		 */
-		function getSellerByCode(code) {
-			if (!code) {
-				self.focusOn('input[name="autocompleteSeller"]');
-				return;
-			}
-
-			if (code == self.budget.order_seller.person_code || !parseInt(code))
-				return;
-
-			$rootScope.loading.load();
-			getPersonByCode(code, Globals.get('person-categories').seller).then(function(success) {
-				self.budget.setSeller(new Person(success.data));
-				self.internal.tempSeller = new Person(success.data);
-				$rootScope.loading.unload();
-			}, function(error) {
-				constants.debug && console.log(error);
-				$rootScope.loading.unload();
-
-				if (error.status == 404)
-					self.showNotFound();
-			});
-		}
-
-		/**
-		 * Pesquisa vendedores pelo nome.
-		 * @param {string} name - O nome do vendedor.
-		 * @returns {object} - Uma promise com o resultado.
-		 */
-		function getSellerByName(name) {
-			return getPersonByName(name, Globals.get('person-categories').seller);
 		}
 
 		/**
@@ -1773,7 +1758,7 @@
 
 			var deferred = $q.defer();
 
-			$rootScope.customDialog().showConfirm('Aviso', 'Exportar pedido?')
+			$rootScope.customDialog().showConfirm('Aviso', 'Exportar pedido?' + soldOutWarning())
 				.then(function(success) {
 					constants.debug && console.log('exportando pedido: ' + self.budget.order_id);					
 
@@ -1870,7 +1855,7 @@
 
 			var deferred = $q.defer();
 
-			$rootScope.customDialog().showConfirm('Aviso', 'Exportar DAV?')
+			$rootScope.customDialog().showConfirm('Aviso', 'Exportar DAV?' + soldOutWarning())
 				.then(function(success) {
 					constants.debug && console.log('exportando DAV: ' + self.budget.order_id);
 					
@@ -1996,6 +1981,12 @@
 				this.value_total = self.budget.order_value_total;
 
 				this.hoverIndex = -1;
+				this.close = function() {
+					if (this.hoverIndex >= 0)
+						this._close(this.term.modality[this.hoverIndex]);
+					else
+						this._cancel();
+				};
 
 				if (constants.isElectron) {
 					var scope = this;
@@ -2017,6 +2008,7 @@
 				}
 
 				jQuery('table[name="clementino"]').focus();
+
 			};
 
 			var options = {
@@ -2788,23 +2780,46 @@
 
 					this._showCloseButton = true;
 
-					this.load = function() {
-						this.budget = self.budget;
-						this.tempSeller = self.internal.tempSeller;
-						this.getSellerByCode = self.getSellerByCode;
-						this.getSellerByName = self.getSellerByName;
+					this.budget = self.budget;
+					this.tempSeller = self.internal.tempSeller;
 
+					this.getSellerByName = function(name) {
+						return getPersonByName(name, Globals.get('person-categories').seller);
+					};
 
-						scope.$watch(function() {
-							return self.internal.tempSeller;
-						}, function() {
-							vm.tempSeller = self.internal.tempSeller;
+					this.getSellerByCode = function(code) {
+						if (!code) {
+							self.focusOn('input[name="autocompleteSeller"]');
+							return;
+						}
+
+						if (code == self.budget.order_seller.person_code) {
+							self.focusOn('.footer button[name="confirm"]');
+							return;
+						}
+
+						if (!parseInt(code))
+							return;
+
+						$rootScope.loading.load();
+						getPersonByCode(code, Globals.get('person-categories').seller).then(function(success) {
+							self.budget.setSeller(new Person(success.data));
+							vm.tempSeller = new Person(success.data);
+							self.internal.tempSeller = vm.tempSeller;
+							$rootScope.loading.unload();
+						}, function(error) {
+							constants.debug && console.log(error);
+							$rootScope.loading.unload();
+
+							if (error.status == 404) {
+								self.showNotFound();
+							}
 						});
-						
-						this.blurSeller = function() { 
-							if (vm.budget.order_seller.person_id) 
-								vm.tempSeller = new Person(vm.budget.order_seller);
-						};
+					};
+					
+					this.blurSeller = function() { 
+						if (vm.budget.order_seller.person_id) 
+							vm.tempSeller = new Person(vm.budget.order_seller);
 					};
 
 					this.showModalSeller = function() {
@@ -2821,8 +2836,6 @@
 								self.internal.tempSeller = new Person(success);
 							}, function(error) { });
 					};
-
-					this.load();
 				};
 
 				controller.$inject = [ '$scope' ];
@@ -2882,8 +2895,6 @@
 					providerOrder.unlock(self.budget.order_id)
 						.then(function(success) {
 							$rootScope.loading.unload();
-							//window.location.href = window.location.href + '&reloaded=true';
-							///location.reload();
 							if (constants.isElectron) {
 								var options = {
 									parent: _remote.getGlobal('mainWindow').instance,
@@ -2906,7 +2917,9 @@
 							$rootScope.loading.unload();
 							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 						});
-				}, function(error) { }); 
+				}, function(error) { 
+					self.budget.printable = true;
+				}); 
 		}
 	}
 }());

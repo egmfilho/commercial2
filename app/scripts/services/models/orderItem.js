@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-18 16:38:30
+* @Last Modified time: 2017-08-30 13:49:21
 */
 
 (function() {
@@ -151,12 +151,14 @@
 			 */
 
 			function getValue() {
-				// return this.order_item_amount * this.order_item_value_unitary;
+				/* JEITO CERTO */
+				return this.order_item_amount * this.order_item_value_unitary;
 				
-				if (!this.order_item_value_unitary)
-					return 0;
-				else
-					return parseFloat(( this.order_item_amount * parseFloat((this.order_item_value_unitary).toFixed(2)) ).toFixed(2));
+				/* JEITO ALTERDATANO */
+				// if (!this.order_item_value_unitary)
+				// 	return 0;
+				// else
+				// 	return parseFloat(( this.order_item_amount * parseFloat((this.order_item_value_unitary).toFixed(2)) ).toFixed(2));
 			}
 
 			function getValueTotal() {

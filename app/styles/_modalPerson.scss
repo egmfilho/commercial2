@@ -10,7 +10,7 @@
 	tbody{
 		tr{
 			&.inactive td{
-				@extend .text-danger;
+				color: #ccc !important;
 			}
 		}
 	}
@@ -58,7 +58,11 @@
 		border-top: none;
 
 		.legend{
-			@extend .text-danger;
+			color: $main-color !important;
+
+			.fa.fa-stop {
+				color: #ccc !important;
+			}
 
 			i{
 				margin-right: 4px;

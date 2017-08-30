@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-07-27 12:24:55
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-31 17:06:36
+* @Last Modified time: 2017-08-30 16:40:11
 */
 
 (function() {
@@ -201,7 +201,7 @@
 							});
 					}, function(error) {
 						constants.debug && console.log(error);
-						$rootScope.customDialog().showMessage('Erro', 'Não foi possível enviar o email. Tente novamente mais tarde.');
+						$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 						$rootScope.loading.unload();
 					});
 				}, function(error) {

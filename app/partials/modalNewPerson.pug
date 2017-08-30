@@ -21,6 +21,8 @@ div(flex layout='column')
 					| CPF
 				input(name='cpf' 
 					  ng-model='ctrl.customer.person_cpf' 
+					  ng-model-options='{ debounce: 250 }'
+					  ng-change='ctrl.checkDocument()'
 					  ng-pattern="/^[0-9]{3}[.][0-9]{3}[.][0-9]{3}-[0-9]{2}$/" 
 					  ui-mask='999.999.999-99'
 					  model-view-value='true'
@@ -34,6 +36,8 @@ div(flex layout='column')
 					| CNPJ
 				input(name='cnpj' 
 					  ng-model='ctrl.customer.person_cnpj' 
+					  ng-model-options='{ debounce: 250 }'
+					  ng-change='ctrl.checkDocument()'
 					  ng-pattern="/^[0-9]{2}[.][0-9]{3}[.][0-9]{3}/[0-9]{4}[-][0-9]{2}$/" 
 					  ui-mask='99.999.999/9999-99'
 					  model-view-value='true'

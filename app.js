@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-22 16:26:03
+* @Last Modified time: 2017-08-30 08:23:59
 */
 
 const electron = require('electron');
@@ -34,6 +34,10 @@ global.isValidSession = {
 
 global.mainWindow = {
 	instance: null
+};
+
+global.temp = {
+	data: '{ }'
 };
 
 ipcMain.on('propagate-save-order', function(event, arg) {

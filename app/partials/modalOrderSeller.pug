@@ -34,5 +34,5 @@
 						| {{item.person_code}}
 
 .footer(layout='row' layout-align='end center')
-	md-button.md-primary.md-raised(ng-click='ctrl._close()' ng-disabled='!ctrl.budget.order_seller_id')
+	md-button.md-primary.md-raised(name='confirm' ng-click='ctrl._close()' ng-disabled='!ctrl.budget.order_seller_id')
 		| &nbsp; Ok &nbsp;

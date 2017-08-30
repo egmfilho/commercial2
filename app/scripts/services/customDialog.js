@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-31 09:00:47
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-22 13:00:06
+* @Last Modified time: 2017-08-29 16:39:30
 */
 
 (function() {
@@ -43,19 +43,19 @@
 		// Internal methods
 		// ******************************
 
-		function showUnclosable(title, message, controller) {
+		function showUnclosable(title, message, controller, options) {
 			var _controller = function() {
 				this._showProgress = true;
 			};
 
-			return show(this, title, message, null, controller || _controller, {
+			return show(this, title, message, null, controller || _controller, angular.extend({}, {
 				hasBackdrop: true,
 				trapFocus: true,
 				clickOutsideToClose: false,
 				escapeToClose: false,
 				zIndex: 2000,
 				width: 300
-			});
+			}, options));
 		}
 
 		/**
