@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-02 12:07:18
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-01 10:52:16
+* @Last Modified time: 2017-08-31 10:49:58
 */
 
 (function() {
@@ -59,16 +59,18 @@
 		/**
 		* Chama o dialogo de impressao na janela atual do Electron.
 		*/
-		function print() {
+		function print(options) {
 			var win = _electron.remote.getCurrentWindow();
-			win.webContents.print();
+			win.webContents.print({
+				printBackground: true
+			});
 		}
 
 		/**
 		* Chama o dialogo para salvar o PDF na jalena atual do Electron.
 		* @param {object} options - As configuracoes das paginas do pdf.
 		*/
-		function savePDF(options) {
+		function savePDF() {
 			var win = _electron.remote.getCurrentWindow(), 
 				fileSettings = {
 					filters: [ 
@@ -85,6 +87,10 @@
 				_dialog.showErrorBox('Erro', 'File System não inicializado.');
 				return;	
 			}
+
+			var options = {
+				printBackground: true
+			};
 
 			_dialog.showSaveDialog(win, fileSettings, function(filePath) {
 				if (filePath) {

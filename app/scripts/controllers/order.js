@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-30 15:39:55
+* @Last Modified time: 2017-08-31 10:52:42
 */
 
 (function() {
@@ -2856,6 +2856,7 @@
 		 */
 		function showLockModal() {
 			if (self.budget.order_status_id == Globals.get('order-status-values').billed || self.budget.status.editable == 'N') {
+				self.budget.printable = true;
 				if (self.budget.status.message) {
 					$rootScope.customDialog().showMessage('Aviso', self.budget.status.message);
 				}

@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-26 10:21:29
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-29 17:02:53
+* @Last Modified time: 2017-08-31 08:13:34
 */
 
 'use strict';
@@ -97,9 +97,10 @@ angular.module('commercial2', [
 		'commercial2.controllers',
 		'disableAll'
 	])
-	.config(['$httpProvider', '$locationProvider', function($httpProvider, $locationProvider) {
+	.config(['$httpProvider', '$locationProvider', '$qProvider', function($httpProvider, $locationProvider, $qProvider) {
 		$httpProvider.interceptors.push('Interceptor');
 		$locationProvider.hashPrefix('');
+		$qProvider.errorOnUnhandledRejections(false);
 	}])
 	.config(['$mdDateLocaleProvider', 'uiMask.ConfigProvider', function($mdDateLocaleProvider, uiMaskConfigProvider) {
 		/* Formata com leading 0 as datas selecionadas no datepicker */

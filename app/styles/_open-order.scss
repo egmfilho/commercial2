@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:10:42
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-29 16:31:06
+* @Last Modified time: 2017-08-31 10:02:27
 */
 
 .open-order-container-nav {
@@ -199,8 +199,13 @@
 					width: 12%;
 				}
 
-				&:nth-child(6), &:nth-child(7) {
+				&:nth-child(6) {
 					width: 10%;
+				}
+
+				&:nth-child(7) {
+					width: 11%;
+					box-sizing: border-box;
 				}
 
 				&:nth-child(8), &:nth-child(9), &:nth-child(10), &:nth-child(11) {
@@ -372,26 +377,6 @@
 					font-size: 30px;
 				}
 			}
-		}
-	}
-
-	.cloud-open {
-		color: #4caf50;
-
-		&:after {
-			content: 'cloud_queue';
-		}		
-	}
-
-	.cloud-exported {
-		&:after {
-			content: 'cloud';
-		}
-	}
-
-	.cloud-billed {
-		&:after {
-			content: 'cloud_done';
 		}
 	}
 }

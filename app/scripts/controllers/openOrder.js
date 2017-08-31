@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-23 17:13:32
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-30 13:43:20
+* @Last Modified time: 2017-08-31 10:02:29
 */
 
 (function() {
@@ -189,16 +189,33 @@
 						orderStatusValues = Globals.get('order-status-values');
 
 					self.orders = success.data.map(function(order) {
-						return new Order(Object.assign({}, order, {
+						var temp = {
+							order_code: order.order_code,
+							order_code_erp: order.order_code_erp,
+							order_status_id: order.order_status_id,
+							order_export_type: order.order_export_type,
 							order_value_total_plus_st_formatted: $filter('currency')(order.order_value_total + order.order_value_st, 'R$ '),
-							order_date_formatted: $filter('date')(new Date(order.order_date), 'dd/MM/yyyy'),
+							order_date_formatted: $filter('date')(new Date(order.order_date), 'dd/MM/yyyy HH:mm'),
+							order_customer_name: order.order_client.person_name,
 							order_seller_name: order.order_seller.person_shortname ? order.order_seller.person_shortname : $filter('truncate')(order.order_seller.person_name, 15, ' '),
 							cloudColor: orderExportTypeColors[order.order_export_type],
 							isOpen: order.order_status_id == orderStatusValues.open,
 							isExported: order.order_status_id == orderStatusValues.exported,
-							isBilled: order.order_status_id == orderStatusValues.billed
-						}));
+							isBilled: order.order_status_id == orderStatusValues.billed,							
+						};
+
+						temp.queryable = '';
+						temp.queryable += temp.order_code + ' '; 
+						temp.queryable += temp.order_code_erp + ' ';
+						temp.queryable += temp.order_value_total_plus_st_formatted + ' ';
+						temp.queryable += temp.order_date_formatted + ' ';
+						temp.queryable += temp.order_customer_name + ' ';
+						temp.queryable += order.order_seller.person_name + ' ';
+						temp.queryable += order.order_seller.person_shortname + ' ';
+
+						return temp;
 					});
+					console.log(self.orders);
 
 					$rootScope.loading.unload();
 

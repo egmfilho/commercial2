@@ -200,11 +200,11 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 					.offset-top-5(layout='row' layout-align='center center')
 						p 
 							b &nbsp;Status: 
-							| exportado.
+							| {{::globals('order-status-labels')[order.budget.order_status_id] || 'Novo'}}
 							b &nbsp;Cód. ERP: 
-							| {{order.budget.order_code_erp || 'Indisponível'}}
+							| {{::order.budget.order_code_erp || 'Indisponível'}}
 							b &nbsp;Documento: 
-							| {{order.budget.order_code_document || 'Indisponível'}}
+							| {{::order.budget.order_code_document || 'Indisponível'}}
 
 		//- Produtos					
 		section(name='products')
@@ -726,6 +726,5 @@ footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPa
 			| &nbsp;|&nbsp;
 			| Empresa: {{order.budget.order_company_id ? (order.budget.order_company.company_code + ' - ' + order.budget.order_company.company_name) : 'Não informado.'}}
 			span(flex)
-			| Status:&nbsp;
-			i.fa.fa-circle(style='line-height: 1px' ng-style='{ "color": globals("order-status-colors")[order.budget.order_status_id] }')
+			i.material-icons.cloud-open(style='line-height: 1px;font-size: 20px' ng-style='{ "color": globals("order-status-colors")[order.budget.order_status_id] }' ng-class='{ "cloud-open": order.budget.order_status_id == globals("order-status-values").open, "cloud-exported": order.budget.order_status_id == globals("order-status-values").exported, "cloud-billed": order.budget.order_status_id == globals("order-status-values").billed }')
 			| &nbsp;{{globals('order-status-labels')[order.budget.order_status_id] || 'Novo'}}&nbsp;
