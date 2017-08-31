@@ -50,7 +50,7 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 				md-option(ng-value='d' 
 						ng-repeat='d in address.queryDistrictResult' 
 						ng-click='address.districtChanged(d.district_id)')
-					| {{d.district_name}}
+					| {{::d.district_name}}
 
 	md-input-container(flex='30')
 		label 
@@ -93,7 +93,7 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 				table.contacts-table
 					tbody
 						tr(ng-repeat='contact in address.newAddress.person_address_contact')
-							td {{contact.person_address_contact_label}}
+							td {{::contact.person_address_contact_label}}
 							td 
 								input(type='text' ng-model='contact.person_address_contact_value')
 

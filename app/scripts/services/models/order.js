@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-14 16:59:11
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-30 09:25:17
+* @Last Modified time: 2017-08-31 18:03:29
 */
 
 (function() {
@@ -90,6 +90,7 @@
 			this.order_credit                = null;
 			this.order_value_icms            = 0;
 			this.order_value_st              = 0;
+			this.order_addition              = 0;
 			this.status                      = new OrderStatus(),
 			this.queryable                   = '';
 
@@ -290,7 +291,7 @@
 		 */
 		function updateValues() {
 			this.order_value = 0;
-			this.order_value_total = 0;
+			this.order_value_total = this.order_addition;
 
 			var scope = this;
 			angular.forEach(this.order_items, function(item) {
@@ -298,7 +299,7 @@
 				scope.order_value_total += item.getValueTotal();
 			});
 
-			this.order_vl_discount = this.order_value - this.order_value_total;
+			this.order_vl_discount = this.order_value - (this.order_value_total - this.order_addition);
 			this.order_al_discount = this.order_value == 0 ? 0 : (this.order_vl_discount * 100) / this.order_value;
 		}
 

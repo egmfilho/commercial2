@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-08 17:01:06
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-30 13:49:21
+* @Last Modified time: 2017-08-31 17:23:19
 */
 
 (function() {
@@ -46,6 +46,7 @@
 				this.order_item_date          = null;
 				this.order_item_value_icms    = 0;
 				this.order_item_value_st      = 0;
+				this.order_item_stock         = 0;
 				this.order_item_audit         = new Audit();
 				this.product                  = new Product();
 				this.price                    = new Price();
@@ -152,13 +153,13 @@
 
 			function getValue() {
 				/* JEITO CERTO */
-				return this.order_item_amount * this.order_item_value_unitary;
+				// return this.order_item_amount * this.order_item_value_unitary;
 				
 				/* JEITO ALTERDATANO */
-				// if (!this.order_item_value_unitary)
-				// 	return 0;
-				// else
-				// 	return parseFloat(( this.order_item_amount * parseFloat((this.order_item_value_unitary).toFixed(2)) ).toFixed(2));
+				if (!this.order_item_value_unitary)
+					return 0;
+				else
+					return parseFloat(( this.order_item_amount * parseFloat((this.order_item_value_unitary).toFixed(2)) ).toFixed(2));
 			}
 
 			function getValueTotal() {
