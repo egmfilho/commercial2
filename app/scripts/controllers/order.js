@@ -826,6 +826,9 @@
 						self.internal.term.tempTerm = new Term(self.internal.term.backup);
 					}
 				},
+				orderStatusValues: Globals.get('order-status-values'),
+				orderStatusLabels: Globals.get('order-status-labels'),
+				orderStatusColor: Globals.get("order-status-colors"),
 				flags: {
 					isToolbarLocked: false,
 					printable: false,
@@ -856,14 +859,14 @@
 		 */
 		function canSave() {
 			var isEqualsBackup = _backup && self.budget ? self.budget.equals(_backup) : false;
-			return !isEqualsBackup && self.budget.order_company_id && self.budget.order_status_id != Globals.get('order-status-values').billed && self.budget.status.editable == 'Y';
+			return !isEqualsBackup && self.budget.order_company_id && self.budget.order_status_id != self.internal.orderStatusValues.billed && self.budget.status.editable == 'Y';
 		}
 
 		/**
 		 * Verifica se o orcamento pode ser exportado.
 		 */
 		function canExport() {
-			return self.budget.order_company_id && self.budget.order_status_id == Globals.get('order-status-values').open;
+			return self.budget.order_company_id && self.budget.order_status_id == self.internal.orderStatusValues.open;
 		}
 
 		/**
@@ -883,7 +886,7 @@
 		 * Verifica se as informacoes do orcamento podem ser exibidas.
 		 */
 		function canShowInfo() {
-			if (self.internal.flags.showInfo)
+			if (self.internal.flags.showInfo && $scope.isDisabled)
 				return true;
 
 			if (isToolbarLocked())

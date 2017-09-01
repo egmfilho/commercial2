@@ -32,13 +32,13 @@
 			table.receivables-table.table(name='')
 				tbody
 					tr(ng-repeat='r in ctrl.receivables | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-class="{'blocked':r.receivable_delay > ctrl.debit_day_limit,'expired':r.receivable_delay && r.receivable_delay <= ctrl.debit_day_limit}")
-						td {{r.modality_name}}
-						td {{r.receivable_code}}
-						td {{r.receivable_date | date:'dd/MM/yyyy'}}
-						td {{r.receivable_deadline | date:'dd/MM/yyyy'}}
-						td {{r.receivable_value | currency: 'R$ '}}
-						td {{r.receivable_paid | currency: 'R$ '}}
-						td {{r.receivable_delay}} dias
+						td {{::r.modality_name}}
+						td {{::r.receivable_code}}
+						td {{::r.receivable_date | date:'dd/MM/yyyy'}}
+						td {{::r.receivable_deadline | date:'dd/MM/yyyy'}}
+						td {{::r.receivable_value | currency: 'R$ '}}
+						td {{::r.receivable_paid | currency: 'R$ '}}
+						td {{::r.receivable_delay}} dias
 	div(layout='column')
 		.bar
 			md-toolbar

@@ -112,23 +112,11 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								| Sobre
 
 			.md-toolbar-tools(flex)
-				//- h1(ng-if='order.budget.order_code') 
-					| {{order.budget.order_code}} ({{order.budget.order_date | date:'short'}})
-					span.md-subhead.text-warning &nbsp;[{{order.budget.order_company.company_code}} {{order.budget.order_company.company_name}}]
-				//- h1(ng-if='!order.budget.order_code') 
-					| Novo Orçamento
-					span.md-subhead.text-success &nbsp;[{{order.budget.order_company.company_code}} {{order.budget.order_company.company_name}}]
 				md-button.toolbar-btn(ng-click='newOrder()')
 					md-tooltip(md-direction='bottom') 
 						| Novo orçamento &nbsp;
 						span.md-alt-text ({{ 'M-N' | keyboardShortcut }})
 					md-icon(md-font-icon='fa fa-file-o')
-
-				//- md-button.toolbar-btn(ng-click='open()')
-					md-tooltip(md-direction='bottom') 
-						| Abrir orçamento &nbsp;
-						span.md-alt-text ({{ 'M-A' | keyboardShortcut }})
-					md-icon(md-font-icon='fa fa-folder-open-o' style='color: orange')
 
 				md-button.toolbar-btn(ng-click='save()' ng-disabled='!order.canSave() || order.isToolbarLocked()')
 					md-tooltip(md-direction='bottom') 
@@ -193,13 +181,13 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 
 	.order-container(disable-all='isDisabled')
 		//- Info
-		section(name='control' ng-if='order.isExported()' ng-cloak)
+		section(name='info' ng-if='order.isExported()' ng-cloak)
 			md-card(layout-align='center')
 				md-card-content.offset-top-5
 					.offset-top-5(layout='row' layout-align='center center')
 						p 
 							b &nbsp;Status: 
-							| {{::globals('order-status-labels')[order.budget.order_status_id]'}}
+							| {{::order.internal.orderStatusLabels[order.budget.order_status_id]}}
 							b &nbsp;Cód. ERP: 
 							| {{::order.budget.order_code_erp || 'Indisponível'}}
 							b &nbsp;Documento: 
@@ -372,59 +360,6 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 						div(layout='column' layout-align='center start')
 							span Total
 							span {{order.budget.order_value_total | currency:'R$ '}}
-
-		//- Vendedor
-		//- section(name='seller')
-			md-card
-				md-card-header.header-green
-					md-card-header-text
-						div(layout='row')
-							div(flex='90' layout='column')
-								span.md-title Vendedor
-									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-2' | keyboardShortcut }})
-								span.md-subhead Informe o vendedor
-							div(layout='row' layout-align='end center' layout-fill)
-								//- md-button.md-raised.text-primary(ng-click='order.showModalSeller()')
-									i.fa.fa-search &nbsp; 
-									| Localizar
-
-								md-button.md-raised.button-red(ng-click='order.clearSeller()' md-colors='{background: "commercialRed"}')
-									i.fa.fa-remove &nbsp; 
-									| Limpar
-				md-card-content
-					div(layout='row')
-						md-input-container(flex='25')
-							label Código ( F2 para localizar )
-							input(name='seller-code'
-									ng-value='order.budget.order_seller.person_code' 
-									blur-to='order.budget.order_seller.person_code'
-									keys-shortcuts prevent-default
-									shift-enter='null'
-									f2='order.showModalSeller()'
-									enter='order.getSellerByCode($event.target.value)')
-						md-autocomplete(flex='85' 
-										md-delay='300'
-										md-input-name='autocompleteSeller'
-										md-no-cache='true'
-										md-autoselect='true'
-										md-escape-options='none'
-										md-selected-item='order.internal.tempSeller'
-										md-search-text='sellerQuery'
-										md-selected-item-change='item.person_code && order.getSellerByCode(item.person_code)'
-										md-items='item in order.getSellerByName(sellerQuery)'
-										md-item-text='item.person_name'
-										md-min-length='3'
-										md-require-match='true'
-										md-floating-label='Nome ( F2 para localizar )'
-										ng-blur='order.internal.blurSeller()')
-							md-item-template
-								div(md-highlight-text='sellerQuery' style='line-height: 2') {{item.person_name}}
-								div(style='font-size: 11px;line-height: 1')
-									| Código: 
-									| {{item.person_code}}
-
-					pre(ng-if='debug')
-						| {{order.budget.order_seller | json}}
 
 		//- Cliente
 		section(name='customer')
@@ -709,28 +644,28 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 			md-card(layout-align='center')
 				md-card-content.offset-top-5
 					.offset-top-5(layout='row')
-						md-button.md-raised.md-primary(flex='25' ng-click='close()' md-colors='{background: "commercialRed"}' skip-disable)
+						md-button.md-raised.md-primary.button-close(flex='25' ng-click='close()' skip-disable)
 							i.fa.fa-remove &nbsp;
 							| Fechar
 						
-						md-button.md-raised.md-primary(flex='25' ng-click='order.exportOrder()' ng-disabled='!order.canExport()' md-colors='{background: "commercialOrange"}' skip-disable)
+						md-button.md-raised.md-primary.button-order(flex='25' ng-click='order.exportOrder()' ng-disabled='!order.canExport()' skip-disable)
 							i.fa.fa-cloud-upload &nbsp;	
 							| Exportar Pedido
 						
-						md-button.md-raised.md-primary(flex='25' ng-click='order.exportDAV()' ng-disabled='!order.canExport()' md-colors='{background: "commercialBlue"}' skip-disable)
+						md-button.md-raised.md-primary.button-dav(flex='25' ng-click='order.exportDAV()' ng-disabled='!order.canExport()' skip-disable)
 							i.fa.fa-upload &nbsp;
 							| Exportar DAV
 						
-						md-button.md-raised.md-primary(name='save' flex='25' ng-click='save()' ng-disabled='!order.canSave()' md-colors='{background: "commercialGreen"}' skip-disable)
+						md-button.md-raised.md-primary.button-save(name='save' flex='25' ng-click='save()' ng-disabled='!order.canSave()' skip-disable)
 							i.fa.fa-floppy-o &nbsp;
 							| Salvar
 
-//- footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath !== "/loading" && currentPath.indexOf("/order/print/") < 0')
+footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath !== "/loading" && currentPath.indexOf("/order/print/") < 0')
 	md-toolbar
 		div(layout='row' layout-align='start center' flex)
 			| &nbsp;Autor: {{order.budget.order_user.user_name}}
 			| &nbsp;|&nbsp;
 			| Empresa: {{order.budget.order_company_id ? (order.budget.order_company.company_code + ' - ' + order.budget.order_company.company_name) : 'Não informado.'}}
 			span(flex)
-			i.material-icons.cloud-open(style='line-height: 1px;font-size: 20px' ng-style='{ "color": globals("order-status-colors")[order.budget.order_status_id] }' ng-class='{ "cloud-open": order.budget.order_status_id == globals("order-status-values").open, "cloud-exported": order.budget.order_status_id == globals("order-status-values").exported, "cloud-billed": order.budget.order_status_id == globals("order-status-values").billed }')
-			| &nbsp;{{globals('order-status-labels')[order.budget.order_status_id] || 'Novo'}}&nbsp;
+			i.material-icons.cloud-open(style='line-height: 1px;font-size: 20px' ng-style='{ "color": order.internal.orderStatusColor[order.budget.order_status_id] }' ng-class='{ "cloud-open": order.budget.order_status_id == order.internal.orderStatusValues.open, "cloud-exported": order.budget.order_status_id == order.internal.orderStatusValues.exported, "cloud-billed": order.budget.order_status_id == order.internal.orderStatusValues.billed }')
+			| &nbsp;{{order.internal.orderStatusLabels[order.budget.order_status_id] || 'Novo'}}&nbsp;

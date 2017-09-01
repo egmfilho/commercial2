@@ -225,7 +225,6 @@
 
 						return temp;
 					});
-					console.log(self.orders);
 
 					$rootScope.loading.unload();
 

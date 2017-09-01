@@ -37,10 +37,10 @@
 			table.person-table.table(name='clementino')
 				tbody
 					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-dblclick='ctrl.get(p)' ng-class="{'inactive':p.person_active=='N'}" keys-shortcuts enter='ctrl.get(p)')
-						td {{p.person_code}}
-						td {{p.person_name}}
-						td {{p.person_type}}
-						td {{p.person_doc}}
+						td {{::p.person_code}}
+						td {{::p.person_name}}
+						td {{::p.person_type}}
+						td {{::p.person_doc}}
 
 	div(layout='column')
 		.bar
