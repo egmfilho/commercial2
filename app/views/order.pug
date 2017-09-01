@@ -1,4 +1,3 @@
-
 md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 	div(layout='row' layout-fill)
 		md-toolbar-filler(layout layout-align='center center' ng-class='order.budget.order_code ? "edit" : "new"')
@@ -347,7 +346,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 							table.table.products-table
 								tbody
 									tr(ng-repeat='i in order.budget.order_items track by $index' layout='row' ng-dblclick='order.editItem(i)'
-										ng-class='{"sold-out": i.product.stock.product_stock <= 0}')
+										ng-class='{"sold-out": i.order_item_stock <= 0}')
 										td {{i.product.product_code}} - {{i.product.product_name}}
 										td {{i.product.unit.unit_initials}}
 										td {{i.order_item_amount | currency:''}}

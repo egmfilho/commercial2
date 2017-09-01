@@ -43,6 +43,14 @@
 
 			if (constants.isElectron) {
 				Mousetrap = require('mousetrap');
+				
+				/* Novo orcamento */
+				Mousetrap.bind(['command+n', 'ctrl+n'], function() {
+					$scope.newOrder();
+					return false;
+				});
+
+				/* Find */
 				Mousetrap.bind(['command+f', 'ctrl+f'], function() {
 					$timeout(function() { $scope.setSearchOpen(true); });
 					return false;
@@ -79,8 +87,10 @@
 			$scope.$on('$destroy', function() {
 				$rootScope.titleBarText = '';
 				
-				if (constants.isElectron) 
+				if (constants.isElectron) {
+					Mousetrap.unbind(['command+n', 'ctrl+n']);
 					Mousetrap.unbind(['command+f', 'ctrl+f']);
+				}
 			});
 
 			$scope.newOrder = function(companyId) {

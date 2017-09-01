@@ -276,6 +276,17 @@
 		function setDeliveryAddress(address) {
 			this.address_delivery = new Address(address);
 			this.order_address_delivery_code = this.address_delivery.person_address_code;
+			
+			/* Concatena a observacao do endereco nas observacoes da nota */
+			var obsFlag = Globals.get('obsFlag');
+			if (address.person_address_note) {
+				if (this.order_note_doc.indexOf(obsFlag) >= 0) {
+					this.order_note_doc = this.order_note_doc.split(obsFlag)[0];
+				}
+
+				this.order_note_doc += obsFlag;
+				this.order_note_doc += address.person_address_note;	
+			}
 		}
 
 		/**
@@ -284,6 +295,12 @@
 		function removeDeliveryAddress() {
 			this.address_delivery = new Address();
 			this.order_address_delivery_code = null;
+			
+			/* Remove a observacao do endereco das observacoes da nota */
+			var obsFlag = Globals.get('obsFlag');
+			if (this.order_note_doc.indexOf(obsFlag) >= 0) {
+				this.order_note_doc = this.order_note_doc.split(obsFlag)[0];
+			}
 		}
 
 		/**
@@ -342,7 +359,7 @@
 		}
 
 		/**
-		 * Retorna o contato principal do endereco.
+		 * Retorna o contato principal do endereco de entrega.
 		 */
 		function getMainContact() {
 			if (this.address_delivery && this.address_delivery.person_address_contact.length) {

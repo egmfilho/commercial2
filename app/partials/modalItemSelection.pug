@@ -13,7 +13,7 @@
 	.container-table
 		table.table.items-selection-table
 			tbody
-				tr(ng-repeat='i in ctrl.selection')
+				tr(ng-repeat='i in ctrl.selection' ng-class='{"sold-out": i.order_item_stock <= 0}')
 					td {{i.product.product_code}}
 					td {{i.product.product_name}}
 					td

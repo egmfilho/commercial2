@@ -96,6 +96,7 @@
 			Globals.set('default-icms-type', { code: 2, value: 'ISENTO' });
 			Globals.set('elective-icms-type', { code: 9 });
 			Globals.set('public-place-types', [ 'AV', 'EST', 'PC', 'R', 'RUA', 'ROD' ]);
+			Globals.set('obsFlag', '\n\nObs. de Entrega: ');
 
 			Globals.set('order-status-labels', {
 				'1001': 'Aberto',

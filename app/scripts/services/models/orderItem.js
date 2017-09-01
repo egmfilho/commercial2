@@ -91,6 +91,7 @@
 				this.price_id = this.price.price_id;
 				this.order_item_vl_discount = 0;
 				this.order_item_al_discount = 0;
+				this.order_item_stock = this.product.stock.product_stock;
 				this.updateValues();
 			}
 
