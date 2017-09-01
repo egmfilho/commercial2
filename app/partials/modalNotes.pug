@@ -2,13 +2,13 @@
 	
 	.custom-textarea(flex)
 		label Observações do orçamento
-		textarea(name='order-note' ng-model='ctrl.order_note' rows='3')
+		textarea(name='order-note' ng-model='ctrl.order_note' rows='3' ng-readonly='ctrl.readonly')
 
 	span(style='margin: 16px;')
 
 	.custom-textarea(flex)
 		label Observações da Nota
-		textarea(ng-model='ctrl.order_note_doc' rows='3')
+		textarea(ng-model='ctrl.order_note_doc' rows='3' ng-readonly='ctrl.readonly')
 
 .footer.bordered(layout='row' layout-align='end center')
 	md-button.md-raised(ng-click='ctrl._close({ order_note: ctrl.order_note, order_note_doc: ctrl.order_note_doc })')

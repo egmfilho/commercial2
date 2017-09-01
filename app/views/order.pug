@@ -77,11 +77,11 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								md-icon(md-font-icon='fa fa-user')
 								| Localizar cliente
 						md-menu-item
-							md-button(ng-click='order.showModalCustomerInfo()' ng-disabled='!order.budget.order_client.person_id || order.isToolbarLocked()')
+							md-button(ng-click='order.showModalCustomerInfo()' ng-disabled='!order.budget.order_client.person_id || !order.canShowInfo()')
 								md-icon(md-font-icon='fa fa-id-card-o')
 								| Ver informações sobre o cliente
 						md-menu-item
-							md-button(ng-click='order.showModalNotes()' ng-disabled='order.isToolbarLocked()')
+							md-button(ng-click='order.showModalNotes()' ng-disabled='!order.canShowInfo()')
 								md-icon(md-font-icon='fa fa-sticky-note-o')
 								| Observações
 						md-menu-divider
@@ -172,11 +172,11 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					md-tooltip(md-direction='bottom') Localizar cliente
 					md-icon(md-font-icon='fa fa-user' style='color: seagreen')
 
-				md-button.toolbar-btn(ng-click='order.showModalCustomerInfo()' ng-disabled='!order.budget.order_client.person_id || order.isToolbarLocked()')
+				md-button.toolbar-btn(ng-click='order.showModalCustomerInfo()' ng-disabled='!order.budget.order_client.person_id || !order.canShowInfo()')
 					md-tooltip(md-direction='bottom') Informações do cliente
 					md-icon(md-font-icon='fa fa-id-card-o' style='color: tomato')
 
-				md-button.toolbar-btn(ng-click='order.showModalNotes()' ng-disabled='order.isToolbarLocked()')
+				md-button.toolbar-btn(ng-click='order.showModalNotes()' ng-disabled='!order.canShowInfo()')
 					md-tooltip(md-direction='bottom') Observações
 					md-icon.text-warning(md-font-icon='fa fa-sticky-note-o')
 
@@ -199,7 +199,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 					.offset-top-5(layout='row' layout-align='center center')
 						p 
 							b &nbsp;Status: 
-							| {{::globals('order-status-labels')[order.budget.order_status_id] || 'Novo'}}
+							| {{::globals('order-status-labels')[order.budget.order_status_id]'}}
 							b &nbsp;Cód. ERP: 
 							| {{::order.budget.order_code_erp || 'Indisponível'}}
 							b &nbsp;Documento: 
@@ -725,7 +725,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 							i.fa.fa-floppy-o &nbsp;
 							| Salvar
 
-footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath !== "/loading" && currentPath.indexOf("/order/print/") < 0')
+//- footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath !== "/loading" && currentPath.indexOf("/order/print/") < 0')
 	md-toolbar
 		div(layout='row' layout-align='start center' flex)
 			| &nbsp;Autor: {{order.budget.order_user.user_name}}
