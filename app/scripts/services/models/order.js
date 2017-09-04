@@ -276,16 +276,17 @@
 		function setDeliveryAddress(address) {
 			this.address_delivery = new Address(address);
 			this.order_address_delivery_code = this.address_delivery.person_address_code;
-			
+
 			/* Concatena a observacao do endereco nas observacoes da nota */
 			var obsFlag = Globals.get('obsFlag');
 			if (address.person_address_note) {
-				if (this.order_note_doc.indexOf(obsFlag) >= 0) {
-					this.order_note_doc = this.order_note_doc.split(obsFlag)[0];
-				}
+				console.log(address.person_address_note);
+				// if (this.order_note_doc.indexOf(obsFlag) >= 0) {
+				// 	this.order_note_doc = this.order_note_doc.split(obsFlag)[0];
+				// }
 
-				this.order_note_doc += obsFlag;
-				this.order_note_doc += address.person_address_note;	
+				// this.order_note_doc += obsFlag;
+				// this.order_note_doc += address.person_address_note;	
 			}
 		}
 
@@ -307,8 +308,11 @@
 		 * Recalcula e atualiza os valores do orcamento.
 		 */
 		function updateValues() {
+			if (!this.order_addition)
+				this.order_addition = 0;
+
 			this.order_value = 0;
-			this.order_value_total = this.order_addition;
+			this.order_value_total = 0;
 
 			var scope = this;
 			angular.forEach(this.order_items, function(item) {
@@ -316,8 +320,10 @@
 				scope.order_value_total += item.getValueTotal();
 			});
 
-			this.order_vl_discount = this.order_value - (this.order_value_total - this.order_addition);
+			this.order_vl_discount = this.order_value - this.order_value_total;
 			this.order_al_discount = this.order_value == 0 ? 0 : (this.order_vl_discount * 100) / this.order_value;
+
+			this.order_value_total += this.order_value_addition;
 		}
 
 		/**

@@ -93,9 +93,13 @@ div(flex layout='column')
 						data-md-container-class='query-select-container'
 						ng-model-options='{ trackBy: "$value.district_id" }')
 					md-select-header.select-header
+						| &nbsp; &nbsp;
+						i.fa.fa-search
 						input.md-text(ng-model='ctrl.queryDistrict' 
-								type='search' placeholder='Digite o nome do bairro'
+								type='search' placeholder='Pesquisar bairro'
 								ng-keydown="$event.stopPropagation()" ng-change='ctrl.searchDistrict()')
+						button(ng-click='ctrl.queryDistrict = \'\'; ctrl.searchDistrict()')
+							i.fa.fa-times-circle
 					md-opt-group(label='Bairros')
 						md-option(ng-value='d' 
 								ng-repeat='d in ctrl.queryDistrictResult' 
@@ -109,9 +113,13 @@ div(flex layout='column')
 						data-md-container-class='query-select-container'
 						ng-model-options='{ trackBy: "$value.city_id" }')
 					md-select-header.select-header
+						| &nbsp; &nbsp;
+						i.fa.fa-search
 						input.md-text(ng-model='ctrl.queryCity' 
-								type='search' placeholder='Digite o nome da cidade'
+								type='search' placeholder='Pesquisar cidade'
 								ng-keydown="$event.stopPropagation()" ng-change='ctrl.searchCity()')
+						button(ng-click='ctrl.queryCity = \'\'; ctrl.searchCity()')
+							i.fa.fa-times-circle
 					md-opt-group(label='Cidades')
 						md-option(ng-value='c' 
 								ng-repeat='c in ctrl.queryCityResult'

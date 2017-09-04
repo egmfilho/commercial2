@@ -167,6 +167,10 @@
 		height: 100%;
 		min-height: 100%;
 
+		.md-virtual-repeat-scroller {
+			overflow-y: scroll;
+		}
+
 		.repeated-item {
 			background: white;
 			height: 40px;

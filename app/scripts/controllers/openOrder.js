@@ -22,6 +22,8 @@
 
 			self.seller = null;
 			self.companyId = Globals.get('user').user_company[0].company_id;
+			self.orderStatusValues = Globals.get('order-status-values');
+			self.orderExportTypeColors = Globals.get('order-export-type-colors');
 
 			self.filters = {
 				query: '',
@@ -177,8 +179,8 @@
 				self.orders = [];
 
 				var options = {
-						// start_date: moment('08-18-2017').toDate(),
-						// end_date: moment('08-20-2017').toDate(),
+						// start_date: moment('08-01-2017').toDate(),
+						// end_date: moment('08-31-2017').toDate(),
 						company_id: self.companyId,
 						start_date: self.calendar.start.value,
 						end_date: self.calendar.end.value,
@@ -204,6 +206,8 @@
 							order_code_erp: order.order_code_erp,
 							order_status_id: order.order_status_id,
 							order_export_type: order.order_export_type,
+							order_value_total: order.order_value_total,
+							order_value_st: order.order_value_st,
 							order_value_total_plus_st_formatted: $filter('currency')(order.order_value_total + order.order_value_st, 'R$ '),
 							order_date_formatted: $filter('date')(new Date(order.order_date), 'dd/MM/yyyy HH:mm'),
 							order_customer_name: order.order_client.person_name,
@@ -220,8 +224,10 @@
 						temp.queryable += temp.order_value_total_plus_st_formatted + ' ';
 						temp.queryable += temp.order_date_formatted + ' ';
 						temp.queryable += temp.order_customer_name + ' ';
-						temp.queryable += order.order_seller.person_name + ' ';
-						temp.queryable += order.order_seller.person_shortname + ' ';
+						temp.queryable += '@cliente:' + order.order_client.person_code + ' ';
+						temp.queryable += '@cliente:' + order.order_client.person_name + ' ';
+						temp.queryable += '@vendedor:' + (order.order_seller.person_shortname ? order.order_seller.person_shortname : order.order_seller.person_name) + ' ',
+						temp.queryable += '@vendedor:' + order.order_seller.person_code + ' ';
 
 						return temp;
 					});
@@ -306,6 +312,18 @@
 					ElectronWindow.createWindow('#/order/mail/' + code, options);
 				else
 					$location.path('/order/mail/' + code);
+			}
+
+			self.getSum = function(list) {
+				if (!list) return 0;
+
+				var sum = 0;
+
+				for(var i = 0; i < list.length; i++) {
+					sum += list[i].order_value_total + list[i].order_value_st;
+				}
+
+				return sum;
 			}
 
 		}

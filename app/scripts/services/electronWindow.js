@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('ElectronWindow', ElectronWindow);
 
-	ElectronWindow.$inject = [ 'Constants', 'Globals' ];
+	ElectronWindow.$inject = [ '$q', 'Constants', 'Globals' ];
 
-	function ElectronWindow(constants, Globals) {
+	function ElectronWindow($q, constants, Globals) {
 
 		// ******************************************
 		// Check if it's running on Electron
@@ -49,7 +49,8 @@
 		*/
 		function createWindow(url, options) {
 
-			var url = window.location.href.split('#')[0] + url;
+			var deferred = $q.defer(),
+				url = window.location.href.split('#')[0] + url;
 
 			var parent = _electron.remote.getCurrentWindow(),
 				win = new _BrowserWindow(angular.extend({ }, { 
@@ -72,6 +73,7 @@
 			});
 			
 			win.on('ready-to-show', function() {
+				deferred.resolve(win);
 				win.show();
 			});
 
@@ -87,7 +89,7 @@
 
 			_remote.getGlobal('children').array = _remote.getGlobal('children').array.concat([win]);
 
-			return win;
+			return deferred.promise;
 		}
 	}
 

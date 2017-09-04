@@ -43,9 +43,13 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 				data-md-container-class='query-select-container'
 				ng-model-options='{ trackBy: "$value.district_id" }')
 			md-select-header.select-header
+				| &nbsp; &nbsp;
+				i.fa.fa-search
 				input.md-text(ng-model='address.queryDistrict' 
-						type='search' placeholder='Digite o nome do bairro'
-						ng-keydown="address.updateSearch($event)")
+						type='search' placeholder='Pesquisar bairro'
+						ng-keydown="$event.stopPropagation()" ng-change='address.searchDistrict()')
+				button(ng-click='address.queryDistrict = \'\'')
+					i.fa.fa-times-circle
 			md-opt-group(label='Bairros')
 				md-option(ng-value='d' 
 						ng-repeat='d in address.queryDistrictResult' 
@@ -59,9 +63,13 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 				data-md-container-class='query-select-container'
 				ng-model-options='{ trackBy: "$value.city_id" }')
 			md-select-header.select-header
+				| &nbsp; &nbsp;
+				i.fa.fa-search
 				input.md-text(ng-model='address.queryCity' 
-						type='search' placeholder='Digite o nome da cidade'
-						ng-keydown="address.updateSearch($event)")
+						type='search' placeholder='Pesquisar cidade'
+						ng-keydown="$event.stopPropagation()" ng-change='address.searchCity()')
+				button(ng-click='address.queryCity = \'\'; address.searchCity()')
+					i.fa.fa-times-circle
 			md-opt-group(label='Cidades')
 				md-option(ng-value='c' 
 						ng-repeat='c in address.queryCityResult'

@@ -706,18 +706,16 @@
 							.then(function(res) {
 								switch (res) {
 									case 'print': {
-										self.print();
-										$timeout(function(){
+										self.print().then(function(win) {
 											$scope.close(true);
-										},1000);
+										});
 										break;
 									}
 									
 									case 'mail': {
-										self.mail();
-										$timeout(function(){
+										self.mail().then(function(win) {
 											$scope.close(true);
-										},1000);
+										});
 										break;
 									}
 									
@@ -1142,10 +1140,12 @@
 				if (customer.isActive) {
 					$rootScope.customDialog().showMessage('Erro', 'Cliente inativo!');
 					self.internal.tempCustomer = null;
+					console.log('cliente inativo');
 				} else {
 					setCustomer(customer);
-					if (self.budget.order_client.person_address.length)
-						self.budget.setDeliveryAddress(self.budget.order_client.person_address[0])
+					if (self.budget.order_client.person_address.length) {
+						self.budget.setDeliveryAddress(self.budget.order_client.person_address[0]);
+					}
 				}
 				$rootScope.loading.unload();
 			}, function(error) {
@@ -1611,6 +1611,8 @@
 		function savePDF() {
 			if (!self.canPrint()) return;
 
+			var deferred = $q.defer();
+
 			var options = {
 				parent: _remote.getGlobal('mainWindow').instance,
 				webPreferences: {
@@ -1618,10 +1620,17 @@
 				}
 			};
 
-			if (constants.isElectron)
-				ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=pdf', options);
-			else
-				$location.path('/order/print/' + self.budget.order_code)
+			if (constants.isElectron) {
+				ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=pdf', options)
+					.then(function(win) {
+						deferred.resolve(win);
+					});
+			} else {
+				deferred.resolve();
+				$location.path('/order/print/' + self.budget.order_code);
+			}
+
+			return deferred.promise();
 		}
 
 		/**
@@ -1629,6 +1638,8 @@
 		 */
 		function print() {
 			if (!self.canPrint()) return;
+
+			var deferred = $q.defer();
 
 			if (constants.isElectron) {
 				var options = {
@@ -1638,11 +1649,17 @@
 					}
 				};
 
-				ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=print', options);
+				ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=print', options)
+					.then(function(win) {
+						deferred.resolve(win);
+					});
 			}
 			else {
+				deferred.resolve();
 				$location.path('/order/print/' + self.budget.order_code);
 			}
+
+			return deferred.promise;
 		}
 
 		/**
@@ -1650,6 +1667,8 @@
 		 */
 		function mail() {
 			if (!self.canPrint()) return;
+
+			var deferred = $q.defer();
 
 			if (constants.isElectron) {
 				var options = {
@@ -1662,11 +1681,17 @@
 					}
 				};
 
-				ElectronWindow.createWindow('#/order/mail/' + self.budget.order_code, options);
+				ElectronWindow.createWindow('#/order/mail/' + self.budget.order_code, options)
+					.then(function(win) {
+						deferred.resolve(win);
+					});
 			}
 			else {
+				deferred.resolve();
 				$location.path('/order/mail/' + self.budget.order_code);
 			}
+
+			return deferred.promise;
 		}
 
 		/**
@@ -1743,18 +1768,16 @@
 				.then(function(res) {
 					switch (res) {
 						case 'print': {
-							self.print();
-							$timeout(function(){
+							self.print().then(function(win) {
 								$scope.close(true);
-							},1000);
+							});
 							break;
 						}
 						
 						case 'mail': {
-							self.mail();
-							$timeout(function(){
+							self.mail().then(function(win) {
 								$scope.close(true);
-							},1000);
+							});
 							break;
 						}
 					}
@@ -2589,8 +2612,6 @@
 				slice = (self.budget.order_value_total - (self.budget.creditPayment ? self.budget.creditPayment.order_payment_value_total : 0)) / paymentLen,
 				total = self.budget.creditPayment ? self.budget.creditPayment.order_payment_value_total : 0,
 				diff = 0, temp;
-
-			console.log('slice: ' + slice);
 
 			if (paymentLen == 0)
 				return;

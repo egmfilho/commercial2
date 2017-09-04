@@ -102,7 +102,7 @@
 
 	div(flex)
 		md-virtual-repeat-container#virtual-repeat-container
-			.repeated-item(layout='row' layout-align='start center' md-virtual-repeat='o in openOrder.orders | orderBy:openOrder.grid.propertyName:openOrder.grid.reverse | filter: { queryable: openOrder.filters.query, order_status_id: openOrder.filters.status, order_export_type: openOrder.filters.exportType }' ng-dblclick='open(o)')
+			.repeated-item(layout='row' layout-align='start center' md-virtual-repeat='o in (filteredList = (openOrder.orders | orderBy:openOrder.grid.propertyName:openOrder.grid.reverse | filter: { queryable: openOrder.filters.query, order_status_id: openOrder.filters.status, order_export_type: openOrder.filters.exportType }))' ng-dblclick='open(o)')
 				span &nbsp;
 					i.material-icons(ng-style='{ "color": o.cloudColor}' ng-class='{ "cloud-open": o.isOpen, "cloud-exported": o.isExported, "cloud-billed": o.isBilled }') &nbsp;
 				span {{o.order_code}}
@@ -134,51 +134,51 @@
 	md-toolbar.info(layout='column')
 		.md-toolbar-tools(flex layout='row' layout-fill)
 			.filters(flex='30' layout='row' layout-align='start')
-				.status-filter(ng-click='openOrder.filters.setStatus("open", globals("order-status-values")["open"], 1)')
+				.status-filter(ng-click='openOrder.filters.setStatus("open", openOrder.orderStatusValues["open"], 1)')
 					md-icon(
 						md-font-set='material-icons' 
-						ng-style='{ "color": globals("order-export-type-colors")["open"] }') cloud_queue
+						ng-style='{ "color": openOrder.orderExportTypeColors["open"] }') cloud_queue
 					md-tooltip(md-direction='top') 
 						| Salvo
 		
 				span(flex)
 
-				.status-filter(ng-click='openOrder.filters.setStatus("order", globals("order-status-values")["exported"], 3)')
+				.status-filter(ng-click='openOrder.filters.setStatus("order", openOrder.orderStatusValues["exported"], 3)')
 					md-icon(
 						md-font-set='material-icons' 
-						ng-style='{ "color": globals("order-export-type-colors")["order"] }') cloud
+						ng-style='{ "color": openOrder.orderExportTypeColors["order"] }') cloud
 					md-tooltip(md-direction='top') 
 						| Pedido exportado
 
 				span(flex)
 
-				.status-filter(ng-click='openOrder.filters.setStatus("order", globals("order-status-values")["billed"], 5)')
+				.status-filter(ng-click='openOrder.filters.setStatus("order", openOrder.orderStatusValues["billed"], 5)')
 					md-icon(
 						md-font-set='material-icons' 
-						ng-style='{ "color": globals("order-export-type-colors")["order"] }') cloud_done
-					md-tooltip(md-direction='top') 
+						ng-style='{ "color": openOrder.orderExportTypeColors["order"] }') cloud_done
+					md-tooltip(md-direction='top')
 						| Pedido faturado
 
 				span(flex)
 
-				.status-filter(ng-click='openOrder.filters.setStatus("dav", globals("order-status-values")["exported"], 7)')
+				.status-filter(ng-click='openOrder.filters.setStatus("dav", openOrder.orderStatusValues["exported"], 7)')
 					md-icon(
 						md-font-set='material-icons' 
-						ng-style='{ "color": globals("order-export-type-colors")["dav"] }') cloud
+						ng-style='{ "color": openOrder.orderExportTypeColors["dav"] }') cloud
 					md-tooltip(md-direction='top') 
 						| Dav exportado
 
 				span(flex)
 
-				.status-filter(ng-click='openOrder.filters.setStatus("dav", globals("order-status-values")["billed"], 9)')
+				.status-filter(ng-click='openOrder.filters.setStatus("dav", openOrder.orderStatusValues["billed"], 9)')
 					md-icon(
 						md-font-set='material-icons' 
-						ng-style='{ "color": globals("order-export-type-colors")["dav"] }') cloud_done
+						ng-style='{ "color": openOrder.orderExportTypeColors["dav"] }') cloud_done
 					md-tooltip(md-direction='top') 
 						| Dav faturado
 
 			div(flex layout='row' layout-align='center center')
-				span.md-subhead Orçamentos: {{info.count}} &nbsp; Valor total: {{ info.sum | currency:'R$ '}}
+				span.md-subhead Orçamentos: {{ filteredList ? filteredList.length : 0 }} &nbsp; Valor total: {{ openOrder.getSum(filteredList) | currency:'R$ '}}
 
 			div(flex='30' layout='row' layout-align='end center')
 				md-button.md-icon-button.search-button(ng-click='setSearchOpen(true)')

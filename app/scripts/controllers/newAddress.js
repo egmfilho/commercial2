@@ -48,6 +48,8 @@
 		self.clear 	             = clear;
 		self.submit              = submit;
 		self.updateSearch        = updateSearch;
+		self.searchCity          = searchCity;
+		self.searchDistrict      = searchDistrict;
 		self.districtChanged     = districtChanged;
 		self.cityChanged         = cityChanged;
 		self.icmsChanged         = icmsChanged;
@@ -84,20 +86,6 @@
 			_personId = args.person_id;
 			self.newAddress.person_id = _personId;
 			clear();
-		});
-
-		$scope.$watch(function() {
-			return self.queryDistrict;
-		}, function(newValue, oldValue) {
-			if (newValue)
-				searchDistrict();
-		});
-
-		$scope.$watch(function() {
-			return self.queryCity;
-		}, function(newValue, oldValue) {
-			if (newValue)
-				searchCity();
 		});
 
 		function setCepFromSource(source) {
@@ -138,8 +126,8 @@
 
 			self.queryDistrict = null;
 			self.queryCity = null;
-			searchDistrict();
-			searchCity();
+			self.searchDistrict();
+			self.searchCity();
 		}
 
 		function submit() {
