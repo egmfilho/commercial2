@@ -404,6 +404,43 @@ section[name="payment"] {
 	}
 }
 
+section[name="control"] {
+	button {
+		color: white !important;
+	}
+	.button-close {
+		background-color: red !important;
+
+		&:hover {
+			background-color: darken(red, 10%) !important;
+		}
+	}
+
+	.button-order {
+		background-color: $order-color !important;
+
+		&:hover {
+			background-color: darken($order-color, 10%) !important;
+		}
+	}
+
+	.button-dav {
+		background-color: $dav-color !important;
+
+		&:hover {
+			background-color: darken($dav-color, 10%) !important;
+		}
+	}
+
+	.button-save {
+		background-color: $success-color !important;
+
+		&:hover {
+			background-color: darken($success-color, 10%) !important;
+		}
+	}
+}
+
 .logo-commercial{
 	background-image:url('../images/logo-name.png');
 	background-position:center center;

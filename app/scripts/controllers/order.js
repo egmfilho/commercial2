@@ -94,7 +94,12 @@
 		ElectronOS, 
 		GUID) {
 
-		var self = this, _remote, _ipcRenderer, _backup, _focusOn, _isToolbarLocked = false, _preventClosing = true;
+		var self = this, 
+			_remote, 
+			_ipcRenderer, 
+			_backup, 
+			_focusOn, 
+			_preventClosing = true;
 
 		$scope.debug = constants.debug;
 		$scope.globals = Globals.get;
@@ -102,7 +107,7 @@
 		$scope.$watch(function() {
 			return $scope.isDisabled;
 		}, function(newVal, oldVal) {
-			_isToolbarLocked = newVal;
+			self.internal.flags.isToolbarLocked = newVal;
 		});
 
 		self.propagateSaveOrder = function(company_id) {
@@ -123,27 +128,25 @@
 
 			/* Avancar sessao */
 			Mousetrap.bind('shift+enter', function(e, combo) {
-				if (!_isToolbarLocked) {
+				if (!self.internal.flags.isToolbarLocked) {
 					switch(_focusOn) {
-						// case 'products':
-						// 	self.scrollTo('section[name="seller"]');
-						// 	self.focusOn('input[name="seller-code"]');
-						// 	break;
-
-						case 'products':
+						case 'products': {
 							self.scrollTo('section[name="customer"]');
 							self.focusOn('input[name="customer-code"]');
 							break;
+						}
 
-						case 'customer':
+						case 'customer': {
 							self.scrollTo('section[name="payment"]');
 							self.focusOn('input[name="term-code"]');
 							break;
+						}
 
-						case 'payment':
+						case 'payment': {
 							self.scrollTo('section[name="control"]');
 							self.focusOn('button[name="save"]');
 							break;
+						}
 					}
 				}
 
@@ -164,7 +167,7 @@
 
 			/* Salvar orcamento */
 			Mousetrap.bind(['command+s', 'ctrl+s'], function() {
-				if (!_isToolbarLocked && self.canSave())
+				if (!self.internal.flags.isToolbarLocked && self.canSave())
 					$scope.save();
 
 				return false;
@@ -172,7 +175,7 @@
 
 			/* Imprimir orcamento */
 			Mousetrap.bind(['command+p', 'ctrl+p'], function() {
-				if (!_isToolbarLocked)
+				if (!self.internal.flags.isToolbarLocked)
 					self.print();
 
 				return false;
@@ -180,7 +183,7 @@
 
 			/* Mudar empresa do orcamento */
 			// Mousetrap.bind(['command+e', 'ctrl+e'], function() {
-			// 	if (!_isToolbarLocked)
+			// 	if (!self.internal.flags.isToolbarLocked)
 			// 		self.selectCompany();
 
 			// 	return false;
@@ -188,7 +191,7 @@
 
 			/* Ir para produtos */
 			Mousetrap.bind(['command+1', 'ctrl+1'], function() {
-				if (!_isToolbarLocked) {
+				if (!self.internal.flags.isToolbarLocked) {
 					self.scrollTo('section[name="products"]');
 					self.focusOn('input[name="product-code"]');
 				}
@@ -198,7 +201,7 @@
 
 			/* Ir para vendedor */
 			// Mousetrap.bind(['command+2', 'ctrl+2'], function() {
-			// 	if (!_isToolbarLocked) {
+			// 	if (!self.internal.flags.isToolbarLocked) {
 			// 		self.scrollTo("section[name=\'seller\']");
 			// 		self.focusOn('input[name="seller-code"]');
 			// 	}
@@ -208,7 +211,7 @@
 
 			/* Ir para cliente */
 			Mousetrap.bind(['command+2', 'ctrl+2'], function() {
-				if (!_isToolbarLocked) {
+				if (!self.internal.flags.isToolbarLocked) {
 					self.scrollTo("section[name=\'customer\']");
 					self.focusOn('input[name="customer-code"]');
 				}
@@ -218,7 +221,7 @@
 
 			/* Ir para pagamento */
 			Mousetrap.bind(['command+3', 'ctrl+3'], function() {
-				if (!_isToolbarLocked) {
+				if (!self.internal.flags.isToolbarLocked) {
 					self.scrollTo("section[name=\'payment\']");
 					self.focusOn('input[name="term-code"]');
 				}
@@ -275,6 +278,7 @@
 
 		self.isToolbarLocked       = isToolbarLocked;
 		self.canSave               = canSave;
+		self.canShowInfo           = canShowInfo;
 		self.canExport             = canExport;
 		self.canPrint              = canPrint;
 		self.canChangeCompany      = canChangeCompany;
@@ -557,6 +561,7 @@
 				$rootScope.titleBarText = 'Novo orçamento';
 
 				$scope.isDisabled = false;
+				self.internal.flags.showInfo = true;
 
 				if ($routeParams.company) {
 					var company = Globals.get('user-companies-raw').find(function(company) {
@@ -820,8 +825,15 @@
 					restoreBackup: function() {
 						self.internal.term.tempTerm = new Term(self.internal.term.backup);
 					}
+				},
+				orderStatusValues: Globals.get('order-status-values'),
+				orderStatusLabels: Globals.get('order-status-labels'),
+				orderStatusColor: Globals.get("order-status-colors"),
+				flags: {
+					isToolbarLocked: false,
+					printable: false,
+					showInfo: false
 				}
-
 			};
 		}
 
@@ -839,7 +851,7 @@
 		 * Verifica se a barra de tarefas esta trancada.
 		 */
 		function isToolbarLocked() {
-			return _isToolbarLocked;
+			return self.internal.flags.isToolbarLocked;
 		}
 
 		/**
@@ -847,27 +859,40 @@
 		 */
 		function canSave() {
 			var isEqualsBackup = _backup && self.budget ? self.budget.equals(_backup) : false;
-			return !isEqualsBackup && self.budget.order_company_id && self.budget.order_status_id != Globals.get('order-status-values').billed && self.budget.status.editable == 'Y';
+			return !isEqualsBackup && self.budget.order_company_id && self.budget.order_status_id != self.internal.orderStatusValues.billed && self.budget.status.editable == 'Y';
 		}
 
 		/**
 		 * Verifica se o orcamento pode ser exportado.
 		 */
 		function canExport() {
-			return self.budget.order_company_id && self.budget.order_status_id == Globals.get('order-status-values').open;
+			return self.budget.order_company_id && self.budget.order_status_id == self.internal.orderStatusValues.open;
 		}
 
 		/**
 		 * Verifica se o orcamento pode ser impresso.
 		 */
 		function canPrint() {
-			if (self.budget.printable)
+			if (self.internal.flags.printable)
 				return true;
 
 			if (isToolbarLocked())
 				return false;
 
 			return self.budget.order_code && (_backup && self.budget.equals(_backup));
+		}
+
+		/**
+		 * Verifica se as informacoes do orcamento podem ser exibidas.
+		 */
+		function canShowInfo() {
+			if (self.internal.flags.showInfo && $scope.isDisabled)
+				return true;
+
+			if (isToolbarLocked())
+				return false;
+
+			return true;
 		}
 
 		/**
@@ -961,12 +986,12 @@
 				_showCloseButton: true
 			};
 
-			_isToolbarLocked = true;
+			self.internal.flags.isToolbarLocked = true;
 			ModalNewPerson.show().then(function(res) {
-				_isToolbarLocked = false;
+				self.internal.flags.isToolbarLocked = false;
 				self.getCustomerByCode(res.person_code);
 			}, function(error) {
-				_isToolbarLocked = false;
+				self.internal.flags.isToolbarLocked = false;
 			}); 
 		}
 
@@ -1667,13 +1692,13 @@
 				$rootScope.loading.unload();
 				var addresses = success.data.map(function(a) { return new Address(a) });
 
-				_isToolbarLocked = true;
+				self.internal.flags.isToolbarLocked = true;
 				ModalCustomerAddress.show(angular.extend(self.budget.order_client, { person_address: addresses }), self.budget.address_delivery)
 					.then(function(success) {
 						self.budget.setDeliveryAddress(success);
-						_isToolbarLocked = false;
+						self.internal.flags.isToolbarLocked = false;
 					}, function(error) {
-						_isToolbarLocked = false;
+						self.internal.flags.isToolbarLocked = false;
 					});
 			}, function(error) {
 				$rootScope.loading.unload();
@@ -2486,10 +2511,10 @@
 				}
 			};
 
-			_isToolbarLocked = true;
+			self.internal.flags.isToolbarLocked = true;
 			$rootScope.customDialog().showTemplate('Cartas de crédito', './partials/modalCustomerCredit.html', controller, { zIndex: 1, innerDialog: true })
 				.then(function(res) {
-					_isToolbarLocked = false;
+					self.internal.flags.isToolbarLocked = false;
 
 					constants.debug && console.log('creditos selecionados: ', res);
 
@@ -2546,7 +2571,7 @@
 						});					
 					
 				}, function(error) { 
-					_isToolbarLocked = false;
+					self.internal.flags.isToolbarLocked = false;
 				});
 		}
 
@@ -2627,14 +2652,14 @@
 
 			jQuery('input[name="seller-code"]').blur();
 
-			_isToolbarLocked = true;
+			self.internal.flags.isToolbarLocked = true;
 			showModalPerson('Localizar Vendedor', category, options)
 				.then(function(success) {
 					self.budget.setSeller(new Person(success));
 					self.internal.tempSeller = new Person(success);
-					_isToolbarLocked = false;
+					self.internal.flags.isToolbarLocked = false;
 				}, function(error) {
-					_isToolbarLocked = false;
+					self.internal.flags.isToolbarLocked = false;
 				});
 		}
 
@@ -2650,13 +2675,13 @@
 
 			jQuery('input[name="customer-code"]').blur();
 
-			_isToolbarLocked = true;
+			self.internal.flags.isToolbarLocked = true;
 			showModalPerson('Localizar Cliente', category, options)
 				.then(function(success) {
 					self.getCustomerByCode(success.person_code);
-					_isToolbarLocked = false;
+					self.internal.flags.isToolbarLocked = false;
 				}, function(error){
-					_isToolbarLocked = false;
+					self.internal.flags.isToolbarLocked = false;
 				});
 		}
 
@@ -2714,7 +2739,7 @@
 
 			jQuery('input[name="product-code"]').blur();
 
-			_isToolbarLocked = true;
+			self.internal.flags.isToolbarLocked = true;
 			ModalProduct.show('Localizar Produto',self.budget.order_company_id,getMainUserPriceId(),options)
 				.then(function(success) {
 					if (success.length == 1) {
@@ -2728,9 +2753,9 @@
 						});
 					}
 					
-					_isToolbarLocked = false;
+					self.internal.flags.isToolbarLocked = false;
 				},function(error) {
-					_isToolbarLocked = false;
+					self.internal.flags.isToolbarLocked = false;
 				});
 		}
 
@@ -2742,7 +2767,8 @@
 				this._showCloseButton = true;
 				this.order_note = self.budget.order_note;
 				this.order_note_doc = self.budget.order_note_doc;
-			}
+				this.readonly = $scope.isDisabled;
+			};
 
 			$rootScope.customDialog().showTemplate('Observações do orçamento', './partials/modalNotes.html', controller, { width: 500 })
 				.then(function(success) {
@@ -2840,13 +2866,13 @@
 
 				controller.$inject = [ '$scope' ];
 
-			_isToolbarLocked = true;
+			self.internal.flags.isToolbarLocked = true;
 			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalOrderSeller.html', controller, options)
 				.then(function(success) {
-					_isToolbarLocked = false;
+					self.internal.flags.isToolbarLocked = false;
 					callback && callback();
 				}, function(error) {
-					_isToolbarLocked = false;
+					self.internal.flags.isToolbarLocked = false;
 					callback && callback();
 				});
 		}
@@ -2856,7 +2882,9 @@
 		 */
 		function showLockModal() {
 			if (self.budget.order_status_id == Globals.get('order-status-values').billed || self.budget.status.editable == 'N') {
-				self.budget.printable = true;
+				self.internal.flags.printable = true;
+				self.internal.flags.showInfo = true;
+
 				if (self.budget.status.message) {
 					$rootScope.customDialog().showMessage('Aviso', self.budget.status.message);
 				}
@@ -2865,6 +2893,7 @@
 
 			if (self.budget.order_status_id == Globals.get('order-status-values').open) {
 				$scope.isDisabled = false;
+				self.internal.flags.showInfo = true;
 				return;
 			}
 
@@ -2919,7 +2948,8 @@
 							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 						});
 				}, function(error) { 
-					self.budget.printable = true;
+					self.internal.flags.printable = true;
+					self.internal.flags.showInfo = true;
 				}); 
 		}
 	}

@@ -138,6 +138,10 @@
 
 			&.sold-out {
 				color: red !important;
+
+				.fa.fa-stop {
+					color: red !important;
+				}
 			}
 
 			&.inactive {
