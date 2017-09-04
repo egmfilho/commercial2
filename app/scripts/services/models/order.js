@@ -280,13 +280,12 @@
 			/* Concatena a observacao do endereco nas observacoes da nota */
 			var obsFlag = Globals.get('obsFlag');
 			if (address.person_address_note) {
-				console.log(address.person_address_note);
-				// if (this.order_note_doc.indexOf(obsFlag) >= 0) {
-				// 	this.order_note_doc = this.order_note_doc.split(obsFlag)[0];
-				// }
+				if (this.order_note_doc && this.order_note_doc.indexOf(obsFlag) >= 0) {
+					this.order_note_doc = this.order_note_doc.split(obsFlag)[0];
+				}
 
-				// this.order_note_doc += obsFlag;
-				// this.order_note_doc += address.person_address_note;	
+				this.order_note_doc += obsFlag;
+				this.order_note_doc += address.person_address_note;	
 			}
 		}
 
