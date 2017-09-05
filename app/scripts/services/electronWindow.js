@@ -49,8 +49,7 @@
 		*/
 		function createWindow(url, options) {
 
-			var deferred = $q.defer(),
-				url = window.location.href.split('#')[0] + url;
+			var url = window.location.href.split('#')[0] + url;
 
 			var parent = _electron.remote.getCurrentWindow(),
 				win = new _BrowserWindow(angular.extend({ }, { 
@@ -73,12 +72,12 @@
 			});
 			
 			win.on('ready-to-show', function() {
-				deferred.resolve(win);
 				win.show();
 			});
 
 			win.on('close', function() {
-				parent.focus();
+				if (parent && !parent.isDestroyed())
+					parent.focus();
 
 				_remote.getGlobal('children').array = _remote.getGlobal('children').array.filter(function(w) {
 					w != win;
@@ -89,7 +88,7 @@
 
 			_remote.getGlobal('children').array = _remote.getGlobal('children').array.concat([win]);
 
-			return deferred.promise;
+			return win;
 		}
 	}
 

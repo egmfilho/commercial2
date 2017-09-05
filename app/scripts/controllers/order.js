@@ -706,7 +706,7 @@
 							.then(function(res) {
 								switch (res) {
 									case 'print': {
-										self.print().then(function(win) {
+										self.print().then(function() {
 											$scope.close(true);
 										});
 										break;
@@ -1621,10 +1621,15 @@
 			};
 
 			if (constants.isElectron) {
-				ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=pdf', options)
-					.then(function(win) {
-						deferred.resolve(win);
-					});
+				var win = ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=pdf', options);
+
+				$scope.$watch(function() {
+					return win.isVisible();
+				}, function(newVal, oldVal) {
+					if (!!newVal) {
+						deferred.resolve();
+					}
+				});
 			} else {
 				deferred.resolve();
 				$location.path('/order/print/' + self.budget.order_code);
@@ -1637,6 +1642,7 @@
 		 * Instancia uma nova janela e chama o dialogo de impressao.
 		 */
 		function print() {
+
 			if (!self.canPrint()) return;
 
 			var deferred = $q.defer();
@@ -1649,10 +1655,15 @@
 					}
 				};
 
-				ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=print', options)
-					.then(function(win) {
-						deferred.resolve(win);
-					});
+				var win = ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=print', options);
+
+				$scope.$watch(function() {
+					return win.isVisible();
+				}, function(newVal, oldVal) {
+					if (!!newVal) {
+						deferred.resolve();
+					}
+				});
 			}
 			else {
 				deferred.resolve();
@@ -1681,10 +1692,15 @@
 					}
 				};
 
-				ElectronWindow.createWindow('#/order/mail/' + self.budget.order_code, options)
-					.then(function(win) {
-						deferred.resolve(win);
-					});
+				var win = ElectronWindow.createWindow('#/order/mail/' + self.budget.order_code, options);
+
+				$scope.$watch(function() {
+					return win.isVisible();
+				}, function(newVal, oldVal) {
+					if (!!newVal) {
+						deferred.resolve();
+					}
+				});
 			}
 			else {
 				deferred.resolve();
@@ -1768,7 +1784,7 @@
 				.then(function(res) {
 					switch (res) {
 						case 'print': {
-							self.print().then(function(win) {
+							self.print().then(function() {
 								$scope.close(true);
 							});
 							break;

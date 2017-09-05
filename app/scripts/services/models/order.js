@@ -307,8 +307,8 @@
 		 * Recalcula e atualiza os valores do orcamento.
 		 */
 		function updateValues() {
-			if (!this.order_addition)
-				this.order_addition = 0;
+			if (!this.order_value_addition)
+				this.order_value_addition = 0;
 
 			this.order_value = 0;
 			this.order_value_total = 0;

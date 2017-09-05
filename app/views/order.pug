@@ -245,15 +245,12 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									div(flex='20' style='font-size: 11px;line-height: 1')
 										| Cód: 
 										| {{item.product_code}} 
-									//- div(flex='5')
 									div(flex='30' style='font-size: 11px;line-height: 1')
 										| Class.: 
 										| {{item.product_classification || 'indisponível' | truncate:10}} 
-									//- div(flex='5')
 									div(flex='30' style='font-size: 11px;line-height: 1')
 										| Estoque: 
 										| {{item.unit && item.unit.unit_format == "I" ? (item.stock.product_stock | number: 0) : (item.stock.product_stock | number: 2)}} ({{item.unit.unit_initials}}) 
-									//- div(flex='5')
 									div(flex='20' style='font-size: 11px;line-height: 1')
 										| Preço: 
 										| {{item.product_prices[0].price_value | currency: 'R$ '}} 
@@ -349,16 +346,16 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 					.items-summary(layout='row')
 						span(flex)
 
-						div(layout='column' layout-align='center start')
+						//- div(layout='column' layout-align='center start')
 							span Desconto %
 							span {{order.budget.order_al_discount | number:2}}%
 
-						div(layout='column' layout-align='center start')
+						//- div(layout='column' layout-align='center start')
 							span Desconto R$
 							span {{order.budget.order_vl_discount | currency:'R$ '}}
 
-						div(layout='column' layout-align='center start')
-							span Total
+						div(layout='row' layout-align='start center')
+							span Valor total: &nbsp;
 							span {{order.budget.order_value - order.budget.order_vl_discount | currency:'R$ '}}
 
 		//- Cliente

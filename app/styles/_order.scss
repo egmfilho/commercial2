@@ -233,18 +233,20 @@
 	div {
 		min-width: 120px;
 		height: 100%;
-		margin: 16px 8px;
+		margin: 12px 8px;
 
 		span {
 			display: block;
 
 			&:first-child {
 				@extend .text-light;
+				font-size: 18px;
 			}
 
 			&:last-child {
 				@extend .text-primary;
 				font-size: 20px;
+				margin-right: 16px;
 			}
 		}
 	}
