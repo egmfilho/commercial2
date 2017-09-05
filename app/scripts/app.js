@@ -283,12 +283,12 @@ angular.module('commercial2', [
 			.when('/order/print/:code', {
 				templateUrl: 'views/print-order.html',
 				controller: 'PrintOrderCtrl',
-				controllerAs: 'print'
+				controllerAs: 'ctrl'
 			})
 			.when('/order/mail/:code', {
 				templateUrl: 'views/mail-order.html',
 				controller: 'MailOrderCtrl',
-				controllerAs: 'mail'
+				controllerAs: 'ctrl'
 			})
 			.when('/about', {
 				module: 'about',

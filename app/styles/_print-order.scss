@@ -17,12 +17,12 @@
 	background-color: white;
 	
 	.header {
-		padding-bottom: 15px;
+		padding-bottom: 10px;
 		border-bottom: 2px solid black;
-		margin-bottom: 15px;
+		margin-bottom: 10px;
 
 		.logo {
-			height: 100px;
+			height: 80px;
 			padding: 16px;
 			// background-size: contain;
 			// background-position: center;
@@ -34,7 +34,7 @@
 		}
 
 		.company {
-			font-size: .8em;
+			font-size: .9em;
 		}
 
 		.info {
@@ -48,15 +48,22 @@
 	}
 
 	.order-info {
-		font-size: 11px;
+		font-size: 14px;
+		// padding-bottom: 10px;
+		// border-bottom: 2px solid black;
 		margin-bottom: 15px;
 
 		table {
 			width: 100%;
+			border-collapse: collapse;
 
 			tr {
 				td {
-					padding: 2px;
+					padding: 2px 4px;
+					text-transform: uppercase;
+					white-space: nowrap;
+					overflow: hidden !important;
+					// border: 1px solid black;
 				}
 			}
 		}
@@ -75,7 +82,7 @@
 		thead {
 			tr {
 				&:first-child {
-					background-color: #cdcdcd;
+					background-color: #bfbfbf;
 				}
 			}
 		}
@@ -146,13 +153,14 @@
 			th, td {
 				text-align: left !important;
 				border: 1px solid black !important;
+				text-transform: uppercase;
 
 				&:first-child {
 					width: 20px;
 				}
 
 				&:nth-child(2) {
-					width: 80px;
+					width: 160px;
 				}
 
 				&:last-child {
@@ -164,7 +172,28 @@
 		thead {
 			tr {
 				&:first-child {
-					background-color: #cdcdcd;
+					background-color: #bfbfbf;
+				}
+			}
+		}
+	}
+
+	.besouro {
+		// min-height: 400px;
+
+		display: block;
+
+		.delivery-address, .summary {
+			box-sizing: border-box;
+			display: inline-flex;
+			width: 100%;
+		}
+
+		.delivery-address {
+			table tr {
+				td {
+					font-size: 13px;
+					text-transform: uppercase;
 				}
 			}
 		}
@@ -173,12 +202,13 @@
 	.note {
 		border: 1px solid black;
 		padding: 4px;
-		margin-left: 16px;
+		margin-right: 16px;
 		min-height: 40px;
 
 		p {
 			margin: 0px;
-			font-size: 11px;
+			font-size: 13px;
+			text-transform: uppercase;
 		}
 	}
 }

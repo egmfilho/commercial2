@@ -1,71 +1,53 @@
-md-content.print-order(layout-fill ng-if='print.order.order_code')
+md-content.print-order.zoom-50(layout-fill ng-if='ctrl.order.order_code')
 	.header(layout='row')
 		.logo(flex='20' layout='column' layout-align='center center')
-			img(ng-src='{{print.logo}}')
+			img(ng-src='{{::ctrl.logo}}')
 		
 		.company(flex layout='row' layout-align='start center')
 			div
 				.md-block 
-					| {{print.order.order_company.company_name}}
+					b {{::ctrl.order.order_company.company_name}}
 				.md-block 
-					| {{print.order.order_company.company_address.company_address_type}}
-					| {{print.order.order_company.company_address.company_address_public_place}}
+					| {{::ctrl.order.order_company.company_address.company_address_type}}
+					| {{::ctrl.order.order_company.company_address.company_address_public_place}}
 				.md-block 
-					| {{print.order.order_company.company_address.company_address_district}} -
-					| {{print.order.order_company.company_address.company_address_city}} -
-					| {{print.order.order_company.company_address.company_address_uf}}
+					| {{::ctrl.order.order_company.company_address.company_address_district}} -
+					| {{::ctrl.order.order_company.company_address.company_address_city}} -
+					| {{::ctrl.order.order_company.company_address.company_address_uf}}
 				.md-block 
-					| {{print.order.order_company.company_phone}}
+					| {{::ctrl.order.order_company.company_phone}}
 		
-		.info(flex='30' layout='column' layout-align='end')
+		.info(flex='30' layout='column' layout-align='center')
 			.md-title
-				div(ng-if='print.order.order_code_erp') {{print.order.order_export_type == 'dav' ? 'DAV' : 'Pedido'}}: {{print.order.order_code_erp}}
+				div(ng-if='ctrl.order.order_code_erp') {{ctrl.order.order_export_type == 'dav' ? 'DAV' : 'Pedido'}}: {{ctrl.order.order_code_erp}}
 			span(flex)
 			.md-subhead
-				| Orçamento n&#186;: {{print.order.order_code}}
+				| Orçamento n&#186;: {{::ctrl.order.order_code}}
 			.md-subhead
-				| Data da impressão: {{now | date:'dd/MM/yyyy'}}
+				| Impressão em: {{::now | date:'dd/MM/yyyy HH:mm:ss'}}
 			.md-subhead
-				| Hora da impressão: {{now | date:'HH:mm:ss'}}
-			.md-subhead
-				| Commercial ver. {{version}}
+				| Commercial versão {{::version}}
 
 	.order-info
 		table
 			tr
-				td 
-					b Data da emissão: 
-					| {{print.order.order_date | date:'dd/MM/yyyy'}}
-				td 
-					b Vendedor: 
-					| {{print.order.order_seller.person_code}} - {{print.order.order_seller.person_name}}
-				td 
+				td
 					b Cliente: 
-					| {{print.order.order_client.person_code}} - {{print.order.order_client.person_name}}
+					| {{::ctrl.order.order_client.person_code}} - {{::ctrl.order.order_client.person_name}}
+				td
+					//- b {{::ctrl.order.order_client.person_address[0].getMainContact().person_address_contact_label}}: 
+					b CONTATO: 
+					| {{::ctrl.order.order_client.person_address[0].getMainContact().person_address_contact_value}}
 			tr
-				td 
-					b CPF/CNPJ: 
-					| {{print.order.order_client.person_type == 'F' ? print.order.order_client.person_cpf : print.order.order_client.person_cnpj}}  
-				td 
-					b Insc. Est.: 
-					| {{print.order.address_delivery.person_address_ie}}
 				td 
 					b Endereço: 
-					| {{print.order.address_delivery.person_address_type}} {{print.order.address_delivery.person_address_public_place}} - {{print.order.address_delivery.person_address_number}}
-			tr
-				td 
-					b Bairro: 
-					| {{print.order.address_delivery.district.district_name}}
-				td 
-					b Cidade: 
-					| {{print.order.address_delivery.city.city_name}} - {{print.order.address_delivery.city.uf_id}}
-				td 
-					b Cep: 
-					| {{print.order.address_delivery.person_address_cep}}
-			tr
-				td(ng-repeat='contact in print.order.address_delivery.person_address_contact|limitTo:3')
-					b {{contact.person_address_contact_label}}: 
-					| {{contact.person_address_contact_value}}
+					| {{::ctrl.order.order_client.person_address[0].person_address_type}} {{::ctrl.order.order_client.person_address[0].person_address_public_place}} {{::ctrl.order.order_client.person_address[0].person_address_number}}
+					|  - 
+					| {{::ctrl.order.order_client.person_address[0].district.district_name}}, 
+					| {{::ctrl.order.order_client.person_address[0].city.city_name}} - {{::ctrl.order.order_client.person_address[0].city.uf_id}}
+				td
+					b Vendedor: 
+					| {{::ctrl.order.order_seller.person_code}} - {{::ctrl.order.order_seller.person_shortname ? ctrl.order.order_seller.person_shortname : (ctrl.order.order_seller.person_name | truncate: 15)}}
 
 	table.print-table.products
 		thead
@@ -78,48 +60,73 @@ md-content.print-order(layout-fill ng-if='print.order.order_code')
 				th LÍQUIDO
 				th TOTAL
 		tbody
-			tr(ng-repeat='i in print.order.order_items' layout='row')
-				td {{i.product.product_code}} - {{i.product.product_name}}
-				td {{i.product.unit.unit_initials}}
-				td {{i.order_item_amount}}
-				td {{i.order_item_value_unitary | currency}}
-				td {{i.order_item_al_discount | currency:''}}%
-				td {{i.order_item_vl_discount | currency:'R$ '}}
-				td {{(i.order_item_value_total / i.order_item_amount) | currency:'R$ '}}
-				td {{i.order_item_value_total | currency:'R$ '}}
+			tr(ng-repeat='i in ctrl.order.order_items' layout='row')
+				td {{::i.product.product_code}} - {{i.product.product_name}}
+				td {{::i.product.unit.unit_initials}}
+				td {{::i.order_item_amount}}
+				td {{::i.order_item_value_unitary | currency}}
+				td {{::i.order_item_al_discount | currency:''}}%
+				td {{::i.order_item_vl_discount | currency:'R$ '}}
+				td {{::(i.order_item_value_total / i.order_item_amount) | currency:'R$ '}}
+				td {{::i.order_item_value_total | currency:'R$ '}}
 
 	.offset-top-15(layout='row')
-		div(layout='column' flex='35')
-			div
-				table.print-table.borderless.payment(style='width: 100%')
+		.besouro(flex='60')
+			.delivery-address(flex='50' style='padding-right: 16px;')
+				table.print-table(style='width: 100%')
 					thead
 						tr
-							th.text-left(colspan='4') PAGAMENTO
-								span.pull-right {{print.order.term.term_description}}
-					tbody
-						tr(ng-repeat='i in print.order.order_payments' layout='row')
-							td
-								.text-center {{i.order_payment_installment}}x
-							td {{i.modality.modality_description}}
-							td 
-								.text-center {{i.order_payment_value | currency:'R$ '}}
-							td 
-								.text-center {{i.order_payment_deadline | date:'dd/MM/yyyy'}}
-		span(flex)
-
-		div(layout='column' flex='65')
-			div(style='padding-left: 16px;')
-				table.print-table(style='width: 100%')
+							th ENDEREÇO DE ENTREGA
 					tr
 						td 
-							.text-center DESCONTO TOTAL: {{print.order.order_vl_discount | currency:'R$ '}}
-						td 
-							.text-center VALOR TOTAL: {{print.order.order_value_total | currency:'R$ '}}
+							b ENDEREÇO: 
+							| {{::ctrl.order.address_delivery.person_address_type}} {{::ctrl.order.address_delivery.person_address_public_place}} {{::ctrl.order.address_delivery.person_address_number}}
+							|  - 
+							| {{::ctrl.order.address_delivery.district.district_name}}, 
+							| {{::ctrl.order.address_delivery.city.city_name}} - {{::ctrl.order.address_delivery.city.uf_id}} |
+							b &nbsp; CONTATO: 
+							| {{::ctrl.order.address_delivery.getMainContact().person_address_contact_value}}
 			
-			.note.offset-top-15
-				p 
-					b OBSERVAÇÕES - &nbsp;
-					| {{print.order.order_note || 'Sem observações'}}
+			.summary(flex='50' style='padding-right: 16px;')
+				table.print-table(style='width: 100%')
+					thead
+						tr
+							th(colspan='2') VALORES
+					tbody
+						tr
+							td 
+								| DESCONTO TOTAL
+							td
+								| {{::ctrl.order.order_vl_discount | currency:'R$ '}}
+						tr
+							td
+								| VALOR DO PEDIDO
+							td
+								| {{::ctrl.order.order_value_total | currency:'R$ '}}
 
-			.message(flex= '60')
-				p {{globals('print-message')[print.order.order_company_id].order_message}}
+			.note.offset-top-15 
+				p
+					b OBSERVAÇÕES - &nbsp;
+					| {{::ctrl.order.order_note || 'Sem observações'}}
+	
+		div(layout='column' flex='40')
+			table.print-table.borderless.payment(style='width: 100%')
+				thead
+					tr
+						th.text-left(colspan='4') PAGAMENTO
+							span.pull-right {{::ctrl.order.term.term_description}}
+				tbody
+					tr(ng-if='!ctrl.order.order_payments.length')
+						td
+							.text-center NENHUM PAGAMENTO INFORMADO
+					tr(ng-repeat='i in ctrl.order.order_payments' layout='row')
+						td
+							.text-center {{::i.order_payment_installment}}x
+						td {{::i.modality.modality_description}}
+						td 
+							.text-center {{::i.order_payment_value | currency:'R$ '}}
+						td 
+							.text-center {{::i.order_payment_deadline | date:'dd/MM/yyyy'}}
+
+	.message
+		p {{::globals('print-message')[ctrl.order.order_company_id].order_message}}

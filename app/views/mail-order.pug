@@ -9,14 +9,14 @@
 				tr
 					td Para: 
 					td
-						.box(ng-click='mail.focusSearchInput()')
-							md-chips(ng-model='mail.form.to' md-autocomplete-snap md-transform-chip='mail.internal.newContact($chip)' md-require-match='false' md-add-on-blur='true')
-								md-autocomplete(md-selected-item='mail.internal.selectedItem'
-										md-search-text='mail.internal.searchText'
-										md-items='item in mail.internal.querySearch(mail.internal.searchText)'
+						.box(ng-click='ctrl.focusSearchInput()')
+							md-chips(ng-model='ctrl.form.to' md-autocomplete-snap md-transform-chip='ctrl.internal.newContact($chip)' md-require-match='false' md-add-on-blur='true')
+								md-autocomplete(md-selected-item='ctrl.internal.selectedItem'
+										md-search-text='ctrl.internal.searchText'
+										md-items='item in ctrl.internal.querySearch(ctrl.internal.searchText)'
 										md-item-text='item.email'
 										placeholder='Informe os destinatários')
-									span(md-highlight-text='mail.internal.searchText') 
+									span(md-highlight-text='ctrl.internal.searchText') 
 										| {{item.name}} ({{item.mail}})
 								md-chip-template
 									span
@@ -26,12 +26,12 @@
 				tr
 					td Assunto: 
 					td 
-						input.box(name='subject' ng-model='mail.form.subject')
+						input.box(name='subject' ng-model='ctrl.form.subject')
 
 				tr
 					td.message Mensagem:
 					td
-						textarea.box(name='message' ng-model='mail.form.message')
+						textarea.box(name='message' ng-model='ctrl.form.message')
 
 				tr
 					td
@@ -40,21 +40,21 @@
 							.attachment
 								i.material-icons attach_file
 								b Anexo: &nbsp;
-								span(ng-show='mail.order.order_code')
+								span(ng-show='ctrl.order.order_code')
 									i.fa.fa-file-pdf-o &nbsp;
-									| Orçamento_{{mail.order.order_code}}.pdf 
-								span(ng-hide='mail.order.order_code')
+									| Orçamento_{{ctrl.order.order_code}}.pdf 
+								span(ng-hide='ctrl.order.order_code')
 									| Carregando...
 
 							.send
-								md-button.md-raised.md-primary(ng-click='mail.send()')
+								md-button.md-raised.md-primary(ng-click='ctrl.send()')
 									i.material-icons send
 									| Enviar
 
-		.preview(ng-if='mail.order.order_code')
+		.preview(ng-if='ctrl.order.order_code')
 			.preview-header.hidden-on-print(layout='row' layout-align='start center')
 				span Pré-Visualização: &nbsp;
-				span Orçamento_{{mail.order.order_code}}.pdf
+				span Orçamento_{{ctrl.order.order_code}}.pdf
 
 				span(flex)
 
@@ -65,128 +65,4 @@
 					md-icon(md-icon-set='material-icons' style='font-size: 24px') zoom_in
 
 			.print-container
-				md-content.print-order.zoom-50
-					.header(layout='row')
-						.logo(flex='20' layout='column' layout-align='center center')
-							img(ng-src='{{mail.logo}}')
-						
-						.company(flex layout='row' layout-align='start center')
-							div
-								.md-block 
-									| {{mail.order.order_company.company_name}}
-								.md-block 
-									| {{mail.order.order_company.company_address.company_address_type}}
-									| {{mail.order.order_company.company_address.company_address_public_place}}
-								.md-block 
-									| {{mail.order.order_company.company_address.company_address_district}} -
-									| {{mail.order.order_company.company_address.company_address_city}} -
-									| {{mail.order.order_company.company_address.company_address_uf}}
-								.md-block 
-									| {{mail.order.order_company.company_phone}}
-						
-						.info(flex='30' layout='column' layout-align='end')
-							.md-title
-								div(ng-if='mail.order.order_code_erp') {{mail.order.order_export_type == 'dav' ? 'DAV' : 'Pedido'}}: {{mail.order.order_code_erp}}
-							span(flex)
-							.md-subhead
-								| Orçamento n&#186;: {{mail.order.order_code}}
-							.md-subhead
-								| Data da impressão: {{now | date:'dd/MM/yyyy'}}
-							.md-subhead
-								| Hora da impressão: {{now | date:'HH:mm:ss'}}
-							.md-subhead
-								| Commercial: ver. {{version}}
-
-					.order-info
-						table
-							tr
-								td 
-									b Data da emissão: 
-									| {{mail.order.order_date | date:'dd/MM/yyyy'}}
-								td 
-									b Vendedor: 
-									| {{mail.order.order_seller.person_code}} - {{mail.order.order_seller.person_name}}
-								td 
-									b Cliente: 
-									| {{mail.order.order_client.person_code}} - {{mail.order.order_client.person_name}}
-							tr
-								td 
-									b CPF/CNPJ: 
-									| {{mail.order.order_client.person_type == 'F' ? mail.order.order_client.person_cpf : mail.order.order_client.person_cnpj}}  
-								td 
-									b Insc. Est.: 
-									| {{mail.order.address_delivery.person_address_ie}}
-								td 
-									b Endereço: 
-									| {{mail.order.address_delivery.person_address_type}} {{mail.order.address_delivery.person_address_public_place}} - {{mail.order.address_delivery.person_address_number}}
-							tr
-								td 
-									b Bairro: 
-									| {{mail.order.address_delivery.district.district_name}}
-								td 
-									b Cidade: 
-									| {{mail.order.address_delivery.city.city_name}} - {{mail.order.address_delivery.city.uf_id}}
-								td 
-									b Cep: 
-									| {{mail.order.address_delivery.person_address_cep}}
-							tr
-								td(ng-repeat='contact in mail.order.address_delivery.person_address_contact|limitTo:3')
-									b {{contact.person_address_contact_label}}: 
-									| {{contact.person_address_contact_value}}
-
-					table.print-table.products
-						thead
-							tr
-								th PRODUTO
-								th UND
-								th QTD
-								th VALOR
-								th(colspan='2') DESCONTO
-								th LÍQUIDO
-								th TOTAL
-						tbody
-							tr(ng-repeat='i in mail.order.order_items' layout='row')
-								td {{i.product.product_code}} - {{i.product.product_name}}
-								td {{i.product.unit.unit_initials}}
-								td {{i.order_item_amount}}
-								td {{i.order_item_value_unitary | currency}}
-								td {{i.order_item_al_discount | currency:''}}%
-								td {{i.order_item_vl_discount | currency:'R$ '}}
-								td {{(i.order_item_value_total / i.order_item_amount) | currency:'R$ '}}
-								td {{i.order_item_value_total | currency:'R$ '}}
-
-					.offset-top-15(layout='row')
-						div(layout='column' flex='35')
-							div
-								table.print-table.borderless.payment(style='width: 100%')
-									thead
-										tr
-											th.text-left(colspan='4') PAGAMENTO
-												span.pull-right {{mail.order.term.term_description}}
-									tbody
-										tr(ng-repeat='i in mail.order.order_payments' layout='row')
-											td
-												.text-center {{i.order_payment_installment}}x
-											td {{i.modality.modality_description}}
-											td 
-												.text-center {{i.order_payment_value | currency:'R$ '}}
-											td 
-												.text-center {{i.order_payment_deadline | date:'dd/MM/yyyy'}}
-						span(flex)
-
-						div(layout='column' flex='65')
-							div(style='padding-left: 16px;')
-								table.print-table(style='width: 100%')
-									tr
-										td 
-											.text-center DESCONTO TOTAL: {{mail.order.order_vl_discount | currency:'R$ '}}
-										td 
-											.text-center VALOR TOTAL: {{mail.order.order_value_total | currency:'R$ '}}
-							
-							.note.offset-top-15
-								p 
-									b OBSERVAÇÕES - &nbsp;
-									| {{mail.order.order_note || 'Sem observações'}}
-
-							.message(flex= '60')
-								p {{globals('print-message')[mail.order.order_company_id].order_message}}
+				div(ng-include='"./views/print-order.html"')

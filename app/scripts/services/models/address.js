@@ -100,6 +100,8 @@
 				this.person_address_number       = null;
 				this.person_address_note         = null;
 				this.person_address_reference    = null;
+				this.tel                         = null;
+				this.cel                         = null;
 				this.icms_type                   = Globals.get('default-icms-type').code;
 				this.city                        = new City();
 				this.district                    = new District();
@@ -117,7 +119,8 @@
 				toString: toString,
 				setDistrict: setDistrict,
 				setCity: setCity,
-				merge: merge
+				merge: merge,
+				getMainContact: getMainContact
 			};
 
 			return Address;
@@ -159,6 +162,13 @@
 					city: new City(address.city), 
 					district: new District(address.district),
 				});
+			}
+
+			function getMainContact() {
+				return this.person_address_contact.map(function(contact) {
+					if (contact.person_address_contact_main == 'Y')
+						return contact;
+				})[0];
 			}
 
 		}]);
