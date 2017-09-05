@@ -86,7 +86,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								| Observações
 						md-menu-divider
 						md-menu-item
-							md-button(ng-click='' ng-disabled='true || order.isToolbarLocked()')
+							md-button(ng-click='order.showModalDiscount()' ng-disabled='!order.budget.order_items.length')
 								md-icon(md-font-set='material-icons') monetization_on
 								| Aplicar desconto geral
 				md-menu
@@ -168,7 +168,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					md-tooltip(md-direction='bottom') Observações
 					md-icon.text-warning(md-font-icon='fa fa-sticky-note-o')
 
-				md-button.toolbar-btn(ng-click='' ng-disabled='true || order.isToolbarLocked()')
+				md-button.toolbar-btn(ng-click='order.showModalDiscount()' ng-disabled='!order.budget.order_items.length')
 					md-tooltip(md-direction='bottom') Aplicar desconto geral
 					md-icon(md-font-set='material-icons' style='color: tan') monetization_on
 				

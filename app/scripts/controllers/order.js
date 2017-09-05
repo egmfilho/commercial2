@@ -342,6 +342,7 @@
 		self.showModalCustomerInfo = showModalCustomerInfo;
 		self.showModalProduct      = showModalProduct;
 		self.showModalNotes        = showModalNotes;
+		self.showModalDiscount     = showModalDiscount;
 		self.goToSection           = goToSection;
 		self.showModalOrderSeller  = showModalOrderSeller;
 		self.showLockModal         = showLockModal;
@@ -2811,6 +2812,51 @@
 				.then(function(success) {
 					self.budget.order_note = success.order_note;
 					self.budget.order_note_doc = success.order_note_doc;
+				}, function(error) { });
+		}
+
+		/**
+		 * Exibe a tela de desconto geral do orcamento.
+		 */
+		function showModalDiscount() {
+			var controller = function() {
+				this.user = Globals.get('user');
+				this.vl_discount = 0;
+				this.al_discount = 0;
+				this._showCloseButton = true;
+
+				var scope = this;
+
+				this.calcDiscountByAl = function(){
+					if( scope.check()){
+						scope.vl_discount = self.budget.order_value * (scope.al_discount/100);
+						self.focusOn('input[name="vl-discount"]');
+					}
+				}
+				this.calcDiscountByVl = function(){
+					scope.al_discount = (scope.vl_discount*100)/self.budget.order_value;
+					if( scope.check()){
+						self.focusOn('button[name="sendDiscount"]');
+					}
+				}
+				this.check = function(){
+					if( scope.al_discount < 0 || scope.al_discount > scope.user.user_max_discount ){
+						scope.al_discount = 0;
+						scope.vl_discount = 0;
+						return false;
+					}
+					return true;
+				}
+			};
+
+			$rootScope.customDialog().showTemplate('Desconto geral do orçamento', './partials/modalDiscount.html', controller, { width: 240 })
+				.then(function(success) {
+					var total = self.budget.order_value_total;
+					angular.forEach( self.budget.order_items, function(item){
+						item.setAlDiscount(success.al_discount);
+					});
+					self.budget.updateValues();
+					self.recalcPayments();
 				}, function(error) { });
 		}
 

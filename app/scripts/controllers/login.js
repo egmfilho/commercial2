@@ -57,7 +57,8 @@
 							$rootScope.toast('Erro', 'Usuário não autorizado.');
 							break;
 						case 404: 
-							$rootScope.toast('Erro', 'Usuário ou senha inválidos.');
+							//$rootScope.toast('Erro', 'Usuário ou senha inválidos.');
+							$rootScope.toast('Erro', res.status.description);
 							break;
 						case 412:
 							if (constants.isElectron) {

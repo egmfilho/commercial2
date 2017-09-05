@@ -1,0 +1,26 @@
+.body(layout='column' layout-fill)
+	
+	span(flex) Desconto máximo permitido: {{ctrl.user.user_max_discount | number:'2'}}%
+	
+	span(style='margin: 16px;')
+	
+	div(layout='row')
+		md-input-container(flex='50')
+			label Alíquota %
+			input(name='al-discount'
+					ng-model='ctrl.al_discount'
+					currency trim max-fraction-size='4' number-only symbol="''"
+					ng-blur='ctrl.calcDiscountByAl()'
+					keys-shortcuts enter='ctrl.calcDiscountByAl()')
+		md-input-container(flex='50')
+			label Valor
+			input(name='vl-discount'
+					ng-model='ctrl.vl_discount' 
+					currency symbol="'R$ '"
+					number-only
+					ng-blur='ctrl.calcDiscountByVl()'
+					keys-shortcuts enter='ctrl.calcDiscountByVl()')
+
+.footer.bordered(layout='row' layout-align='end center')
+	md-button.md-raised(name="sendDiscount" ng-click='ctrl._close({ al_discount: ctrl.al_discount, vl_discount: ctrl.vl_discount })')
+		| &nbsp; Ok &nbsp;
