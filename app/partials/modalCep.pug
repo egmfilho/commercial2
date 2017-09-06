@@ -16,9 +16,13 @@
 						data-md-container-class='query-select-container'
 						ng-model-options='{ trackBy: "$value.district_id" }')
 					md-select-header.select-header
+						| &nbsp; &nbsp;
+						i.fa.fa-search
 						input.md-text(ng-model='queryDistrict' 
 								type='search' placeholder='Digite aqui o nome do bairro'
 								ng-keydown="ctrl.searchDistrict($event, queryDistrict)")
+						button(ng-click='queryDistrict = \'\'; ctrl.searchDistrict()')
+							i.fa.fa-times-circle
 					md-opt-group(label='Bairros')
 						md-option(ng-value='d' 
 								ng-repeat='d in ctrl.queryDistrictResult')
@@ -30,9 +34,13 @@
 						data-md-container-class='query-select-container'
 						ng-model-options='{ trackBy: "$value.city_id" }')
 					md-select-header.select-header
+						| &nbsp; &nbsp;
+						i.fa.fa-search
 						input.md-text(ng-model='queryCity' 
 								type='search' placeholder='Digite aqui o nome da cidade'
 								ng-keydown="ctrl.searchCity($event, queryCity)")
+						button(ng-click='queryCity = \'\'; ctrl.searchCity()')
+							i.fa.fa-times-circle
 					md-opt-group(label='Cidades')
 						md-option(ng-value='c' 
 								ng-repeat='c in ctrl.queryCityResult'

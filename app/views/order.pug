@@ -497,9 +497,13 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 											ng-model-options='{ trackBy: "$value.term_id" }'
 											ng-disabled='!order.budget.order_items.length || isDisabled')
 										md-select-header.select-header
+											| &nbsp; &nbsp;
+											i.fa.fa-search
 											input.md-text(ng-model='order.internal.term.queryTerm' 
 													type='search' placeholder='Buscar prazo'
 													ng-keydown="order.internal.term.updateSearch($event)")
+											button(ng-click='order.internal.term.queryTerm = \'\';')
+												i.fa.fa-times-circle
 										md-opt-group(label='Prazos')
 											md-option(ng-value='t' 
 													ng-repeat='t in order.internal.term.queryResult | filter: { queryable: order.internal.term.queryTerm }'

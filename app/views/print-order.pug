@@ -1,6 +1,6 @@
 md-content.print-order.zoom-50(layout-fill ng-if='ctrl.order.order_code')
 	.header(layout='row')
-		.logo(flex='20' layout='column' layout-align='center center')
+		.logo(flex='15' layout='column' layout-align='center center')
 			img(ng-src='{{::ctrl.logo}}')
 		
 		.company(flex layout='row' layout-align='start center')
@@ -31,23 +31,23 @@ md-content.print-order.zoom-50(layout-fill ng-if='ctrl.order.order_code')
 	.order-info
 		table
 			tr
-				td
+				td(colspan='2')
 					b Cliente: 
-					| {{::ctrl.order.order_client.person_code}} - {{::ctrl.order.order_client.person_name}}
-				td
-					//- b {{::ctrl.order.order_client.person_address[0].getMainContact().person_address_contact_label}}: 
+					b {{::ctrl.order.order_client.person_code}} - {{::ctrl.order.order_client.person_name}}
+				td.text-right
 					b CONTATO: 
 					| {{::ctrl.order.order_client.person_address[0].getMainContact().person_address_contact_value}}
 			tr
-				td 
+				td(colspan='3')
 					b Endereço: 
 					| {{::ctrl.order.order_client.person_address[0].person_address_type}} {{::ctrl.order.order_client.person_address[0].person_address_public_place}} {{::ctrl.order.order_client.person_address[0].person_address_number}}
 					|  - 
 					| {{::ctrl.order.order_client.person_address[0].district.district_name}}, 
 					| {{::ctrl.order.order_client.person_address[0].city.city_name}} - {{::ctrl.order.order_client.person_address[0].city.uf_id}}
-				td
+			tr
+				td(colspan='2')
 					b Vendedor: 
-					| {{::ctrl.order.order_seller.person_code}} - {{::ctrl.order.order_seller.person_shortname ? ctrl.order.order_seller.person_shortname : (ctrl.order.order_seller.person_name | truncate: 15)}}
+					| {{::ctrl.order.order_seller.person_code}} - {{::ctrl.order.order_seller.person_name}}
 
 	table.print-table.products
 		thead
@@ -83,8 +83,8 @@ md-content.print-order.zoom-50(layout-fill ng-if='ctrl.order.order_code')
 							| {{::ctrl.order.address_delivery.person_address_type}} {{::ctrl.order.address_delivery.person_address_public_place}} {{::ctrl.order.address_delivery.person_address_number}}
 							|  - 
 							| {{::ctrl.order.address_delivery.district.district_name}}, 
-							| {{::ctrl.order.address_delivery.city.city_name}} - {{::ctrl.order.address_delivery.city.uf_id}} |
-							b &nbsp; CONTATO: 
+							| {{::ctrl.order.address_delivery.city.city_name}} - {{::ctrl.order.address_delivery.city.uf_id}}
+							b &nbsp;|&nbsp;CONTATO: 
 							| {{::ctrl.order.address_delivery.getMainContact().person_address_contact_value}}
 			
 			.summary(flex='50' style='padding-right: 16px;')

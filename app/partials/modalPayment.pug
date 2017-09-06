@@ -25,9 +25,13 @@
 					data-md-container-class='query-select-container'
 					ng-model-options='{ trackBy: "$value.modality_id" }')
 				md-select-header.select-header
+					| &nbsp; &nbsp;
+					i.fa.fa-search
 					input.md-text(ng-model='ctrl.queryModality' 
 							type='search' placeholder='Buscar modalidade'
 							ng-keydown="ctrl.updateSearch($event)")
+					button(ng-click='ctrl.queryModality = \'\';')
+						i.fa.fa-times-circle
 				md-opt-group(label='Modalidades')
 					md-option(ng-value='m' 
 							ng-repeat='m in ctrl.queryModalityResult | filter: { queryable: ctrl.queryModality }' 
@@ -52,9 +56,13 @@
 					data-md-container-class='query-select-container'
 					ng-disabled='!ctrl.isCheck()')
 				md-select-header.select-header
+					| &nbsp; &nbsp;
+					i.fa.fa-search
 					input.md-text(ng-model='ctrl.queryBank' 
 							type='search' placeholder='Buscar banco'
 							ng-keydown="ctrl.updateSearch($event)")
+					button(ng-click='ctrl.queryBank = \'\';')
+						i.fa.fa-times-circle
 				md-opt-group(label='Bancos')
 					md-option(ng-value='b.bank_id' 
 							ng-repeat='b in ctrl.queryBankResult | filter: { queryable: ctrl.queryBank }'
@@ -66,7 +74,11 @@
 			md-select(ng-model='ctrl.payment.order_payment_agency_id' data-md-container-class='query-select-container' 
 					ng-disabled='!ctrl.tempBank.bank_agencies.length || !ctrl.isCheck()')
 				md-select-header.select-header
+					| &nbsp; &nbsp;
+					i.fa.fa-search
 					input.md-text(ng-model='ctrl.queryAgency' type='search' placeholder='Buscar agência' ng-keydown="ctrl.updateSearch($event)")
+					button(ng-click='ctrl.queryAgency = \'\';')
+						i.fa.fa-times-circle
 				md-opt-group(label='Agências')
 					md-option(ng-value='a.bank_agency_id' ng-repeat='a in ctrl.tempBank.bank_agencies | filter: { queryable: ctrl.queryAgency }' ng-click='ctrl.queryAgency = ""')
 						| {{a.bank_agency_number}} - {{a.bank_agency_name}}

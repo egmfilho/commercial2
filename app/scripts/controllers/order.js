@@ -651,7 +651,8 @@
 			var message = '';
 
 			for (var i = 0; i < self.budget.order_items.length; i++) {
-				if (self.budget.order_items[i].product.stock.product_stock <= 0) {
+				if (self.budget.order_status_id == self.internal.orderStatusValues.open &&
+					self.budget.order_items[i].product.stock.product_stock <= 0) {
 					message += '<br><br><div class="well">';
 					message += '<span class="text-danger">ATENÇÃO</span><br><br>';
 					message += 'Este orçamento possui 1 ou mais itens sem estoque.';
@@ -1657,10 +1658,13 @@
 				};
 
 				var win = ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=print', options);
+				// ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=print', options);
 
-				$scope.$watch(function() {
+				var pastel = $scope.$watch(function() {
 					return win.isVisible();
 				}, function(newVal, oldVal) {
+					if (!win) pastel();
+
 					if (!!newVal) {
 						deferred.resolve();
 					}
@@ -1695,9 +1699,11 @@
 
 				var win = ElectronWindow.createWindow('#/order/mail/' + self.budget.order_code, options);
 
-				$scope.$watch(function() {
+				var pastel = $scope.$watch(function() {
 					return win.isVisible();
 				}, function(newVal, oldVal) {
+					if (!win) pastel();
+
 					if (!!newVal) {
 						deferred.resolve();
 					}
