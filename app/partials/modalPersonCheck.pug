@@ -1,0 +1,40 @@
+.body(name='modal-person-check-body' flex='100' layout='column' layout-fill)
+	
+	span(flex) O CPF/CNPJ já está cadastrado.
+
+	div(class='person-check-container-table' flex layout='column' style='margin-top: 20px')
+		.person-check-table-header-container
+			table.person-check-table.table
+				thead
+					tr
+						th.sortable(ng-click="ctrl.sortBy('person_type')")
+							| TIPO &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'person_type'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-click="ctrl.sortBy('person_code')")
+							| CÓDIGO &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'person_code'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-click="ctrl.sortBy('person_name')")
+							| NOME &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'person_name'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+
+		.container-table(flex)
+			table.person-check-table.table(name='person-check')
+				tbody
+					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-dblclick='ctrl.get(p)' ng-class="{'inactive':p.person_active=='N'}" keys-shortcuts enter='ctrl.get(p)')
+						td {{::p.person_type}}
+						td {{::p.person_code}}
+						td {{::p.person_name}}
+
+	div(layout='column')
+		.bar
+			md-toolbar
+				.md-toolbar-tools(layout='row')
+					i.fa.fa-2x.fa-users &nbsp;
+					p(flex) {{ctrl.result.length > 0 ? ctrl.result.length : 'Nenhum' }} {{ctrl.options.module}}{{ctrl.result.length > 1 ? 's' : '' }} Localizado{{ctrl.result.length > 1 ? 's' : '' }}
+					.legend.pull-right
+						i.fa.fa-stop
+						| Inativo
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-primary.md-raised(ng-click='ctrl._cancel()')
+		| &nbsp; Fechar &nbsp;

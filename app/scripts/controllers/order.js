@@ -45,6 +45,7 @@
 		'ProviderBank',
 		'Bank',
 		'ModalPerson',
+		'ModalPersonCheck',
 		'ModalNewPerson',
 		'ModalProduct',
 		'ModalCustomerAddress',
@@ -87,6 +88,7 @@
 		providerBank,
 		Bank,
 		ModalPerson,
+		ModalPersonCheck,
 		ModalNewPerson,
 		ModalProduct,
 		ModalCustomerAddress,
@@ -506,7 +508,8 @@
 					getItems: true,
 					getPayments: true,
 					getTerm: true,
-					getProductPrice: true
+					getProductPrice: true,
+					getProductStock: true
 				};
 
 				$rootScope.loading.load();
@@ -2825,8 +2828,11 @@
 		 * Exibe a tela de desconto geral do orcamento.
 		 */
 		function showModalDiscount() {
-			var controller = function() {
-				this.user = Globals.get('user');
+			var _user = Globals.get('user'),
+				controller;
+
+			controller = function() {
+				this.user = _user;
 				this.vl_discount = 0;
 				this.al_discount = 0;
 				this._showCloseButton = true;
@@ -2836,13 +2842,13 @@
 				this.calcDiscountByAl = function(){
 					if( scope.check()){
 						scope.vl_discount = self.budget.order_value * (scope.al_discount/100);
-						self.focusOn('input[name="vl-discount"]');
+						// self.focusOn('input[name="vl-discount"]');
 					}
 				}
 				this.calcDiscountByVl = function(){
 					scope.al_discount = (scope.vl_discount*100)/self.budget.order_value;
 					if( scope.check()){
-						self.focusOn('button[name="sendDiscount"]');
+						// self.focusOn('button[name="sendDiscount"]');
 					}
 				}
 				this.check = function(){
@@ -2858,9 +2864,22 @@
 			$rootScope.customDialog().showTemplate('Desconto geral do orçamento', './partials/modalDiscount.html', controller, { width: 240 })
 				.then(function(success) {
 					var total = self.budget.order_value_total;
-					angular.forEach( self.budget.order_items, function(item){
+
+					angular.forEach( self.budget.order_items, function(item, index){
 						item.setAlDiscount(success.al_discount);
 					});
+
+					self.budget.order_audit_discounts.push({
+						title: 'Desconto geral',
+						al_discount: success.al_discount,
+						vl_discount: success.vl_discount,
+						user_id: _user.user_id,
+						user_name: _user.user_name,
+						person_name: self.budget.order_client && self.budget.order_client.person_name,
+						person_code: self.budget.order_client && self.budget.order_client.person_code,
+						date: moment().toDate()
+					});
+					
 					self.budget.updateValues();
 					self.recalcPayments();
 				}, function(error) { });

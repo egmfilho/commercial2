@@ -74,7 +74,7 @@
 						}, function(error) {
 							constants.debug && console.log(error);
 							$rootScope.loading.unload();
-							$rootScope.customDialog.showMessage('Erro', error.data.status.description);
+							$rootScope.customDialog().showMessage('Aviso', error.data.status.description);
 						});
 					};
 

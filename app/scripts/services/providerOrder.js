@@ -65,7 +65,8 @@
 						get_order_payments_modality: options && options.getPayments,
 						get_order_term: options && options.getTerm,
 						get_order_address_delivery: options && options.getDeliveryAddress,
-						get_product_price: options && options.getProductPrice
+						get_product_price: options && options.getProductPrice,
+						get_product_stock: options && options.getProductStock
 					}).$promise;
 				}
 
@@ -91,7 +92,8 @@
 						get_order_payments_modality: options && options.getPayments,
 						get_order_term: options && options.getTerm,
 						get_order_address_delivery: options && options.getDeliveryAddress,
-						get_product_price: options && options.getProductPrice
+						get_product_price: options && options.getProductPrice,
+						get_product_stock: options && options.getProductStock
 					}).$promise;
 				}
 
@@ -120,7 +122,8 @@
 						get_order_payments_modality: options && options.getPayments,
 						get_order_term: options && options.getTerm,
 						get_order_address_delivery: options && options.getDeliveryAddress,
-						get_product_price: options && options.getProductPrice
+						get_product_price: options && options.getProductPrice,
+						get_product_stock: options && options.getProductStock
 					}).$promise;
 				}
 

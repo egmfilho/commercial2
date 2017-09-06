@@ -92,7 +92,8 @@
 			this.order_value_st              = 0;
 			this.order_addition              = 0;
 			this.status                      = new OrderStatus(),
-			this.queryable                   = '';
+			this.queryable                   = '',
+			this.order_audit_discounts       = new Array();
 
 			if (order) {
 				Object.assign(this, order, {

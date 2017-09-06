@@ -1,0 +1,72 @@
+.person-check-table-header-container{
+	padding-top: 14px;
+	padding-right: 10px;
+	border: 1px solid $border-color;
+	border-bottom: none;
+}
+
+.person-check-container-table{
+	height: 170px;
+}
+
+.person-check-table {
+	
+	tbody{
+		tr{
+			&.inactive td{
+				color: #ccc !important;
+			}
+		}
+	}
+
+	tr {
+		th{
+			padding: 0 5px 10px;
+		}
+
+		td{
+			padding: 10px 5px;
+		}
+
+		th, td {
+			
+			&:nth-child(1) {
+				width: 14%;
+				text-align: center;
+			}
+
+			&:nth-child(2){
+				width: 18%;
+				text-align: center;
+			}
+
+			&:nth-child(3){
+				width: auto;
+			}
+		}
+	}
+}
+
+.bar {
+	z-index: 0;
+
+	.md-toolbar-tools {
+		background-color: white;
+		color: $main-color;
+		font-size: .7em;
+		border: 1px solid $border-color;
+		border-top: none;
+
+		.legend{
+			color: $main-color !important;
+
+			.fa.fa-stop {
+				color: #ccc !important;
+			}
+
+			i{
+				margin-right: 4px;
+			}
+		}
+	}
+}
