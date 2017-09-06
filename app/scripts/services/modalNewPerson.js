@@ -10,7 +10,7 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('ModalNewPerson', ['$rootScope', '$http', 'Constants', 'Globals', function($rootScope, $http, constants, Globals) {
+		.factory('ModalNewPerson', ['$rootScope', '$http', 'Constants', 'Globals', 'ModalPersonCheck', function($rootScope, $http, constants, Globals, ModalPersonCheck) {
 
 
 			function show() {
@@ -20,6 +20,7 @@
 					this._showCloseButton = true;
 
 					this.addressTypes = Globals.get('public-place-types');
+					this.category = Globals.get('person-categories').customer;
 					this.customer = new Person({
 						person_address: [ new Address() ]
 					});
@@ -36,14 +37,24 @@
 						scope.searchCity();
 					}
 
+					this.showModalPersonCheck = function(title, people) {
+						return ModalPersonCheck.show(title, people, scope.category);
+					}
+
 					this.checkDocument = function() {
-						providerPerson.check(this.customer.person_cpf, this.customer.person_cnpj)
+						providerPerson.check(this.customer.person_cpf, this.customer.person_cnpj, this.category)
 							.then(function(success) {
-								$rootScope.customDialog().showMessage('Aviso', 'Usuário já cadastrado!');
+								scope.showModalPersonCheck('Aviso',success.data).then(function(success){
+									scope._close(success);
+								}, function(error){ });
 							}, function(error) {
 								if (error.status != 404 && error.status != 417)
 									$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 							});
+					};
+
+					this.activateAndClose = function(id) {
+
 					};
 
 					this.save = function() {
@@ -120,6 +131,7 @@
 						}, function(error) {
 							constants.debug && console.log(error);
 							$rootScope.loading.unload();
+							$rootScope.customDialog().showMessage('Aviso', error.data.status.description);
 						});
 					};
 
@@ -177,6 +189,7 @@
 				return $rootScope.customDialog().showTemplate('Novo cliente', './partials/modalNewPerson.html', controller, {
 					hasBackdrop: false,
 					innerDialog: true,
+					escapeToClose: false,
 					zIndex: 1,
 					width: 900
 				});

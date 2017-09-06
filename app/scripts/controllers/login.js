@@ -54,11 +54,11 @@
 				authentication.login(self.user, self.pass, function(res) {
 					switch (res.status.code) {
 						case 401: 
-							$rootScope.toast('Erro', 'Usuário não autorizado.');
+							$rootScope.toast('Aviso', 'Usuário não autorizado.');
 							break;
 						case 404: 
 							//$rootScope.toast('Erro', 'Usuário ou senha inválidos.');
-							$rootScope.toast('Erro', res.status.description);
+							$rootScope.toast('Aviso', res.status.description);
 							break;
 						case 412:
 							if (constants.isElectron) {

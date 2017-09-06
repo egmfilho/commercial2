@@ -86,7 +86,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								| Observações
 						md-menu-divider
 						md-menu-item
-							md-button(ng-click='order.showModalDiscount()' ng-disabled='!order.budget.order_items.length')
+							md-button(ng-click='order.showModalDiscount()' ng-disabled='order.isToolbarLocked() || !order.budget.order_items.length')
 								md-icon(md-font-set='material-icons') monetization_on
 								| Aplicar desconto geral
 				md-menu
@@ -168,7 +168,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 					md-tooltip(md-direction='bottom') Observações
 					md-icon.text-warning(md-font-icon='fa fa-sticky-note-o')
 
-				md-button.toolbar-btn(ng-click='order.showModalDiscount()' ng-disabled='!order.budget.order_items.length')
+				md-button.toolbar-btn(ng-click='order.showModalDiscount()' ng-disabled='order.isToolbarLocked() || !order.budget.order_items.length')
 					md-tooltip(md-direction='bottom') Aplicar desconto geral
 					md-icon(md-font-set='material-icons' style='color: tan') monetization_on
 				
@@ -331,7 +331,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 							table.table.products-table
 								tbody
 									tr(ng-repeat='i in order.budget.order_items track by $index' layout='row' ng-dblclick='order.editItem(i)'
-										ng-class='{"sold-out": i.order_item_stock <= 0}')
+										ng-class='{"sold-out": order.budget.order_status_id == order.internal.orderStatusValues.open ? i.product.stock.product_stock <= 0 : i.order_item_stock <= 0}')
 										td {{i.product.product_code}} - {{i.product.product_name}}
 										td {{i.product.unit.unit_initials}}
 										td {{i.order_item_amount | currency:''}}
@@ -609,7 +609,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 												input(ng-model='order.budget.order_value_addition' ng-change='order.budget.updateValues()' number-only currency symbol='"R$ "')
 									tr
 										td.text-right.text-light
-											b Valor total líquido:
+											b Vl. total líquido:
 										td.text-primary
 											| {{order.budget.order_value_total | currency:'R$ '}}
 									tr

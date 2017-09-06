@@ -29,7 +29,8 @@
 					getByFilter: getByFilter,
 					getByType:   getByType,
 					save:        save,
-					check:       check
+					check:       check,
+					activate:    activate
 				}
 
 				// ******************************
@@ -119,12 +120,22 @@
 					}, person).$promise;
 				}
 
-				function check(cpf, cnpj) {
+				function check(cpf, cnpj, category) {
 					return provider.save({
 						action: 'check'
 					}, {
 						person_cpf: cpf,
-						person_cnpj: cnpj
+						person_cnpj: cnpj,
+						person_category: category
+					}).$promise;
+				}
+
+				function activate(id, category) {
+					return provider.save({
+						action: 'activate'
+					}, {
+						person_id: id,
+						person_category: category
 					}).$promise;
 				}
 
