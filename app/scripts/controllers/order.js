@@ -705,6 +705,7 @@
 								this.msg = msg;
 							};
 
+						_backup = new Order(self.budget);
 						self.propagateSaveOrder(self.budget.order_company_id);
 
 						$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderSaved.html', controller)
@@ -763,8 +764,6 @@
 						providerOrder.edit(filtered).then(function(success) {
 							$rootScope.loading.unload();
 
-							_backup = new Order(self.budget);
-
 							/* Modal de confirmacao */
 							afterSave('Orçamento editado!');
 						}, function(error) {
@@ -778,7 +777,6 @@
 							self.budget.order_id = success.data.order_id;
 							self.budget.order_code = success.data.order_code;
 							self.budget.order_date = moment().toDate();
-							_backup = new Order(self.budget);
 							$rootScope.loading.unload();
 
 							/* Modal de confirmacao */
@@ -1661,7 +1659,6 @@
 				};
 
 				var win = ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=print', options);
-				// ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=print', options);
 
 				var pastel = $scope.$watch(function() {
 					return win.isVisible();
