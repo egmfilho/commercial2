@@ -58,6 +58,24 @@ ipcMain.on('shutdown', function(event, arg) {
 	mainWindow.webContents.send('shutdown', null);
 });
 
+ipcMain.on('killme', function(event, arg) {
+	console.log('Someone just asked to be killed!');
+	setTimeout(function() {
+		let win = null;
+
+		global.children.array = global.children.array.filter(function(w) {
+			if (w.id == arg.winId) 
+				win = w;
+
+			return w.id != arg.winId;
+		});
+
+		console.log('Killing window: ' + win.id);
+		win.close();
+
+	}, 500);
+});
+
 ipcMain.on('redeem', function(event, arg) {
 	if (arg.guid) {
 		console.log('redeem fired by: ' + arg.guid);

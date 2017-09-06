@@ -713,14 +713,20 @@
 								switch (res) {
 									case 'print': {
 										self.print().then(function() {
-											$scope.close(true);
+											// $scope.close(true);
+											_ipcRenderer.send('killme', {
+												winId: _remote.getCurrentWindow().id
+											});
 										});
 										break;
 									}
 									
 									case 'mail': {
 										self.mail().then(function(win) {
-											$scope.close(true);
+											// $scope.close(true);
+											_ipcRenderer.send('killme', {
+												winId: _remote.getCurrentWindow().id
+											});
 										});
 										break;
 									}
@@ -1792,14 +1798,20 @@
 					switch (res) {
 						case 'print': {
 							self.print().then(function() {
-								$scope.close(true);
+								// $scope.close(true);
+								_ipcRenderer.send('killme', {
+									winId: _remote.getCurrentWindow().id
+								});
 							});
 							break;
 						}
 						
 						case 'mail': {
 							self.mail().then(function(win) {
-								$scope.close(true);
+								// $scope.close(true);
+								_ipcRenderer.send('killme', {
+									winId: _remote.getCurrentWindow().id
+								});
 							});
 							break;
 						}
