@@ -40,6 +40,7 @@
 		function loadConfig() {
 			var deferred = $q.defer();
 
+			$rootScope.writeLog('Requisitando configuracoes do servidor');
 			$http({
 				method: 'GET',
 				url: constants.api + 'config.php?action=getList'
@@ -65,6 +66,8 @@
 				deferred.resolve();
 			}, function(error) {
 				constants.debug && console.log(error);
+				$rootScope.writeLog('Falha ao receber as configuracoes do servidor.');
+				$rootScope.writeLog(JSON.stringify(error));
 				deferred.reject();
 			});
 

@@ -18,38 +18,14 @@
 				jQuery('input[name="user"]').select().focus();
 			});
 
-			if (constants.isElectron) {
-				_ipcRenderer = require('electron').ipcRenderer;
-
-				_ipcRenderer.on('update', function(event, arg) {
-					var options = {
-						hasBackdrop: true,
-						clickOutsideToClose: false,
-						escapeToClose: false
-					};
-
-					function ctrl() {
-						var scope = this;
-						_ipcRenderer.on('update-progress', function(event, arg) {
-							$timeout(function() {
-								scope.progress = (arg.progress / 1000000.0).toFixed(2);
-								scope.total = (arg.total / 1000000.0).toFixed(2);
-								scope.percent = (scope.progress * 100) / scope.total;
-							});
-						});
-					};
-
-					$rootScope.customDialog().showTemplate('Atualização', './partials/modalUpdate.html', ctrl, options);
-				});
-			}
-			
-
 			this.advance = function() {
 				jQuery('input[name="pass"]').select().focus();
 			};
 
 			this.submitForm = function() {
 				if (!self.user && ! self.pass) return;
+
+				$rootScope.writeLog('Logging in...');				
 
 				authentication.login(self.user, self.pass, function(res) {
 					switch (res.status.code) {
@@ -61,12 +37,6 @@
 							$rootScope.toast('Aviso', res.status.description);
 							break;
 						case 412:
-							if (constants.isElectron) {
-								$rootScope.customDialog().showConfirm('Aviso de atualização', 'Uma nova versão está disponível, deseja atualizar agora?')
-									.then(function(success) {
-										_ipcRenderer.send('update');
-									}, function(error) { });
-							}
 
 							break;
 						case 200: 

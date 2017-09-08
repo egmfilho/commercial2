@@ -713,20 +713,24 @@
 								switch (res) {
 									case 'print': {
 										self.print().then(function() {
-											// $scope.close(true);
-											_ipcRenderer.send('killme', {
-												winId: _remote.getCurrentWindow().id
-											});
+											if (constants.isElectron) {
+												_ipcRenderer.send('killme', {
+													winId: _remote.getCurrentWindow().id,
+													ttl: 1000
+												});
+											}
 										});
 										break;
 									}
 									
 									case 'mail': {
 										self.mail().then(function(win) {
-											// $scope.close(true);
-											_ipcRenderer.send('killme', {
-												winId: _remote.getCurrentWindow().id
-											});
+											if (constants.isElectron) {
+												_ipcRenderer.send('killme', {
+													winId: _remote.getCurrentWindow().id,
+													ttl: 1000
+												});
+											}
 										});
 										break;
 									}
@@ -1666,15 +1670,7 @@
 
 				var win = ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=print', options);
 
-				var pastel = $scope.$watch(function() {
-					return win.isVisible();
-				}, function(newVal, oldVal) {
-					if (!win) pastel();
-
-					if (!!newVal) {
-						deferred.resolve();
-					}
-				});
+				deferred.resolve();
 			}
 			else {
 				deferred.resolve();
@@ -1705,15 +1701,7 @@
 
 				var win = ElectronWindow.createWindow('#/order/mail/' + self.budget.order_code, options);
 
-				var pastel = $scope.$watch(function() {
-					return win.isVisible();
-				}, function(newVal, oldVal) {
-					if (!win) pastel();
-
-					if (!!newVal) {
-						deferred.resolve();
-					}
-				});
+				deferred.resolve();
 			}
 			else {
 				deferred.resolve();
@@ -1798,20 +1786,24 @@
 					switch (res) {
 						case 'print': {
 							self.print().then(function() {
-								// $scope.close(true);
-								_ipcRenderer.send('killme', {
-									winId: _remote.getCurrentWindow().id
-								});
+								if (constants.isElectron) {
+									_ipcRenderer.send('killme', {
+										winId: _remote.getCurrentWindow().id,
+										ttl: 1000
+									});
+								}
 							});
 							break;
 						}
 						
 						case 'mail': {
 							self.mail().then(function(win) {
-								// $scope.close(true);
-								_ipcRenderer.send('killme', {
-									winId: _remote.getCurrentWindow().id
-								});
+								if (constants.isElectron) {
+									_ipcRenderer.send('killme', {
+										winId: _remote.getCurrentWindow().id,
+										ttl: 1000
+									});
+								}
 							});
 							break;
 						}

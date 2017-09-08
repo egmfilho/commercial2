@@ -2,6 +2,8 @@
 /bower_components
 /www
 /releases
+/log/*.log
 .DS_Store
+*.log
 *.exe
 *.dmg

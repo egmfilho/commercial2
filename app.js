@@ -15,6 +15,13 @@ const ipcMain = electron.ipcMain;
 
 const path = require('path');
 const url = require('url');
+const fs = require('fs');
+
+// const logFilename = './logs/' + Date.now() + '.log';
+const logFilename = './commercial.log';
+
+writeLog('###################################################################');
+writeLog('Initializing...');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -41,11 +48,12 @@ global.temp = {
 };
 
 ipcMain.on('propagate-save-order', function(event, arg) {
+	writeLog('Propagate save order called');
 	mainWindow.webContents.send('refresh-orders', arg);
 });
 
 ipcMain.on('shutdown', function(event, arg) {
-	console.log('Kill\'em all!');
+	writeLog('Kill\'em all!');
 
 	global.isValidSession.value = false;
 
@@ -59,7 +67,7 @@ ipcMain.on('shutdown', function(event, arg) {
 });
 
 ipcMain.on('killme', function(event, arg) {
-	console.log('Someone just asked to be killed!');
+	writeLog('Someone just asked to be killed!');
 	setTimeout(function() {
 		let win = null;
 
@@ -70,48 +78,34 @@ ipcMain.on('killme', function(event, arg) {
 			return w.id != arg.winId;
 		});
 
-		console.log('Killing window: ' + win.id);
+		writeLog('Killing window: ' + win.id);
 		win.close();
 
-	}, 500);
+	}, arg.ttl || 500);
 });
 
 ipcMain.on('redeem', function(event, arg) {
 	if (arg.guid) {
-		console.log('redeem fired by: ' + arg.guid);
+		writeLog('redeem fired by: ' + arg.guid);
 		order66(arg.guid);
 	}
 });
 
-ipcMain.on('update', function(event, arg) {
-	var readFile = require('fs').readFile,
-		downloader = require('./downloader.js'),
-		status = downloader.downloadStatus;
-
-	readFile('./config.ini', 'utf8', function(err, data) {
-		if (err) return console.log(err);
-
-		var lines = data.split('\n');
-
-		if (!lines.length || lines.length < 3) return console.log('Missing config data!');
-
-		event.sender.send('update');
-
-		downloader.download({
-			url: lines[0], 
-			filename: lines[1]
-		}, function(s) {
-			event.sender.send('update-progress', {
-				progress: s.progress,
-				total: s.total
-			});
-		}, function(res) {
-			var cp = require('child_process');
-			cp.exec(lines[2]);
-			process.exit(0);
-		});
-	});
+ipcMain.on('writeLog', function(event, arg) {
+	if (arg.log) {
+		writeLog(arg.log);
+	}
 });
+
+function writeLog(log) {
+	if (!log) return;
+
+	console.log(log);
+
+	fs.appendFile(logFilename, '[' + new Date() + ']' + log + '\n', function(err) {
+		if (err) console.log(err);
+	});
+}
 
 function order66(guid, callback) {
 	var parsed = global.globals ? JSON.parse(global.globals.shared) : null,
@@ -131,19 +125,19 @@ function order66(guid, callback) {
 		}
 	};
 
-	console.log('Order 66 in progress...');
+	writeLog('Order 66 in progress...');
 	var post_req = http.request(post_options, function(res) {
 		res.setEncoding('utf8');
-		console.log('Status: ', res.statusCode);
+		writeLog('Status: ', res.statusCode);
 
 		res.on('data', function(chunk) {
-			console.log('Response: ' + chunk);
+			writeLog('Response: ' + chunk);
 			callback && callback();
 		});
 	});
 
 	post_req.on('error', function(e) {
-		console.log('deu erro: ' + e.message );
+		writeLog('deu erro: ' + e.message );
 		callback && callback();
 	});
 

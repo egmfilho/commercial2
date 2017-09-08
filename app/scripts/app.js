@@ -397,6 +397,13 @@ angular.module('commercial2', [
 		$rootScope.customDialog = function() {
 			return new customDialog();
 		};
+
+		/* Envia um log para o electron garvar no arquivo de log */
+		$rootScope.writeLog = function(log) {
+			if (constants.isElectron && log) {
+				require('electron').ipcRenderer.send('writeLog', { log: log });
+			}
+		}
 		
 	}])
 	.run(['$location', 'Constants', 'GUID', function($location, constants, GUID) {
