@@ -2578,6 +2578,9 @@
 								self.budget.creditPayment = null;
 							}
 
+							/* Remove o prazo */
+							self.clearTerm();
+
 							/* Checa se creditos foram retornados do modal.*/
 							if (res.length) {
 								var payment = new OrderPayment(),
