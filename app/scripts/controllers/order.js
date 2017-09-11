@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-05-25 17:59:28
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-31 10:52:42
+* @Last Modified time: 2017-09-11 11:03:16
 */
 
 (function() {
@@ -2578,8 +2578,9 @@
 								self.budget.creditPayment = null;
 							}
 
-							/* Remove o prazo */
-							self.clearTerm();
+							/* Remove o prazo se nao tiver nenhuma forma de pagamento */
+							if (self.budget.order_payments.length == 0)
+								self.clearTerm();
 
 							/* Checa se creditos foram retornados do modal.*/
 							if (res.length) {
