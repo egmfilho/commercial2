@@ -12,9 +12,9 @@
 	angular.module('commercial2.controllers')
 		.controller('OpenOrderCtrl', OpenOrderCtrl);
 
-		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', '$routeParams', '$location', '$q', '$timeout', '$filter', 'ProviderOrder', 'Order', 'ProviderPerson', 'Person', 'WebWorker', 'Globals', 'Constants', 'ElectronWindow' ];
+		OpenOrderCtrl.$inject = [ '$rootScope', '$scope', '$routeParams', '$location', '$q', '$timeout', '$filter', 'ProviderOrder', 'Order', 'ProviderPerson', 'Person', 'WebWorker', 'Globals', 'Constants', 'ElectronWindow', 'OpenedOrderManager' ];
 
-		function OpenOrderCtrl($rootScope, $scope, $routeParams, $location, $q, $timeout, $filter, providerOrder, Order, providerPerson, Person, WebWorker, Globals, constants, ElectronWindow) {
+		function OpenOrderCtrl($rootScope, $scope, $routeParams, $location, $q, $timeout, $filter, providerOrder, Order, providerPerson, Person, WebWorker, Globals, constants, ElectronWindow, OpenedOrderManager) {
 
 			var self = this,
 				Mousetrap = null,
@@ -107,6 +107,10 @@
 			}
 
 			$scope.open = function(order) {
+				if (OpenedOrderManager.isOpen(order.order_code)) {
+					$rootScope.customDialog().showMessage('Erro', 'Este orçamento encontra-se aberto.');
+					return;
+				}
 
 				var options = {
 					// title: 'Cód: ' + order.order_code + ' (' + $filter('date')(order.order_date, 'short') + ')'

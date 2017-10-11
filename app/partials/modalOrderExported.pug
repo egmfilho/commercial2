@@ -15,5 +15,5 @@
 			md-icon(md-font-icon='fa fa-2x fa-envelope-o')
 
 .footer.bordered(layout='row' layout-align='end center')
-	md-button.md-primary(name='positive' ng-click='ctrl._cancel()')
-		| &nbsp; Fechar &nbsp;
+	md-button.md-raised.md-primary(name='positive' ng-click='ctrl._cancel()')
+		| &nbsp; Fechar ({{ctrl.timer}}) &nbsp;

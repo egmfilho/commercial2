@@ -127,7 +127,7 @@
 	.search-container(layout='row' ng-class='{ "opened": isSearchOpened }')
 		span(flex)
 		.search
-			input(type='text' placeholder='Pesquisar' ng-model='openOrder.filters.query' keys-shortcuts escape='setSearchOpen(false)')
+			input(type='text' placeholder='Pesquisar' ng-model='tempFilter' keys-shortcuts escape='setSearchOpen(false)' enter='openOrder.filters.query = tempFilter')
 			a(ng-click='setSearchOpen(false)')
 				i.fa.fa-remove
 

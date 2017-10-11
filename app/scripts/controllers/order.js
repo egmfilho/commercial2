@@ -51,7 +51,8 @@
 		'ModalCustomerAddress',
 		'ElectronWindow',
 		'ElectronOS',
-		'GUID'
+		'GUID',
+		'OpenedOrderManager'
 	];
 
 	function OrderCtrl(
@@ -94,7 +95,8 @@
 		ModalCustomerAddress,
 		ElectronWindow,
 		ElectronOS, 
-		GUID) {
+		GUID,
+		OpenedOrderManager) {
 
 		var self = this, 
 			_remote, 
@@ -485,6 +487,10 @@
 			jQuery(target).hasClass('disabled');
 		};
 
+		$scope.clone = function() {
+			$location.path('/order/new').search('code', self.budget.order_code);
+		};
+
 		$scope.$on('$viewContentLoaded', function() {
 			$timeout(function() {
 				jQuery('section[name="seller"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'seller' });
@@ -498,7 +504,11 @@
 
 			self.searchTerm();
 
-			if (!!$routeParams.action && $routeParams.action == 'edit' && !!$routeParams.code) {
+			if (!!$routeParams.action && $routeParams.action == 'edit') {
+				if (!$routeParams.code) {
+					$location.path('/');
+				}
+
 				var options = {
 					getCompany: true,
 					getUser: true,
@@ -515,6 +525,7 @@
 				$rootScope.loading.load();
 				providerOrder.getByCode($routeParams.code, options).then(function(success) {
 					self.budget = new Order(success.data);
+					OpenedOrderManager.add(self.budget.order_code);
 
 					self.showLockModal();
 
@@ -590,6 +601,59 @@
 
 				/* Cria uma copia de backup para saber se o orcamento foi modificado no final */
 				_backup = new Order(self.budget);
+
+				if (!!$routeParams.code) {
+					var options = {
+						getCompany: true,
+						getCustomer: true,
+						getCreditLimit: true,
+						getSeller: true,
+						getItems: true
+					}, code = $routeParams.code;
+
+					console.log(code);
+
+					$rootScope.loading.load();
+					providerOrder.getByCode(code, options).then(function(success) {
+						var temp = new Order(success.data)
+						temp.order_id = null;
+						temp.order_erp_id = null;
+						temp.order_user_id = null;
+						temp.order_status_id = Globals.get('order-status-values')['open'];
+						temp.order_term_id = null;
+						temp.order_origin_id = null;
+						temp.order_code = null;
+						temp.order_code_erp = null;
+						temp.order_code_document = null;
+						temp.order_mail_sent = new Array();
+						temp.order_update = null;
+						temp.order_date = null;
+						temp.order_payments = new Array();
+						temp.creditPayment = null;
+						temp.order_audit = null;
+						temp.order_credit = null;
+						temp.order_value_icms = null;
+						temp.order_value_st = null;
+						temp.status = null;
+						temp.order_audit_discounts = new Array();
+
+						self.budget = new Order(temp);
+
+						/* copia os valores para as variaveis temporarias dos autocompletes */
+						self.internal.tempSeller = new Person(self.budget.order_seller);
+						self.internal.tempCustomer = new Person(self.budget.order_client);
+
+						/* copia o endereco de entrega para o corpo do orcamento */
+						self.budget.address_delivery = new Address(self.budget.order_client.person_address.find(function(a) {
+							return a.person_address_code == self.budget.order_address_delivery_code;
+						}));
+
+						$rootScope.loading.unload();
+					}, function(error) {
+						console.error(error);
+						$rootScope.loading.unload();
+					});
+				}
 			} else {
 				$location.path('/');
 			}
@@ -627,6 +691,8 @@
 			}
 
 			function closeWindow() {
+				OpenedOrderManager.remove(self.budget.order_code);
+
 				_ipcRenderer.send('redeem', {
 					guid: GUID.get()
 				});
@@ -703,6 +769,21 @@
 								this.order_code_erp = self.budget.order_code_erp;
 								this.order_export_type = self.budget.order_export_type;
 								this.msg = msg;
+								this.timer = 10;
+
+								this.tick = function() {
+									var scope = this;
+									$timeout(function() {
+										scope.timer --;
+										if (scope.timer <= 0) {
+											$scope.close(true);
+										} else {
+											scope.tick();
+										}
+									}, 1000);
+								};
+
+								this.tick();
 							};
 
 						_backup = new Order(self.budget);
@@ -1777,6 +1858,21 @@
 					this._showCloseButton = true;
 					this.code = code;
 					this.msg = msg;
+					this.timer = 10;
+
+					this.tick = function() {
+						var scope = this;
+						$timeout(function() {
+							scope.timer --;
+							if (scope.timer <= 0) {
+								$scope.close(true);
+							} else {
+								scope.tick();
+							}
+						}, 1000);
+					};
+
+					this.tick();
 				};
 
 			self.propagateSaveOrder(self.budget.order_company_id);
@@ -2046,7 +2142,7 @@
 		}
 
 		/**
-		 * Abre uma janela com as modalidades do termo selecionado.
+		 * Abre uma janela com as modalidades do prazo selecionado.
 		 * @returns {object} - Uma promise com o resultado.
 		 */
 		function selectTerm() {
@@ -2127,7 +2223,7 @@
 					date.setDate(today.getDate() + delay + installment_delay);
 
 					return date;
-				}
+				};
 
 				/* Trata primeiro para quando for cartao de credito */
 				if (modality.modality_type == Globals.get('modalities')['credit-card'].type) {
@@ -2144,7 +2240,9 @@
 							modality: new PaymentModality(modality)
 						}));
 				} else {
-					var total = 0;
+					/* armazena o valor total dos pagamentos, incluindo o credito, para colocar a diferença na ultima parcela */
+					var total = self.budget.creditPayment ? self.budget.creditPayment.order_payment_value_total : 0;
+
 					for (i = 0; i < term.term_installment; i++) {
 						payments.push(new OrderPayment({
 							order_id: self.budget.order_id,
@@ -2161,6 +2259,7 @@
 
 						total += payments[i].order_payment_value;
 					}
+
 					payments[payments.length - 1].order_payment_value += self.budget.order_value_total - total;
 					payments[payments.length - 1].order_payment_value_total += self.budget.order_value_total - total;
 				}
@@ -2176,6 +2275,12 @@
 				$rootScope.customDialog().showConfirm('Aviso', message).then(function(success) {
 					self.budget.order_payments = new Array();
 					self.internal.term.backup = new Term(self.internal.term.tempTerm);
+
+					// Recoloca o credito novamente nos pagamentos
+					if (self.budget.creditPayment) {
+						self.budget.order_payments.unshift(self.budget.creditPayment);
+					}
+
 					add();
 				}, function(error) {
 					self.internal.term.restoreBackup();
@@ -2606,6 +2711,7 @@
 
 								if (payment.order_payment_value_total >= self.budget.order_value_total) {
 									self.budget.order_payments = new Array();
+									self.clearTerm();
 								}
 
 								/* Adiciona o credito, no inicio do array, como forma de pagamento */
@@ -2864,9 +2970,26 @@
 					}
 					return true;
 				}
+
+
+				/* metodos para autorizacao do desconto */
+				this.authorize = function() {
+					return authorizationDialog('Autorização de desconto', 'mensagem', 'order', 'user_discount');
+				}
+
+				this.confirm = function() {
+					this.authorize().then(function() {
+						scope._close({
+							al_discount: scope.al_discount, 
+							vl_discount: scope.vl_discount
+						});
+					}, function() {
+						$rootScope.showConfirm('Não autorizado!');
+					});
+				}
 			};
 
-			$rootScope.customDialog().showTemplate('Desconto geral do orçamento', './partials/modalDiscount.html', controller, { width: 240 })
+			$rootScope.customDialog().showTemplate('Desconto geral do orçamento', './partials/modalDiscount.html', controller, { width: 240, zIndex: 1 })
 				.then(function(success) {
 					var total = self.budget.order_value_total;
 

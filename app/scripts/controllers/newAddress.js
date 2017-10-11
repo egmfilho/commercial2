@@ -91,7 +91,9 @@
 		function setCepFromSource(source) {
 			self.newAddress.merge(source);
 			self.queryDistrict = source.district.district_name;
+			searchDistrict();
 			self.queryCity = source.city.city_name;
+			searchCity();
 		}
 
 		// ******************************
@@ -168,6 +170,9 @@
 			}
 
 			$rootScope.loading.load();
+			self.newAddress.person_address_contact = self.newAddress.person_address_contact.filter(function(c) {
+				return !!c.person_address_contact_value;
+			});
 			providerAddress.save(self.newAddress).then(function(success) {
 				self.newAddress.person_address_code = success.data.address_code;
 				constants.debug && console.log('$emit: newAddress', self.newAddress);
