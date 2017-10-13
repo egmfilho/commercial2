@@ -14,9 +14,14 @@
 							md-option(ng-value='c.company_id' ng-repeat='c in openOrder.companies') 
 								| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
 
-					md-input-container.datepicker(flex ng-click='openOrder.calendar.start.isCalendarOpen = true')
-						label Início
-						md-datepicker(ng-model='openOrder.calendar.start.value' md-hide-icons='all' md-is-open='openOrder.calendar.start.isCalendarOpen' ng-change='openOrder.calendar.start.update()' md-max-date='openOrder.calendar.start.maxDate')
+					div(flex layout='row')
+						md-input-container.datepicker(flex)
+							label Início
+							md-datepicker(ng-model='openOrder.calendar.start.value' md-hide-icons='all' md-is-open='openOrder.calendar.start.isCalendarOpen' ng-change='openOrder.calendar.start.update()' md-max-date='openOrder.calendar.start.maxDate')
+						
+						div(flex='20')
+							md-button.md-icon-button.md-primary(style='margin-top: 12px' ng-click='openOrder.calendar.start.isCalendarOpen = true')
+								md-icon(md-font-icon='fa fa-calendar')
 
 				.clown(layout='row' layout-fill)
 					md-input-container(flex='20')
@@ -49,9 +54,14 @@
 									| Código: 
 									| {{item.person_code}}
 
-					md-input-container.datepicker(flex ng-click='openOrder.calendar.end.isCalendarOpen = true')
-						label Fim
-						md-datepicker(ng-model='openOrder.calendar.end.value' md-hide-icons='all' md-is-open='openOrder.calendar.end.isCalendarOpen' md-min-date='openOrder.calendar.end.minDate' md-max-date='openOrder.calendar.end.maxDate' ng-change='openOrder.calendar.end.update()')
+					div(flex layout='row')
+						md-input-container.datepicker(flex)
+							label Fim
+							md-datepicker(ng-model='openOrder.calendar.end.value' md-hide-icons='all' md-is-open='openOrder.calendar.end.isCalendarOpen' md-min-date='openOrder.calendar.end.minDate' md-max-date='openOrder.calendar.end.maxDate' ng-change='openOrder.calendar.end.update()')
+						
+						div(flex='20')
+							md-button.md-icon-button.md-primary(style='margin-top: 12px' ng-click='openOrder.calendar.end.isCalendarOpen = true')
+								md-icon(md-font-icon='fa fa-calendar')
 
 			span(flex)
 
