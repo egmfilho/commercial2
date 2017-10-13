@@ -17,10 +17,10 @@
 					div(flex layout='row')
 						md-input-container.datepicker(flex)
 							label Início
-							md-datepicker(ng-model='openOrder.calendar.start.value' md-hide-icons='all' md-is-open='openOrder.calendar.start.isCalendarOpen' ng-change='openOrder.calendar.start.update()' md-max-date='openOrder.calendar.start.maxDate')
+							md-datepicker(ng-model='openOrderCalendar.start.value' md-hide-icons='all' md-is-open='openOrderCalendar.start.isCalendarOpen' ng-change='openOrderCalendar.start.update()' md-max-date='openOrderCalendar.start.maxDate')
 						
 						div(flex='20')
-							md-button.md-icon-button.md-primary(style='margin-top: 12px' ng-click='openOrder.calendar.start.isCalendarOpen = true')
+							md-button.md-icon-button.md-primary(style='margin-top: 12px' ng-click='openOrderCalendar.start.isCalendarOpen = true')
 								md-icon(md-font-icon='fa fa-calendar')
 
 				.clown(layout='row' layout-fill)
@@ -57,10 +57,10 @@
 					div(flex layout='row')
 						md-input-container.datepicker(flex)
 							label Fim
-							md-datepicker(ng-model='openOrder.calendar.end.value' md-hide-icons='all' md-is-open='openOrder.calendar.end.isCalendarOpen' md-min-date='openOrder.calendar.end.minDate' md-max-date='openOrder.calendar.end.maxDate' ng-change='openOrder.calendar.end.update()')
+							md-datepicker(ng-model='openOrderCalendar.end.value' md-hide-icons='all' md-is-open='openOrderCalendar.end.isCalendarOpen' md-min-date='openOrderCalendar.end.minDate' md-max-date='openOrderCalendar.end.maxDate' ng-change='openOrderCalendar.end.update()')
 						
 						div(flex='20')
-							md-button.md-icon-button.md-primary(style='margin-top: 12px' ng-click='openOrder.calendar.end.isCalendarOpen = true')
+							md-button.md-icon-button.md-primary(style='margin-top: 12px' ng-click='openOrderCalendar.end.isCalendarOpen = true')
 								md-icon(md-font-icon='fa fa-calendar')
 
 			span(flex)

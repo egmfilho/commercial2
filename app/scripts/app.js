@@ -65,7 +65,7 @@ Object.defineProperty(Object.prototype, 'equals', {
 });
 
 function refreshOrders(company) {
-	var x = Math.random();
+	var x = Math.random(); // gambi para forcar a atualizacao da pagina por ser uma url diferente da atual
 	window.location.href = window.location.href.split('#')[0] + '#/open-order?company=' + company + '&x=' + x;
 }
 
@@ -282,6 +282,11 @@ angular.module('commercial2', [
 			})
 			.when('/order/print/:code', {
 				templateUrl: 'views/print-order.html',
+				controller: 'PrintOrderCtrl',
+				controllerAs: 'ctrl'
+			})
+			.when('/order/cupon/:code', {
+				templateUrl: 'views/order-cupon.html',
 				controller: 'PrintOrderCtrl',
 				controllerAs: 'ctrl'
 			})

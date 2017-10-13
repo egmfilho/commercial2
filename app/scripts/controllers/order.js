@@ -117,12 +117,12 @@
 		self.propagateSaveOrder = function(company_id) {
 			if (constants.isElectron && _ipcRenderer) {
 				_ipcRenderer.send('propagate-save-order', company_id);
-				console.log('propagating save order')
+				console.log('propagating save order');
 			}
 			else {
-				console.log('could not propagate save order');
+				console.warn('could not propagate save order');
 			}
-		}
+		};
 
 		/**
 		 * Cria os atalhos globais de teclado.

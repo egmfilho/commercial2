@@ -1,0 +1,138 @@
+.order-cupon {
+	min-height: 100%;
+	overflow-y: auto;
+
+	.cupon {
+		width: 400px;
+		height: 100%;
+		min-height: 100%;
+		padding: 15px;
+		background-color: #FFF5BF;
+		box-shadow: 0 0 15px rgba(#000, .3);
+		font-size: 12px;
+		font-family: monospace;
+
+		.header {
+			margin-bottom: 15px;
+			text-align: center;
+			
+			.name {
+				font-weight: bold;
+				font-size: 18px;
+				margin-bottom: 5px;
+			}
+
+			.info {
+				margin-top: 15px;
+				padding-bottom: 15px;
+				border-bottom: 1px solid black;
+			}
+		}
+
+		.body {
+			table {
+				width: 100%;
+				display: table;
+				padding-bottom: 5px;
+
+				thead {
+					display: table-header-group;
+				}
+
+				tbody {
+					display: table-row-group;
+				}
+
+				tr {
+					display: table-row;
+
+					th {
+						display: table-cell;
+						text-align: left;
+						font-weight: bold;
+						padding: 4px;
+					}
+
+					td {
+						display: table-cell;
+						padding: 4px;
+					}
+				}
+			}
+
+			.title {
+				font-size: 16px;
+				text-align: center;
+				font-weight: bold;
+				margin-bottom: 15px;
+			}
+
+			.subtitle {
+				margin-bottom: 15px;
+			}
+
+			.customer {
+				.md-block:first-child {
+					font-size: 14px;
+					margin-bottom: 10px;
+				}
+
+				.md-block:last-child {
+					margin-top: 5px;
+				}
+			}
+
+			.items {
+				margin-top: 15px;
+
+				table {
+					border-bottom: 1px solid black;
+					border-collapse: collapse;
+
+					thead {
+						tr:first-child {
+							border-bottom: 1px solid black;
+						}
+	
+						tr:last-child {
+							border-top: 1px solid black;
+						}
+					}
+				}				
+
+				.total {
+					margin-top: 10px;
+					font-size: 16px;
+				}
+			}
+
+			.payment {
+				margin-top: 15px;
+			}
+
+			.delivery-address {
+				border-top: 1px solid black;
+				padding-top: 15px;
+
+				.md-block {
+					font-size: 14px;
+				}
+			}
+
+			.note {
+				margin-top: 15px;
+
+				.md-block {
+					font-size: 14px;
+				}
+			}
+
+			.message {
+				text-align: center;
+				margin-top: 15px;
+				border-top: 1px solid black;
+				padding-top: 15px;
+			}
+		}
+	}
+}

@@ -72,8 +72,8 @@
 				if ($routeParams.company)
 					self.companyId = $routeParams.company;
 
-				if ($routeParams.start)
-					self.calendar.start.value = $routeParams.company;
+				// if ($routeParams.start)
+				// 	self.calendar.start.value = $routeParams.company;
 
 				if (Globals.get('user')['user_seller'].person_id) {
 					self.seller = new Person(Globals.get('user')['user_seller']);
@@ -150,29 +150,31 @@
 
 			self.companies = Globals.get('user').user_company;
 
-			self.calendar = {}
-			self.calendar.start = {
-				isCalendarOpen: false,
-				value: moment().toDate(),
-				maxDate: moment().toDate(),
-				update: function(){
-					self.calendar.end.value = moment(self.calendar.start.value).toDate();
-					self.calendar.end.minDate = moment(self.calendar.start.value).toDate();
-					self.calendar.end.maxDate = moment(self.calendar.start.value).add(dateRange,'days').toDate();
-				}
-			};
-
-			self.calendar.end = {
-				isCalendarOpen: false,
-				value: moment().toDate(),
-				minDate: moment(self.calendar.start.value).toDate(),
-				maxDate: moment(self.calendar.start.value).add(dateRange,'days').toDate()
-			};
+			if (!$rootScope.openOrderCalendar) {
+				$rootScope.openOrderCalendar = {};
+				$rootScope.openOrderCalendar.start = {
+					isCalendarOpen: false,
+					value: moment().toDate(),
+					maxDate: moment().toDate(),
+					update: function(){
+						$rootScope.openOrderCalendar.end.value = moment($rootScope.openOrderCalendar.start.value).toDate();
+						$rootScope.openOrderCalendar.end.minDate = moment($rootScope.openOrderCalendar.start.value).toDate();
+						$rootScope.openOrderCalendar.end.maxDate = moment($rootScope.openOrderCalendar.start.value).add(dateRange,'days').toDate();
+					}
+				};
+	
+				$rootScope.openOrderCalendar.end = {
+					isCalendarOpen: false,
+					value: moment().toDate(),
+					minDate: moment($rootScope.openOrderCalendar.start.value).toDate(),
+					maxDate: moment($rootScope.openOrderCalendar.start.value).add(dateRange,'days').toDate()
+				};
+			}
 
 			self.grid = {
 				propertyName: 'order_code',
 				reverse: true
-			}
+			};
 
 			self.sortBy = function(propertyName) {
 				self.grid.reverse = (self.grid.propertyName === propertyName) ? !self.grid.reverse : false;
@@ -186,8 +188,8 @@
 						// start_date: moment('08-01-2017').toDate(),
 						// end_date: moment('08-31-2017').toDate(),
 						company_id: self.companyId,
-						start_date: self.calendar.start.value,
-						end_date: self.calendar.end.value,
+						start_date: $rootScope.openOrderCalendar.start.value,
+						end_date: $rootScope.openOrderCalendar.end.value,
 						order_seller_id: self.seller && self.seller.person_id,
 						getCustomer: true,
 						getSeller: true
@@ -262,7 +264,7 @@
 
 			self.getSellerByName = function(name) {
 				return getPersonByName(name, Globals.get('person-categories').seller);
-			}
+			};
 
 			self.getSellerByCode = function(code) {
 				if (!code) {
@@ -284,13 +286,13 @@
 					if (error.status == 404)
 						self.showNotFound();
 				});
-			}
+			};
 
 			self.getPersonByCode = function(code, category, options) {
 				if (!code) return;
 
 				return providerPerson.getByCode(code, category, options);
-			}
+			};
 
 			self.print = function(code) {
 				var options = {
@@ -303,7 +305,7 @@
 					ElectronWindow.createWindow('#/order/print/' + code + '?action=print', options);
 				else
 					$location.path('/order/print/'+code)
-			}
+			};
 
 			self.mail = function(code) {
 				var options = {
@@ -316,7 +318,7 @@
 					ElectronWindow.createWindow('#/order/mail/' + code, options);
 				else
 					$location.path('/order/mail/' + code);
-			}
+			};
 
 			self.getSum = function(list) {
 				if (!list) return 0;
@@ -328,7 +330,7 @@
 				}
 
 				return sum;
-			}
+			};
 
 		}
 
