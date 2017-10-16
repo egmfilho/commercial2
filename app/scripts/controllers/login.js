@@ -10,16 +10,22 @@
 	'use strict';
 
 	angular.module('commercial2.controllers')
-		.controller('LoginCtrl', ['$rootScope', '$scope', '$location', '$timeout', 'Authentication', 'Constants', function($rootScope, $scope, $location, $timeout, authentication, constants) {
+		.controller('LoginCtrl', ['$rootScope', '$scope', '$location', '$timeout', 'Authentication', 'Globals', 'Constants', function($rootScope, $scope, $location, $timeout, authentication, Globals, constants) {
 
 			var self = this, _ipcRenderer = null;
+
+			$scope.arrayApi = Globals.api();
+			// $scope.selectedApi = $scope.arrayApi[0];
+			$scope.setApi = function() {
+				Globals.set('api', $scope.selectedApi);
+			};
 
 			$scope.$on('$viewContentLoaded', function() {
 				jQuery('input[name="user"]').select().focus();
 			});
 
 			this.advance = function() {
-				jQuery('input[name="pass"]').select().focus();
+				// jQuery('input[name="pass"]').select().focus();
 			};
 
 			this.submitForm = function() {
@@ -46,7 +52,7 @@
 							break;
 					}
 				});
-			}
+			};
 
 			this.forgottenPassword = function() {
 				$rootScope.customDialog().showMessage('Aviso', 'Por favor entre em contato com o suporte!');

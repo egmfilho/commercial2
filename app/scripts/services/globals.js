@@ -25,6 +25,7 @@
 		this.get    = get;
 		this.remove = remove;
 		this.clear  = clear;
+		this.api    = api;
 
 		// ******************************
 		// Methods declaration
@@ -73,6 +74,14 @@
 			}
 
 			return deferred.promise;
+		}
+
+		function api() {
+			if (!constants.isElectron) {
+				return '';
+			} else {
+				return remote.getGlobal('globals').api;
+			}
 		}
 		
 	}
