@@ -17,6 +17,8 @@ const path = require('path');
 const url = require('url');
 const fs = require('fs');
 
+const api = require('./api');
+
 // const logFilename = './logs/' + Date.now() + '.log';
 const logFilename = './commercial.log';
 
@@ -28,6 +30,7 @@ writeLog('Initializing...');
 let mainWindow;
 
 global.globals = {
+	api: api,
 	shared: '{ }'
 };
 
@@ -102,9 +105,9 @@ function writeLog(log) {
 
 	console.log(log);
 
-	fs.appendFile(logFilename, '[' + new Date() + ']' + log + '\n', function(err) {
-		if (err) console.log(err);
-	});
+	// fs.appendFile(logFilename, '[' + new Date() + ']' + log + '\n', function(err) {
+	// 	if (err) console.log(err);
+	// });
 }
 
 function order66(guid, callback) {

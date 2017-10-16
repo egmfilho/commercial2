@@ -13,13 +13,19 @@ md-content.login(flex)
 						input(type='text' name='user' ng-model='login.user' keys-shortcuts enter='login.advance()' required)
 						div(ng-messages='LoginForm.user.$error' role='alert' multiple)
 							div(ng-message='required') Informe o nome de usuário.
+					
 					md-input-container
 						label Senha
 						input(type='password' name='pass' ng-model='login.pass' md-maxlength='16' required)
 						div(ng-messages='LoginForm.pass.$error' role='alert' multiple)
 							div(ng-message='required') Informe a senha.
 							div(ng-message='md-maxlength') Senha muito longa.
-					md-button.md-raised.md-primary(ng-disabled='!LoginForm.$valid' type='submit')
+					
+					md-input-container
+						md-select(name='select-api' ng-model='selectedApi' placeholder='API' required md-no-asterisk='false')
+							md-option(ng-value='api' ng-repeat='api in arrayApi') {{api.name}}
+
+					md-button.md-raised.md-primary.offset-top-30(ng-disabled='!LoginForm.$valid' type='submit')
 						| &nbsp; Login &nbsp;
 		.lost-pass
 			a(href='' ng-click='login.forgottenPassword()') Esqueci a senha
