@@ -25,7 +25,11 @@
 		this.get    = get;
 		this.remove = remove;
 		this.clear  = clear;
-		this.api    = api;
+		this.api    = {
+			getList: apiList,
+			set: setApi,
+			get: getApi
+		};
 
 		// ******************************
 		// Methods declaration
@@ -76,9 +80,25 @@
 			return deferred.promise;
 		}
 
-		function api() {
+		function apiList() {
 			if (!constants.isElectron) {
-				return [{ 'id': 0, 'name': 'Teste', 'address': 'http://172.16.0.6/commercial2.api/.teste' }];
+				return constants.api;
+			} else {
+				return remote.getGlobal('globals').apiList;
+			}
+		}
+
+		function setApi(api) {
+			if (!constants.isElectron) {
+				window.sessionStorage.setItem('api', JSON.stringify(api));
+			} else {
+				remote.getGlobal('globals').api = api;
+			}
+		}
+
+		function getApi() {
+			if (!constants.isElectron) {
+				return JSON.parse(window.sessionStorage.getItem(api));
 			} else {
 				return remote.getGlobal('globals').api;
 			}

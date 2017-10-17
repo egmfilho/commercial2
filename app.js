@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-30 08:23:59
+* @Last Modified time: 2017-10-17 09:12:59
 */
 
 const electron = require('electron');
@@ -17,7 +17,7 @@ const path = require('path');
 const url = require('url');
 const fs = require('fs');
 
-const api = require('./api');
+const api = require('./api').map((a, i) => { a.id = i; return a; });
 
 // const logFilename = './logs/' + Date.now() + '.log';
 const logFilename = './commercial.log';
@@ -30,7 +30,8 @@ writeLog('Initializing...');
 let mainWindow;
 
 global.globals = {
-	api: api.map((a, i) => { a.id = i; return a; }),
+	apiList: api,
+	api: api[0],
 	shared: '{ }'
 };
 

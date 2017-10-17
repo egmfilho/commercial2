@@ -14,18 +14,12 @@
 
 			var self = this, _ipcRenderer = null;
 
-			$scope.arrayApi = Globals.api();
-			// $scope.selectedApi = $scope.arrayApi[0];
-			$scope.setApi = function() {
-				Globals.set('api', $scope.selectedApi);
-			};
-
 			$scope.$on('$viewContentLoaded', function() {
 				jQuery('input[name="user"]').select().focus();
 			});
 
 			this.advance = function() {
-				// jQuery('input[name="pass"]').select().focus();
+				jQuery('input[name="pass"]').select().focus();
 			};
 
 			this.submitForm = function() {
@@ -58,13 +52,16 @@
 				$rootScope.customDialog().showMessage('Aviso', 'Por favor entre em contato com o suporte!');
 			};
 
+			this.getCurrentApi = function() {
+				return Globals.api.get();
+			};
+
 			this.selectApi = function() {
-				console.log('oi');
 				var controller = function() {
 					this._showCloseButton = true;
-					this.array = Globals.api();
-	
-					this.hoverIndex = 0;
+					this.array = Globals.api.getList();
+
+					this.hoverIndex = Globals.api.get().id;
 					this.close = function() {
 						if (this.hoverIndex >= 0)
 							this._close(this.array[this.hoverIndex]);
@@ -72,24 +69,26 @@
 							this._cancel();
 					};
 	
-					// if (constants.isElectron) {
-					// 	var scope = this;
-					// 	Mousetrap.bind('up', function() {
-					// 		$timeout(function() {
-					// 			scope.hoverIndex = Math.max(0, scope.hoverIndex - 1);
-					// 			jQuery('table[name="clementino"] tbody tr:nth-child(' + (scope.hoverIndex + 1) + ')').focus();
-					// 		});
-					// 		return false;
-					// 	});
+					if (constants.isElectron) {
+						var scope = this,
+							Mousetrap = require('mousetrap');
+
+						Mousetrap.bind('up', function() {
+							$timeout(function() {
+								scope.hoverIndex = Math.max(0, scope.hoverIndex - 1);
+								jQuery('table[name="clementino"] tbody tr:nth-child(' + (scope.hoverIndex + 1) + ')').focus();
+							});
+							return false;
+						});
 	
-					// 	Mousetrap.bind('down', function() {
-					// 		$timeout(function() {
-					// 			scope.hoverIndex = Math.min(scope.term.modality.length - 1, scope.hoverIndex + 1);
-					// 			jQuery('table[name="clementino"] tbody tr:nth-child(' + (scope.hoverIndex + 1) + ')').focus();
-					// 		});
-					// 		return false;
-					// 	});	
-					// }
+						Mousetrap.bind('down', function() {
+							$timeout(function() {
+								scope.hoverIndex = Math.min(scope.array.length - 1, scope.hoverIndex + 1);
+								jQuery('table[name="clementino"] tbody tr:nth-child(' + (scope.hoverIndex + 1) + ')').focus();
+							});
+							return false;
+						});	
+					}
 	
 					jQuery('table[name="clementino"]').focus();
 	
@@ -102,9 +101,11 @@
 	
 				$rootScope.customDialog().showTemplate('Selecionar API', './partials/modalApi.html', controller, options)
 					.then(function(success) {
-						
+						Globals.api.set(success);
 					}, function(error) { 
 						if (constants.isElectron) {
+							var Mousetrap = require('mousetrap');
+
 							Mousetrap.unbind('up');
 							Mousetrap.unbind('down');
 						}
