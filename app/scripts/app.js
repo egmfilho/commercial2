@@ -380,19 +380,23 @@ angular.module('commercial2', [
 
 		/* Funcao generica para chamar o Toast na tela. */
 		$rootScope.toast = function(title, message, delay) {
-			var controller = function() {
-				this.title = title,
-				this.message = message,
-				this.close = $mdToast.cancel;
-			}
+			var preset = $mdToast.build();
 
-			return $mdToast.show({
-				hideDelay: delay || 5000,
-				position: 'bottom right',
-				controller: controller,
-				controllerAs: 'ctrl',
-				templateUrl: './partials/toastTemplate.html'
-			});
+			var controller = function() {
+				this.title = title;
+				this.message = message;
+				this.close = function() {
+					$mdToast.hide();
+				};
+			};
+
+			preset.hideDelay(delay || 5000)
+				.position('bottom right')
+				.controller(controller)
+				.controllerAs('ctrl')
+				.templateUrl('./partials/toastTemplate.html')
+
+			return $mdToast.show(preset);
 		};
 
 		/* Exibe o menu principal */
