@@ -14,8 +14,17 @@
 
 			var self = this, _ipcRenderer = null;
 
+			this.loggingIn = false;
+
 			$scope.$on('$viewContentLoaded', function() {
 				jQuery('input[name="user"]').select().focus();
+
+				if (constants.isElectron) {
+					var electron = require('electron');
+
+					if (!electron.remote.getGlobal('isValidSession').value)
+						electron.remote.getCurrentWindow().setTitle('Commercial - Gestor de Vendas');
+				}
 			});
 
 			this.advance = function() {
@@ -25,24 +34,35 @@
 			this.submitForm = function() {
 				if (!self.user && ! self.pass) return;
 
-				$rootScope.writeLog('Logging in...');				
+				$rootScope.writeLog('Logging in...');
+				this.loggingIn = true;				
 
 				authentication.login(self.user, self.pass, function(res) {
-					switch (res.status.code) {
+					self.loggingIn = false;
+
+					switch (res.status) {
 						case 401: 
 							$rootScope.toast('Aviso', 'Usuário não autorizado.');
 							break;
+
 						case 404: 
 							//$rootScope.toast('Erro', 'Usuário ou senha inválidos.');
-							$rootScope.toast('Aviso', res.status.description);
+							$rootScope.toast('Aviso', res.data.status.description);
 							break;
-						case 412:
 
-							break;
+						// case 412:
+						// 	break;
+
 						case 200: 
 							$location.path('loading');
 							break;
+
+						case -1:
+							$rootScope.toast('Erro de conexão', 'Não foi possível conectar com o servidor. Verifique sua conexão com a internet.');
+							break;
+
 						default:
+							$rootScope.toast('Aviso', res.data.status.description);
 							break;
 					}
 				});

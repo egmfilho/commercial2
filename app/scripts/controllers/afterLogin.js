@@ -16,6 +16,11 @@
 
 	function AfterLogin($rootScope, $scope, $location, $http, $q, $timeout, Globals, Cookies, constants) {
 
+		if (constants.isElectron) {
+			var api = Globals.api.get();
+			require('electron').remote.getCurrentWindow().setTitle('Commercial - Gestor de Vendas | API: ' + api.name + ' (' + api.address + ')');
+		}
+
 		$scope.$on('$viewContentLoaded', function() {
 			$rootScope.loading.load();
 

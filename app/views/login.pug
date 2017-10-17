@@ -21,13 +21,17 @@ md-content.login(flex)
 							div(ng-message='required') Informe a senha.
 							div(ng-message='md-maxlength') Senha muito longa.
 
-					md-button.md-raised.md-primary.offset-top-30(type='button' ng-click='login.selectApi()')
-						| &nbsp; TROCAR API &nbsp;
+					.text-center.text-primary.offset-top-30(ng-if='login.loggingIn')
+						i.fa.fa-3x.fa-spin.fa-circle-o-notch
 
-					p.text-center.text-light API: {{login.getCurrentApi().name}}
+					div(layout='column' ng-if='!login.loggingIn')
+						md-button.md-raised.md-primary.offset-top-30(type='button' ng-click='login.selectApi()')
+							| &nbsp; TROCAR API &nbsp;
 
-					md-button.md-raised.md-primary.offset-top-15(ng-disabled='!LoginForm.$valid' type='submit')
-						| &nbsp; Login &nbsp;
+						p.text-center.text-light.offset-top-5(style='font-size: 12px') API: {{login.getCurrentApi().name}}
+
+						md-button.md-raised.md-primary.offset-top-15(ng-disabled='!LoginForm.$valid' type='submit')
+							| &nbsp; Login &nbsp;
 		.lost-pass
 			a(href='' ng-click='login.forgottenPassword()') Esqueci a senha
 
