@@ -181,7 +181,7 @@
 							$rootScope.loading.unload();
 							$rootScope.customDialog().showMessage('Erro', error.data.data.status.description);
 						});
-					}());
+					})();
 				};
 
 				controller.$inject = [ 'ProviderPerson', 'Person', 'Address', 'Contact', 'ProviderCep', 'Cep', 'ModalCep', 'ProviderDistrict', 'District', 'ProviderCity', 'City' ];
@@ -201,4 +201,4 @@
 
 		}]);
 
-}());
+})();

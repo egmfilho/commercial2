@@ -64,4 +64,4 @@
 		return _OrderPayment;
 	}
 
-}());
+})();
