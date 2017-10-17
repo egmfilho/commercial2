@@ -98,7 +98,7 @@
 
 		function getApi() {
 			if (!constants.isElectron) {
-				return JSON.parse(window.sessionStorage.getItem(api));
+				return JSON.parse(window.sessionStorage.getItem('api'));
 			} else {
 				return remote.getGlobal('globals').api;
 			}

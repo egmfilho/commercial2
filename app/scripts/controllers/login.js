@@ -53,6 +53,10 @@
 			};
 
 			this.getCurrentApi = function() {
+				if (!Globals.api.get()) {
+					Globals.api.set(Globals.api.getList()[0]);
+				}
+
 				return Globals.api.get();
 			};
 
