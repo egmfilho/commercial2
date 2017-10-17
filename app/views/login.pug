@@ -21,9 +21,12 @@ md-content.login(flex)
 							div(ng-message='required') Informe a senha.
 							div(ng-message='md-maxlength') Senha muito longa.
 					
-					md-input-container
+					//- md-input-container
 						md-select(name='select-api' ng-model='selectedApi' placeholder='API' required md-no-asterisk='false')
 							md-option(ng-value='api' ng-repeat='api in arrayApi') {{api.name}}
+
+					md-button.md-raised.md-primary.offset-top-30(type='button' ng-click='login.selectApi()')
+						| &nbsp; Escolher API &nbsp;
 
 					md-button.md-raised.md-primary.offset-top-30(ng-disabled='!LoginForm.$valid' type='submit')
 						| &nbsp; Login &nbsp;

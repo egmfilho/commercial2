@@ -58,6 +58,59 @@
 				$rootScope.customDialog().showMessage('Aviso', 'Por favor entre em contato com o suporte!');
 			};
 
+			this.selectApi = function() {
+				console.log('oi');
+				var controller = function() {
+					this._showCloseButton = true;
+					this.array = Globals.api();
+	
+					this.hoverIndex = 0;
+					this.close = function() {
+						if (this.hoverIndex >= 0)
+							this._close(this.array[this.hoverIndex]);
+						else
+							this._cancel();
+					};
+	
+					// if (constants.isElectron) {
+					// 	var scope = this;
+					// 	Mousetrap.bind('up', function() {
+					// 		$timeout(function() {
+					// 			scope.hoverIndex = Math.max(0, scope.hoverIndex - 1);
+					// 			jQuery('table[name="clementino"] tbody tr:nth-child(' + (scope.hoverIndex + 1) + ')').focus();
+					// 		});
+					// 		return false;
+					// 	});
+	
+					// 	Mousetrap.bind('down', function() {
+					// 		$timeout(function() {
+					// 			scope.hoverIndex = Math.min(scope.term.modality.length - 1, scope.hoverIndex + 1);
+					// 			jQuery('table[name="clementino"] tbody tr:nth-child(' + (scope.hoverIndex + 1) + ')').focus();
+					// 		});
+					// 		return false;
+					// 	});	
+					// }
+	
+					jQuery('table[name="clementino"]').focus();
+	
+				};
+	
+				var options = {
+					width: 400,
+					focusOnOpen: false,
+				};
+	
+				$rootScope.customDialog().showTemplate('Selecionar API', './partials/modalApi.html', controller, options)
+					.then(function(success) {
+						
+					}, function(error) { 
+						if (constants.isElectron) {
+							Mousetrap.unbind('up');
+							Mousetrap.unbind('down');
+						}
+					});
+			}
+
 		}]);
 
 }());

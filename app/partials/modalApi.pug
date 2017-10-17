@@ -1,0 +1,19 @@
+.body(layout='column')
+	.well.text-light.offset-bottom-15
+		b Nome: &nbsp;
+		| {{ctrl.array[ctrl.hoverIndex].name}} 
+		br
+		b Endereço: &nbsp;
+		| {{ctrl.array[ctrl.hoverIndex].address}}
+
+	.container-table
+		table.table(name='clementino')
+			tbody
+				tr(ng-repeat='a in ctrl.array track by a.id' ng-click='ctrl.hoverIndex = $index' ng-dblclick='ctrl._close(a)' keys-shortcuts enter='ctrl._close(a)')
+					td.text-center(style='font-size: 14px; width: 20px')
+						i.fa(ng-class='a.id == ctrl.array[ctrl.hoverIndex].id ? "fa-circle" : "fa-circle-o"')
+					td {{a.name}}
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-primary.md-raised(ng-click='ctrl.close(array[ctrl.hoverIndex])')
+		| &nbsp; Ok &nbsp;

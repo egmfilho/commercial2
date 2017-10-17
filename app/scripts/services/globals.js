@@ -78,7 +78,7 @@
 
 		function api() {
 			if (!constants.isElectron) {
-				return '';
+				return [{ 'id': 0, 'name': 'Teste', 'address': 'http://172.16.0.6/commercial2.api/.teste' }];
 			} else {
 				return remote.getGlobal('globals').api;
 			}

@@ -30,7 +30,7 @@ writeLog('Initializing...');
 let mainWindow;
 
 global.globals = {
-	api: api,
+	api: api.map((a, i) => { a.id = i; return a; }),
 	shared: '{ }'
 };
 
