@@ -19,7 +19,7 @@
 		function login(username, password, callback) {
 			$http({
 				method: 'POST',
-				url: constants.api + 'login.php',
+				url: Globals.api.get().address + 'login.php',
 				data: { user_user: username, user_pass: password }
 			}).then(function(res) {
 				if (res.status == 200) {
@@ -45,7 +45,7 @@
 		function logout(callback) {
 			$http({
 				method: 'POST',
-				url: constants.api + 'logout.php'
+				url: Globals.api.get().address + 'logout.php'
 			}).then(function(res) {
 				if (constants.isElectron) {
 					require('electron').ipcRenderer.send('shutdown');

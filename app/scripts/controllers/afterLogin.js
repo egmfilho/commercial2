@@ -43,7 +43,7 @@
 			$rootScope.writeLog('Requisitando configuracoes do servidor');
 			$http({
 				method: 'GET',
-				url: constants.api + 'config.php?action=getList'
+				url: Globals.api.get().address + 'config.php?action=getList'
 			}).then(function(success) {
 				Globals.set('person-categories', { 
 					seller: success.data.data.person_category.seller_category,
@@ -93,7 +93,7 @@
 		}
 
 		function setConstants() {
-			Globals.set('server-host', constants.api);
+			Globals.set('server-host', Globals.api.get().address);
 
 			Globals.set('default-person-type', 'F');
 			Globals.set('default-icms-type', { code: 2, value: 'ISENTO' });

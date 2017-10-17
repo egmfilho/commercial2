@@ -167,7 +167,7 @@
 						$rootScope.loading.load();
 						$http({
 							method: 'GET',
-							url: constants.api + 'contact_type.php?action=getList'
+							url: Globals.api.get().address + 'contact_type.php?action=getList'
 						}).then(function(success) {
 							success.data.data.map(function(c) {
 								scope.customer.person_address[0].person_address_contact.push(new Contact({

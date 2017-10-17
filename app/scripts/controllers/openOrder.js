@@ -185,8 +185,6 @@
 				self.orders = [];
 
 				var options = {
-						// start_date: moment('08-01-2017').toDate(),
-						// end_date: moment('08-31-2017').toDate(),
 						company_id: self.companyId,
 						start_date: $rootScope.openOrderCalendar.start.value,
 						end_date: $rootScope.openOrderCalendar.end.value,

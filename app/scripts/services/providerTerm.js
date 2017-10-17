@@ -10,12 +10,13 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.provider('ProviderTerm', ['Constants', function(constants) {
+		.provider('ProviderTerm', [function() {
 
-			var url = constants.api + 'term.php?action=:action',
+			var url = null,
 				provider = null;
 
-			this.$get = ['$resource', function($resource) {
+			this.$get = ['$resource', 'Globals', function($resource, Globals) {
+				url = Globals.api.get().address + 'term.php?action=:action';
 
 				provider = $resource(url, { }, {
 					get:    { method: 'POST', isArray: false },

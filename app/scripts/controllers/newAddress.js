@@ -60,7 +60,7 @@
 
 			$http({
 				method: 'GET',
-				url: constants.api + 'contact_type.php?action=getList'
+				url: Globals.api.get().address + 'contact_type.php?action=getList'
 			}).then(function(success) {
 				success.data.data.map(function(c) {
 					_contacts.push(new Contact({

@@ -12,9 +12,9 @@
 	angular.module('commercial2.controllers')
 		.controller('LogoutCtrl', LogoutCtrl);
 
-	LogoutCtrl.$inject = [ '$rootScope', '$timeout', '$location', 'Authentication', 'OpenedOrderManager' ];
+	LogoutCtrl.$inject = [ '$rootScope', '$timeout', '$location', '$window', 'Authentication', 'OpenedOrderManager' ];
 
-	function LogoutCtrl($rootScope, $timeout, $location, Authentication, OpenedOrderManager) {
+	function LogoutCtrl($rootScope, $timeout, $location, $window, Authentication, OpenedOrderManager) {
 
 		var alert = $rootScope.customDialog();
 		alert.showUnclosable('Logout', 'Efetuando logout, aguarde...');
@@ -25,6 +25,7 @@
 					OpenedOrderManager.clear();
 					alert.close();
 					$location.path('/login');
+					$window.location.reload();
 				}, 1000);
 			}
 		});

@@ -12,9 +12,9 @@
 	angular.module('commercial2.constants')
 		.constant('Constants', {
 			// 'api': 'http://172.16.0.6/commercial2.api/',
-			'api': 'http://187.16.252.130/commercial2.api.teste/',
+			// 'api': 'http://187.16.252.130/commercial2.api.teste/',
 			// 'api': '',
-			// 'api': [{ 'id': 0, 'name': 'Teste', 'address': 'http://172.16.0.6/commercial2.api/.teste' }],
+			'api': [{ 'id': 0, 'name': 'Teste', 'address': 'http://172.16.0.6/commercial2.api/.teste' }],
 			// 'api': angular.injector(['Globals']).get()
 			'app-name': 'Commercial - Gestor de vendas',
 			'version': '2.0.0 rc6',
