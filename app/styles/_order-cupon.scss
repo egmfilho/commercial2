@@ -1,25 +1,46 @@
+.cupon-window {
+	@media only screen {
+		background-color: #777;
+	}
+}
+
 .order-cupon {
 	min-height: 100%;
 	overflow-y: auto;
+	background-color: transparent;
 
 	.cupon {
+		$font-xlg: 20px;
+		$font-lg: 18px;
+		$font-md: 16px;
+		$font-sm: 14px;
+
 		width: 400px;
-		height: 100%;
-		min-height: 100%;
-		padding: 15px;
-		background-color: #FFF5BF;
-		box-shadow: 0 0 15px rgba(#000, .3);
-		font-size: 12px;
-		font-family: monospace;
+		font-weight: bold !important;
+
+		@media only screen {
+			margin: 0 auto;
+			height: 100%;
+			min-height: 100%;
+			padding: 15px;
+			background-color: #FFF5BF;
+			box-shadow: 0 0 15px rgba(#000, .3);
+		}
+
+		font-size: $font-sm;
+		font-family: arial;
 
 		.header {
 			margin-bottom: 15px;
-			text-align: center;
 			
-			.name {
-				font-weight: bold;
-				font-size: 18px;
-				margin-bottom: 5px;
+			.company {
+				text-align: center;
+
+				.name {
+					font-weight: bold;
+					font-size: $font-xlg;
+					margin-bottom: 5px;
+				}
 			}
 
 			.info {
@@ -55,13 +76,20 @@
 
 					td {
 						display: table-cell;
-						padding: 4px;
+						padding: 6px 2px;
+
+						&.no-breakable {
+							max-width: 280px;
+							white-space: nowrap;
+							overflow-x: hidden;
+							text-overflow: ellipsis;
+						}
 					}
 				}
 			}
 
 			.title {
-				font-size: 16px;
+				font-size: $font-lg;
 				text-align: center;
 				font-weight: bold;
 				margin-bottom: 15px;
@@ -72,8 +100,10 @@
 			}
 
 			.customer {
+				text-transform: uppercase;
+
 				.md-block:first-child {
-					font-size: 14px;
+					font-size: $font-md;
 					margin-bottom: 10px;
 				}
 
@@ -102,20 +132,22 @@
 
 				.total {
 					margin-top: 10px;
-					font-size: 16px;
+					font-size: $font-lg;
 				}
 			}
 
 			.payment {
+				text-transform: uppercase;
 				margin-top: 15px;
 			}
 
 			.delivery-address {
 				border-top: 1px solid black;
 				padding-top: 15px;
+				text-transform: uppercase;
 
 				.md-block {
-					font-size: 14px;
+					font-size: $font-md;
 				}
 			}
 
@@ -123,7 +155,7 @@
 				margin-top: 15px;
 
 				.md-block {
-					font-size: 14px;
+					font-size: $font-md;
 				}
 			}
 

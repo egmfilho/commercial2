@@ -14,11 +14,21 @@
 			'api': [
 				{
 					'id': 0, 
+					'name': 'VPN', 
+					'address': 'http://172.16.0.6/commercial2.api/' 
+				},
+				{
+					'id': 1,
+					'name': 'VPN Teste', 
+					'address': 'http://172.16.0.6/commercial2.api.teste/'
+				},
+				{
+					'id': 2, 
 					'name': 'Teste interno', 
 					'address': 'http://172.16.0.6/commercial2.api.teste/' 
 				},
 				{
-					'id': 1,
+					'id': 3,
 					'name': 'Teste externo', 
 					'address': 'http://187.16.252.130/commercial2.api.teste/' 
 				}

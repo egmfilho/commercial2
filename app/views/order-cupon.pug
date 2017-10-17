@@ -1,32 +1,31 @@
-md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row' layout-align='center')
+md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row')
 	.cupon
 		.header(layout='column')
-			.company(flex layout='row' layout-align='start center')
-				div
-					.md-block 
-						.name {{::ctrl.order.order_company.company_name}}
-					.md-block 
-						| {{::ctrl.order.order_company.company_address.company_address_type}}
-						| {{::ctrl.order.order_company.company_address.company_address_public_place}}
-					.md-block 
-						| {{::ctrl.order.order_company.company_address.company_address_district}} -
-						| {{::ctrl.order.order_company.company_address.company_address_city}} -
-						| {{::ctrl.order.order_company.company_address.company_address_uf}}
-					.md-block 
-						| {{::ctrl.order.order_company.company_phone}}
+			.company(flex layout='column' layout-align='start center')
+				.md-block 
+					.name {{::ctrl.order.order_company.company_name}}
+				.md-block 
+					| {{::ctrl.order.order_company.company_address.company_address_type}}
+					| {{::ctrl.order.order_company.company_address.company_address_public_place}}
+				.md-block 
+					| {{::ctrl.order.order_company.company_address.company_address_district}} -
+					| {{::ctrl.order.order_company.company_address.company_address_city}} -
+					| {{::ctrl.order.order_company.company_address.company_address_uf}}
+				.md-block 
+					| {{::ctrl.order.order_company.company_phone}}
 			
 			.info(layout='row' layout-align='center')
 				.md-block.text-left(flex='60')
-					| Impressão: {{::now | date:'dd/MM/yyyy HH:mm:ss'}}
+					| {{::now | date:'dd/MM/yyyy HH:mm:ss'}}
 				.md-block.text-right(flex='40')
-					| Commercial {{::version}}
+					| COMMERCIAL {{::version}}
 
 		.body 
 			.subtitle(layout='row')
 				.md-block.text-left(flex='50')
-					| Orçamento n&#186;: {{::ctrl.order.order_code}}
+					| ORÇAMENTO N&#186;: {{::ctrl.order.order_code}}
 				.md-block.text-right(flex='50' ng-if='ctrl.order.order_code_erp')
-					| {{ctrl.order.order_export_type == 'dav' ? 'DAV' : 'Pedido'}}: {{ctrl.order.order_code_erp}}
+					| {{ctrl.order.order_export_type == 'dav' ? 'DAV' : 'PEDIDO'}}: {{ctrl.order.order_code_erp}}
 
 			.title ORÇAMENTO
 			
@@ -65,7 +64,7 @@ md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row' layout
 						tr(ng-repeat-start='i in ctrl.order.order_items track by $index' layout='row')
 							td {{('00' + ($index + 1)).slice(-3)}}
 							td {{::i.product.product_code}}
-							td(colspan='3') {{::i.product.product_name | truncate: 40}}
+							td.no-breakable(colspan='3') {{::i.product.product_name}}
 						tr(ng-repeat-end)
 							td
 							td {{::i.order_item_amount}}{{::i.product.unit.unit_initials}} X
