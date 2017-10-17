@@ -33,12 +33,12 @@
 						name: constants['cookie'], 
 						value: window.btoa(JSON.stringify(user)) 
 					}).then(function(success) {
-						callback(res.data);
+						callback(res);
 					});
 				}
 			}, function(res) {
-				if (constants.debug) console.log(res);
-				callback(res.data);
+				if (constants.debug) console.error(res);
+				callback(res);
 			});
 		}
 
@@ -59,7 +59,7 @@
 							});
 					// });
 			}, function(res) {
-				constants.debug && console.log(res);
+				constants.debug && console.error(res);
 				callback(res);
 			});
 		}

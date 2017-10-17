@@ -20,14 +20,14 @@
 		alert.showUnclosable('Logout', 'Efetuando logout, aguarde...');
 
 		Authentication.logout(function(res) {
-			if (res.status == 200) {
+			// if (res.status == 200) {
 				$timeout(function() {
 					OpenedOrderManager.clear();
 					alert.close();
-					$location.path('/login');
+					$location.path('/login')
 					$window.location.reload();
 				}, 1000);
-			}
+			// }
 		});
 	}
 
