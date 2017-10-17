@@ -213,6 +213,7 @@
 							order_value_total: order.order_value_total,
 							order_value_st: order.order_value_st,
 							order_value_total_plus_st_formatted: $filter('currency')(order.order_value_total + order.order_value_st, 'R$ '),
+							order_value_total_plus_st: order.order_value_total + order.order_value_st,
 							order_date_formatted: $filter('date')(new Date(order.order_date), 'dd/MM/yyyy HH:mm'),
 							order_customer_name: order.order_client.person_name,
 							order_seller_name: order.order_seller.person_shortname ? order.order_seller.person_shortname : $filter('truncate')(order.order_seller.person_name, 15, ' '),

@@ -8,18 +8,18 @@
 
 			div(flex='60' layout='column')
 				.clown(layout='row' layout-fill)
-					md-input-container.md-select(flex='80')
+					md-input-container.md-select(flex)
 						label Empresa
 						md-select(name='type' ng-model='openOrder.companyId' ng-change='openOrder.getOrders()')
 							md-option(ng-value='c.company_id' ng-repeat='c in openOrder.companies') 
 								| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
 
-					div(flex layout='row')
-						md-input-container.datepicker(flex)
+					div(flex='initial' layout='row' style='min-width: 120px')
+						md-input-container.datepicker()
 							label Início
-							md-datepicker(ng-model='openOrderCalendar.start.value' md-hide-icons='all' md-is-open='openOrderCalendar.start.isCalendarOpen' ng-change='openOrderCalendar.start.update()' md-max-date='openOrderCalendar.start.maxDate')
+							md-datepicker(ng-model='openOrderCalendar.start.value' md-hide-icons='calendar' md-is-open='openOrderCalendar.start.isCalendarOpen' ng-change='openOrderCalendar.start.update()' md-max-date='openOrderCalendar.start.maxDate')
 						
-						div(flex='20')
+						//- div(flex='20')
 							md-button.md-icon-button.md-primary(style='margin-top: 12px' ng-click='openOrderCalendar.start.isCalendarOpen = true')
 								md-icon(md-font-icon='fa fa-calendar')
 
@@ -32,7 +32,7 @@
 								keys-shortcuts
 								enter='openOrder.getSellerByCode($event.target.value)')
 
-					.autocomplete(flex="60" layout="row")
+					.autocomplete(flex layout="row")
 						button(ng-show='openOrder.seller.person_id' ng-click='openOrder.seller=null')
 							i.fa.fa-times-circle
 
@@ -54,12 +54,12 @@
 									| Código: 
 									| {{item.person_code}}
 
-					div(flex layout='row')
+					div(flex='initial' layout='row')
 						md-input-container.datepicker(flex)
 							label Fim
-							md-datepicker(ng-model='openOrderCalendar.end.value' md-hide-icons='all' md-is-open='openOrderCalendar.end.isCalendarOpen' md-min-date='openOrderCalendar.end.minDate' md-max-date='openOrderCalendar.end.maxDate' ng-change='openOrderCalendar.end.update()')
+							md-datepicker(ng-model='openOrderCalendar.end.value' md-hide-icons='calendar' md-is-open='openOrderCalendar.end.isCalendarOpen' md-min-date='openOrderCalendar.end.minDate' md-max-date='openOrderCalendar.end.maxDate' ng-change='openOrderCalendar.end.update()')
 						
-						div(flex='20')
+						//- div(flex='20')
 							md-button.md-icon-button.md-primary(style='margin-top: 12px' ng-click='openOrderCalendar.end.isCalendarOpen = true')
 								md-icon(md-font-icon='fa fa-calendar')
 
@@ -87,24 +87,31 @@
 				thead
 					tr
 						th.sortable &nbsp;
+						
 						th.sortable(ng-click="openOrder.sortBy('order_code')")
 							| CÓDIGO
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_code'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						
 						th.sortable(ng-click="openOrder.sortBy('order_code_erp')")
 							| ERP
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_code_erp'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
-						th.sortable(ng-click="openOrder.sortBy('order_client.person_name')")
+						
+						th.sortable(ng-click="openOrder.sortBy('order_customer_name')")
 							| CLIENTE
-							i.fa(ng-show="openOrder.grid.propertyName === 'order_client.person_name'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
-						th.sortable(ng-click="openOrder.sortBy('order_seller.person_name')")
+							i.fa(ng-show="openOrder.grid.propertyName === 'order_customer_name'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						
+						th.sortable(ng-click="openOrder.sortBy('order_seller_name')")
 							| VENDEDOR
-							i.fa(ng-show="openOrder.grid.propertyName === 'order_seller.person_name'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
-						th.sortable(ng-click="openOrder.sortBy('order_value_total')")
+							i.fa(ng-show="openOrder.grid.propertyName === 'order_seller_name'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						
+						th.sortable(ng-click="openOrder.sortBy('order_value_total_plus_st')")
 							| TOTAL
-							i.fa(ng-show="openOrder.grid.propertyName === 'order_value_total'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
-						th.sortable(ng-click="openOrder.sortBy('order_date')")
+							i.fa(ng-show="openOrder.grid.propertyName === 'order_value_total_plus_st'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						
+						th.sortable(ng-click="openOrder.sortBy('order_date_formatted')")
 							| DATA
-							i.fa(ng-show="openOrder.grid.propertyName === 'order_date'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+							i.fa(ng-show="openOrder.grid.propertyName === 'order_date_formatted'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						
 						th &nbsp;
 						th &nbsp;
 						th &nbsp;
