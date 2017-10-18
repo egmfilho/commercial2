@@ -12,7 +12,7 @@
 	angular.module('commercial2.controllers')
 		.controller('LoginCtrl', ['$rootScope', '$scope', '$location', '$timeout', 'Authentication', 'Globals', 'Constants', function($rootScope, $scope, $location, $timeout, authentication, Globals, constants) {
 
-			var self = this, _ipcRenderer = null;
+			var self = this;
 
 			this.loggingIn = false;
 
@@ -21,6 +21,7 @@
 
 				if (constants.isElectron) {
 					var electron = require('electron');
+					_ipcRenderer = electron.ipcRenderer;
 
 					if (!electron.remote.getGlobal('isValidSession').value)
 						electron.remote.getCurrentWindow().setTitle('Commercial - Gestor de Vendas');
@@ -34,34 +35,26 @@
 			this.submitForm = function() {
 				if (!self.user && ! self.pass) return;
 
-				$rootScope.writeLog('Logging in...');
 				this.loggingIn = true;				
+				var api = Globals.api.get();
+				$rootScope.writeLog('Logging at: ['  + api.name + ' - ' + api.address + ']');
 
 				authentication.login(self.user, self.pass, function(res) {
 					self.loggingIn = false;
 
 					switch (res.status) {
-						case 401: 
-							$rootScope.toast('Aviso', 'Usuário não autorizado.');
-							break;
-
-						case 404: 
-							//$rootScope.toast('Erro', 'Usuário ou senha inválidos.');
-							$rootScope.toast('Aviso', res.data.status.description);
-							break;
-
-						// case 412:
-						// 	break;
-
 						case 200: 
+							$rootScope.writeLog('Logged in');
 							$location.path('loading');
 							break;
 
 						case -1:
+							$rootScope.writeLog('Could not establish connection to the server!');
 							$rootScope.toast('Erro de conexão', 'Não foi possível conectar com o servidor. Verifique sua conexão com a internet.');
 							break;
 
 						default:
+							$rootScope.writeLog(res.status + ' - ' + res.data.status.description);
 							$rootScope.toast('Aviso', res.data.status.description);
 							break;
 					}

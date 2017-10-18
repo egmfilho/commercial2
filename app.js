@@ -17,12 +17,33 @@ const path = require('path');
 const url = require('url');
 const fs = require('fs');
 
-const api = require('./api').map((a, i) => { a.id = i; return a; });
+const api = require(path.join(path.dirname(app.getPath('exe')), './api')).map((a, i) => { a.id = i; return a; });
 
-// const logFilename = './logs/' + Date.now() + '.log';
-const logFilename = './commercial.log';
+// Make sure logs directory exists
+let logDir = path.join(path.dirname(app.getPath('exe')), './log');
+try {
+	fs.statSync(logDir);
+} catch(e) {
+	fs.mkdirSync(logDir);
+}
 
-writeLog('###################################################################');
+function getDateString(dateSeparator, separator, timeSeparator) {
+	let date = new Date();
+	return ('0' + date.getDate()).slice(-2) + 
+	       dateSeparator + 
+		   ('0' + (date.getMonth() + 1)).slice(-2) + 
+		   dateSeparator + 
+		   date.getFullYear() + 
+		   separator + 
+		   ('0' + date.getHours()).slice(-2) + 
+		   timeSeparator + 
+		   ('0' + date.getMinutes()).slice(-2) + 
+		   timeSeparator + 
+		   ('0' + date.getSeconds()).slice(-2);
+}
+
+const logFilename = path.join(logDir, getDateString('-', 'T', '-') + '.log');
+
 writeLog('Initializing...');
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -106,9 +127,9 @@ function writeLog(log) {
 
 	console.log(log);
 
-	// fs.appendFile(logFilename, '[' + new Date() + ']' + log + '\n', function(err) {
-	// 	if (err) console.log(err);
-	// });
+	fs.appendFile(logFilename, '[' + getDateString('-', ' ', ':') + '] ' + log + '\n', function(err) {
+		if (err) console.log(err);
+	});
 }
 
 function order66(guid, callback) {
@@ -223,7 +244,10 @@ app.on('before-quit', function (event) {
 		order66(null, app.quit);
 		global.globals = null;
 		event.preventDefault();
+		return;
 	}
+
+	writeLog('Closing Application');
 });
 
 app.on('activate', function () {

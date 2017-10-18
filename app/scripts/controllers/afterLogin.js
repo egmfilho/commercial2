@@ -45,7 +45,7 @@
 		function loadConfig() {
 			var deferred = $q.defer();
 
-			$rootScope.writeLog('Requisitando configuracoes do servidor');
+			$rootScope.writeLog('Requiring server configurations');
 			$http({
 				method: 'GET',
 				url: Globals.api.get().address + 'config.php?action=getList'
