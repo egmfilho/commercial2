@@ -1,6 +1,14 @@
 .cupon-window {
+	.md-fab {
+		display: none;
+	}
+
 	@media only screen {
 		background-color: #777;
+		
+		.md-fab {
+			display: block;
+		}	
 	}
 }
 
