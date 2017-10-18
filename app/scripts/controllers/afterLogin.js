@@ -18,7 +18,7 @@
 
 		if (constants.isElectron) {
 			var api = Globals.api.get();
-			require('electron').remote.getCurrentWindow().setTitle('Commercial - Gestor de Vendas | API: ' + api.name + ' (' + api.address + ')');
+			require('electron').remote.getCurrentWindow().setTitle('Commercial - Gestor de Vendas | API: ' + api.name);
 		}
 
 		$scope.$on('$viewContentLoaded', function() {
