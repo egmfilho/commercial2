@@ -98,13 +98,18 @@ md-content.print-order.zoom-50(layout-fill ng-if='ctrl.order.order_code')
 							th(colspan='2') VALORES
 					tbody
 						tr
+							td
+								| VALOR BRUTO
+							td
+								| {{::ctrl.order.order_value | currency:'R$ '}}
+						tr
 							td 
 								| DESCONTO TOTAL
 							td
 								| {{::ctrl.order.order_vl_discount | currency:'R$ '}}
 						tr
 							td
-								| VALOR DO PEDIDO
+								| VALOR TOTAL
 							td
 								| {{::ctrl.order.order_value_total | currency:'R$ '}}
 
