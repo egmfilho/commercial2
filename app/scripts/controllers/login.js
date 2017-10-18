@@ -21,7 +21,6 @@
 
 				if (constants.isElectron) {
 					var electron = require('electron');
-					_ipcRenderer = electron.ipcRenderer;
 
 					if (!electron.remote.getGlobal('isValidSession').value)
 						electron.remote.getCurrentWindow().setTitle('Commercial - Gestor de Vendas');
