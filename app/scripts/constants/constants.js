@@ -11,7 +11,7 @@
 
 	angular.module('commercial2.constants')
 		.constant('Constants', {
-			'api': [
+			'api': [ // comentar antes de dar build
 				{
 					'id': 0, 
 					'name': 'VPN', 
@@ -33,7 +33,7 @@
 					'address': 'http://187.16.252.130/commercial2.api.teste/' 
 				}
 			],
-			// 'api': [],
+			// 'api': [], // descomentar antes de dar build
 			'app-name': 'Commercial - Gestor de vendas',
 			'version': '2.0.0 rc6',
 			'cookie': 'commercial.currentUser',

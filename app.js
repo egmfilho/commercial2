@@ -49,7 +49,7 @@ function getDateString(dateSeparator, separator, timeSeparator) {
 
 const logFilename = path.join(logDir, getDateString('-', 'T', '-') + '.log');
 
-writeLog('Initializing...');
+writeLog('Initializing application');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
