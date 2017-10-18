@@ -17,7 +17,12 @@ const path = require('path');
 const url = require('url');
 const fs = require('fs');
 
-const api = require(path.join(path.dirname(app.getPath('exe')), './api')).map((a, i) => { a.id = i; return a; });
+let api = null;
+try {
+	api = require(path.join(path.dirname(app.getPath('exe')), './api')).map((a, i) => { a.id = i; return a; });
+} catch(e) {
+	api = [];
+}
 
 // Make sure logs directory exists
 let logDir = path.join(path.dirname(app.getPath('exe')), './log');

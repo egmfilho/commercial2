@@ -84,7 +84,8 @@
 			if (!constants.isElectron) {
 				return constants.api;
 			} else {
-				return remote.getGlobal('globals').apiList;
+				var list = remote.getGlobal('globals').apiList;
+				return list.length ? list : constants.api;
 			}
 		}
 

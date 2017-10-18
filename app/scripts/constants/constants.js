@@ -33,6 +33,7 @@
 					'address': 'http://187.16.252.130/commercial2.api.teste/' 
 				}
 			],
+			// 'api': [],
 			'app-name': 'Commercial - Gestor de vendas',
 			'version': '2.0.0 rc6',
 			'cookie': 'commercial.currentUser',
