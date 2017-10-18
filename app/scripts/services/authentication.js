@@ -19,7 +19,7 @@
 		function login(username, password, callback) {
 			$http({
 				method: 'POST',
-				url: constants.api + 'login.php',
+				url: Globals.api.get().address + 'login.php',
 				data: { user_user: username, user_pass: password }
 			}).then(function(res) {
 				if (res.status == 200) {
@@ -33,19 +33,19 @@
 						name: constants['cookie'], 
 						value: window.btoa(JSON.stringify(user)) 
 					}).then(function(success) {
-						callback(res.data);
+						callback(res);
 					});
 				}
 			}, function(res) {
-				if (constants.debug) console.log(res);
-				callback(res.data);
+				if (constants.debug) console.error(res);
+				callback(res);
 			});
 		}
 
 		function logout(callback) {
 			$http({
 				method: 'POST',
-				url: constants.api + 'logout.php'
+				url: Globals.api.get().address + 'logout.php'
 			}).then(function(res) {
 				if (constants.isElectron) {
 					require('electron').ipcRenderer.send('shutdown');
@@ -59,7 +59,7 @@
 							});
 					// });
 			}, function(res) {
-				constants.debug && console.log(res);
+				constants.debug && console.error(res);
 				callback(res);
 			});
 		}
@@ -70,4 +70,4 @@
 		}
 	}
 
-}());
+})();

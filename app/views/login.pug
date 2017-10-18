@@ -13,14 +13,25 @@ md-content.login(flex)
 						input(type='text' name='user' ng-model='login.user' keys-shortcuts enter='login.advance()' required)
 						div(ng-messages='LoginForm.user.$error' role='alert' multiple)
 							div(ng-message='required') Informe o nome de usuário.
+					
 					md-input-container
 						label Senha
 						input(type='password' name='pass' ng-model='login.pass' md-maxlength='16' required)
 						div(ng-messages='LoginForm.pass.$error' role='alert' multiple)
 							div(ng-message='required') Informe a senha.
 							div(ng-message='md-maxlength') Senha muito longa.
-					md-button.md-raised.md-primary(ng-disabled='!LoginForm.$valid' type='submit')
-						| &nbsp; Login &nbsp;
+
+					.text-center.text-primary.offset-top-30(ng-if='login.loggingIn')
+						i.fa.fa-3x.fa-spin.fa-circle-o-notch
+
+					div(layout='column' ng-if='!login.loggingIn')
+						md-button.md-raised.md-primary.offset-top-30(type='button' ng-click='login.selectApi()')
+							| &nbsp; TROCAR API &nbsp;
+
+						p.text-center.text-light.offset-top-5(style='font-size: 12px') API: {{login.getCurrentApi().name}}
+
+						md-button.md-raised.md-primary.offset-top-15(ng-disabled='!LoginForm.$valid' type='submit')
+							| &nbsp; Login &nbsp;
 		.lost-pass
 			a(href='' ng-click='login.forgottenPassword()') Esqueci a senha
 

@@ -65,7 +65,7 @@ Object.defineProperty(Object.prototype, 'equals', {
 });
 
 function refreshOrders(company) {
-	var x = Math.random();
+	var x = Math.random(); // gambi para forcar a atualizacao da pagina por ser uma url diferente da atual
 	window.location.href = window.location.href.split('#')[0] + '#/open-order?company=' + company + '&x=' + x;
 }
 
@@ -73,6 +73,7 @@ function shutdown() {
 	window.location.href = window.location.href.split('#')[0] + '#/logout';
 }
 
+angular.module('commercial2.fandangos', [ ]);
 angular.module('commercial2.constants', [ ]);
 angular.module('commercial2.filters', [ ]);
 angular.module('commercial2.services', [ ]);
@@ -91,6 +92,7 @@ angular.module('commercial2', [
 		'egmfilho.inputFilters',
 		'ui.mask',
 		'commercial2.constants',
+		'commercial2.fandangos',
 		'commercial2.filters',
 		'commercial2.services',
 		'commercial2.directives',
@@ -112,7 +114,7 @@ angular.module('commercial2', [
 		$mdDateLocaleProvider.parseDate = function(dateString) {
 			var m = moment(dateString, 'L', true);
 			return m.isValid() ? m.toDate() : new Date(NaN);
-		}
+		};
 
 		/* Esconde a mascara quando o input nao esta focado para evitar */
 		/* provlemas com os labels do Angularjs Material */
@@ -285,6 +287,11 @@ angular.module('commercial2', [
 				controller: 'PrintOrderCtrl',
 				controllerAs: 'ctrl'
 			})
+			.when('/order/cupon/:code', {
+				templateUrl: 'views/order-cupon.html',
+				controller: 'PrintOrderCtrl',
+				controllerAs: 'ctrl'
+			})
 			.when('/order/mail/:code', {
 				templateUrl: 'views/mail-order.html',
 				controller: 'MailOrderCtrl',
@@ -373,19 +380,23 @@ angular.module('commercial2', [
 
 		/* Funcao generica para chamar o Toast na tela. */
 		$rootScope.toast = function(title, message, delay) {
-			var controller = function() {
-				this.title = title,
-				this.message = message,
-				this.close = $mdToast.cancel;
-			}
+			var preset = $mdToast.build();
 
-			return $mdToast.show({
-				hideDelay: delay || 5000,
-				position: 'bottom right',
-				controller: controller,
-				controllerAs: 'ctrl',
-				templateUrl: './partials/toastTemplate.html'
-			});
+			var controller = function() {
+				this.title = title;
+				this.message = message;
+				this.close = function() {
+					$mdToast.hide();
+				};
+			};
+
+			preset.hideDelay(delay || 5000)
+				.position('bottom right')
+				.controller(controller)
+				.controllerAs('ctrl')
+				.templateUrl('./partials/toastTemplate.html')
+
+			return $mdToast.show(preset);
 		};
 
 		/* Exibe o menu principal */

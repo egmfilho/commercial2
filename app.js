@@ -2,7 +2,7 @@
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
 * @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-30 08:23:59
+* @Last Modified time: 2017-10-17 09:12:59
 */
 
 const electron = require('electron');
@@ -17,10 +17,38 @@ const path = require('path');
 const url = require('url');
 const fs = require('fs');
 
-// const logFilename = './logs/' + Date.now() + '.log';
-const logFilename = './commercial.log';
+let api = null;
+try {
+	api = require(path.join(path.dirname(app.getPath('exe')), './api')).map((a, i) => { a.id = i; return a; });
+} catch(e) {
+	api = [];
+}
 
-writeLog('###################################################################');
+// Make sure logs directory exists
+let logDir = path.join(path.dirname(app.getPath('exe')), './log');
+try {
+	fs.statSync(logDir);
+} catch(e) {
+	fs.mkdirSync(logDir);
+}
+
+function getDateString(dateSeparator, separator, timeSeparator) {
+	let date = new Date();
+	return ('0' + date.getDate()).slice(-2) + 
+	       dateSeparator + 
+		   ('0' + (date.getMonth() + 1)).slice(-2) + 
+		   dateSeparator + 
+		   date.getFullYear() + 
+		   separator + 
+		   ('0' + date.getHours()).slice(-2) + 
+		   timeSeparator + 
+		   ('0' + date.getMinutes()).slice(-2) + 
+		   timeSeparator + 
+		   ('0' + date.getSeconds()).slice(-2);
+}
+
+const logFilename = path.join(logDir, getDateString('-', 'T', '-') + '.log');
+
 writeLog('Initializing...');
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -28,6 +56,8 @@ writeLog('Initializing...');
 let mainWindow;
 
 global.globals = {
+	apiList: api,
+	api: api[0],
 	shared: '{ }'
 };
 
@@ -102,7 +132,7 @@ function writeLog(log) {
 
 	console.log(log);
 
-	fs.appendFile(logFilename, '[' + new Date() + ']' + log + '\n', function(err) {
+	fs.appendFile(logFilename, '[' + getDateString('-', ' ', ':') + '] ' + log + '\n', function(err) {
 		if (err) console.log(err);
 	});
 }
@@ -219,7 +249,10 @@ app.on('before-quit', function (event) {
 		order66(null, app.quit);
 		global.globals = null;
 		event.preventDefault();
+		return;
 	}
+
+	writeLog('Closing Application');
 });
 
 app.on('activate', function () {

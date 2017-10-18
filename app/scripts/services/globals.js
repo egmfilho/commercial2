@@ -9,7 +9,7 @@
 
 	'use strict';
 
-	angular.module('commercial2.services')
+	angular.module('commercial2.fandangos')
 		.service('Globals', Globals);
 
 	Globals.$inject = [ '$q', 'Constants' ];
@@ -25,6 +25,11 @@
 		this.get    = get;
 		this.remove = remove;
 		this.clear  = clear;
+		this.api    = {
+			getList: apiList,
+			set: setApi,
+			get: getApi
+		};
 
 		// ******************************
 		// Methods declaration
@@ -74,7 +79,32 @@
 
 			return deferred.promise;
 		}
+
+		function apiList() {
+			if (!constants.isElectron) {
+				return constants.api;
+			} else {
+				var list = remote.getGlobal('globals').apiList;
+				return list.length ? list : constants.api;
+			}
+		}
+
+		function setApi(api) {
+			if (!constants.isElectron) {
+				window.sessionStorage.setItem('api', JSON.stringify(api));
+			} else {
+				remote.getGlobal('globals').api = api;
+			}
+		}
+
+		function getApi() {
+			if (!constants.isElectron) {
+				return JSON.parse(window.sessionStorage.getItem('api'));
+			} else {
+				return remote.getGlobal('globals').api;
+			}
+		}
 		
 	}
 	
-}());
+})();

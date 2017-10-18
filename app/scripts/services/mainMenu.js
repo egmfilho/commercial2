@@ -57,6 +57,7 @@
 				};
 
 				this.newUserPass = function() {
+					if (mdPanelRef) mdPanelRef.close();
 					ModalUserPass.show('Atualizar senha')
 						.then(function(success) {
 							$rootScope.customDialog().showMessage('Aviso', 'Senha atualizada com sucesso!');
@@ -117,4 +118,4 @@
 		}
 	}
 
-}());
+})();

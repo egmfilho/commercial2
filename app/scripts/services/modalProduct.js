@@ -87,6 +87,7 @@
 							});
 						}
 
+						/* Fecha o modal retornando o produto selecionado */
 						this.select = function(p){
 							if( p.product_active == 'Y'){
 								if (constants.isElectron) {
@@ -130,6 +131,7 @@
 							return providerProduct.getByCode(code, vm.companyId, vm.userPrice.price_id, options);
 						}
 
+						/* Junta o produto com os outros para retornar ao finalizar */
 						this.addProduct = function(product) {
 							if (product.product_active == 'N')
 								return;
@@ -172,21 +174,26 @@
 						};
 
 						this.showSelection = function() {
-							var ctrl = function() {
-								this.selection = selection;
-								this._showCloseButton = true;
-								this.removeItem = vm.addProduct;
-								this.updateItemValues = function(i) { 
-									var n = i.order_item_amount;
-									i.setAmount(n);
-								};
+							var options = {
+									width: 800,
+									onOpenComplete: function() {
+										$timeout(function() {
+											jQuery('input').on('focus', function() { this.select(); });
+											jQuery('.table tr:last-child td input').focus();
+										});
+									}
+								},
+								ctrl = function() {
+										this.selection = selection;
+										this._showCloseButton = true;
+										this.removeItem = vm.addProduct;
+										this.updateItemValues = function(i) { 
+											var n = i.order_item_amount;
+											i.setAmount(n);
+										};
+									};
 
-								setTimeout(function() {
-									jQuery('input').on('focus', function() { this.select(); });
-								}, 500);
-							};
-
-							$rootScope.customDialog().showTemplate('Seleção de itens', './partials/modalItemSelection.html', ctrl, {width: 800});
+							$rootScope.customDialog().showTemplate('Seleção de itens', './partials/modalItemSelection.html', ctrl, options);
 						}
 					};
 
@@ -205,4 +212,4 @@
 			}
 		}]);
 
-}());
+})();

@@ -19,6 +19,10 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								md-icon(md-font-icon='fa fa-folder-open-o')
 								|  Abrir
 								span.md-alt-text {{ 'M-A' | keyboardShortcut }}
+						md-menu-item
+							md-button(ng-click='clone()' ng-disabled='!order.budget.order_code')
+								md-icon(md-font-icon='fa fa-files-o')
+								|  Duplicar
 						md-menu-divider
 						md-menu-item
 							md-button(ng-click='save()' ng-disabled='!order.canSave() || order.isToolbarLocked()')
@@ -193,6 +197,12 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 							b &nbsp;Documento: 
 							| {{::order.budget.order_code_document || 'Indisponível'}}
 
+		section(name='company')
+			md-card(layout-align='center')
+				md-card-content.offset-top-5
+					.offset-top-5(layout='row' layout-align='center center')
+						h3 Empresa: {{order.budget.order_company_id ? (order.budget.order_company.company_code + ' - ' + order.budget.order_company.company_name) : 'Não informado.'}}
+
 		//- Produtos					
 		section(name='products')
 			md-card
@@ -208,9 +218,9 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									i.fa.fa-search &nbsp; 
 									| Localizar
 
-								md-button.md-raised.button-red(ng-click='order.clearItems()' md-colors='{background: "commercialRed"}')
-									i.fa.fa-remove &nbsp; 
-									| Limpar
+								md-button.md-icon-button.md-raised.button-red(ng-click='order.clearItems()' md-colors='{background: "commercialRed"}')
+									i.fa.fa-trash
+									md-tooltip(md-direction='bottom') Limpar
 				md-card-content
 					div(layout='row')
 						md-input-container(flex='25')
@@ -278,7 +288,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 								input(name='amount' ng-model='order.internal.tempItem.order_item_amount'
 										ng-change='order.setItemAmount(order.internal.tempItem.order_item_amount)'
 										keys-shortcuts enter='order.focusOn("input[name=\'al-discount\']")'
-										currency trim min-fraction-size='0' number-only separator=',.' replace-text replace-from='.' replace-to=','
+										currency trim min-fraction-size='0' max-fraction-size='{{order.internal.tempItem.product.unit.unit_format == "I" ? 0 : 4}}' number-only separator=',.' replace-text replace-from='.' replace-to=','
 										ng-disabled='!order.internal.tempItem.product.product_code')
 						
 						md-input-container(flex='25')
@@ -334,7 +344,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 										ng-class='{"sold-out": order.budget.order_status_id == order.internal.orderStatusValues.open ? i.product.stock.product_stock <= 0 : i.order_item_stock <= 0}')
 										td {{i.product.product_code}} - {{i.product.product_name}}
 										td {{i.product.unit.unit_initials}}
-										td {{i.order_item_amount | currency:''}}
+										td {{i.order_item_amount | currency : '' : (i.product.unit.unit_format == 'I' ? 0 : 4)}}
 										td {{i.order_item_value_unitary | currency:'R$ '}}
 										td {{i.order_item_al_discount | currency:''}}%
 										td {{i.order_item_vl_discount | currency:'R$ '}}
@@ -375,13 +385,13 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									i.fa.fa-search &nbsp; 
 									| Localizar
 
-								md-button.md-raised.text-primary.button-green(ng-click='order.newCustomer()')
+								md-button.md-raised.text-primary.button-green(ng-click='order.newCustomer()' style='margin-right: 15px;')
 									i.fa.fa-user-plus &nbsp;
 									| Cadastrar
 
-								md-button.md-raised.button-red(ng-click='order.clearCustomer()' md-colors='{background: "commercialRed"}')
-									i.fa.fa-remove &nbsp; 
-									| Limpar
+								md-button.md-icon-button.md-raised.button-red(ng-click='order.clearCustomer()' md-colors='{background: "commercialRed"}')
+									i.fa.fa-trash
+									md-tooltip(md-direction='bottom') Limpar
 				
 				md-card-content
 					div(layout='row' layout-wrap)
@@ -472,9 +482,9 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									span.md-alt-text(style='font-size: 14px') &nbsp;({{ 'M-3' | keyboardShortcut }})
 								span.md-subhead Informe as formas de pagamento
 							div(layout='column' layout-align='center end' layout-fill)
-								md-button.md-raised.button-red(ng-click='order.clearPayments()' md-colors='{background: "commercialRed"}')
-									i.fa.fa-remove &nbsp; 
-									| Limpar
+								md-button.md-icon-button.md-raised.button-red(ng-click='order.clearPayments()' md-colors='{background: "commercialRed"}')
+									i.fa.fa-trash
+									md-tooltip(md-direction='bottom') Limpar
 				md-card-content
 					div(layout='row')
 

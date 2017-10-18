@@ -41,7 +41,7 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 			| Bairro
 		md-select(ng-model='address.newAddress.district'
 				data-md-container-class='query-select-container'
-				ng-model-options='{ trackBy: "$value.district_id" }')
+				ng-model-options='{ trackBy: "$value.district_id", debounce: 500 }')
 			md-select-header.select-header
 				| &nbsp; &nbsp;
 				i.fa.fa-search
@@ -61,7 +61,7 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 			| Cidade
 		md-select(ng-model='address.newAddress.city'
 				data-md-container-class='query-select-container'
-				ng-model-options='{ trackBy: "$value.city_id" }')
+				ng-model-options='{ trackBy: "$value.city_id", debounce: 500 }')
 			md-select-header.select-header
 				| &nbsp; &nbsp;
 				i.fa.fa-search

@@ -7,6 +7,7 @@
 
 const packager = require('electron-packager');
 const path     = require('path');
+const fs       = require('fs');
 
 let platform = process.argv.slice(2)[0];
 let icon     = path.join(__dirname, platform == 'darwin' ? 'commercial.icns' : 'commercial.ico');
@@ -40,14 +41,18 @@ let options = {
 		'commercial.ico',
 		'Diagrama.asta',
 		'gulpfile.js',
-		'README.md'
+		'README.md',
+		'api.js'
 	]
 };
 
 console.log('>>> Starting Electron Packager proccess...');
 packager(options, (err, appPaths) => {
-	if (err)
+	if (err) {
 		console.log(err);
-	else
+	} else {
+		console.log('Copying api.js file');
+		fs.createReadStream('./api.js').pipe(fs.createWriteStream(path.join(appPaths[0], 'api.js')));
 		console.log('>>> Electron Packager proccess done!');
+	}
 });

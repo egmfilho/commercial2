@@ -181,7 +181,7 @@
 				.then(function(success) {
 					$http({
 						method: 'POST',
-						url: constants.api + 'order.php?action=sendMail',
+						url: Globals.api.get().address + 'order.php?action=sendMail',
 						data: { 
 							order_code: self.order.order_code,
 							to: self.form.to,
@@ -211,4 +211,4 @@
 
 	}
 
-}());
+})();

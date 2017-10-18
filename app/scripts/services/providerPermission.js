@@ -10,12 +10,13 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.provider('ProviderPermission', ['Constants', function(constants) {
+		.provider('ProviderPermission', [function() {
 
-			var url = constants.api + 'permission.php',
+			var url = null,
 				provider = null;
 
-			this.$get = ['$resource', function($resource) {
+			this.$get = ['$resource', 'Globals', function($resource, Globals) {
+				url = Globals.api.get().address + 'permission.php';
 
 				provider = $resource(url);
 
@@ -34,4 +35,4 @@
 
 		}]);
 
-}());
+})();

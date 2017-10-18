@@ -10,12 +10,13 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.provider('ProviderOrder', ['Constants', function(constants) {
+		.provider('ProviderOrder', [function() {
 
-			var url = constants.api + 'order.php?action=:action',
+			var url = null,
 				provider = null;
 
-			this.$get = ['$resource', function($resource) {
+			this.$get = ['$resource', 'Globals', function($resource, Globals) {
+				url = Globals.api.get().address + 'order.php?action=:action';
 
 				provider = $resource(url, { }, {
 					get:    { method: 'POST', isArray: false },
@@ -36,8 +37,8 @@
 					editAndExportDAV: editAndExportDAV,
 					exportOrder: exportOrder,
 					saveAndExportOrder: saveAndExportOrder,
-					editAndExportOrder: editAndExportOrder,
-				}
+					editAndExportOrder: editAndExportOrder
+				};
 
 				// ******************************
 				// Methods declaration
@@ -199,4 +200,4 @@
 
 		}]);
 
-}());
+})();

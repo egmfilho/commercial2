@@ -10,12 +10,13 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.provider('ProviderCep', ['Constants', function(constants) {
+		.provider('ProviderCep', [function() {
 
-			var url = constants.api + 'cep.php?action=:action',
+			var url = null,
 				provider = null;
 
-			this.$get = ['$resource', function($resource) {
+			this.$get = ['$resource', 'Globals', function($resource, Globals) {
+				url = Globals.api.get().address + 'cep.php?action=:action';
 
 				provider = $resource(url, { }, {
 					get:    { method: 'POST', isArray: false },
@@ -62,4 +63,4 @@
 			}];
 		}]);
 
-}());
+})();
