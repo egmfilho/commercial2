@@ -206,6 +206,7 @@
 
 					self.orders = success.data.map(function(order) {
 						var temp = {
+							order_id: order.order_id,
 							order_code: order.order_code,
 							order_code_erp: order.order_code_erp_list,
 							order_status_id: order.order_status_id,
