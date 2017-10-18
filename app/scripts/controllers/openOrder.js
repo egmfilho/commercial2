@@ -40,8 +40,16 @@
 						self.filters.exportType = exportType;
 						jQuery('.filters .status-filter:nth-child(' + child + ')').addClass('active');
 					}
+				},
+				jumanji: function(order) {
+					if (self.filters.status.indexOf(order.order_status_id) >= 0 && 
+					    self.filters.exportType.indexOf(order.order_export_type) >= 0) {
+						return true;
+					}
+
+					return false;
 				}
-			}
+			};
 
 			if (constants.isElectron) {
 				Mousetrap = require('mousetrap');
@@ -101,10 +109,10 @@
 				};
 
 				if (constants.isElectron)
-					ElectronWindow.createWindow('#/order/new?company=' + companyId, options);
+					ElectronWindow.createWindow('#/order/new/company' + companyId, options);
 				else
-					$location.path('/order/new').search('company', companyId);
-			}
+					$location.path('/order/new/' + companyId);
+			};
 
 			$scope.open = function(order) {
 				if (OpenedOrderManager.isOpen(order.order_code)) {
@@ -117,9 +125,9 @@
 				};
 
 				if (constants.isElectron)
-					ElectronWindow.createWindow('#/order/edit?code=' + order.order_code, options);
+					ElectronWindow.createWindow('#/order/edit/' + order.order_code, options);
 				else
-					$location.path('/order/edit').search('code', order.order_code);
+					$location.path('/order/edit/' + order.order_code);
 			};
 
 			$scope.delete = function(order) {

@@ -270,7 +270,7 @@ angular.module('commercial2', [
 			// 	controller: 'HomeCtrl',
 			// 	controllerAs: 'home'
 			// })
-			.when('/order/:action', {
+			.when('/order/:action/:param', {
 				module: 'order',
 				templateUrl: 'views/order.html',
 				controller: 'OrderCtrl',
