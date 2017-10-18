@@ -14,22 +14,22 @@
 			'api': [ // comentar antes de dar build
 				{
 					'id': 0, 
-					'name': 'VPN', 
+					'name': 'VPN (dev)', 
 					'address': 'http://172.16.0.6/commercial2.api/' 
 				},
 				{
 					'id': 1,
-					'name': 'VPN Teste', 
+					'name': 'VPN Teste (dev)', 
 					'address': 'http://172.16.0.6/commercial2.api.teste/'
 				},
 				{
 					'id': 2, 
-					'name': 'Teste interno', 
+					'name': 'Teste interno (dev)', 
 					'address': 'http://172.16.0.6/commercial2.api.teste/' 
 				},
 				{
 					'id': 3,
-					'name': 'Teste externo', 
+					'name': 'Teste externo (dev)', 
 					'address': 'http://187.16.252.130/commercial2.api.teste/' 
 				}
 			],
