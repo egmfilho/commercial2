@@ -1,4 +1,8 @@
 md-content.print-order.zoom-50(layout-fill ng-if='ctrl.order.order_code')
+	md-button.md-fab.floating(ng-click='ctrl.print()')
+		md-icon(md-font-icon='fa fa-file-pdf-o' ng-if='ctrl.isPdf')
+		md-icon(md-font-icon='fa fa-print' ng-if='!ctrl.isPdf')
+
 	.header(layout='row')
 		.logo(flex='15' layout='column' layout-align='center center')
 			img(ng-src='{{::ctrl.logo}}')

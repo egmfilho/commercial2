@@ -12,13 +12,14 @@
 	angular.module('commercial2.controllers')
 		.controller('PrintOrderCtrl', PrintOrder);
 
-	PrintOrder.$inject = [ '$rootScope', '$scope', '$timeout', '$routeParams', 'ProviderOrder', 'Order', 'Globals', 'Constants', 'ElectronPrinter' ];
+	PrintOrder.$inject = [ '$rootScope', '$scope', '$timeout', '$location', '$routeParams', 'ProviderOrder', 'Order', 'Globals', 'Constants', 'ElectronPrinter' ];
 
-	function PrintOrder($rootScope, $scope, $timeout, $routeParams, provider, Order, Globals, constants, ElectronPrinter) {
+	function PrintOrder($rootScope, $scope, $timeout, $location, $routeParams, provider, Order, Globals, constants, ElectronPrinter) {
 
 		var self = this;
 		self.order = new Order();
 		self.logo = null;
+		self.isPdf = $location.path().indexOf('print') && $routeParams.action && $routeParams.action == 'pdf';
 
 		$scope.now = new Date();
 		$scope.globals = Globals.get;
@@ -28,6 +29,14 @@
 				getOrder($routeParams.code);
 			}
 		});
+
+		self.print = function() {
+			if (this.isPdf) {
+				ElectronPrinter.savePDF();
+			} else {
+				ElectronPrinter.print();
+			}
+		};
 
 		function getOrder(code) {
 			var options = {
@@ -50,10 +59,7 @@
 				
 				if (constants.isElectron) {
 					$timeout(function() {
-						if ($routeParams.action && $routeParams.action == 'print')
-							ElectronPrinter.print();
-						else if ($routeParams.action && $routeParams.action == 'pdf')
-							ElectronPrinter.savePDF();
+						self.print();
 					}, 100);
 				}
 			}, function(error) {

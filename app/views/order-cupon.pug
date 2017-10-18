@@ -1,4 +1,9 @@
 md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row')
+
+	md-button.md-fab.floating(ng-click='ctrl.print()')
+		md-icon(md-font-icon='fa fa-envelope-o' ng-if='ctrl.isPdf')
+		md-icon(md-font-icon='fa fa-print' ng-if='!ctrl.isPdf')
+
 	.cupon
 		.header(layout='column')
 			.company(flex layout='column' layout-align='start center')
@@ -104,3 +109,4 @@ md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row')
 				.md-block {{::ctrl.order.order_note}}
 
 			.message {{::globals('print-message')[ctrl.order.order_company_id].order_message}}
+			
