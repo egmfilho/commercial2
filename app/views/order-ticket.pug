@@ -19,8 +19,8 @@ md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row')
 		.body 
 			.title.offset-top-15
 				| {{ctrl.order.order_export_type == 'dav' ? 'DAV' : 'PEDIDO'}}: {{ctrl.order.order_code_erp}}
-			.subtitle.text-center
-				.md-block.text-left
+			.subtitle
+				.md-block.text-center
 					| ORÇAMENTO N&#186;: {{::ctrl.order.order_code}}
 
 			.payment(ng-if='ctrl.order.order_payments.length')
