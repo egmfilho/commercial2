@@ -1,0 +1,33 @@
+md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row')
+	
+	md-button.md-fab.floating(ng-click='ctrl.print()')
+		md-icon(md-font-icon='fa fa-envelope-o' ng-if='ctrl.isPdf')
+		md-icon(md-font-icon='fa fa-print' ng-if='!ctrl.isPdf')
+
+	.cupon
+		.header(layout='column')
+			.company(flex layout='column' layout-align='start center')
+				.md-block 
+					.name {{::ctrl.order.order_company.company_name}}
+			
+			.info(layout='row' layout-align='center')
+				.md-block.text-left(flex='60')
+					| {{::now | date:'dd/MM/yyyy HH:mm:ss'}}
+				.md-block.text-right(flex='40')
+					| COMMERCIAL {{::version}}
+
+		.body 
+			.title.offset-top-15
+				| {{ctrl.order.order_export_type == 'dav' ? 'DAV' : 'PEDIDO'}}: {{ctrl.order.order_code_erp}}
+			.subtitle.text-center
+				.md-block.text-left
+					| ORÇAMENTO N&#186;: {{::ctrl.order.order_code}}
+
+			.payment(ng-if='ctrl.order.order_payments.length')
+				table
+					tbody
+						tr(ng-repeat='i in ctrl.order.order_payments')
+							td {{::i.order_payment_installment}}X
+							td {{::i.modality.modality_description}}
+							td {{::i.order_payment_deadline | date:'dd/MM/yyyy'}}
+							td.text-right {{::i.order_payment_value | currency:'R$ '}}

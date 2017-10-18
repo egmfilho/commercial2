@@ -292,6 +292,11 @@ angular.module('commercial2', [
 				controller: 'PrintOrderCtrl',
 				controllerAs: 'ctrl'
 			})
+			.when('/order/ticket/:code', {
+				templateUrl: 'views/order-ticket.html',
+				controller: 'PrintOrderCtrl',
+				controllerAs: 'ctrl'
+			})
 			.when('/order/mail/:code', {
 				templateUrl: 'views/mail-order.html',
 				controller: 'MailOrderCtrl',
