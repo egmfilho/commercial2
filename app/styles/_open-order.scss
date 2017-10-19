@@ -149,6 +149,16 @@
 	}
 }
 
+md-menu-content.open-order-menu-content {
+	md-menu-item .md-button {
+		color: #666 !important;		
+
+		md-icon.fa.material-icons {
+			font-size: 20px;
+		}
+	}
+}
+
 .open-order {
 	.open-order-dense-container {
 		background-color: white;
@@ -212,8 +222,8 @@
 					box-sizing: border-box;
 				}
 
-				&:nth-child(9), &:nth-child(10), &:nth-child(11), &:nth-child(12) {
-					width: 30px;
+				&:nth-child(9) {
+					width: 50px;
 					padding: 0;
 					text-align: center;
 
@@ -283,8 +293,8 @@
 					width: 11%;
 				}
 
-				&:nth-child(9), &:nth-child(10), &:nth-child(11), &:nth-child(12) {
-					width: 30px;
+				&:nth-child(9) {
+					width: 50px;
 					padding: 0;
 					vertical-align: middle;
 					text-align: center;

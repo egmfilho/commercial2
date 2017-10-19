@@ -117,9 +117,6 @@
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_update'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						
 						th &nbsp;
-						th &nbsp;
-						th &nbsp;
-						th &nbsp;
 
 	div(flex)
 		md-virtual-repeat-container#virtual-repeat-container
@@ -133,18 +130,49 @@
 				span {{o.order_value_total_plus_st_formatted}}
 				span {{o.order_date_formatted}}
 				span {{o.order_update_formatted}}
-				span 
-					button(ng-click='open(o)' md-no-ink)
-						i.fa.fa-pencil
 				span
-					button(ng-click='openOrder.print(o.order_code)' md-no-ink)
-						i.fa.fa-print
-				span
-					button(ng-click='openOrder.mail(o.order_code)' md-no-ink)
-						i.fa.fa-envelope
-				span
-					button(ng-click='delete(o)' md-no-ink)
-						i.fa.fa-remove
+					md-menu
+						md-button.md-icon-button(ng-click='$mdMenu.open($event)')
+							md-icon(md-menu-origin md-font-icon='fa fa-ellipsis-v')
+						md-menu-content.open-order-menu-content(width='4')
+							md-menu-item
+								md-button(ng-click='open(o)')
+									md-icon(md-font-icon='fa fa-pencil')
+									| ABRIR
+
+							md-menu-item
+								md-button(ng-click='clone(o)')
+									md-icon(md-font-icon='fa fa-files-o')
+									| DUPLICAR
+
+							md-menu-divider
+							
+							md-menu-item
+								md-button(ng-click='openOrder.print(o.order_code, null)')
+									md-icon(md-font-icon='fa fa-print')
+									| IMPRIMIR
+
+							md-menu-item
+								md-button(ng-click='openOrder.print(o.order_code, true)')
+									md-icon(md-font-icon='fa fa-print')
+									| IMPRIMIR CUPOM
+
+							md-menu-item
+								md-button(ng-click='openOrder.mail(o.order_code)')
+									md-icon(md-font-icon='fa fa-envelope-o')
+									| ENVIAR POR EMAIL
+
+							md-menu-item
+								md-button(ng-click='openOrder.print(o.order_code, null, true)')
+									md-icon(md-font-icon='fa fa-file-pdf-o')
+									| SALVAR PDF
+
+							md-menu-divider
+
+							md-menu-item
+								md-button(ng-click='delete(o)')
+									md-icon(md-font-icon='fa fa-remove')
+									| APAGAR
 
 	.search-container(layout='row' ng-class='{ "opened": isSearchOpened }')
 		span(flex)

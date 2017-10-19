@@ -47,7 +47,7 @@
 				cerol: function(order) {
 					if (!self.filters.types.length) 
 						return true;
-						
+
 					return self.filters.types.indexOf(order.order_statype) >= 0;
 				}
 			};
@@ -117,7 +117,7 @@
 
 			$scope.open = function(order) {
 				if (OpenedOrderManager.isOpen(order.order_code)) {
-					$rootScope.customDialog().showMessage('Erro', 'Este orçamento encontra-se aberto.');
+					$rootScope.customDialog().showMessage('Erro', 'Este orçamento encontra-se aberto no momento.');
 					return;
 				}
 
@@ -131,7 +131,24 @@
 					$location.path('/order/edit/' + order.order_code);
 			};
 
+			$scope.clone = function(order) {
+				if (OpenedOrderManager.isOpen(order.order_code)) {
+					$rootScope.customDialog().showMessage('Erro', 'Este orçamento encontra-se aberto no momento.');
+					return;
+				}
+
+				if (constants.isElectron)
+					ElectronWindow.createWindow('#/order/clone/' + order.order_code, options);
+				else
+					$location.path('/order/clone/' + order.order_code);
+			};
+
 			$scope.delete = function(order) {
+				if (OpenedOrderManager.isOpen(order.order_code)) {
+					$rootScope.customDialog().showMessage('Erro', 'Este orçamento encontra-se aberto no momento.');
+					return;
+				}
+
 				$rootScope.customDialog().showConfirm('Aviso', 'Excluir o orçamento <b>' + order.order_code + '</b>?')
 					.then(function(success) {
 						$rootScope.loading.load(null, null, { zIndex: 1 });
@@ -307,17 +324,21 @@
 				return providerPerson.getByCode(code, category, options);
 			};
 
-			self.print = function(code) {
+			self.print = function(code, isCupon, isPDF) {
 				var options = {
 					webPreferences: {
 						zoomFactor: 1
 					}
-				};
+				}, root, type, url;
+
+				root = isCupon ? '/cupon/' : '/print/';
+				type = isPDF ? '/pdf' : '';
+				url = root + code + type;
 
 				if (constants.isElectron)
-					ElectronWindow.createWindow('#/order/print/' + code + '?action=print', options);
+					ElectronWindow.createWindow('#' + url, options);
 				else
-					$location.path('/order/print/'+code)
+					$location.path(url);
 			};
 
 			self.mail = function(code) {
@@ -328,9 +349,9 @@
 				};
 
 				if (constants.isElectron)
-					ElectronWindow.createWindow('#/order/mail/' + code, options);
+					ElectronWindow.createWindow('#/mail/' + code, options);
 				else
-					$location.path('/order/mail/' + code);
+					$location.path('/mail/' + code);
 			};
 
 			self.getSum = function(list) {
