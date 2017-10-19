@@ -531,8 +531,12 @@ input, select{
 	color: rgba(0, 0, 0, .8) !important;
 }
 
-md-select md-select-value span{
+md-select md-select-value span {
 	color: rgba(0, 0, 0, .8) !important;
+}
+
+.md-datepicker-expand-triangle {
+	border-top-color: rgba(0, 0, 0, .8) !important;
 }
 
 @import "scrollbar";
