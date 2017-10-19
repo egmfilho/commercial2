@@ -32,7 +32,7 @@
 					save:        save,
 					check:       check,
 					activate:    activate
-				}
+				};
 
 				// ******************************
 				// Methods declaration

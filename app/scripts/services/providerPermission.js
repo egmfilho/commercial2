@@ -29,7 +29,7 @@
 							user_pass: pass
 						}).$promise;
 					}
-				}
+				};
 
 			}];
 

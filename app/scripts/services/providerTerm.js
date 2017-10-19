@@ -29,7 +29,7 @@
 					getByCode: getByCode,
 					getByDescription: getByDescription,
 					getAll:    getAll
-				}
+				};
 
 				// ******************************
 				// Methods declaration

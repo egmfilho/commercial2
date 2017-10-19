@@ -16,7 +16,7 @@
 				provider = null;
 
 			this.$get = ['$resource', 'Globals', function($resource, Globals) {
-				url = Globals.api + 'person_credit.php?action=:action';
+				url = Globals.api.get().address + 'person_credit.php?action=:action';
 
 				provider = $resource(url, { }, {
 					get:    { method: 'POST', isArray: false },
@@ -29,7 +29,7 @@
 					pawn: pawn,
 					redeem: redeem,
 					order66: order66
-				}
+				};
 
 				// ******************************
 				// Methods declaration

@@ -27,7 +27,7 @@
 				return {
 					getAll: getAll,
 					setNewPass: setNewPass
-				}
+				};
 
 				// ******************************
 				// Methods declaration

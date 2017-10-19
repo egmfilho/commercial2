@@ -27,7 +27,7 @@
 				return {
 					getById: getById,
 					getByName: getByName
-				}
+				};
 
 				// ******************************
 				// Methods declaration

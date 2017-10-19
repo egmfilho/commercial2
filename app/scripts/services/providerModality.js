@@ -28,7 +28,7 @@
 					getById: getById,
 					getByCode: getByCode,
 					getByDescription: getByDescription
-				}
+				};
 
 				// ******************************
 				// Methods declaration
