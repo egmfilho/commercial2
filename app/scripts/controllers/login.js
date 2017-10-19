@@ -115,7 +115,7 @@
 					focusOnOpen: false,
 				};
 	
-				$rootScope.customDialog().showTemplate('Selecionar API', './partials/modalApi.html', controller, options)
+				$rootScope.customDialog().showTemplate('Commercial', './partials/modalApi.html', controller, options)
 					.then(function(success) {
 						Globals.api.set(success);
 					}, function(error) { 

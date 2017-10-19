@@ -25,13 +25,17 @@ md-content.login(flex)
 						i.fa.fa-3x.fa-spin.fa-circle-o-notch
 
 					div(layout='column' ng-if='!login.loggingIn')
-						md-button.md-raised.md-primary.offset-top-30(type='button' ng-click='login.selectApi()')
-							| &nbsp; TROCAR API &nbsp;
-
-						p.text-center.text-light.offset-top-5(style='font-size: 12px') API: {{login.getCurrentApi().name}}
-
+						//- md-button.md-raised.md-primary.offset-top-30(type='button' ng-click='login.selectApi()')
+							| &nbsp; SELECIONAR API &nbsp;
+							
 						md-button.md-raised.md-primary.offset-top-15(ng-disabled='!LoginForm.$valid' type='submit')
 							| &nbsp; Login &nbsp;
+
+						.api
+							p.text-center.text-light.offset-top-15 API: {{login.getCurrentApi().name}}
+								br
+								a.text-center(href='' ng-click='login.selectApi()') (Trocar)
+
 		.lost-pass
 			a(href='' ng-click='login.forgottenPassword()') Esqueci a senha
 

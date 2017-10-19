@@ -477,6 +477,8 @@
 			if (constants.isElectron) {
 				unbindKeys();
 			}
+
+			$location.search('source', null);
 		});
 
 		$scope.isLocked = function(target) {
@@ -2252,7 +2254,7 @@
 				focusOnOpen: false,
 			};
 
-			$rootScope.customDialog().showTemplate('Selecionar modalidade', './partials/modalTerm.html', controller, options)
+			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalTerm.html', controller, options)
 				.then(function(success) {
 					self.addModality(success);
 					self.budget.order_term_id = self.internal.term.tempTerm.term_id;
@@ -2371,7 +2373,7 @@
 			// 	return;
 			}
 
-			self.paymentDialog('Adicionar parcela').then(function(success) {
+			self.paymentDialog('Orçamento').then(function(success) {
 				self.clearTerm();
 
 				var payment = new OrderPayment(success);
@@ -2435,7 +2437,7 @@
 				$rootScope.loading.unload();
 				/* coloca no pagamento e manda pro modal */
 				temp.modality = new PaymentModality(success.data);
-				self.paymentDialog('Editar parcela', temp).then(function(success) {
+				self.paymentDialog('Orçamento', temp).then(function(success) {
 					self.clearTerm();
 
 					var index = self.budget.order_payments.indexOf(payment),
@@ -2941,7 +2943,7 @@
 				};
 			};
 
-			$rootScope.customDialog().showTemplate('Informações do Cliente', './partials/modalClientInfo.html', controller, { width: 720 })
+			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalClientInfo.html', controller, { width: 720 })
 				.then(function(success){
 
 				}, function(error) { 
@@ -2993,7 +2995,7 @@
 				this.readonly = $scope.isDisabled;
 			};
 
-			$rootScope.customDialog().showTemplate('Observações do orçamento', './partials/modalNotes.html', controller, { width: 500 })
+			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalNotes.html', controller, { width: 500 })
 				.then(function(success) {
 					self.budget.order_note = success.order_note;
 					self.budget.order_note_doc = success.order_note_doc;
@@ -3054,7 +3056,7 @@
 				}
 			};
 
-			$rootScope.customDialog().showTemplate('Desconto geral do orçamento', './partials/modalDiscount.html', controller, { width: 240, zIndex: 1 })
+			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalDiscount.html', controller, { width: 240, zIndex: 1 })
 				.then(function(success) {
 					var total = self.budget.order_value_total;
 
