@@ -108,9 +108,13 @@
 							| TOTAL
 							i.fa(ng-show="openOrder.grid.propertyName === 'order_value_total_plus_st'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						
-						th.sortable(ng-click="openOrder.sortBy('order_date_formatted')")
+						th.sortable(ng-click="openOrder.sortBy('order_date')")
 							| DATA
-							i.fa(ng-show="openOrder.grid.propertyName === 'order_date_formatted'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+							i.fa(ng-show="openOrder.grid.propertyName === 'order_date'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+
+						th.sortable(ng-click="openOrder.sortBy('order_update')")
+							| ATUALIZAÇÃO
+							i.fa(ng-show="openOrder.grid.propertyName === 'order_update'" ng-class="!openOrder.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						
 						th &nbsp;
 						th &nbsp;
@@ -128,6 +132,7 @@
 				span {{o.order_seller_name}}
 				span {{o.order_value_total_plus_st_formatted}}
 				span {{o.order_date_formatted}}
+				span {{o.order_update_formatted}}
 				span 
 					button(ng-click='open(o)' md-no-ink)
 						i.fa.fa-pencil
