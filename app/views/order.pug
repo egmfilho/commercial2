@@ -122,6 +122,11 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 						span.md-alt-text ({{ 'M-N' | keyboardShortcut }})
 					md-icon(md-font-icon='fa fa-file-o')
 
+				md-button.toolbar-btn(ng-click='clone()' ng-disabled='!order.budget.order_code || order.isToolbarLocked()')
+					md-tooltip(md-direction='bottom') 
+						| Duplicar
+					md-icon(md-font-icon='fa fa-files-o')
+
 				md-button.toolbar-btn(ng-click='save()' ng-disabled='!order.canSave() || order.isToolbarLocked()')
 					md-tooltip(md-direction='bottom') 
 						| Salvar orçamento &nbsp;

@@ -488,7 +488,14 @@
 		};
 
 		$scope.clone = function() {
-			$location.path('/order/clone/' + self.budget.order_code);
+			if (!self.canSave()) {
+				$location.path('/order/clone/' + self.budget.order_code);
+			} else {
+				$rootScope.customDialog().showConfirm('Aviso', 'As alterações serão perdidas, deseja continuar?')
+					.then(function(success) {
+						$location.path('/order/clone/' + self.budget.order_code);
+					}, function(error) { });
+			}
 		};
 
 		$scope.$on('$viewContentLoaded', function() {
@@ -578,6 +585,7 @@
 					getCreditLimit: true,
 					getSeller: true,
 					getItems: true,
+					getProductStock: true,
 					getPayments: true
 				}, code = $routeParams.param;
 
