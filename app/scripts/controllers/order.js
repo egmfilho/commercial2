@@ -477,9 +477,6 @@
 			if (constants.isElectron) {
 				unbindKeys();
 			}
-			
-			$location.search('code', null);
-			$location.search('company', null);
 		});
 
 		$scope.isLocked = function(target) {
@@ -824,6 +821,18 @@
 								switch (res) {
 									case 'print': {
 										self.print().then(function() {
+											if (constants.isElectron) {
+												_ipcRenderer.send('killme', {
+													winId: _remote.getCurrentWindow().id,
+													ttl: 1000
+												});
+											}
+										});
+										break;
+									}
+
+									case 'cupon': {
+										self.print('cupon').then(function() {
 											if (constants.isElectron) {
 												_ipcRenderer.send('killme', {
 													winId: _remote.getCurrentWindow().id,
@@ -1765,7 +1774,7 @@
 		/**
 		 * Instancia uma nova janela e chama o dialogo de impressao.
 		 */
-		function print() {
+		function print(type) {
 
 			if (!self.canPrint()) return;
 
@@ -1779,13 +1788,15 @@
 					}
 				};
 
-				var win = ElectronWindow.createWindow('#/order/print/' + self.budget.order_code, options);
+				var root = type == 'cupon' ? '#/cupon/' : (type == 'ticket' ? '#/ticket/' : '#/print/'),
+					win = ElectronWindow.createWindow(root + self.budget.order_code, options);
 
 				deferred.resolve();
 			}
 			else {
 				deferred.resolve();
-				$location.path('/order/print/' + self.budget.order_code);
+				var root = type == 'cupon' ? '/cupon/' : (type == 'ticket' ? '/ticket/' : '/print/');
+				$location.path(root + self.budget.order_code);
 			}
 
 			return deferred.promise;
@@ -1912,6 +1923,30 @@
 					switch (res) {
 						case 'print': {
 							self.print().then(function() {
+								if (constants.isElectron) {
+									_ipcRenderer.send('killme', {
+										winId: _remote.getCurrentWindow().id,
+										ttl: 1000
+									});
+								}
+							});
+							break;
+						}
+
+						case 'cupon': {
+							self.print('cupon').then(function() {
+								if (constants.isElectron) {
+									_ipcRenderer.send('killme', {
+										winId: _remote.getCurrentWindow().id,
+										ttl: 1000
+									});
+								}
+							});
+							break;
+						}
+
+						case 'ticket': {
+							self.print('ticket').then(function() {
 								if (constants.isElectron) {
 									_ipcRenderer.send('killme', {
 										winId: _remote.getCurrentWindow().id,
@@ -3199,10 +3234,10 @@
 									}
 								};
 
-								ElectronWindow.createWindow('#/order/edit?code=' + self.budget.order_code, options);
+								ElectronWindow.createWindow('#/order/edit/' + self.budget.order_code, options);
 							}
 							else {
-								$location.path('/order/edit?code=' + self.budget.order_code);
+								$location.path('/order/edit/' + self.budget.order_code).search('source', 'recover');
 							}
 							$timeout(function() {
 								window.close();
