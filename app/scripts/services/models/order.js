@@ -12,6 +12,7 @@
 	angular.module('commercial2.services')
 		.factory('OrderAudit', [function() {
 
+			/*jshint validthis:true */
 			function _OrderAudit(audit) {
 				this.title       = null;
 				this.user_id     = null;
@@ -33,6 +34,7 @@
 	angular.module('commercial2.services')
 		.factory('OrderStatus', [function() {
 
+			/*jshint validthis:true */
 			function _OrderStatus(status) {
 				this.billed   = null;
 				this.editable = 'Y';
@@ -53,6 +55,7 @@
 
 	function Order($filter, OrderItem, Person, Address, CompanyERP, OrderPayment, OrderAudit, OrderStatus, Globals) {
 
+		/*jshint validthis:true */
 		function _Order(order) {
 			this.order_id                    = null;
 			this.order_erp_id                = null;
@@ -111,15 +114,15 @@
 					status: order.status ? new OrderStatus(order.status) : new OrderStatus(),
 					// order_value_total_plus_st: parseFloat(order.order_value_total) + parseFloat(order.order_value_st),
 					queryable: order.order_id ?
-						(order.order_code + ' '
-						+ order.order_client.person_code + ' '
-						+ order.order_code_erp + ' '
-						+ order.order_client.person_name + ' '
-						+ order.order_seller.person_code + ' '
-						+ order.order_seller.person_name + ' '
-						+ order.order_seller.person_shortname + ' '
-						+ $filter('currency')(order.order_value_total, "R$ ") + ' '
-						+ $filter('date')(order.order_date, "dd/MM/yyyy")) : ''
+						(order.order_code + ' ' +
+						 order.order_client.person_code + ' ' +
+						 order.order_code_erp + ' ' +
+						 order.order_client.person_name + ' ' +
+						 order.order_seller.person_code + ' ' +
+						 order.order_seller.person_name + ' ' +
+						 order.order_seller.person_shortname + ' ' +
+						 $filter('currency')(order.order_value_total, "R$ ") + ' ' +
+						 $filter('date')(order.order_date, "dd/MM/yyyy")) : ''
 				});
 			}
 		}
