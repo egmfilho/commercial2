@@ -73,7 +73,6 @@ function shutdown() {
 	window.location.href = window.location.href.split('#')[0] + '#/logout';
 }
 
-angular.module('commercial2.fandangos', [ ]);
 angular.module('commercial2.constants', [ ]);
 angular.module('commercial2.filters', [ ]);
 angular.module('commercial2.services', [ ]);
@@ -92,7 +91,6 @@ angular.module('commercial2', [
 		'egmfilho.inputFilters',
 		'ui.mask',
 		'commercial2.constants',
-		'commercial2.fandangos',
 		'commercial2.filters',
 		'commercial2.services',
 		'commercial2.directives',

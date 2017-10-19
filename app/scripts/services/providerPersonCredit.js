@@ -16,6 +16,10 @@
 				provider = null;
 
 			this.$get = ['$resource', 'Globals', function($resource, Globals) {
+				// Tem que ver por que esse carinha esta sendo chamado ao abrir o app, assim dando erro 
+				// pois o Globlas nao tem api ainda
+				if (!Globals.api.get()) return;
+				
 				url = Globals.api.get().address + 'person_credit.php?action=:action';
 
 				provider = $resource(url, { }, {
