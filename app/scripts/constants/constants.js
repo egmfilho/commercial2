@@ -24,12 +24,12 @@
 				},
 				{
 					'id': 2, 
-					'name': 'Teste interno (dev)', 
-					'address': 'http://172.16.0.6/commercial2.api.teste/' 
+					'name': 'Externo (dev)', 
+					'address': 'http://187.16.252.130/commercial2.api/' 
 				},
 				{
 					'id': 3,
-					'name': 'Teste externo (dev)', 
+					'name': 'Externo Teste (dev)', 
 					'address': 'http://187.16.252.130/commercial2.api.teste/' 
 				}
 			],
