@@ -341,6 +341,19 @@
 					$location.path(url);
 			};
 
+			self.printTicket = function(code) {
+				var options = {
+					webPreferences: {
+						zoomFactor: 1
+					}
+				};
+
+				if (constants.isElectron)
+					ElectronWindow.createWindow('#/ticket/' + code, options);
+				else
+					$location.path('/ticket/' + code);
+			};
+
 			self.mail = function(code) {
 				var options = {
 					webPreferences: {

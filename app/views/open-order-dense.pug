@@ -137,7 +137,7 @@
 						md-menu-content.open-order-menu-content(width='4')
 							md-menu-item
 								md-button(ng-click='open(o)')
-									md-icon(md-font-icon='fa fa-pencil')
+									md-icon(md-font-icon='fa fa-folder-open-o')
 									| ABRIR
 
 							md-menu-item
@@ -146,6 +146,11 @@
 									| DUPLICAR
 
 							md-menu-divider
+
+							md-menu-item
+								md-button(ng-click='openOrder.printTicket(o.order_code)'  ng-disabled='o.order_status_id != openOrder.orderStatusValues["exported"]')
+									md-icon(md-font-icon='fa fa-ticket')
+									| IMPRIMIR TICKET
 							
 							md-menu-item
 								md-button(ng-click='openOrder.print(o.order_code, null)')
@@ -170,7 +175,7 @@
 							md-menu-divider
 
 							md-menu-item
-								md-button(ng-click='delete(o)')
+								md-button(ng-click='delete(o)' ng-disabled='o.order_status_id != openOrder.orderStatusValues["open"]')
 									md-icon(md-font-set='material-icons') delete_forever
 									| APAGAR
 
@@ -190,37 +195,29 @@
 						ng-style='{ "color": openOrder.orderExportTypeColors["open"] }') cloud_queue
 					md-tooltip(md-direction='top') 
 						| Salvo
-		
-				span(flex)
 
-				.status-filter(ng-click='openOrder.filters.toggleStatus("order", openOrder.orderStatusValues["exported"], 3)' ng-class='{ "active": openOrder.filters.children.indexOf(3) >= 0 }')
+				.status-filter(ng-click='openOrder.filters.toggleStatus("order", openOrder.orderStatusValues["exported"], 2)' ng-class='{ "active": openOrder.filters.children.indexOf(2) >= 0 }')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": openOrder.orderExportTypeColors["order"] }') cloud
 					md-tooltip(md-direction='top') 
 						| Pedido exportado
 
-				span(flex)
-
-				.status-filter(ng-click='openOrder.filters.toggleStatus("order", openOrder.orderStatusValues["billed"], 5)' ng-class='{ "active": openOrder.filters.children.indexOf(5) >= 0 }')
+				.status-filter(ng-click='openOrder.filters.toggleStatus("order", openOrder.orderStatusValues["billed"], 3)' ng-class='{ "active": openOrder.filters.children.indexOf(3) >= 0 }')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": openOrder.orderExportTypeColors["order"] }') cloud_done
 					md-tooltip(md-direction='top')
 						| Pedido faturado
 
-				span(flex)
-
-				.status-filter(ng-click='openOrder.filters.toggleStatus("dav", openOrder.orderStatusValues["exported"], 7)' ng-class='{ "active": openOrder.filters.children.indexOf(7) >= 0 }')
+				.status-filter(ng-click='openOrder.filters.toggleStatus("dav", openOrder.orderStatusValues["exported"], 4)' ng-class='{ "active": openOrder.filters.children.indexOf(4) >= 0 }')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": openOrder.orderExportTypeColors["dav"] }') cloud
 					md-tooltip(md-direction='top') 
 						| Dav exportado
 
-				span(flex)
-
-				.status-filter(ng-click='openOrder.filters.toggleStatus("dav", openOrder.orderStatusValues["billed"], 9)' ng-class='{ "active": openOrder.filters.children.indexOf(9) >= 0 }')
+				.status-filter(ng-click='openOrder.filters.toggleStatus("dav", openOrder.orderStatusValues["billed"], 5)' ng-class='{ "active": openOrder.filters.children.indexOf(5) >= 0 }')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": openOrder.orderExportTypeColors["dav"] }') cloud_done
@@ -228,7 +225,22 @@
 						| Dav faturado
 
 			div(flex layout='row' layout-align='center center')
-				span.md-subhead Orçamentos: {{ filteredList ? filteredList.length : 0 }} &nbsp; Valor total: {{ openOrder.getSum(filteredList) | currency:'R$ '}}
+				span.summary
+					div
+						md-tooltip(md-direction='top') 
+							| Orçamentos
+						i.fa.fa-cubes
+						| {{ filteredList ? filteredList.length : 0 }} &nbsp;
+					div
+						md-tooltip(md-direction='top') 
+							| Valor total
+						i.fa.fa-money
+						| {{ openOrder.getSum(filteredList) | currency:'R$ '}} &nbsp;
+					div
+						md-tooltip(md-direction='top') 
+							| Ticket médio
+						i.fa.fa-bar-chart
+						| {{ filteredList.length ? (openOrder.getSum(filteredList) / filteredList.length) : 0 | currency:'R$ ' }}
 
 			div(flex='30' layout='row' layout-align='end center')
 				md-button.md-icon-button.search-button(ng-click='setSearchOpen(true)')
