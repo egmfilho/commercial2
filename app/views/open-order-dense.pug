@@ -154,8 +154,8 @@
 
 							md-menu-item
 								md-button(ng-click='openOrder.print(o.order_code, true)')
-									md-icon(md-font-icon='fa fa-print')
-									| IMPRIMIR CUPOM
+									md-icon(md-font-set='material-icons') receipt
+									| IMPRIMIR EM CUPOM
 
 							md-menu-item
 								md-button(ng-click='openOrder.mail(o.order_code)')
@@ -171,7 +171,7 @@
 
 							md-menu-item
 								md-button(ng-click='delete(o)')
-									md-icon(md-font-icon='fa fa-remove')
+									md-icon(md-font-set='material-icons') delete_forever
 									| APAGAR
 
 	.search-container(layout='row' ng-class='{ "opened": isSearchOpened }')
