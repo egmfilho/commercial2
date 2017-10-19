@@ -55,7 +55,7 @@
 					customer: success.data.data.person_category.client_category
 				});
 
-				Globals.set('api', success.data.data.api);
+				// Globals.set('api', success.data.data.api);
 				Globals.set('contact-types', success.data.data.person_address_contact_type);
 				Globals.set('logo', success.data.data.logo);
 				Globals.set('print-message', success.data.data.order);
@@ -103,7 +103,9 @@
 			Globals.set('default-person-type', 'F');
 			Globals.set('default-icms-type', { code: 2, value: 'ISENTO' });
 			Globals.set('elective-icms-type', { code: 9 });
+
 			Globals.set('public-place-types', [ 'AV', 'EST', 'PC', 'R', 'RUA', 'ROD' ]);
+
 			Globals.set('obsFlag', '\n\nObs. de Entrega: ');
 
 			Globals.set('order-status-labels', {
