@@ -355,14 +355,14 @@
 				border: 1px solid transparent;
 
 				&.active {
-					background-color: $main-color-lighter;
-					color: white;
-					box-shadow: 0 0 4px rgba(#000, .4);
-					// border: 1px solid $main-color-lighter;
+					// background-color: $main-color-lighter;
+					// color: white;
+					box-shadow: 0 0 5px rgba(#000, .7);
+					border: 1px solid $main-color-lighter;
 				}
 
 				&:hover {
-					// background-color: whitesmoke;
+					background-color: #ccc;
 					border: 1px solid $main-color-lighter;
 				}
 

@@ -27,27 +27,28 @@
 
 			self.filters = {
 				query: '',
-				status: '',
-				exportType: '',
-				setStatus: function(exportType, status, child) {
-					jQuery('.filters .status-filter').removeClass('active');
+				types: [],
+				children: [],
+				toggleStatus: function(exportType, status, child) {
+					var statype = status.toString() + exportType;
 
-					if (status == self.filters.status && exportType == self.filters.exportType) {
-						self.filters.status = '';
-						self.filters.exportType = '';
-					} else {
-						self.filters.status = status;
-						self.filters.exportType = exportType;
-						jQuery('.filters .status-filter:nth-child(' + child + ')').addClass('active');
-					}
+					// Statipo
+					if (self.filters.types.indexOf(statype) < 0)
+						self.filters.types.push(statype);
+					else
+						self.filters.types.splice(self.filters.types.indexOf(statype), 1);
+
+					// Elemento
+					if (self.filters.children.indexOf(child) < 0)
+						self.filters.children.push(child);
+					else
+						self.filters.children.splice(self.filters.children.indexOf(child), 1);
 				},
-				jumanji: function(order) {
-					if (self.filters.status.indexOf(order.order_status_id) >= 0 && 
-					    self.filters.exportType.indexOf(order.order_export_type) >= 0) {
+				cerol: function(order) {
+					if (!self.filters.types.length) 
 						return true;
-					}
-
-					return false;
+						
+					return self.filters.types.indexOf(order.order_statype) >= 0;
 				}
 			};
 
@@ -219,6 +220,7 @@
 							order_code_erp: order.order_code_erp_list,
 							order_status_id: order.order_status_id,
 							order_export_type: order.order_export_type_list,
+							order_statype: order.order_status_id.toString() + order.order_export_type_list,
 							order_value_total: order.order_value_total,
 							order_value_st: order.order_value_st,
 							order_value_total_plus_st_formatted: $filter('currency')(order.order_value_total + order.order_value_st, 'R$ '),

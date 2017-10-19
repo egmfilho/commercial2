@@ -123,7 +123,7 @@
 
 	div(flex)
 		md-virtual-repeat-container#virtual-repeat-container
-			.repeated-item(layout='row' layout-align='start center' md-virtual-repeat='o in (filteredList = (openOrder.orders | orderBy:openOrder.grid.propertyName:openOrder.grid.reverse | filter: { queryable: openOrder.filters.query, order_status_id: openOrder.filters.status, order_export_type: openOrder.filters.exportType }))' ng-dblclick='open(o)')
+			.repeated-item(layout='row' layout-align='start center' md-virtual-repeat='o in (filteredList = (openOrder.orders | orderBy:openOrder.grid.propertyName:openOrder.grid.reverse | filter: { queryable: openOrder.filters.query } | filter:openOrder.filters.cerol))' ng-dblclick='open(o)')
 				span &nbsp;
 					i.material-icons(ng-style='{ "color": o.cloudColor}' ng-class='{ "cloud-open": o.isOpen, "cloud-exported": o.isExported, "cloud-billed": o.isBilled }') &nbsp;
 				span {{o.order_code}}
@@ -156,7 +156,7 @@
 	md-toolbar.info(layout='column')
 		.md-toolbar-tools(flex layout='row' layout-fill)
 			.filters(flex='30' layout='row' layout-align='start')
-				.status-filter(ng-click='openOrder.filters.setStatus("open", openOrder.orderStatusValues["open"], 1)')
+				.status-filter(ng-click='openOrder.filters.toggleStatus("open", openOrder.orderStatusValues["open"], 1)' ng-class='{ "active": openOrder.filters.children.indexOf(1) >= 0 }')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": openOrder.orderExportTypeColors["open"] }') cloud_queue
@@ -165,7 +165,7 @@
 		
 				span(flex)
 
-				.status-filter(ng-click='openOrder.filters.setStatus("order", openOrder.orderStatusValues["exported"], 3)')
+				.status-filter(ng-click='openOrder.filters.toggleStatus("order", openOrder.orderStatusValues["exported"], 3)' ng-class='{ "active": openOrder.filters.children.indexOf(3) >= 0 }')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": openOrder.orderExportTypeColors["order"] }') cloud
@@ -174,7 +174,7 @@
 
 				span(flex)
 
-				.status-filter(ng-click='openOrder.filters.setStatus("order", openOrder.orderStatusValues["billed"], 5)')
+				.status-filter(ng-click='openOrder.filters.toggleStatus("order", openOrder.orderStatusValues["billed"], 5)' ng-class='{ "active": openOrder.filters.children.indexOf(5) >= 0 }')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": openOrder.orderExportTypeColors["order"] }') cloud_done
@@ -183,7 +183,7 @@
 
 				span(flex)
 
-				.status-filter(ng-click='openOrder.filters.setStatus("dav", openOrder.orderStatusValues["exported"], 7)')
+				.status-filter(ng-click='openOrder.filters.toggleStatus("dav", openOrder.orderStatusValues["exported"], 7)' ng-class='{ "active": openOrder.filters.children.indexOf(7) >= 0 }')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": openOrder.orderExportTypeColors["dav"] }') cloud
@@ -192,7 +192,7 @@
 
 				span(flex)
 
-				.status-filter(ng-click='openOrder.filters.setStatus("dav", openOrder.orderStatusValues["billed"], 9)')
+				.status-filter(ng-click='openOrder.filters.toggleStatus("dav", openOrder.orderStatusValues["billed"], 9)' ng-class='{ "active": openOrder.filters.children.indexOf(9) >= 0 }')
 					md-icon(
 						md-font-set='material-icons' 
 						ng-style='{ "color": openOrder.orderExportTypeColors["dav"] }') cloud_done
