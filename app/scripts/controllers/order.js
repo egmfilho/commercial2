@@ -504,11 +504,12 @@
 
 			self.searchTerm();
 
-			if (!!$routeParams.action && $routeParams.action == 'edit') {
-				if (!$routeParams.param) {
-					$location.path('/');
-				}
-
+			/************** 
+			 * EDIT
+			 * CLONE
+			 * NEW
+			 **************/
+			if (!!$routeParams.action && $routeParams.action == 'edit' && !!$routeParams.param) {
 				var options = {
 					getCompany: true,
 					getUser: true,
@@ -570,6 +571,80 @@
 						});
 					$rootScope.loading.unload();
 				});
+			} else if (!!$routeParams.action && $routeParams.action == 'clone' && !!$routeParams.param) {
+				var options = {
+					getCompany: true,
+					getCustomer: true,
+					getCreditLimit: true,
+					getSeller: true,
+					getItems: true,
+					getPayments: true
+				}, code = $routeParams.param;
+
+				console.log(code);
+
+				$rootScope.loading.load();
+				providerOrder.getByCode(code, options).then(function(success) {
+					var temp = new Order(success.data);
+					temp.order_id = null;
+					temp.order_erp_id = null;
+					temp.order_user_id = null;
+					temp.order_status_id = Globals.get('order-status-values')['open'];
+					temp.order_term_id = null;
+					temp.order_origin_id = null;
+					temp.order_code = null;
+					temp.order_code_erp = null;
+					temp.order_code_document = null;
+					temp.order_mail_sent = [];
+					temp.order_update = null;
+					temp.order_date = null;
+					temp.creditPayment = null;
+					temp.order_audit = null;
+					temp.order_credit = null;
+					temp.order_value_icms = null;
+					temp.order_value_st = null;
+					temp.status = null;
+					temp.order_audit_discounts = [];
+
+					if (success.data.order_credit === 'Y') {
+						temp.order_payments.shift();
+					}
+
+					temp.order_payments = temp.order_payments.map(function(p) {
+						p.order_payment_id = null;
+						p.order_id = null;
+						p.order_payment_erp_id = null;
+
+						return p;
+					});
+
+					self.budget = new Order(temp);
+					self.recalcPayments();
+
+					if (constants.isElectron)
+						_remote.getCurrentWindow().setTitle('Novo orçamento');
+					$rootScope.titleBarText = 'Novo orçamento';
+
+					$scope.isDisabled = false;
+					self.internal.flags.showInfo = true;
+
+					/* copia os valores para as variaveis temporarias dos autocompletes */
+					self.internal.tempSeller = new Person(self.budget.order_seller);
+					self.internal.tempCustomer = new Person(self.budget.order_client);
+
+					/* copia o endereco de entrega para o corpo do orcamento */
+					self.budget.address_delivery = new Address(self.budget.order_client.person_address.find(function(a) {
+						return a.person_address_code == self.budget.order_address_delivery_code;
+					}));
+
+					$rootScope.loading.unload();
+				}, function(error) {
+					console.error(error);
+					$rootScope.loading.unload();
+				});
+
+				/* Cria uma copia de backup para saber se o orcamento foi modificado no final */
+				_backup = new Order(self.budget);
 			} else if (!!$routeParams.action && $routeParams.action == 'new') {
 				if (constants.isElectron)
 					_remote.getCurrentWindow().setTitle('Novo orçamento');
@@ -598,64 +673,6 @@
 				// 	self.budget.setSeller(new Person(Globals.get('user')['user_seller']));
 				// 	self.internal.tempSeller = new Person(Globals.get('user')['user_seller']);
 				// }
-
-				/* Cria uma copia de backup para saber se o orcamento foi modificado no final */
-				_backup = new Order(self.budget);
-			} else if (!!$routeParams.action && $routeParams.action == 'clone') {
-				if (!$routeParams.param) {
-					$location.path('/');
-				}
-
-				var options = {
-					getCompany: true,
-					getCustomer: true,
-					getCreditLimit: true,
-					getSeller: true,
-					getItems: true
-				}, code = $routeParams.param;
-
-				console.log(code);
-
-				$rootScope.loading.load();
-				providerOrder.getByCode(code, options).then(function(success) {
-					var temp = new Order(success.data);
-					temp.order_id = null;
-					temp.order_erp_id = null;
-					temp.order_user_id = null;
-					temp.order_status_id = Globals.get('order-status-values')['open'];
-					temp.order_term_id = null;
-					temp.order_origin_id = null;
-					temp.order_code = null;
-					temp.order_code_erp = null;
-					temp.order_code_document = null;
-					temp.order_mail_sent = new Array();
-					temp.order_update = null;
-					temp.order_date = null;
-					temp.order_payments = new Array();
-					temp.creditPayment = null;
-					temp.order_audit = null;
-					temp.order_credit = null;
-					temp.order_value_icms = null;
-					temp.order_value_st = null;
-					temp.status = null;
-					temp.order_audit_discounts = new Array();
-
-					self.budget = new Order(temp);
-
-					/* copia os valores para as variaveis temporarias dos autocompletes */
-					self.internal.tempSeller = new Person(self.budget.order_seller);
-					self.internal.tempCustomer = new Person(self.budget.order_client);
-
-					/* copia o endereco de entrega para o corpo do orcamento */
-					self.budget.address_delivery = new Address(self.budget.order_client.person_address.find(function(a) {
-						return a.person_address_code == self.budget.order_address_delivery_code;
-					}));
-
-					$rootScope.loading.unload();
-				}, function(error) {
-					console.error(error);
-					$rootScope.loading.unload();
-				});
 
 				/* Cria uma copia de backup para saber se o orcamento foi modificado no final */
 				_backup = new Order(self.budget);
