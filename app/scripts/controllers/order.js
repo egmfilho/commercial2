@@ -1737,7 +1737,7 @@
 			};
 
 			if (constants.isElectron) {
-				var win = ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=pdf', options);
+				var win = ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '/pdf', options);
 
 				$scope.$watch(function() {
 					return win.isVisible();
@@ -1748,7 +1748,7 @@
 				});
 			} else {
 				deferred.resolve();
-				$location.path('/order/print/' + self.budget.order_code);
+				$location.path('/order/print/' + self.budget.order_code + '/pdf');
 			}
 
 			return deferred.promise();
@@ -1771,7 +1771,7 @@
 					}
 				};
 
-				var win = ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=print', options);
+				var win = ElectronWindow.createWindow('#/order/print/' + self.budget.order_code, options);
 
 				deferred.resolve();
 			}

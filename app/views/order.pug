@@ -8,7 +8,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 			md-menu-bar.order-menu-bar
 				md-menu
 					button(ng-click='$mdMenu.open()') Arquivo
-					md-menu-content
+					md-menu-content.order-menu-content
 						md-menu-item
 							md-button(ng-click='newOrder()')
 								md-icon(md-font-icon='fa fa-file-o')
@@ -61,7 +61,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								|  Fechar
 				md-menu
 					button(ng-click='$mdMenu.open()') Orçamento
-					md-menu-content
+					md-menu-content.order-menu-content
 						//- md-menu-item
 							md-button(ng-click='order.selectCompany()' ng-disabled='!order.canChangeCompany() || order.isToolbarLocked()')
 								md-icon(md-font-set='material-icons') business
@@ -95,7 +95,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								| Aplicar desconto geral
 				md-menu
 					button(ng-click='$mdMenu.open()' ng-disabled='order.isToolbarLocked()') Ir
-					md-menu-content
+					md-menu-content.order-menu-content
 						md-menu-item
 							md-button(ng-click='order.scrollTo("section[name=\'products\']")')
 								| Produtos
@@ -110,7 +110,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								span.md-alt-text {{ 'M-3' | keyboardShortcut }}
 				md-menu
 					button(ng-click='$mdMenu.open()') Ajuda
-					md-menu-content
+					md-menu-content.order-menu-content
 						md-menu-item
 							md-button(ng-click='toast("Aviso!", "Em breve.")')
 								| Sobre
