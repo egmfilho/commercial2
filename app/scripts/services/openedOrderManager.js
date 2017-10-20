@@ -1,8 +1,8 @@
 /*
- * @Author: egmfilho
- * @Date:   2017-10-13 08:58:03
+ * @Author: egmfilho <egmfilho@live.com>
+ * @Date:   2017-10-17 09:42:03
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 14:09:18
+ * @Last Modified time: 2017-10-20 17:14:37
  */
 
 (function() {

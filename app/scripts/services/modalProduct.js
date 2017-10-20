@@ -1,3 +1,10 @@
+/*
+ * @Author: alessandro
+ * @Date: 2017-10-20 17:12:56 
+ * @Last Modified by:   egmfilho 
+ * @Last Modified time: 2017-10-20 17:12:56 
+ */
+
 (function() {
 
 	'use strict';
