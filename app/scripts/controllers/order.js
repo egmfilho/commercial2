@@ -2,7 +2,7 @@
  * @Author: egmfilho
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 13:59:42
+ * @Last Modified time: 2017-10-20 15:10:01
 */
 
 (function() {
@@ -2599,6 +2599,7 @@
 					var scope = this;
 
 					this._showCloseButton= true;
+					this.isEditing = !!payment;
 					this.modality = payment ? new PaymentModality(payment.modality) : null;
 					this.payment = payment ? new OrderPayment(payment) : new OrderPayment({
 						order_payment_value: self.budget.getChange(),
@@ -2624,7 +2625,8 @@
 						providerModality.getById(id, options).then(function(success) {
 							scope.queryModality = '';
 							scope.payment.setModality(new PaymentModality(success.data));
-							scope.payment.order_payment_deadline = moment().add(scope.payment.modality.modality_item[0].modality_item_delay, 'days').toDate();
+							if (!scope.isEditing)
+								scope.payment.order_payment_deadline = moment().add(scope.payment.modality.modality_item[0].modality_item_delay, 'days').toDate();
 							
 							/* Limpa os campos exclusivos do cheque quando troca o tipo da modalidade*/
 							if (!scope.isCheck()) {
