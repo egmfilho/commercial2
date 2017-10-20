@@ -465,11 +465,24 @@
 
 		function filterBudget() {
 			return angular.merge({ }, self.budget, {
+				address_delivery: null,
 				order_address: null,
 				order_client: null,
 				order_company: null,
 				order_mail_sent: null,
-				order_seller: null
+				order_seller: null,
+				order_user: null,
+				queryable: null,
+				order_items: self.budget.order_items.map(function(i) {
+					i.price = null;
+					i.product = null;
+					i.user_price = null;
+					return i;
+				}),
+				order_payments: self.budget.order_payments.map(function(p) {
+					p.modality = null;
+					return p;
+				})
 			});
 		}
 
@@ -3018,16 +3031,20 @@
 				var scope = this;
 
 				this.calcDiscountByAl = function(){
-					if( scope.check()){
-						scope.vl_discount = self.budget.order_value * (scope.al_discount/100);
-						// self.focusOn('input[name="vl-discount"]');
-					}
+					$timeout(function() {
+						if( scope.check()){
+							scope.vl_discount = self.budget.order_value * (scope.al_discount/100);
+							// self.focusOn('button[name="sendDiscount"]');
+						}
+					});
 				}
 				this.calcDiscountByVl = function(){
-					scope.al_discount = (scope.vl_discount*100)/self.budget.order_value;
-					if( scope.check()){
-						// self.focusOn('button[name="sendDiscount"]');
-					}
+					$timeout(function() {
+						scope.al_discount = (scope.vl_discount*100)/self.budget.order_value;
+						if( scope.check()){
+							// self.focusOn('button[name="sendDiscount"]');
+						}
+					});
 				}
 				this.check = function(){
 					if( scope.al_discount < 0 || scope.al_discount > scope.user.user_max_discount ){
