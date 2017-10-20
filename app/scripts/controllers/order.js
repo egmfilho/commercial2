@@ -475,7 +475,13 @@
 			return angular.merge({ }, self.budget, {
 				address_delivery: null,
 				order_address: null,
-				order_client: null,
+				order_client: {
+					person_active: null,
+					person_address: null,
+					person_credit: null,
+					person_credit_limit: null,
+					queryable: null
+				},
 				order_company: null,
 				order_mail_sent: null,
 				order_seller: null,
@@ -633,6 +639,12 @@
 					temp.order_value_st = null;
 					temp.status = null;
 					temp.order_audit_discounts = [];
+
+					temp.order_items = temp.order_items.map(function(i) {
+						i.order_item_al_discount = 0;
+						i.order_item_vl_discount = 0;
+						return i;
+					});
 
 					if (success.data.order_credit === 'Y') {
 						temp.order_payments.shift();
@@ -3029,7 +3041,7 @@
 		 */
 		function showModalDiscount() {
 			var _user = Globals.get('user'),
-				controller;
+				controller, authorizedBy;
 
 			controller = function() {
 				this.user = _user;
@@ -3041,48 +3053,43 @@
 
 				this.calcDiscountByAl = function(){
 					$timeout(function() {
-						if( scope.check()){
-							scope.vl_discount = self.budget.order_value * (scope.al_discount/100);
-							// self.focusOn('button[name="sendDiscount"]');
-						}
+						scope.vl_discount = self.budget.order_value * (scope.al_discount/100);
 					});
 				}
 				this.calcDiscountByVl = function(){
 					$timeout(function() {
 						scope.al_discount = (scope.vl_discount*100)/self.budget.order_value;
-						if( scope.check()){
-							// self.focusOn('button[name="sendDiscount"]');
-						}
 					});
-				}
-				this.check = function(){
-					if( scope.al_discount < 0 || scope.al_discount > scope.user.user_max_discount ){
-						scope.al_discount = 0;
-						scope.vl_discount = 0;
-						return false;
-					}
-					return true;
-				}
-
-
-				/* metodos para autorizacao do desconto */
-				this.authorize = function() {
-					return authorizationDialog('Autorização de desconto', 'mensagem', 'order', 'user_discount');
 				}
 
 				this.confirm = function() {
-					this.authorize().then(function() {
+					if (scope.al_discount < 0) return;
+					
+					if (scope.al_discount > scope.user.user_max_discount) {
+						authorizationDialog('Autorização de desconto', 'mensagem', 'order', 'user_discount').then(function(success) {
+							if (success.user_max_discount >= scope.al_discount) {
+								authorizedBy = success;
+
+								scope._close({
+									al_discount: scope.al_discount, 
+									vl_discount: scope.vl_discount
+								});
+							} else {
+								$rootScope.customDialog().showMessage('Erro', 'Não autorizado!');
+							}
+						}, function(error) {
+							deferred.reject(error);
+						});
+					} else {
 						scope._close({
 							al_discount: scope.al_discount, 
 							vl_discount: scope.vl_discount
 						});
-					}, function() {
-						$rootScope.showConfirm('Não autorizado!');
-					});
+					}
 				}
 			};
 
-			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalDiscount.html', controller, { width: 240, zIndex: 1 })
+			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalDiscount.html', controller, { width: 240, zIndex: 1, escapeToClose: false })
 				.then(function(success) {
 					var total = self.budget.order_value_total;
 
@@ -3094,8 +3101,8 @@
 						title: 'Desconto geral',
 						al_discount: success.al_discount,
 						vl_discount: success.vl_discount,
-						user_id: _user.user_id,
-						user_name: _user.user_name,
+						user_id: authorizedBy.user_id,
+						user_name: authorizedBy.user_name,
 						person_name: self.budget.order_client && self.budget.order_client.person_name,
 						person_code: self.budget.order_client && self.budget.order_client.person_code,
 						date: moment().tz('America/Sao_Paulo').toDate()

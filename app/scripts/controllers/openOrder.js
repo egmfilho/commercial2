@@ -28,7 +28,8 @@
 					reverse: true
 				};
 				
-				$rootScope.openOrderFilters.seller = new Person(Globals.get('user')['user_seller']);;
+				if (Globals.get('user')['user_seller'].person_id)
+					$rootScope.openOrderFilters.seller = new Person(Globals.get('user')['user_seller']);
 				$rootScope.openOrderFilters.companyId = Globals.get('user').user_company[0].company_id;
 				
 				$rootScope.openOrderFilters.calendars = {};
@@ -166,7 +167,7 @@
 				}
 
 				if (constants.isElectron)
-					ElectronWindow.createWindow('#/order/clone/' + order.order_code, options);
+					ElectronWindow.createWindow('#/order/clone/' + order.order_code);
 				else
 					$location.path('/order/clone/' + order.order_code);
 			};

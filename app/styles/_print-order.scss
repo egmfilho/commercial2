@@ -6,10 +6,18 @@
 */
 
 .print-window {
+	.md-fab {
+		display: none;
+	}
+
 	@media only screen {
 		margin: 32px;
 		border: 32px solid white;
 		box-shadow: 0 0 10px rgba(#000, .5);
+		
+		.md-fab {
+			display: block;
+		}	
 	}
 }
 
