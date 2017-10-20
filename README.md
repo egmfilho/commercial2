@@ -48,5 +48,6 @@ Cria o app dentro da pasta `<projeto>/releases/Commercial-linux-x64`
 npm run build-linux
 ```
 
+###
 
-Por egmfilho@me.com 2017
+egmfilho@me.com
