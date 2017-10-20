@@ -50,4 +50,4 @@ npm run build-linux
 
 ###
 
-egmfilho@me.com
+egmfilho@live.com
