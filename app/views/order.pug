@@ -191,22 +191,32 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 	.order-container(disable-all='isDisabled')
 		//- Info
 		section(name='info' ng-if='order.isExported()' ng-cloak)
-			md-card(layout-align='center')
-				md-card-content.offset-top-5
-					.offset-top-5(layout='row' layout-align='center center')
-						p 
-							b &nbsp;Status: 
-							| {{::order.internal.orderStatusLabels[order.budget.order_status_id]}}
-							b &nbsp;Cód. ERP: 
-							| {{::order.budget.order_code_erp || 'Indisponível'}}
-							b &nbsp;Documento: 
-							| {{::order.budget.order_code_document || 'Indisponível'}}
+			md-card.info-card
+				md-card-content(layout='row' layout-align='start center')
+					div(flex='10')
+						i.material-icons info
+
+					.text-center(flex)
+						b Status: 
+						| {{::order.internal.orderStatusLabels[order.budget.order_status_id]}}
+						b Cód. ERP: 
+						| {{::order.budget.order_code_erp || 'Indisponível'}}
+						b Documento: 
+						| {{::order.budget.order_code_document || 'Indisponível'}}
+
+					div(flex='10')
 
 		section(name='company')
-			md-card(layout-align='center')
-				md-card-content.offset-top-5
-					.offset-top-5(layout='row' layout-align='center center')
-						h3 Empresa: {{order.budget.order_company_id ? (order.budget.order_company.company_code + ' - ' + order.budget.order_company.company_name) : 'Não informado.'}}
+			md-card.info-card
+				md-card-content(layout='row' layout-align='start center')
+					div(flex='10')
+						i.material-icons info
+					
+					.text-center(flex)
+						b Empresa: 
+						| {{order.budget.order_company_id ? (order.budget.order_company.company_code + ' - ' + order.budget.order_company.company_name) : 'Não informado.'}}
+					
+					div(flex='10')
 
 		//- Produtos					
 		section(name='products')

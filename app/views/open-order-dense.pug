@@ -182,7 +182,8 @@
 	.search-container(layout='row' ng-class='{ "opened": isSearchOpened }')
 		span(flex)
 		.search
-			input(type='text' placeholder='Pesquisar' ng-model='tempFilter' keys-shortcuts escape='setSearchOpen(false)' enter='openOrderFilters.filters.query = tempFilter')
+			//- input(type='text' placeholder='Pesquisar' ng-model='tempFilter' keys-shortcuts escape='setSearchOpen(false)' enter='openOrderFilters.filters.query = tempFilter')
+			input(type='text' placeholder='Pesquisar' ng-model='openOrderFilters.filters.query' keys-shortcuts escape='setSearchOpen(false)')
 			a(ng-click='setSearchOpen(false)')
 				i.fa.fa-remove
 

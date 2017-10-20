@@ -4,7 +4,7 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('OpenedOrderManager', ['Globals', 'Constants', function(Globals) {
+		.factory('OpenedOrderManager', ['Globals', 'Constants', function(Globals, constants) {
 
 			var _key = 'opened-orders';
 
@@ -17,8 +17,8 @@
 					array.push(code);
 					Globals.set(_key, array);
 
-					console.log('Orcamento aberto: ' + code);
-					console.log('Total: ' + array.length);
+					constants.debug && console.log('Orcamento aberto: ' + code);
+					constants.debug && console.log('Total: ' + array.length);
 				}
 			}
 
@@ -30,8 +30,8 @@
 					array.splice(index, 1);
 					Globals.set(_key, array);
 
-					console.log('Orcamento fechado: ' + code);
-					console.log('Total: ' + array.length);
+					constants.debug && console.log('Orcamento fechado: ' + code);
+					constants.debug && console.log('Total: ' + array.length);
 				}
 			}
 
@@ -43,10 +43,10 @@
 				var array = Globals.get(_key);
 				
 				if (!array || !array.length) {
-					console.log(array, code, false);
+					constants.debug && console.log(array, code, false);
 					return false;
 				} else {
-					console.log(array, code, array.indexOf(code));
+					constants.debug && console.log(array, code, array.indexOf(code));
 					return array.indexOf(code) >= 0;
 				}
 			}

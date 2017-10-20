@@ -110,6 +110,29 @@
 	max-width: $max-document-width;
 	margin: 0 auto;
 
+	.info-card {
+		md-card-content {
+			padding: 10px;
+			color: $main-color;
+			text-transform: uppercase;
+
+			.material-icons, .fa {
+				font-size: 30px;
+			}
+
+			b {
+				color: $secondary-color;
+
+				margin-left: 16px;
+				margin-right: 5px;
+
+				&:first-child {
+					margin-left: 0;
+				}
+			}
+		}
+	}
+
 	md-card {	
 		font-size: .9em;
 
