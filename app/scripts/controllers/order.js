@@ -477,9 +477,8 @@
 			if (constants.isElectron) {
 				unbindKeys();
 			}
-			
-			$location.search('code', null);
-			$location.search('company', null);
+
+			$location.search('source', null);
 		});
 
 		$scope.isLocked = function(target) {
@@ -488,7 +487,14 @@
 		};
 
 		$scope.clone = function() {
-			$location.path('/order/new').search('code', self.budget.order_code);
+			if (!self.canSave()) {
+				$location.path('/order/clone/' + self.budget.order_code);
+			} else {
+				$rootScope.customDialog().showConfirm('Aviso', 'As alterações serão perdidas, deseja continuar?')
+					.then(function(success) {
+						$location.path('/order/clone/' + self.budget.order_code);
+					}, function(error) { });
+			}
 		};
 
 		$scope.$on('$viewContentLoaded', function() {
@@ -504,11 +510,12 @@
 
 			self.searchTerm();
 
-			if (!!$routeParams.action && $routeParams.action == 'edit') {
-				if (!$routeParams.code) {
-					$location.path('/');
-				}
-
+			/************** 
+			 * EDIT
+			 * CLONE
+			 * NEW
+			 **************/
+			if (!!$routeParams.action && $routeParams.action == 'edit' && !!$routeParams.param) {
 				var options = {
 					getCompany: true,
 					getUser: true,
@@ -523,7 +530,7 @@
 				};
 
 				$rootScope.loading.load();
-				providerOrder.getByCode($routeParams.code, options).then(function(success) {
+				providerOrder.getByCode($routeParams.param, options).then(function(success) {
 					self.budget = new Order(success.data);
 					OpenedOrderManager.add(self.budget.order_code);
 
@@ -570,6 +577,81 @@
 						});
 					$rootScope.loading.unload();
 				});
+			} else if (!!$routeParams.action && $routeParams.action == 'clone' && !!$routeParams.param) {
+				var options = {
+					getCompany: true,
+					getCustomer: true,
+					getCreditLimit: true,
+					getSeller: true,
+					getItems: true,
+					getProductStock: true,
+					getPayments: true
+				}, code = $routeParams.param;
+
+				console.log(code);
+
+				$rootScope.loading.load();
+				providerOrder.getByCode(code, options).then(function(success) {
+					var temp = new Order(success.data);
+					temp.order_id = null;
+					temp.order_erp_id = null;
+					temp.order_user_id = null;
+					temp.order_status_id = Globals.get('order-status-values')['open'];
+					temp.order_term_id = null;
+					temp.order_origin_id = null;
+					temp.order_code = null;
+					temp.order_code_erp = null;
+					temp.order_code_document = null;
+					temp.order_mail_sent = [];
+					temp.order_update = null;
+					temp.order_date = null;
+					temp.creditPayment = null;
+					temp.order_audit = null;
+					temp.order_credit = null;
+					temp.order_value_icms = null;
+					temp.order_value_st = null;
+					temp.status = null;
+					temp.order_audit_discounts = [];
+
+					if (success.data.order_credit === 'Y') {
+						temp.order_payments.shift();
+					}
+
+					temp.order_payments = temp.order_payments.map(function(p) {
+						p.order_payment_id = null;
+						p.order_id = null;
+						p.order_payment_erp_id = null;
+
+						return p;
+					});
+
+					self.budget = new Order(temp);
+					self.recalcPayments();
+
+					if (constants.isElectron)
+						_remote.getCurrentWindow().setTitle('Novo orçamento');
+					$rootScope.titleBarText = 'Novo orçamento';
+
+					$scope.isDisabled = false;
+					self.internal.flags.showInfo = true;
+
+					/* copia os valores para as variaveis temporarias dos autocompletes */
+					self.internal.tempSeller = new Person(self.budget.order_seller);
+					self.internal.tempCustomer = new Person(self.budget.order_client);
+
+					/* copia o endereco de entrega para o corpo do orcamento */
+					self.budget.address_delivery = new Address(self.budget.order_client.person_address.find(function(a) {
+						return a.person_address_code == self.budget.order_address_delivery_code;
+					}));
+
+					$rootScope.loading.unload();
+				}, function(error) {
+					console.error(error);
+					$rootScope.loading.unload();
+				});
+
+				/* Cria uma copia de backup para saber se o orcamento foi modificado no final */
+				_backup = new Order(self.budget);
 			} else if (!!$routeParams.action && $routeParams.action == 'new') {
 				if (constants.isElectron)
 					_remote.getCurrentWindow().setTitle('Novo orçamento');
@@ -578,9 +660,9 @@
 				$scope.isDisabled = false;
 				self.internal.flags.showInfo = true;
 
-				if ($routeParams.company) {
+				if ($routeParams.param) {
 					var company = Globals.get('user-companies-raw').find(function(company) {
-						return company.company_id == $routeParams.company;
+						return company.company_id == $routeParams.param;
 					});
 
 					self.budget.setCompany(new UserCompany(company).company_erp);
@@ -601,59 +683,6 @@
 
 				/* Cria uma copia de backup para saber se o orcamento foi modificado no final */
 				_backup = new Order(self.budget);
-
-				if (!!$routeParams.code) {
-					var options = {
-						getCompany: true,
-						getCustomer: true,
-						getCreditLimit: true,
-						getSeller: true,
-						getItems: true
-					}, code = $routeParams.code;
-
-					console.log(code);
-
-					$rootScope.loading.load();
-					providerOrder.getByCode(code, options).then(function(success) {
-						var temp = new Order(success.data)
-						temp.order_id = null;
-						temp.order_erp_id = null;
-						temp.order_user_id = null;
-						temp.order_status_id = Globals.get('order-status-values')['open'];
-						temp.order_term_id = null;
-						temp.order_origin_id = null;
-						temp.order_code = null;
-						temp.order_code_erp = null;
-						temp.order_code_document = null;
-						temp.order_mail_sent = new Array();
-						temp.order_update = null;
-						temp.order_date = null;
-						temp.order_payments = new Array();
-						temp.creditPayment = null;
-						temp.order_audit = null;
-						temp.order_credit = null;
-						temp.order_value_icms = null;
-						temp.order_value_st = null;
-						temp.status = null;
-						temp.order_audit_discounts = new Array();
-
-						self.budget = new Order(temp);
-
-						/* copia os valores para as variaveis temporarias dos autocompletes */
-						self.internal.tempSeller = new Person(self.budget.order_seller);
-						self.internal.tempCustomer = new Person(self.budget.order_client);
-
-						/* copia o endereco de entrega para o corpo do orcamento */
-						self.budget.address_delivery = new Address(self.budget.order_client.person_address.find(function(a) {
-							return a.person_address_code == self.budget.order_address_delivery_code;
-						}));
-
-						$rootScope.loading.unload();
-					}, function(error) {
-						console.error(error);
-						$rootScope.loading.unload();
-					});
-				}
 			} else {
 				$location.path('/');
 			}
@@ -794,6 +823,18 @@
 								switch (res) {
 									case 'print': {
 										self.print().then(function() {
+											if (constants.isElectron) {
+												_ipcRenderer.send('killme', {
+													winId: _remote.getCurrentWindow().id,
+													ttl: 1000
+												});
+											}
+										});
+										break;
+									}
+
+									case 'cupon': {
+										self.print('cupon').then(function() {
 											if (constants.isElectron) {
 												_ipcRenderer.send('killme', {
 													winId: _remote.getCurrentWindow().id,
@@ -1715,7 +1756,7 @@
 			};
 
 			if (constants.isElectron) {
-				var win = ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=pdf', options);
+				var win = ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '/pdf', options);
 
 				$scope.$watch(function() {
 					return win.isVisible();
@@ -1726,7 +1767,7 @@
 				});
 			} else {
 				deferred.resolve();
-				$location.path('/order/print/' + self.budget.order_code);
+				$location.path('/order/print/' + self.budget.order_code + '/pdf');
 			}
 
 			return deferred.promise();
@@ -1735,7 +1776,7 @@
 		/**
 		 * Instancia uma nova janela e chama o dialogo de impressao.
 		 */
-		function print() {
+		function print(type) {
 
 			if (!self.canPrint()) return;
 
@@ -1749,13 +1790,15 @@
 					}
 				};
 
-				var win = ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '?action=print', options);
+				var root = type == 'cupon' ? '#/cupon/' : (type == 'ticket' ? '#/ticket/' : '#/print/'),
+					win = ElectronWindow.createWindow(root + self.budget.order_code, options);
 
 				deferred.resolve();
 			}
 			else {
 				deferred.resolve();
-				$location.path('/order/print/' + self.budget.order_code);
+				var root = type == 'cupon' ? '/cupon/' : (type == 'ticket' ? '/ticket/' : '/print/');
+				$location.path(root + self.budget.order_code);
 			}
 
 			return deferred.promise;
@@ -1882,6 +1925,30 @@
 					switch (res) {
 						case 'print': {
 							self.print().then(function() {
+								if (constants.isElectron) {
+									_ipcRenderer.send('killme', {
+										winId: _remote.getCurrentWindow().id,
+										ttl: 1000
+									});
+								}
+							});
+							break;
+						}
+
+						case 'cupon': {
+							self.print('cupon').then(function() {
+								if (constants.isElectron) {
+									_ipcRenderer.send('killme', {
+										winId: _remote.getCurrentWindow().id,
+										ttl: 1000
+									});
+								}
+							});
+							break;
+						}
+
+						case 'ticket': {
+							self.print('ticket').then(function() {
 								if (constants.isElectron) {
 									_ipcRenderer.send('killme', {
 										winId: _remote.getCurrentWindow().id,
@@ -2187,7 +2254,7 @@
 				focusOnOpen: false,
 			};
 
-			$rootScope.customDialog().showTemplate('Selecionar modalidade', './partials/modalTerm.html', controller, options)
+			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalTerm.html', controller, options)
 				.then(function(success) {
 					self.addModality(success);
 					self.budget.order_term_id = self.internal.term.tempTerm.term_id;
@@ -2306,7 +2373,7 @@
 			// 	return;
 			}
 
-			self.paymentDialog('Adicionar parcela').then(function(success) {
+			self.paymentDialog('Orçamento').then(function(success) {
 				self.clearTerm();
 
 				var payment = new OrderPayment(success);
@@ -2370,7 +2437,7 @@
 				$rootScope.loading.unload();
 				/* coloca no pagamento e manda pro modal */
 				temp.modality = new PaymentModality(success.data);
-				self.paymentDialog('Editar parcela', temp).then(function(success) {
+				self.paymentDialog('Orçamento', temp).then(function(success) {
 					self.clearTerm();
 
 					var index = self.budget.order_payments.indexOf(payment),
@@ -2876,7 +2943,7 @@
 				};
 			};
 
-			$rootScope.customDialog().showTemplate('Informações do Cliente', './partials/modalClientInfo.html', controller, { width: 720 })
+			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalClientInfo.html', controller, { width: 720 })
 				.then(function(success){
 
 				}, function(error) { 
@@ -2928,7 +2995,7 @@
 				this.readonly = $scope.isDisabled;
 			};
 
-			$rootScope.customDialog().showTemplate('Observações do orçamento', './partials/modalNotes.html', controller, { width: 500 })
+			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalNotes.html', controller, { width: 500 })
 				.then(function(success) {
 					self.budget.order_note = success.order_note;
 					self.budget.order_note_doc = success.order_note_doc;
@@ -2989,7 +3056,7 @@
 				}
 			};
 
-			$rootScope.customDialog().showTemplate('Desconto geral do orçamento', './partials/modalDiscount.html', controller, { width: 240, zIndex: 1 })
+			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalDiscount.html', controller, { width: 240, zIndex: 1 })
 				.then(function(success) {
 					var total = self.budget.order_value_total;
 
@@ -3169,10 +3236,10 @@
 									}
 								};
 
-								ElectronWindow.createWindow('#/order/edit?code=' + self.budget.order_code, options);
+								ElectronWindow.createWindow('#/order/edit/' + self.budget.order_code, options);
 							}
 							else {
-								$location.path('/order/edit?code=' + self.budget.order_code);
+								$location.path('/order/edit/' + self.budget.order_code).search('source', 'recover');
 							}
 							$timeout(function() {
 								window.close();

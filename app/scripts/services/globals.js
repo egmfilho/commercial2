@@ -9,7 +9,7 @@
 
 	'use strict';
 
-	angular.module('commercial2.fandangos')
+	angular.module('commercial2.services')
 		.service('Globals', Globals);
 
 	Globals.$inject = [ '$q', 'Constants' ];

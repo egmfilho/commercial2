@@ -73,7 +73,6 @@ function shutdown() {
 	window.location.href = window.location.href.split('#')[0] + '#/logout';
 }
 
-angular.module('commercial2.fandangos', [ ]);
 angular.module('commercial2.constants', [ ]);
 angular.module('commercial2.filters', [ ]);
 angular.module('commercial2.services', [ ]);
@@ -92,7 +91,6 @@ angular.module('commercial2', [
 		'egmfilho.inputFilters',
 		'ui.mask',
 		'commercial2.constants',
-		'commercial2.fandangos',
 		'commercial2.filters',
 		'commercial2.services',
 		'commercial2.directives',
@@ -270,7 +268,7 @@ angular.module('commercial2', [
 			// 	controller: 'HomeCtrl',
 			// 	controllerAs: 'home'
 			// })
-			.when('/order/:action', {
+			.when('/order/:action/:param?', {
 				module: 'order',
 				templateUrl: 'views/order.html',
 				controller: 'OrderCtrl',
@@ -282,22 +280,22 @@ angular.module('commercial2', [
 				controller: 'OpenOrderCtrl',
 				controllerAs: 'openOrder'
 			})
-			.when('/order/print/:code', {
+			.when('/print/:code/:type?', {
 				templateUrl: 'views/print-order.html',
 				controller: 'PrintOrderCtrl',
 				controllerAs: 'ctrl'
 			})
-			.when('/order/cupon/:code', {
+			.when('/cupon/:code', {
 				templateUrl: 'views/order-cupon.html',
 				controller: 'PrintOrderCtrl',
 				controllerAs: 'ctrl'
 			})
-			.when('/order/ticket/:code', {
+			.when('/ticket/:code', {
 				templateUrl: 'views/order-ticket.html',
 				controller: 'PrintOrderCtrl',
 				controllerAs: 'ctrl'
 			})
-			.when('/order/mail/:code', {
+			.when('/mail/:code', {
 				templateUrl: 'views/mail-order.html',
 				controller: 'MailOrderCtrl',
 				controllerAs: 'ctrl'
@@ -419,7 +417,7 @@ angular.module('commercial2', [
 			if (constants.isElectron && log) {
 				require('electron').ipcRenderer.send('writeLog', { log: log });
 			}
-		}
+		};
 		
 	}])
 	.run(['$location', 'Constants', 'GUID', function($location, constants, GUID) {

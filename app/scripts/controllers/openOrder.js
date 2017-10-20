@@ -27,21 +27,30 @@
 
 			self.filters = {
 				query: '',
-				status: '',
-				exportType: '',
-				setStatus: function(exportType, status, child) {
-					jQuery('.filters .status-filter').removeClass('active');
+				types: [],
+				children: [],
+				toggleStatus: function(exportType, status, child) {
+					var statype = status.toString() + exportType;
 
-					if (status == self.filters.status && exportType == self.filters.exportType) {
-						self.filters.status = '';
-						self.filters.exportType = '';
-					} else {
-						self.filters.status = status;
-						self.filters.exportType = exportType;
-						jQuery('.filters .status-filter:nth-child(' + child + ')').addClass('active');
-					}
+					// Statipo
+					if (self.filters.types.indexOf(statype) < 0)
+						self.filters.types.push(statype);
+					else
+						self.filters.types.splice(self.filters.types.indexOf(statype), 1);
+
+					// Elemento
+					if (self.filters.children.indexOf(child) < 0)
+						self.filters.children.push(child);
+					else
+						self.filters.children.splice(self.filters.children.indexOf(child), 1);
+				},
+				cerol: function(order) {
+					if (!self.filters.types.length) 
+						return true;
+
+					return self.filters.types.indexOf(order.order_statype) >= 0;
 				}
-			}
+			};
 
 			if (constants.isElectron) {
 				Mousetrap = require('mousetrap');
@@ -101,14 +110,14 @@
 				};
 
 				if (constants.isElectron)
-					ElectronWindow.createWindow('#/order/new?company=' + companyId, options);
+					ElectronWindow.createWindow('#/order/new/company' + companyId, options);
 				else
-					$location.path('/order/new').search('company', companyId);
-			}
+					$location.path('/order/new/' + companyId);
+			};
 
 			$scope.open = function(order) {
 				if (OpenedOrderManager.isOpen(order.order_code)) {
-					$rootScope.customDialog().showMessage('Erro', 'Este orçamento encontra-se aberto.');
+					$rootScope.customDialog().showMessage('Erro', 'Este orçamento encontra-se aberto no momento.');
 					return;
 				}
 
@@ -117,12 +126,29 @@
 				};
 
 				if (constants.isElectron)
-					ElectronWindow.createWindow('#/order/edit?code=' + order.order_code, options);
+					ElectronWindow.createWindow('#/order/edit/' + order.order_code, options);
 				else
-					$location.path('/order/edit').search('code', order.order_code);
+					$location.path('/order/edit/' + order.order_code);
+			};
+
+			$scope.clone = function(order) {
+				if (OpenedOrderManager.isOpen(order.order_code)) {
+					$rootScope.customDialog().showMessage('Erro', 'Este orçamento encontra-se aberto no momento.');
+					return;
+				}
+
+				if (constants.isElectron)
+					ElectronWindow.createWindow('#/order/clone/' + order.order_code, options);
+				else
+					$location.path('/order/clone/' + order.order_code);
 			};
 
 			$scope.delete = function(order) {
+				if (OpenedOrderManager.isOpen(order.order_code)) {
+					$rootScope.customDialog().showMessage('Erro', 'Este orçamento encontra-se aberto no momento.');
+					return;
+				}
+
 				$rootScope.customDialog().showConfirm('Aviso', 'Excluir o orçamento <b>' + order.order_code + '</b>?')
 					.then(function(success) {
 						$rootScope.loading.load(null, null, { zIndex: 1 });
@@ -206,15 +232,20 @@
 
 					self.orders = success.data.map(function(order) {
 						var temp = {
+							order_id: order.order_id,
 							order_code: order.order_code,
 							order_code_erp: order.order_code_erp_list,
 							order_status_id: order.order_status_id,
 							order_export_type: order.order_export_type_list,
+							order_statype: order.order_status_id.toString() + order.order_export_type_list,
 							order_value_total: order.order_value_total,
 							order_value_st: order.order_value_st,
 							order_value_total_plus_st_formatted: $filter('currency')(order.order_value_total + order.order_value_st, 'R$ '),
 							order_value_total_plus_st: order.order_value_total + order.order_value_st,
 							order_date_formatted: $filter('date')(new Date(order.order_date), 'dd/MM/yyyy HH:mm'),
+							order_date: new Date(order.order_date),
+							order_update_formatted: order.order_update && $filter('date')(new Date(order.order_update), 'dd/MM/yyyy HH:mm'),
+							order_update: new Date(order.order_update),
 							order_customer_name: order.order_client.person_name,
 							order_seller_name: order.order_seller.person_shortname ? order.order_seller.person_shortname : $filter('truncate')(order.order_seller.person_name, 15, ' '),
 							cloudColor: orderExportTypeColors[order.order_export_type_list],
@@ -293,7 +324,24 @@
 				return providerPerson.getByCode(code, category, options);
 			};
 
-			self.print = function(code) {
+			self.print = function(code, isCupon, isPDF) {
+				var options = {
+					webPreferences: {
+						zoomFactor: 1
+					}
+				}, root, type, url;
+
+				root = isCupon ? '/cupon/' : '/print/';
+				type = isPDF ? '/pdf' : '';
+				url = root + code + type;
+
+				if (constants.isElectron)
+					ElectronWindow.createWindow('#' + url, options);
+				else
+					$location.path(url);
+			};
+
+			self.printTicket = function(code) {
 				var options = {
 					webPreferences: {
 						zoomFactor: 1
@@ -301,9 +349,9 @@
 				};
 
 				if (constants.isElectron)
-					ElectronWindow.createWindow('#/order/print/' + code + '?action=print', options);
+					ElectronWindow.createWindow('#/ticket/' + code, options);
 				else
-					$location.path('/order/print/'+code)
+					$location.path('/ticket/' + code);
 			};
 
 			self.mail = function(code) {
@@ -314,9 +362,9 @@
 				};
 
 				if (constants.isElectron)
-					ElectronWindow.createWindow('#/order/mail/' + code, options);
+					ElectronWindow.createWindow('#/mail/' + code, options);
 				else
-					$location.path('/order/mail/' + code);
+					$location.path('/mail/' + code);
 			};
 
 			self.getSum = function(list) {

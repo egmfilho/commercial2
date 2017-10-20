@@ -28,7 +28,7 @@
 					getByCode: getByCode,
 					getByName: getByName,
 					getByFilter: getByFilter
-				}
+				};
 
 				// ******************************
 				// Methods declaration

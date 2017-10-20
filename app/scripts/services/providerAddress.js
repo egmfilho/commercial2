@@ -27,7 +27,7 @@
 				return {
 					getByPerson: getByPerson,
 					save: save
-				}
+				};
 
 				// ******************************
 				// Methods declaration

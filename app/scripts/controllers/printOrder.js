@@ -19,7 +19,7 @@
 		var self = this;
 		self.order = new Order();
 		self.logo = null;
-		self.isPdf = $location.path().indexOf('print') && $routeParams.action && $routeParams.action == 'pdf';
+		self.isPdf = $location.path().indexOf('print') && $routeParams.type && $routeParams.type == 'pdf';
 
 		$scope.now = new Date();
 		$scope.globals = Globals.get;

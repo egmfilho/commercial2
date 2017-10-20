@@ -16,6 +16,7 @@
 
 	function OrderPayment(PaymentModality) {
 
+		/*jshint validthis:true */
 		function _OrderPayment(payment) {
 			this.order_payment_id                     = null;
 			this.order_payment_erp_id                 = null;
@@ -36,7 +37,7 @@
 			this.order_payment_check_number           = null;
 			this.modality_id                          = null;
 			this.modality                             = new PaymentModality();
-			this.credit                               = new Array();
+			this.credit                               = [];
 
 			if (payment) {
 				Object.assign(this, payment, {

@@ -149,6 +149,24 @@
 	}
 }
 
+md-menu-content.open-order-menu-content {
+	min-height: 338px;
+
+	md-menu-item {
+		min-height: 40px;
+		height: 40px;
+
+		.md-button {
+			color: #666 !important;
+			font-size: 14px;
+		}
+
+		md-icon.material-icons {
+			font-size: 22px;
+		}
+	}
+}
+
 .open-order {
 	.open-order-dense-container {
 		background-color: white;
@@ -184,6 +202,7 @@
 				display: table-cell;
 				color: $main-color;
 				vertical-align: middle;
+				text-transform: uppercase;
 
 				&:nth-child(1) {
 					width: 30px;
@@ -207,13 +226,13 @@
 					width: 10%;
 				}
 
-				&:nth-child(7) {
+				&:nth-child(7), &:nth-child(8) {
 					width: 11%;
 					box-sizing: border-box;
 				}
 
-				&:nth-child(8), &:nth-child(9), &:nth-child(10), &:nth-child(11) {
-					width: 30px;
+				&:nth-child(9) {
+					width: 50px;
 					padding: 0;
 					text-align: center;
 
@@ -255,6 +274,8 @@
 			}
 
 			th, td {
+				padding-left: 0;
+
 				&:nth-child(1) {
 					width: 30px;
 					vertical-align: middle;
@@ -274,12 +295,16 @@
 					width: 12%;
 				}
 
-				&:nth-child(6), &:nth-child(7) {
+				&:nth-child(6) {
 					width: 10%;
 				}
 
-				&:nth-child(8), &:nth-child(9), &:nth-child(10), &:nth-child(11) {
-					width: 30px;
+				&:nth-child(7), &:nth-child(8) {
+					width: 11%;
+				}
+
+				&:nth-child(9) {
+					width: 50px;
 					padding: 0;
 					vertical-align: middle;
 					text-align: center;
@@ -340,6 +365,7 @@
 		box-shadow: 0 0 4px rgba(#000, .3);
 		
 		.md-toolbar-tools {
+
 			.status-filter {
 				padding: 4px;
 				cursor: pointer !important;
@@ -348,16 +374,15 @@
 				border-radius: 4px;
 				transition: box-shadow .5s;
 				border: 1px solid transparent;
+				margin: 0 5px;
 
 				&.active {
-					background-color: $main-color-lighter;
-					color: white;
-					box-shadow: 0 0 4px rgba(#000, .4);
-					// border: 1px solid $main-color-lighter;
+					box-shadow: 0 0 5px rgba(#000, .7);
+					border: 1px solid $main-color-lighter;
 				}
 
 				&:hover {
-					// background-color: whitesmoke;
+					background-color: #ccc;
 					border: 1px solid $main-color-lighter;
 				}
 
@@ -370,6 +395,25 @@
 				.md-subhead {
 					font-size: 14px;
 					cursor: pointer !important;
+				}
+			}
+
+			.summary {
+				font-size: 16px;
+
+				div {
+					display: inline-block;
+					margin: 0 5px;
+					border-radius: 3px;
+					padding: 4px;
+
+					&:hover {
+						background-color: #ccc;
+					}
+
+					.fa {
+						margin-right: 5px;
+					}
 				}
 			}
 

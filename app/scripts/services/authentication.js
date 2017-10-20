@@ -51,13 +51,11 @@
 					require('electron').ipcRenderer.send('shutdown');
 				}
 
-				// providerPersonCredit.order66()
-					// .then(function(success) {
-						$q.all([cookies.clear(), Globals.clear()])
-							.then(function(success) {
-								callback(res);
-							});
-					// });
+				$q.all([cookies.clear(), Globals.clear()])
+					.then(function(success) {
+						callback(res);
+					});
+
 			}, function(res) {
 				constants.debug && console.error(res);
 				callback(res);
