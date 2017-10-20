@@ -11,6 +11,9 @@ block header
 					md-icon(md-font-icon='fa fa-bars' aria-label='Menu')
 				h1 {{titleBarText && titleBarText.length ? titleBarText : 'Commercial - Gestor de vendas'}}
 				span.flex
+				h1
+					i.fa.fa2x.fa-globe &nbsp; 
+					| API: {{apiName}}
 				//- md-menu
 					md-button.md-icon-button(ng-click='$mdMenu.open($event)')
 						md-icon(md-font-icon='fa fa-gear' aria-label='Ajustes')

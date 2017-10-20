@@ -508,7 +508,7 @@ md-tabs.mussum {
 	font-size: 20px;
 	box-sizing: border-box;
 
-	.material-icons, .fa {
+	> .material-icons, > .fa {
 		font-size: 30px;
 		margin-right: 10px;
 	}

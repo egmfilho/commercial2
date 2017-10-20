@@ -454,6 +454,14 @@
 				return false;
 			}
 
+			if (self.budget.order_payments.find(function(p) {
+				return !p.order_payment_value_total || p.order_payment_value_total <= 0;
+			})) {
+				$rootScope.customDialog().showMessage('Erro', 'Não é possível usar pagamentos com valores zerados.');
+				self.scrollTo('section[name="payment"]');
+				return false;
+			}
+
 			if (self.budget.getChange() != 0) {
 				$rootScope.customDialog().showMessage('Erro', 'Reveja os valores dos pagamentos!');
 				self.scrollTo('section[name="payment"]');
@@ -674,6 +682,7 @@
 				self.internal.flags.showInfo = true;
 
 				if ($routeParams.param) {
+					console.log('pegando empresa', $routeParams.param);
 					var company = Globals.get('user-companies-raw').find(function(company) {
 						return company.company_id == $routeParams.param;
 					});
@@ -921,7 +930,7 @@
 							constants.debug && console.log('orcamento salvo', success);
 							self.budget.order_id = success.data.order_id;
 							self.budget.order_code = success.data.order_code;
-							self.budget.order_date = moment().toDate();
+							self.budget.order_date = moment().tz('America/Sao_Paulo').toDate();
 							$rootScope.loading.unload();
 
 							/* Modal de confirmacao */
@@ -1836,13 +1845,13 @@
 					}
 				};
 
-				var win = ElectronWindow.createWindow('#/order/mail/' + self.budget.order_code, options);
+				var win = ElectronWindow.createWindow('#/mail/' + self.budget.order_code, options);
 
 				deferred.resolve();
 			}
 			else {
 				deferred.resolve();
-				$location.path('/order/mail/' + self.budget.order_code);
+				$location.path('/mail/' + self.budget.order_code);
 			}
 
 			return deferred.promise;
@@ -2059,7 +2068,7 @@
 						providerOrder.saveAndExportOrder(filterBudget()).then(function(success) {
 							self.budget.order_id = success.data.order_id;
 							self.budget.order_code = success.data.order_code;
-							self.budget.order_date = moment().toDate();
+							self.budget.order_date = moment().tz('America/Sao_Paulo').toDate();
 							self.budget.order_erp = success.data.budget_code;
 							self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 							$rootScope.loading.unload();
@@ -2157,7 +2166,7 @@
 							$rootScope.loading.unload(success);
 							self.budget.order_id = success.data.order_id;
 							self.budget.order_code = success.data.order_code;
-							self.budget.order_date = moment().toDate();
+							self.budget.order_date = moment().tz('America/Sao_Paulo').toDate();
 							self.budget.order_erp = success.data.budget_code;
 							self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 							
@@ -2296,8 +2305,8 @@
 
 				/* Calcula os vencimentos das parcelas */
 				dateCalc = function(installment, delay, interval) {
-					var date = moment().toDate(),
-						today = moment().toDate(),
+					var date = moment().tz('America/Sao_Paulo').toDate(),
+						today = moment().tz('America/Sao_Paulo').toDate(),
 						installment_delay = installment * interval;
 
 					date.setDate(today.getDate() + delay + installment_delay);
@@ -3089,7 +3098,7 @@
 						user_name: _user.user_name,
 						person_name: self.budget.order_client && self.budget.order_client.person_name,
 						person_code: self.budget.order_client && self.budget.order_client.person_code,
-						date: moment().toDate()
+						date: moment().tz('America/Sao_Paulo').toDate()
 					});
 					
 					self.budget.updateValues();

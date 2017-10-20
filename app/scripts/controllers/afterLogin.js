@@ -16,8 +16,9 @@
 
 	function AfterLogin($rootScope, $scope, $location, $http, $q, $timeout, Globals, Cookies, constants) {
 
+		var api = Globals.api.get();
+		$rootScope.apiName = api.name;
 		if (constants.isElectron) {
-			var api = Globals.api.get();
 			require('electron').remote.getCurrentWindow().setTitle('Commercial - Gestor de Vendas | API: ' + api.name);
 		}
 

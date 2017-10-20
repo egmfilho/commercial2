@@ -20,37 +20,65 @@
 				Mousetrap = null,
 				dateRange = 31;
 
-			self.seller = null;
-			self.companyId = Globals.get('user').user_company[0].company_id;
+			if (!$rootScope.openOrderFilters) {
+				$rootScope.openOrderFilters = { };
+
+				$rootScope.openOrderFilters.grid = {
+					propertyName: 'order_code',
+					reverse: true
+				};
+				
+				$rootScope.openOrderFilters.seller = new Person(Globals.get('user')['user_seller']);;
+				$rootScope.openOrderFilters.companyId = Globals.get('user').user_company[0].company_id;
+				
+				$rootScope.openOrderFilters.calendars = {};
+				$rootScope.openOrderFilters.calendars.start = {
+					isCalendarOpen: false,
+					value: moment().tz('America/Sao_Paulo').toDate(),
+					maxDate: moment().tz('America/Sao_Paulo').toDate(),
+					update: function(){
+						$rootScope.openOrderFilters.calendars.end.value = moment($rootScope.openOrderFilters.calendars.start.value).toDate();
+						$rootScope.openOrderFilters.calendars.end.minDate = moment($rootScope.openOrderFilters.calendars.start.value).toDate();
+						$rootScope.openOrderFilters.calendars.end.maxDate = moment($rootScope.openOrderFilters.calendars.start.value).add(dateRange,'days').toDate();
+					}
+				};
+	
+				$rootScope.openOrderFilters.calendars.end = {
+					isCalendarOpen: false,
+					value: moment().tz('America/Sao_Paulo').toDate(),
+					minDate: moment($rootScope.openOrderFilters.calendars.start.value).toDate(),
+					maxDate: moment($rootScope.openOrderFilters.calendars.start.value).add(dateRange,'days').toDate()
+				};
+
+				$rootScope.openOrderFilters.filters = {
+					query: '',
+					types: [],
+					children: [],
+					toggleStatus: function(exportType, status, child) {
+						var statype = status.toString() + exportType;
+	
+						// Statipo
+						if ($rootScope.openOrderFilters.filters.types.indexOf(statype) < 0)
+							$rootScope.openOrderFilters.filters.types.push(statype);
+						else
+							$rootScope.openOrderFilters.filters.types.splice($rootScope.openOrderFilters.filters.types.indexOf(statype), 1);
+	
+						// Elemento
+						if ($rootScope.openOrderFilters.filters.children.indexOf(child) < 0)
+							$rootScope.openOrderFilters.filters.children.push(child);
+						else
+							$rootScope.openOrderFilters.filters.children.splice($rootScope.openOrderFilters.filters.children.indexOf(child), 1);
+					},
+					cerol: function(order) {
+						if (!$rootScope.openOrderFilters.filters.types.length) 
+							return true;
+	
+						return $rootScope.openOrderFilters.filters.types.indexOf(order.order_statype) >= 0;
+					}
+				};
+			}	
 			self.orderStatusValues = Globals.get('order-status-values');
 			self.orderExportTypeColors = Globals.get('order-export-type-colors');
-
-			self.filters = {
-				query: '',
-				types: [],
-				children: [],
-				toggleStatus: function(exportType, status, child) {
-					var statype = status.toString() + exportType;
-
-					// Statipo
-					if (self.filters.types.indexOf(statype) < 0)
-						self.filters.types.push(statype);
-					else
-						self.filters.types.splice(self.filters.types.indexOf(statype), 1);
-
-					// Elemento
-					if (self.filters.children.indexOf(child) < 0)
-						self.filters.children.push(child);
-					else
-						self.filters.children.splice(self.filters.children.indexOf(child), 1);
-				},
-				cerol: function(order) {
-					if (!self.filters.types.length) 
-						return true;
-
-					return self.filters.types.indexOf(order.order_statype) >= 0;
-				}
-			};
 
 			if (constants.isElectron) {
 				Mousetrap = require('mousetrap');
@@ -78,15 +106,15 @@
 			$scope.$on('$viewContentLoaded', function() {
 				$rootScope.titleBarText = 'Abrir Orçamento';
 
-				if ($routeParams.company)
-					self.companyId = $routeParams.company;
+				// if ($routeParams.company)
+					// $rootScope.openOrderFilters.companyId = $routeParams.company;
 
 				// if ($routeParams.start)
 				// 	self.calendar.start.value = $routeParams.company;
 
-				if (Globals.get('user')['user_seller'].person_id) {
-					self.seller = new Person(Globals.get('user')['user_seller']);
-				}
+				// if (Globals.get('user')['user_seller'].person_id) {
+					// $rootScope.openOrderFilters.seller = new Person(Globals.get('user')['user_seller']);
+				// }
 				
 				$timeout(function() {
 					$rootScope.loading.load(null, null, { zIndex: 1 });
@@ -104,15 +132,15 @@
 				}
 			});
 
-			$scope.newOrder = function(companyId) {
+			$scope.newOrder = function() {
 				var options = {
 					// title: 'Novo orçamento'
 				};
 
 				if (constants.isElectron)
-					ElectronWindow.createWindow('#/order/new/company' + companyId, options);
+					ElectronWindow.createWindow('#/order/new/' + $rootScope.openOrderFilters.companyId, options);
 				else
-					$location.path('/order/new/' + companyId);
+					$location.path('/order/new/' + $rootScope.openOrderFilters.companyId);
 			};
 
 			$scope.open = function(order) {
@@ -170,51 +198,25 @@
 					jQuery('.search-container .search input').focus().select();
 				} else {
 					jQuery('.search-container .search input').blur();
-					self.filters.query = '';
+					$rootScope.openOrderFilters.filters.query = '';
 				}
 			};
 
 			self.companies = Globals.get('user').user_company;
 
-			if (!$rootScope.openOrderCalendar) {
-				$rootScope.openOrderCalendar = {};
-				$rootScope.openOrderCalendar.start = {
-					isCalendarOpen: false,
-					value: moment().toDate(),
-					maxDate: moment().toDate(),
-					update: function(){
-						$rootScope.openOrderCalendar.end.value = moment($rootScope.openOrderCalendar.start.value).toDate();
-						$rootScope.openOrderCalendar.end.minDate = moment($rootScope.openOrderCalendar.start.value).toDate();
-						$rootScope.openOrderCalendar.end.maxDate = moment($rootScope.openOrderCalendar.start.value).add(dateRange,'days').toDate();
-					}
-				};
-	
-				$rootScope.openOrderCalendar.end = {
-					isCalendarOpen: false,
-					value: moment().toDate(),
-					minDate: moment($rootScope.openOrderCalendar.start.value).toDate(),
-					maxDate: moment($rootScope.openOrderCalendar.start.value).add(dateRange,'days').toDate()
-				};
-			}
-
-			self.grid = {
-				propertyName: 'order_code',
-				reverse: true
-			};
-
 			self.sortBy = function(propertyName) {
-				self.grid.reverse = (self.grid.propertyName === propertyName) ? !self.grid.reverse : false;
-				self.grid.propertyName = propertyName;
+				$rootScope.openOrderFilters.grid.reverse = ($rootScope.openOrderFilters.grid.propertyName === propertyName) ? !$rootScope.openOrderFilters.grid.reverse : false;
+				$rootScope.openOrderFilters.grid.propertyName = propertyName;
 			};
 
 			self.getOrders = function (index, quantity){
 				self.orders = [];
 
 				var options = {
-						company_id: self.companyId,
-						start_date: $rootScope.openOrderCalendar.start.value,
-						end_date: $rootScope.openOrderCalendar.end.value,
-						order_seller_id: self.seller && self.seller.person_id,
+						company_id: $rootScope.openOrderFilters.companyId,
+						start_date: $rootScope.openOrderFilters.calendars.start.value,
+						end_date: $rootScope.openOrderFilters.calendars.end.value,
+						order_seller_id: $rootScope.openOrderFilters.seller && $rootScope.openOrderFilters.seller.person_id,
 						getCustomer: true,
 						getSeller: true
 					};
@@ -223,9 +225,9 @@
 				providerOrder.getAll(options).then(function(success) {
 					$scope.info.count = success.info.quantity;
 					$scope.info.sum = success.info.value_total;
-
+					
 					$scope.setSearchOpen(false);
-					self.filters.query = '';
+					$rootScope.openOrderFilters.filters.query = '';
 
 					var orderExportTypeColors = Globals.get('order-export-type-colors'),
 						orderStatusValues = Globals.get('order-status-values');
@@ -302,12 +304,12 @@
 					return;
 				}
 
-				if ( ( self.seller && code == self.seller.person_code ) || !parseInt(code))
+				if ( ( $rootScope.openOrderFilters.seller && code == $rootScope.openOrderFilters.seller.person_code ) || !parseInt(code))
 					return;
 
 				$rootScope.loading.load(null, null, { zIndex: 1 });
 				self.getPersonByCode(code, Globals.get('person-categories').seller).then(function(success) {
-					self.seller = new Person(success.data);
+					$rootScope.openOrderFilters.seller = new Person(success.data);
 					$rootScope.loading.unload();
 				}, function(error){
 					constants.debug && console.log(error);

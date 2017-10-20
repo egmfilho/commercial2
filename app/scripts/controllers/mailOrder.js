@@ -57,10 +57,10 @@
 
 			return function(n) {
 				return (n.name.toLowerCase().indexOf(lowercaseQuery) >= 0) || (n.mail.toLowerCase().indexOf(lowercaseQuery) >= 0);
-			}
+			};
 		}
 
-		$scope.now = new Date();
+		$scope.now = moment().tz('America/Sao_Paulo').toDate();
 		$scope.globals = Globals.get;
 
 		$scope.zoomIn = function() {

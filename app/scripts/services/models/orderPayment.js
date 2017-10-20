@@ -41,9 +41,9 @@
 
 			if (payment) {
 				Object.assign(this, payment, {
-					order_payment_deadline: payment.order_payment_deadline ? new Date(payment.order_payment_deadline) : new Date(),
-					order_payment_date: payment.order_payment_date ? new Date(payment.order_payment_date) : new Date(),
-					order_payment_update: payment.order_payment_update ? new Date(payment.order_payment_update) : new Date()
+					order_payment_deadline: payment.order_payment_deadline ? new Date(payment.order_payment_deadline) : moment().tz('America/Sao_Paulo').toDate(),
+					order_payment_date: payment.order_payment_date ? new Date(payment.order_payment_date) : moment().tz('America/Sao_Paulo').toDate(),
+					order_payment_update: payment.order_payment_update ? new Date(payment.order_payment_update) : moment().tz('America/Sao_Paulo').toDate()
 				});
 			}
 		}

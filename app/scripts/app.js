@@ -353,6 +353,9 @@ angular.module('commercial2', [
 		/* Titulo exibido na barra de ferraments do Commercial. */
 		$rootScope.titleBarText = '';
 
+		/* Nome da API exibida na barra de ferraments do Commercial. */
+		$rootScope.apiName = '';
+
 		/* Controlador de carregamento. */
 		/* Exibe e esconde a tela de carregamento. */
 		$rootScope.loading = {

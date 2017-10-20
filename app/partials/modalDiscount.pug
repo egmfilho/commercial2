@@ -12,20 +12,16 @@
 			input(name='al-discount'
 					ng-model='ctrl.al_discount'
 					currency trim max-fraction-size='4' number-only symbol="''"
-					ng-blur='ctrl.calcDiscountByAl()'
-					keys-shortcuts enter='ctrl.calcDiscountByAl()')
+					ng-keypress='ctrl.calcDiscountByAl()'
+					keys-shortcuts enter='ctrl.confirm()')
 		md-input-container(flex='50')
 			label Valor
 			input(name='vl-discount'
 					ng-model='ctrl.vl_discount' 
 					currency symbol="'R$ '"
 					number-only
-					ng-blur='ctrl.calcDiscountByVl()'
-					keys-shortcuts enter='ctrl.calcDiscountByVl()')
-
-//- .footer.bordered(layout='row' layout-align='end center')
-//- 	md-button.md-raised(name="sendDiscount" ng-click='ctrl._close({ al_discount: ctrl.al_discount, vl_discount: ctrl.vl_discount })')
-//- 		| &nbsp; Ok &nbsp;
+					ng-keypress='ctrl.calcDiscountByVl()'
+					keys-shortcuts enter='ctrl.confirm()')
 
 .footer.bordered(layout='row' layout-align='end center')
 	md-button.md-raised(name="sendDiscount" ng-click='ctrl.confirm()')

@@ -21,7 +21,7 @@
 		self.logo = null;
 		self.isPdf = $location.path().indexOf('print') && $routeParams.type && $routeParams.type == 'pdf';
 
-		$scope.now = new Date();
+		$scope.now = moment().tz('America/Sao_Paulo').toDate();
 		$scope.globals = Globals.get;
 
 		$scope.$on('$viewContentLoaded', function() {

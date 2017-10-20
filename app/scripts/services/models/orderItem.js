@@ -12,14 +12,14 @@
 
 			function _Audit(audit) {
 				this.user_id      = null;
-				this.date         = moment().toDate();
+				this.date         = moment().tz('America/Sao_Paulo').toDate();
 				this.user_name    = null;
 				this.product_name = null;
 				this.product_code = null;
 
 				if (audit)
 					Object.assign(this, audit, {
-						date: audit.date ? new Date(audit.date) : new Date()
+						date: audit.date ? new Date(audit.date) : moment().tz('America/Sao_Paulo').toDate()
 					});
 			}
 
