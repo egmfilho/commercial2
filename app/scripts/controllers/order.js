@@ -473,7 +473,7 @@
 
 		function filterBudget() {
 			return angular.merge({ }, self.budget, {
-				address_delivery: null,
+				// address_delivery: null,
 				order_address: null,
 				order_client: {
 					person_active: null,
@@ -489,14 +489,10 @@
 				queryable: null,
 				order_items: self.budget.order_items.map(function(i) {
 					i.price = null;
-					i.product = null;
+					// i.product = null;
 					i.user_price = null;
 					return i;
 				}),
-				order_payments: self.budget.order_payments.map(function(p) {
-					p.modality = null;
-					return p;
-				})
 			});
 		}
 
