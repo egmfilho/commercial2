@@ -1,9 +1,9 @@
 /*
-* @Author: egmfilho
-* @Date:   2017-05-29 10:46:07
-* @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-30 16:51:31
-*/
+ * @Author: egmfilho
+ * @Date:   2017-05-29 10:46:07
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-10-20 14:02:19
+ */
 
 (function() {
 	'use strict';

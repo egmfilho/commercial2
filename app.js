@@ -1,8 +1,8 @@
 /*
 * @Author: egmfilho
 * @Date:   2017-06-06 09:08:17
-* @Last Modified by:   egmfilho
-* @Last Modified time: 2017-10-17 09:12:59
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2017-10-20 13:54:30
 */
 
 const electron = require('electron');
@@ -108,8 +108,10 @@ ipcMain.on('killme', function(event, arg) {
 			return w.id != arg.winId;
 		});
 
-		writeLog('Killing window: ' + win.id);
-		win.close();
+		if (win) {
+			writeLog('Killing window: ' + win.id);
+			win.close();
+		}
 
 	}, arg.ttl || 500);
 });
