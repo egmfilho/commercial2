@@ -38,3 +38,15 @@ Cria o app dentro da pasta `<projeto>/releases/Commercial-win32-x64`
 # gera o app para Windows
 npm run build-win32
 ```
+
+### Build para Linux
+
+Cria o app dentro da pasta `<projeto>/releases/Commercial-linux-x64`
+
+```sh
+# gera o app para Linux
+npm run build-linux
+```
+
+
+Por egmfilho@me.com 2017
