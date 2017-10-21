@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-21 15:19:34
+ * @Last Modified time: 2017-10-21 15:39:35
 */
 
 (function() {
@@ -833,7 +833,7 @@
 								this.tick = function() {
 									var scope = this;
 									$timeout(function() {
-										//scope.timer --;
+										scope.timer --;
 										if (scope.timer <= 0) {
 											$scope.close(true);
 										} else {
@@ -845,23 +845,21 @@
 								this.tick();
 							};
 
-						_backup = new Order(self.budget);
-						self.propagateSaveOrder(self.budget.order_company_id);
+						_backup = self.budget;
 						self.internal.flags.printable = true;
+						self.propagateSaveOrder(self.budget.order_company_id);
 
 						$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderSaved.html', controller)
 							.then(function(res) {
 								switch (res) {
 									case 'print': {
 										self.print().then(function() {
-											$setTimeout(function(){
-												if (constants.isElectron) {
-													_ipcRenderer.send('killme', {
-														winId: _remote.getCurrentWindow().id,
-														ttl: 1000
-													});
-												}
-											}, 500);
+											if (constants.isElectron) {
+												_ipcRenderer.send('killme', {
+													winId: _remote.getCurrentWindow().id,
+													ttl: 1000
+												});
+											}
 										});
 										break;
 									}
@@ -1789,7 +1787,7 @@
 			};
 
 			if (constants.isElectron) {
-				var win = ElectronWindow.createWindow('#/order/print/' + self.budget.order_code + '/pdf', options);
+				var win = ElectronWindow.createWindow('#/print/' + self.budget.order_code + '/pdf', options);
 
 				$scope.$watch(function() {
 					return win.isVisible();
@@ -1800,7 +1798,7 @@
 				});
 			} else {
 				deferred.resolve();
-				$location.path('/order/print/' + self.budget.order_code + '/pdf');
+				$location.path('/print/' + self.budget.order_code + '/pdf');
 			}
 
 			return deferred.promise();
@@ -1952,7 +1950,7 @@
 				};
 
 			self.propagateSaveOrder(self.budget.order_company_id);
-			self.internal.flags.printable = true;
+			// self.internal.flags.printable = true;
 
 			$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderExported.html', controller)
 				.then(function(res) {
@@ -2045,7 +2043,8 @@
 								self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 								$rootScope.loading.unload();
 								
-								_backup = new Order(self.budget);
+								_backup = self.budget;
+								self.internal.flags.printable = true;
 
 								deferred.resolve(success);
 
@@ -2063,7 +2062,8 @@
 								self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 								$rootScope.loading.unload();
 								
-								_backup = new Order(self.budget);
+								_backup = self.budget;
+								self.internal.flags.printable = true;
 
 								deferred.resolve(success);
 								
@@ -2085,7 +2085,8 @@
 							self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 							$rootScope.loading.unload();
 
-							_backup = new Order(self.budget);
+							_backup = self.budget;
+							self.internal.flags.printable = true;
 
 							deferred.resolve(success);
 							
@@ -2142,7 +2143,8 @@
 								self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 								$rootScope.loading.unload();
 								
-								_backup = new Order(self.budget);
+								_backup = self.budget;
+								self.internal.flags.printable = true;
 
 								deferred.resolve(success);
 
@@ -2160,7 +2162,8 @@
 								self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 								$rootScope.loading.unload();
 								
-								_backup = new Order(self.budget);
+								_backup = self.budget;
+								self.internal.flags.printable = true;
 								
 								deferred.resolve(success);
 								
@@ -2182,7 +2185,8 @@
 							self.budget.order_erp = success.data.budget_code;
 							self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 							
-							_backup = new Order(self.budget);
+							_backup = new self.budget;
+							self.internal.flags.printable = true;
 
 							deferred.resolve(success);
 							
