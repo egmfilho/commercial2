@@ -301,7 +301,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 								label 
 									| Quantidade
 								input(name='amount' ng-model='order.internal.tempItem.order_item_amount'
-										ng-change='order.setItemAmount(order.internal.tempItem.order_item_amount)'
+										ng-blur='order.setItemAmount(order.internal.tempItem.order_item_amount)'
 										keys-shortcuts enter='order.focusOn("input[name=\'al-discount\']")'
 										currency trim min-fraction-size='0' max-fraction-size='{{order.internal.tempItem.product.unit.unit_format == "I" ? 0 : 4}}' number-only separator=',.' replace-text replace-from='.' replace-to=','
 										ng-disabled='!order.internal.tempItem.product.product_code')

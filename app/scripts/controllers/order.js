@@ -1446,6 +1446,7 @@
 		 * @param {int} amount - A quantidade de itens.
 		 */
 		function setItemAmount(amount) {
+			console.log(self.internal.tempItem.order_item_amount, amount);
 			self.internal.tempItem.setAmount(amount);
 			self.internal.tempItemVlDiscount = self.internal.tempItem.order_item_vl_discount;
 		}
