@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-21 15:39:35
+ * @Last Modified time: 2017-10-21 16:15:32
 */
 
 (function() {
@@ -2181,11 +2181,11 @@
 							$rootScope.loading.unload(success);
 							self.budget.order_id = success.data.order_id;
 							self.budget.order_code = success.data.order_code;
-							self.budget.order_date = moment().tz('America/Sao_Paulo').toDate();
+							// self.budget.order_date = moment().tz('America/Sao_Paulo').toDate();
 							self.budget.order_erp = success.data.budget_code;
 							self.budget.order_status_id = Globals.get('order-status-values')['exported'];
 							
-							_backup = new self.budget;
+							_backup = self.budget;
 							self.internal.flags.printable = true;
 
 							deferred.resolve(success);
