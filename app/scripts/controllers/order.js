@@ -833,7 +833,7 @@
 								this.tick = function() {
 									var scope = this;
 									$timeout(function() {
-										scope.timer --;
+										//scope.timer --;
 										if (scope.timer <= 0) {
 											$scope.close(true);
 										} else {
@@ -853,12 +853,14 @@
 								switch (res) {
 									case 'print': {
 										self.print().then(function() {
-											if (constants.isElectron) {
-												_ipcRenderer.send('killme', {
-													winId: _remote.getCurrentWindow().id,
-													ttl: 1000
-												});
-											}
+											$setTimeout(function(){
+												if (constants.isElectron) {
+													_ipcRenderer.send('killme', {
+														winId: _remote.getCurrentWindow().id,
+														ttl: 1000
+													});
+												}
+											}, 500);
 										});
 										break;
 									}
@@ -3063,31 +3065,24 @@
 				this.confirm = function() {
 					if (scope.al_discount < 0) return;
 					
-					if (scope.al_discount > scope.user.user_max_discount) {
-						authorizationDialog('Autorização de desconto', 'mensagem', 'order', 'user_discount').then(function(success) {
-							if (success.user_max_discount >= scope.al_discount) {
-								authorizedBy = success;
+					authorizationDialog('Autorização de desconto', 'mensagem', 'order', 'user_discount').then(function(success) {
+						if (success.user_max_discount >= scope.al_discount) {
+							authorizedBy = success;
 
-								scope._close({
-									al_discount: scope.al_discount, 
-									vl_discount: scope.vl_discount
-								});
-							} else {
-								$rootScope.customDialog().showMessage('Erro', 'Não autorizado!');
-							}
-						}, function(error) {
-							deferred.reject(error);
-						});
-					} else {
-						scope._close({
-							al_discount: scope.al_discount, 
-							vl_discount: scope.vl_discount
-						});
-					}
+							scope._close({
+								al_discount: scope.al_discount, 
+								vl_discount: scope.vl_discount
+							});
+						} else {
+							$rootScope.customDialog().showMessage('Erro', 'Não autorizado!');
+						}
+					}, function(error) {
+						deferred.reject(error);
+					});
 				}
 			};
 
-			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalDiscount.html', controller, { width: 240, zIndex: 1, escapeToClose: false })
+			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalDiscount.html', controller, { width: 240, zIndex: 1, escapeToClose: true })
 				.then(function(success) {
 					var total = self.budget.order_value_total;
 
