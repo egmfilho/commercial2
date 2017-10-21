@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 15:10:01
+ * @Last Modified time: 2017-10-21 15:19:34
 */
 
 (function() {
@@ -847,6 +847,7 @@
 
 						_backup = new Order(self.budget);
 						self.propagateSaveOrder(self.budget.order_company_id);
+						self.internal.flags.printable = true;
 
 						$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderSaved.html', controller)
 							.then(function(res) {
@@ -1951,6 +1952,7 @@
 				};
 
 			self.propagateSaveOrder(self.budget.order_company_id);
+			self.internal.flags.printable = true;
 
 			$rootScope.customDialog().showTemplate('Sucesso', './partials/modalOrderExported.html', controller)
 				.then(function(res) {
