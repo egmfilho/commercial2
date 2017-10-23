@@ -206,6 +206,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 
 					div(flex='10')
 
+		//- Empresa
 		section(name='company')
 			md-card.info-card
 				md-card-content(layout='row' layout-align='start center')
@@ -334,9 +335,8 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 								b.text-light Total:&nbsp;
 								| {{order.internal.tempItem.getValueTotal() | currency:"R$ "}}
 
-							md-button.md-raised.md-primary.button-green(name='btn-add-item' ng-click='order.addItem()' style='margin:0')
-								i.fa.fa-plus &nbsp;
-								| Incluir
+							md-button.md-raised.md-primary.md-icon-button.button-green(name='btn-add-item' ng-click='order.addItem()' style='margin:0')
+								i.fa.fa-plus
 
 					pre(ng-if='debug')
 						| {{order.internal.tempItem | json}}
@@ -402,9 +402,8 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									i.fa.fa-search &nbsp; 
 									| Localizar
 
-								md-button.md-raised.text-primary.button-green(ng-click='order.newCustomer()' style='margin-right: 15px;')
-									i.fa.fa-user-plus &nbsp;
-									| Cadastrar
+								md-button.md-raised.md-icon-button.text-primary.button-green(ng-click='order.newCustomer()' style='margin-right: 15px;')
+									i.fa.fa-user-plus
 
 								md-button.md-icon-button.md-raised.button-red(ng-click='order.clearCustomer()' md-colors='{background: "commercialRed"}')
 									i.fa.fa-trash
@@ -481,9 +480,8 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 											| Código: {{order.budget.order_address_delivery_code}}
 										span {{order.budget.address_delivery.toString()}}
 
-									md-button.md-raised.text-white(ng-click='order.addressDialog()' ng-if='order.budget.order_client_id' md-colors='{background: "commercialOrange"}')
-										i.fa.fa-address-book-o &nbsp; 
-										| Endereços
+									md-button.md-raised.md-icon-button.text-white(ng-click='order.addressDialog()' ng-if='order.budget.order_client_id' md-colors='{background: "commercialOrange"}')
+										i.fa.fa-address-book-o
 
 					pre(ng-if='debug')
 						| {{order.budget.order_client | json}}
