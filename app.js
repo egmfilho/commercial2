@@ -1,8 +1,8 @@
 /*
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-06-06 09:08:17
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2017-10-20 13:54:30
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-10-23 09:04:10
 */
 
 const electron = require('electron');
@@ -26,11 +26,6 @@ try {
 
 // Make sure logs directory exists
 let logDir = path.join(path.dirname(app.getPath('exe')), './log');
-try {
-	fs.statSync(logDir);
-} catch(e) {
-	fs.mkdirSync(logDir);
-}
 
 function getDateString(dateSeparator, separator, timeSeparator) {
 	let date = new Date();
@@ -48,8 +43,6 @@ function getDateString(dateSeparator, separator, timeSeparator) {
 }
 
 const logFilename = path.join(logDir, getDateString('-', 'T', '-') + '.log');
-
-writeLog('Initializing application');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -229,10 +222,34 @@ function createWindow() {
 	});
 }
 
+function ready() {
+	try {
+		fs.statSync(logDir);
+	} catch(e) {
+		try {
+			fs.mkdirSync(logDir);
+		} catch(exeption) {
+			electron.dialog.showMessageBox({
+				type: 'error',
+				title: 'Erro',
+				message: 'O Commercial encontrou um problema ao tentar criar arquivos internos. Verifique as permissões de usuário na pasta do Commercial.',
+				buttons: [ 'Fechar' ]
+			}, (response) => {
+				global.globals = { };
+				app.quit();
+			});
+		}
+	}
+
+	writeLog('Initializing application');
+
+	createWindow();
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', ready);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
