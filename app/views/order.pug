@@ -602,10 +602,9 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									b.text-light Carta de crédito:&nbsp;
 									| {{order.budget.creditPayment.order_payment_credit_available || '0' | currency:"R$ "}}
 
-								md-button.md-primary.md-raised(style='margin: 0;' ng-click='order.addCredit()' 
+								md-button.md-primary.md-icon-button.md-raised(style='margin: 0;' ng-click='order.addCredit()' 
 										ng-disabled='!order.budget.order_client.person_credit.length')
-									i.fa.fa-plus &nbsp;
-									| Adicionar
+									i.fa.fa-plus
 							
 							.summary(layout='column')
 								md-toolbar.md-toolbar-tools.toolbar-orange(style='z-index:0')
