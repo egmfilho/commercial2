@@ -337,6 +337,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 
 							md-button.md-raised.md-primary.md-icon-button.button-green(name='btn-add-item' ng-click='order.addItem()' style='margin:0')
 								i.fa.fa-plus
+								md-tooltip(md-direction='bottom') Adicionar produto
 
 					pre(ng-if='debug')
 						| {{order.internal.tempItem | json}}
@@ -404,6 +405,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 
 								md-button.md-raised.md-icon-button.text-primary.button-green(ng-click='order.newCustomer()' style='margin-right: 15px;')
 									i.fa.fa-user-plus
+									md-tooltip(md-direction='bottom') Cadastrar novo cliente
 
 								md-button.md-icon-button.md-raised.button-red(ng-click='order.clearCustomer()' md-colors='{background: "commercialRed"}')
 									i.fa.fa-trash
@@ -605,6 +607,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 								md-button.md-primary.md-icon-button.md-raised(style='margin: 0;' ng-click='order.addCredit()' 
 										ng-disabled='!order.budget.order_client.person_credit.length')
 									i.fa.fa-plus
+									md-tooltip(md-direction='bottom') Adicionar crédito
 							
 							.summary(layout='column')
 								md-toolbar.md-toolbar-tools.toolbar-orange(style='z-index:0')
