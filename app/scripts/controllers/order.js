@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-23 09:23:33
+ * @Last Modified time: 2017-10-23 10:59:07
 */
 
 (function() {
@@ -1378,6 +1378,9 @@
 				self.internal.tempProduct = new Product(success.data);
 				self.internal.tempItem.setProduct(new Product(success.data));
 				self.internal.tempPrice = new Price(self.internal.tempItem.price);
+				
+				self.setItemAmount(1);
+				
 				self.focusOn('input[name="amount"]');
 				$rootScope.loading.unload();
 			}, function(error) {
