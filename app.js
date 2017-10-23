@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-06-06 09:08:17
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-23 09:04:10
+ * @Last Modified time: 2017-10-23 09:31:18
 */
 
 const electron = require('electron');
@@ -177,14 +177,13 @@ function createWindow() {
 		devTools: false,
 		title: 'Commercial - Gestor de vendas',
 		icon: './www/images/logo-icon.png',
+		show: false,
 		webPreferences: {
 			zoomFactor: 1.15
 		}
 	});
 
 	global.mainWindow.instance = mainWindow;
-
-	mainWindow.maximize();
 
 	mainWindow.on('page-title-updated', function(e) {
 		e.preventDefault();
@@ -220,6 +219,9 @@ function createWindow() {
 		// when you should delete the corresponding element.
 		mainWindow = null;
 	});
+
+	mainWindow.maximize();
+	mainWindow.show();
 }
 
 function ready() {
