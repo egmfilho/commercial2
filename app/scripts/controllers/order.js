@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-23 10:59:07
+ * @Last Modified time: 2017-10-23 18:10:12
 */
 
 (function() {
@@ -14,6 +14,7 @@
 	OrderCtrl.$inject = [ 
 		'$rootScope', 
 		'$scope', 
+		'$compile',
 		'$timeout',
 		'$location',
 		'$route', 
@@ -58,6 +59,7 @@
 	function OrderCtrl(
 		$rootScope, 
 		$scope, 
+		$compile,
 		$timeout, 
 		$location, 
 		$route, 
@@ -439,9 +441,7 @@
 					$rootScope.customDialog().showMessage('Erro', 'Não autorizado!')
 						.then(function(success) {
 							callback && callback();
-						}, function(error) {
-							callback && callback();
-						});
+						}, function(error) { });
 				});
 				return false;
 			}
@@ -1581,24 +1581,32 @@
 
 		/**
 		 * Abre um modal para autorizar uma acao.
-		 * @param {string} msg - A mensagem a ser exibida na janela.
+		 * @param {object} data - Os elementos a serem incorporados no modal.
 		 * @param {string} module - O modulo do qual a permissao pertence.
 		 * @param {string} access - O nome da permissao.
 		 * @returns {object} - Uma promise com o resultado.
 		 */
-		function authorizationDialog(title, msg, module, access) {
+		function authorizationDialog(title, data, module, access) {
 			var deferred = $q.defer(),
 				options = null;
 
 			function controller($rootScope, providerPermission, Audit) {
 				var ctrl = this;
 
-				this.text = msg.msg;
-				this.icon = msg.icon;
-				this.user = null;
-				this.pass = null;
+				if (data.ctrl) {
+					for (var x in data.ctrl) {
+						ctrl[x] = data.ctrl[x];
+					}
+				}
+
+				this.title     = data.title && data.title;
+				this.text      = data.msg && data.msg;
+				this.icon      = data.icon && data.icon;
+				this.template  = data.template && data.template;
+				this.user      = null;
+				this.pass      = null;
 				this.authorize = authorize;
-				this.advance = function() {
+				this.advance   = function() {
 					jQuery('input[ng-model=\'ctrl.pass\']').focus();
 				};
 
@@ -1661,24 +1669,43 @@
 			html += '</span></div>';
 
 			msg = {
+				title: 'Desconto máximo permitido: ' + allowed.toFixed(2) + '%',
 				msg: html,
 				icon: 'fa-2x fa-exclamation-triangle text-warning'
 			};
 
-			return self.authorizationDialog('Desconto máximo permitido: ' + allowed.toFixed(2) + '%', msg, 'order', 'user_discount');
+			return self.authorizationDialog('Orçamento', msg, 'order', 'user_discount');
 		}
 
 		function authorizeCredit() {
-			var msg = {};
+			var data = {};
+			
+			data.template = '<div><div ng-init="in = false"><button ng-click="in = !in">oi</button></div><div ng-include="\'../partials/customer-receivables.html\'" ng-class="{ \'in\': in }"></div></div>';
+			
 			if( self.budget.order_client.person_credit_limit.blocked_days_limit == 1 ){
-				msg.msg = 'Atenção! O cliente possui títulos vencidos em aberto.';
-				msg.icon = 'fa-2x fa-exclamation-triangle text-danger';
+				data.title = 'Títulos em aberto';
+				data.msg = 'Motivo: O cliente possui títulos vencidos em aberto.';
+				data.icon = 'fa-2x fa-exclamation-triangle text-danger';
 			} else{
-				msg.msg = 'O valor da compra ultrapassa o limite de crédito.';
-				msg.icon = 'fa-2x fa-exclamation-triangle text-warning';
+				data.title = 'Limite de crédito';
+				data.msg = 'Motivo: O valor da compra ultrapassa o limite de crédito.';
+				data.icon = 'fa-2x fa-exclamation-triangle text-warning';
 			}
 
-			return self.authorizationDialog('Autorização', msg, 'order', 'user_credit_authorization');
+			data.ctrl = {
+				grid: {
+					propertyName: 'receivable_delay',
+					reverse: true
+				},
+				sortBy: function(propertyName){
+					this.grid.reverse = (this.grid.propertyName === propertyName) ? !this.grid.reverse : false;
+					this.grid.propertyName = propertyName;
+				},
+				receivables: self.budget.order_client.person_credit_limit.receivables,
+				debit_day_limit: Globals.get('debit-day-limit')
+			};
+
+			return self.authorizationDialog('Orçamento', data, 'order', 'user_credit_authorization');
 		}
 
 		/**
@@ -3082,7 +3109,7 @@
 				this.confirm = function() {
 					if (scope.al_discount < 0) return;
 					
-					authorizationDialog('Autorização de desconto', 'mensagem', 'order', 'user_discount').then(function(success) {
+					authorizationDialog('Orçamento', { title: 'Autorização de desconto geral' }, 'order', 'user_discount').then(function(success) {
 						if (success.user_max_discount >= scope.al_discount) {
 							authorizedBy = success;
 

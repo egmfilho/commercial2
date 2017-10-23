@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-29 10:49:05
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 17:03:17
+ * @Last Modified time: 2017-10-23 12:40:27
  */
 
 (function() {
@@ -26,6 +26,11 @@
 					'id': 2,
 					'name': 'Externo NQT', 
 					'address': 'http://186.219.4.163/commercial2.api/'
+				},
+				{
+					'id': 3,
+					'name': 'Alessandro Notebook', 
+					'address': 'http://172.16.0.176/commercial2.api/'
 				}
 			],
 			'app-name': 'Commercial - Gestor de vendas',

@@ -2,7 +2,7 @@
  * @Author: alessandro 
  * @Date: 2017-10-20 17:05:52 
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 17:07:04
+ * @Last Modified time: 2017-10-23 17:28:52
  */
 
 .well-receivables{
@@ -18,6 +18,7 @@
 }
 
 .receivables-table {
+	min-width: 700px;
 	
 	tbody{
 		tr{
@@ -60,12 +61,17 @@
 .bar {
 	z-index: 0;
 
+	md-toolbar {
+		min-height: 50px;
+	}
+
 	.md-toolbar-tools {
 		background-color: white;
 		color: $main-color;
 		font-size: .7em;
 		border: 1px solid $border-color;
 		border-top: none;
+		height: 50px;
 
 		.info{
 			margin-right: 20px;

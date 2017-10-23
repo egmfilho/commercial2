@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-29 14:03:46
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 14:06:34
+ * @Last Modified time: 2017-10-23 12:20:55
  */
 
 (function() {
@@ -43,7 +43,9 @@
 
 					switch (res.status) {
 						case 200: 
-							$rootScope.writeLog('Logged in');
+							$rootScope.writeLog('Logged in' + ' - ' + (res.data.status.description || '(no status message)'));
+							if (!!res.data.status.description)
+								$rootScope.toast('Aviso', res.data.status.description);
 							$location.path('loading');
 							break;
 

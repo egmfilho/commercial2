@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 16:09:13
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 14:08:02
+ * @Last Modified time: 2017-10-23 17:22:38
  */
 
 
@@ -121,6 +121,20 @@ md-input-container {
 			padding-top: 6px;
 			color: $main-color;
 		}
+	}
+}
+
+.collapsable {
+	-webkit-transition: max-height 1s; 
+	-moz-transition: max-height 1s; 
+	-ms-transition: max-height 1s; 
+	-o-transition: max-height 1s; 
+	transition: max-height 1s;  
+	overflow-y: hidden;
+	max-height: 0;
+
+	&.in {
+		max-height: 500px;
 	}
 }
 
@@ -274,8 +288,9 @@ table.contacts-table {
 }
 
 .custom-toast {
-	margin-right: 8px;
-	margin-bottom: 24px;
+	margin-right: 12px;
+	margin-bottom: 50px;
+	z-index: 2001;
 
 	.md-toast-content {
 		padding: 4px;
@@ -501,7 +516,7 @@ md-tabs.mussum {
 
 .irineu {
 	background-color: $secondary-color;
-	margin-bottom: 16px;
+	// margin-bottom: 16px;
 	padding: 8px 16px;
 	max-height: 60px;
 	color: white;

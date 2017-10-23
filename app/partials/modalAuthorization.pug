@@ -1,7 +1,13 @@
+.irineu(layout='row' layout-align='start center' layout-fill)
+	i.fa.fa-lock
+	span Autorização
+
 .body(layout='column')
-	.offset-bottom-15(layout='row' layout-align='start center') 
+	.offset-bottom-15(layout='row' layout-align='start center' ng-if='ctrl.title') 
 		i.fa(ng-if='ctrl.icon' ng-class='ctrl.icon')
-		span(flex ng-bind-html='ctrl.text | trusted')
+		span.md-subhead {{ctrl.title}}
+	
+	.offset-bottom-15.well(flex ng-bind-html='ctrl.text | trusted' ng-if='ctrl.text')
 
 	md-input-container
 		label 
@@ -12,6 +18,8 @@
 		label 
 			| Senha
 		input(type='password' ng-model='ctrl.pass' keys-shortcuts enter='ctrl.authorize(ctrl.user, ctrl.pass)')
+
+	div(compile='ctrl.template' ng-if='ctrl.template')
 
 .footer(layout='row' layout-align='end center')
 	md-button.md-raised(ng-click='ctrl._cancel()')
