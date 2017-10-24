@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 10:21:29
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-23 13:14:54
+ * @Last Modified time: 2017-10-24 13:37:23
  */
 
 'use strict';
@@ -400,7 +400,7 @@ angular.module('commercial2', [
 				.position('bottom right')
 				.controller(controller)
 				.controllerAs('ctrl')
-				.templateUrl('./partials/toastTemplate.html')
+				.templateUrl('./partials/toastTemplate.html');
 
 			return $mdToast.show(preset);
 		};

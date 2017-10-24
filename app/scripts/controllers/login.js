@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-29 14:03:46
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-23 12:20:55
+ * @Last Modified time: 2017-10-24 13:37:53
  */
 
 (function() {
@@ -51,12 +51,12 @@
 
 						case -1:
 							$rootScope.writeLog('Could not establish connection to the server!');
-							$rootScope.toast('Erro de conexão', 'Não foi possível conectar com o servidor. Verifique sua conexão com a internet.');
+							$rootScope.customDialog().showMessage('Erro de conexão', 'Não foi possível conectar com o servidor. Verifique sua conexão com a internet.');
 							break;
 
 						default:
 							$rootScope.writeLog(res.status + ' - ' + res.data.status.description);
-							$rootScope.toast('Aviso', res.data.status.description);
+							$rootScope.customDialog().showMessage('Aviso', res.data.status.description);
 							break;
 					}
 				});
