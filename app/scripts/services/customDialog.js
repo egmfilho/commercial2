@@ -1,8 +1,8 @@
 /*
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-05-31 09:00:47
-* @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-29 16:39:30
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-10-24 10:40:30
 */
 
 (function() {
@@ -164,7 +164,7 @@
 
 			var _options = {
 				attatchTo: angular.element(document.body),
-				panelClass: 'custom-dialog layout-column flex ' + (options && options.innerDialog ? 'custom-dialog-inner' : '') + (options && options.addClass),
+				panelClass: 'custom-dialog layout-column flex ' + (options && options.innerDialog ? 'custom-dialog-inner ' : ' ') + (options && options.addClass),
 				animation: _animation,
 				fullscreen: false,
 				hasBackdrop: false,
