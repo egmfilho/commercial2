@@ -17,9 +17,9 @@ md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row')
 					| COMMERCIAL {{::version}}
 
 		.body 
-			.title.offset-top-15
+			.md-headline.text-center.offset-top-15
 				| {{ctrl.order.order_export_type == 'dav' ? 'DAV' : 'PEDIDO'}}: {{ctrl.order.order_code_erp}}
-			.subtitle
+			.title.offset-top-15
 				.md-block.text-center
 					| ORÇAMENTO N&#186;: {{::ctrl.order.order_code}}
 
@@ -27,7 +27,11 @@ md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row')
 				table
 					tbody
 						tr(ng-repeat='i in ctrl.order.order_payments')
-							td {{::i.order_payment_installment}}X
-							td {{::i.modality.modality_description}}
-							td {{::i.order_payment_deadline | date:'dd/MM/yyyy'}}
-							td.text-right {{::i.order_payment_value | currency:'R$ '}}
+							td 
+								.title {{::i.order_payment_installment}}X
+							td 
+								.title {{::i.modality.modality_description}}
+							td 
+								.title {{::i.order_payment_deadline | date:'dd/MM/yyyy'}}
+							td.text-right 
+								.title {{::i.order_payment_value | currency:'R$ '}}
