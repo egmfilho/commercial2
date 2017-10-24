@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-31 13:43:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 17:04:06
+ * @Last Modified time: 2017-10-24 09:55:00
  */
 
 .custom-dialog {
@@ -12,6 +12,10 @@
 	box-shadow: 0 7px 8px -4px rgba(0, 0, 0, 0.2),
 				0 13px 19px 2px rgba(0, 0, 0, 0.14),
 				0 5px 24px 4px rgba(0, 0, 0, 0.12);
+
+	&.authorization-dialog {
+		max-width: 350px;
+	}
 
 	> div {
 		md-toolbar.title-bar {

@@ -9,17 +9,19 @@
 	
 	.offset-bottom-15.well(flex ng-bind-html='ctrl.text | trusted' ng-if='ctrl.text')
 
-	md-input-container
-		label 
-			| Nome de usuário
-		input(type='text' ng-model='ctrl.user' keys-shortcuts enter='ctrl.advance()')
+	.offset-bottom-15(compile='ctrl.template' ng-if='ctrl.template')
 
-	md-input-container
-		label 
-			| Senha
-		input(type='password' ng-model='ctrl.pass' keys-shortcuts enter='ctrl.authorize(ctrl.user, ctrl.pass)')
+	div(layout='{{ctrl.inputLayout}}')
+		md-input-container
+			label 
+				| Nome de usuário
+			input(type='text' ng-model='ctrl.user' keys-shortcuts enter='ctrl.advance()')
 
-	div(compile='ctrl.template' ng-if='ctrl.template')
+		md-input-container
+			label 
+				| Senha
+			input(type='password' ng-model='ctrl.pass' keys-shortcuts enter='ctrl.authorize(ctrl.user, ctrl.pass)')
+
 
 .footer(layout='row' layout-align='end center')
 	md-button.md-raised(ng-click='ctrl._cancel()')

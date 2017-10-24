@@ -164,7 +164,7 @@
 
 			var _options = {
 				attatchTo: angular.element(document.body),
-				panelClass: 'custom-dialog layout-column flex ' + (options && options.innerDialog ? 'custom-dialog-inner' : ''),
+				panelClass: 'custom-dialog layout-column flex ' + (options && options.innerDialog ? 'custom-dialog-inner' : '') + (options && options.addClass),
 				animation: _animation,
 				fullscreen: false,
 				hasBackdrop: false,

@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-23 18:10:12
+ * @Last Modified time: 2017-10-24 10:06:04
 */
 
 (function() {
@@ -1599,21 +1599,21 @@
 					}
 				}
 
-				this.title     = data.title && data.title;
-				this.text      = data.msg && data.msg;
-				this.icon      = data.icon && data.icon;
-				this.template  = data.template && data.template;
-				this.user      = null;
-				this.pass      = null;
-				this.authorize = authorize;
-				this.advance   = function() {
+				this.title       = data.title && data.title;
+				this.text        = data.msg && data.msg;
+				this.icon        = data.icon && data.icon;
+				this.template    = data.template && data.template;
+				this.inputLayout = data.inputLayout || 'column';
+				this.user        = null;
+				this.pass        = null;
+				this.authorize   = authorize;
+				this.advance     = function() {
 					jQuery('input[ng-model=\'ctrl.pass\']').focus();
 				};
 
 				$timeout(function() {
 					jQuery('input[ng-model=\'ctrl.user\']').focus();
 				}, 300);
-
 
 				function authorize(user, pass, callback) {
 					if (!user || !pass) return;
@@ -1635,13 +1635,17 @@
 				hasBackdrop: true,
 				clickOutsideToClose: false,
 				escapeToClose: false,
+				addClass: 'authorization-dialog',
 				zIndex: 1
 			};
 			
+			self.internal.flags.isToolbarLocked = true;
 			$rootScope.customDialog().showTemplate(title, './partials/modalAuthorization.html', controller, options)
 				.then(function(success) {
+					self.internal.flags.isToolbarLocked = false;
 					deferred.resolve(success);
 				}, function(error) {
+					self.internal.flags.isToolbarLocked = false;
 					deferred.reject();
 				});
 
@@ -1678,13 +1682,42 @@
 		}
 
 		function authorizeCredit() {
-			var data = {};
+			var data = {
+				// inputLayout: 'row',
+				template: ''
+			};
 			
-			data.template = '<div><div ng-init="in = false"><button ng-click="in = !in">oi</button></div><div ng-include="\'../partials/customer-receivables.html\'" ng-class="{ \'in\': in }"></div></div>';
+			// data.template += '<div layout="column" ng-init="in = false">';
+			// data.template += 	'<div layout="row" class="well">';
+			// data.template += 		'<div flex layout="row" layout-align="start center">';
+			// data.template += 			'<i class="fa fa-user" class="text-primary"></i> &nbsp; {{ctrl.customer.code}} - {{ctrl.customer.name}}';
+			// data.template += 		'</div>';
+			// data.template += 		'<div layout="row" layout-align="end center">';
+			// data.template += 			'<md-button class="md-raised md-primary" style="margin: 0" ng-click="in = !in">';
+			// data.template += 				'<i class="fa fa-id-card-o"></i> Informações
+			// data.template += 			'</md-button>';
+			// data.template += 		'</div>';
+			// data.template += 	'</div>';
+			// data.template += 	'<div class="collapsable" ng-class="{ \'in\': in }">';
+			// data.template += 		'<div ng-include="\'./partials/customer-receivables.html\'"></div>';
+			// data.template += 	'</div>';
+			// data.template += '</div>';
+
+			data.template += '<div layout="row" class="well">';
+			data.template += 	'<div flex layout="row" layout-align="start center">';
+			data.template += 		'{{ctrl.customer.code}} - {{ctrl.customer.name}}';
+			data.template += 	'</div>';
+			data.template += 	'<div layout="row" layout-align="end center">';
+			data.template += 		'<md-button class="md-raised md-primary md-icon-button" style="margin: 0; font-size: 17px" ng-click="ctrl.showInfo()">';
+			data.template += 			'<i class="fa fa-id-card-o"></i>';
+			data.template += 			'<md-tooltip md-direction="bottom">Informações do cliente</md-tooltip>';
+			data.template += 		'</md-button>';
+			data.template += 	'</div>';
+			data.template += '</div>';
 			
 			if( self.budget.order_client.person_credit_limit.blocked_days_limit == 1 ){
 				data.title = 'Títulos em aberto';
-				data.msg = 'Motivo: O cliente possui títulos vencidos em aberto.';
+				data.msg = 'Motivo: O cliente possui títulos vencidos em aberto por mais de ' + Globals.get('debit-day-limit') + ' dias.';
 				data.icon = 'fa-2x fa-exclamation-triangle text-danger';
 			} else{
 				data.title = 'Limite de crédito';
@@ -1701,8 +1734,14 @@
 					this.grid.reverse = (this.grid.propertyName === propertyName) ? !this.grid.reverse : false;
 					this.grid.propertyName = propertyName;
 				},
-				receivables: self.budget.order_client.person_credit_limit.receivables,
-				debit_day_limit: Globals.get('debit-day-limit')
+				customer: {
+					code: self.budget.order_client.person_code,
+					name: self.budget.order_client.person_name
+				},
+				// receivables: self.budget.order_client.person_credit_limit.receivables,
+				// debit_day_limit: Globals.get('debit-day-limit'),
+				// person_credit_limit: self.budget.order_client.person_credit_limit
+				showInfo: self.showModalCustomerInfo
 			};
 
 			return self.authorizationDialog('Orçamento', data, 'order', 'user_credit_authorization');
