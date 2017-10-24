@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-29 14:03:46
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-24 13:37:53
+ * @Last Modified time: 2017-10-24 17:36:30
  */
 
 (function() {
@@ -44,8 +44,18 @@
 					switch (res.status) {
 						case 200: 
 							$rootScope.writeLog('Logged in' + ' - ' + (res.data.status.description || '(no status message)'));
-							if (!!res.data.status.description)
-								$rootScope.toast('Aviso', res.data.status.description);
+							if (!!res.data.status.description) {
+								switch (res.data.status.action) {
+									case 'update':
+										// $rootScope.toast('Atualização disponível', 'Deseja atualizar agora ou tentar depois?', 10000);
+										$rootScope.toast('Atualização disponível', res.data.status.description, 10000);
+										break;
+
+									default: 
+										$rootScope.toast('Aviso', res.data.status.description);
+										break;
+								}
+							}
 							$location.path('loading');
 							break;
 

@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 10:21:29
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-24 13:37:23
+ * @Last Modified time: 2017-10-24 17:35:13
  */
 
 'use strict';
@@ -385,7 +385,7 @@ angular.module('commercial2', [
 		};
 
 		/* Funcao generica para chamar o Toast na tela. */
-		$rootScope.toast = function(title, message, delay) {
+		$rootScope.toast = function(title, message, delay, ctrl) {
 			var preset = $mdToast.build();
 
 			var controller = function() {
@@ -394,6 +394,12 @@ angular.module('commercial2', [
 				this.close = function() {
 					$mdToast.hide();
 				};
+
+				if (ctrl) {
+					for (var x in ctrl) {
+						this[x] = ctrl[x];
+					}
+				}
 			};
 
 			preset.hideDelay(delay || 5000)
