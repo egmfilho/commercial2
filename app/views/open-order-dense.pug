@@ -148,7 +148,7 @@
 							md-menu-divider
 
 							md-menu-item
-								md-button(ng-click='openOrder.printTicket(o.order_code)')
+								md-button(ng-click='openOrder.printTicket(o.order_code)' ng-disabled='o.order_status_id != openOrder.orderStatusValues["exported"]')
 									md-icon(md-font-icon='fa fa-ticket')
 									| IMPRIMIR TICKET
 							
