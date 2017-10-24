@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-24 10:06:04
+ * @Last Modified time: 2017-10-24 12:12:04
 */
 
 (function() {
@@ -423,8 +423,8 @@
 					debtor += self.budget.order_payments[i].order_payment_value_total;
 				}
 			}
-			
-			if( !self.budget.order_audit.user_id && debtor > 0 && ( self.budget.order_client.person_credit_limit.blocked_days_limit == 1 || debtor > self.budget.order_client.person_credit_limit.person_credit_limit_balance ) ){
+
+			if(self.budget.order_audit && !self.budget.order_audit.user_id && debtor > 0 && ( self.budget.order_client.person_credit_limit.blocked_days_limit == 1 || debtor > self.budget.order_client.person_credit_limit.person_credit_limit_balance ) ){
 				authorizeCredit().then(function(success){
 					if( success.user_max_credit_authorization > 0 ){
 						self.setOrderAudit({
@@ -518,10 +518,12 @@
 
 		$scope.clone = function() {
 			if (!self.canSave()) {
+				OpenedOrderManager.remove(self.budget.order_code);
 				$location.path('/order/clone/' + self.budget.order_code);
 			} else {
 				$rootScope.customDialog().showConfirm('Aviso', 'As alterações serão perdidas, deseja continuar?')
 					.then(function(success) {
+						OpenedOrderManager.remove(self.budget.order_code);
 						$location.path('/order/clone/' + self.budget.order_code);
 					}, function(error) { });
 			}
@@ -1789,18 +1791,21 @@
 			$timeout(function() {
 				if (self.internal.tempItem.product && self.internal.tempItem.product.product_id) {
 					if (self.internal.tempItem.order_item_amount > 0) {
-						self.budget.addItem(new OrderItem(self.internal.tempItem));
-						var container = jQuery('.container-table');
-						container.animate({ scrollTop: container.height() });
+						if (self.budget.addItem(new OrderItem(self.internal.tempItem))) {
+							var container = jQuery('.container-table');
+							container.animate({ scrollTop: container.height() });
+
+							self.internal.tempProduct = null;
+							self.internal.tempItemAlDiscount = 0;
+							self.internal.tempItemVlDiscount = 0;
+							self.internal.tempPrice = new Price();
+							self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() });
+		
+							self.recalcPayments();
+						} else {
+							$rootScope.customDialog().showMessage('Aviso', 'Item já adicionado!');
+						}
 					}
-
-					self.internal.tempProduct = null;
-					self.internal.tempItemAlDiscount = 0;
-					self.internal.tempItemVlDiscount = 0;
-					self.internal.tempPrice = new Price();
-					self.internal.tempItem = new OrderItem({ price_id: getMainUserPriceId().price_id, user_price: getMainUserPriceId() });
-
-					self.recalcPayments();
 				}
 			}, 100);
 		}
