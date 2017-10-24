@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-24 12:12:04
+ * @Last Modified time: 2017-10-24 12:55:02
 */
 
 (function() {
@@ -617,7 +617,8 @@
 					getSeller: true,
 					getItems: true,
 					getProductStock: true,
-					getPayments: true
+					getPayments: true,
+					getTerm: true
 				}, code = $routeParams.param;
 
 				console.log(code);
@@ -629,7 +630,6 @@
 					temp.order_erp_id = null;
 					temp.order_user_id = null;
 					temp.order_status_id = Globals.get('order-status-values')['open'];
-					temp.order_term_id = null;
 					temp.order_origin_id = null;
 					temp.order_code = null;
 					temp.order_code_erp = null;
@@ -653,6 +653,19 @@
 
 					if (success.data.order_credit === 'Y') {
 						temp.order_payments.shift();
+					}
+
+					if (temp.order_term_id) {
+						$rootScope.loading.load();
+						providerTerm.getById(temp.order_term_id, { getModality: true }).then(function(success) {
+							self.internal.term.tempTerm = new Term(success.data);
+							self.internal.term.backup = new Term(success.data);
+							/* Cria uma copia de backup para saber se o orcamento foi modificado no final */
+							$rootScope.loading.unload();
+						}, function(error) {
+							constants.debug && console.log(error);
+							$rootScope.loading.unload();
+						});
 					}
 
 					temp.order_payments = temp.order_payments.map(function(p) {
@@ -2568,7 +2581,7 @@
 						var i, flag;
 
 						for (i = 0; i < self.budget.order_payments.length; i++) {
-							if (self.budget.order_payments[i].order_payment_deadline.getTime() < newPayment.order_payment_deadline.getTime()) {
+							if (payment != self.budget.order_payments[i] && self.budget.order_payments[i].order_payment_deadline.getTime() < newPayment.order_payment_deadline.getTime()) {
 								flag = true;
 								break;
 							}
