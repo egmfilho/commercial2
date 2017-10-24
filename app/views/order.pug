@@ -306,7 +306,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 										keys-shortcuts enter='order.focusOn("input[name=\'al-discount\']")'
 										currency trim min-fraction-size='0' max-fraction-size='{{order.internal.tempItem.product.unit.unit_format == "I" ? 0 : 4}}' 
 										number-only separator=',.' 
-										replace-text='{ ".": "{{order.internal.tempItem.product.unit.unit_format == "I" ? \'\' : \',\'}}", ",": "{{order.internal.tempItem.product.unit.unit_format == "I" ? \'\' : \',\'}}" }'
+										replace-text='{ ".": "", ",": "{{order.internal.tempItem.product.unit.unit_format == "I" ? \'\' : \',\'}}" }'
 										ng-disabled='!order.internal.tempItem.product.product_code')
 						
 						md-input-container(flex='25')
@@ -315,7 +315,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 							input(name='al-discount' ng-model='order.internal.tempItemAlDiscount' 
 									ng-blur='order.internal.tempItemAlDiscount = order.internal.tempItem.order_item_al_discount.toString()'
 									currency trim max-fraction-size='4' number-only separator=',.' 
-									replace-text replace-from='.' replace-to=','
+									replace-text='{ ".": "," }'
 									ng-disabled='!order.internal.tempItem.product.product_code'
 									keys-shortcuts enter='order.setItemAlDiscount(order.internal.tempItemAlDiscount)')
 						
@@ -324,7 +324,8 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 								| Desconto R$
 							input(name='vl-discount' ng-model='order.internal.tempItemVlDiscount' 
 									ng-blur='order.internal.tempItemVlDiscount = order.internal.tempItem.order_item_vl_discount'
-									currency number-only separator=',.' replace-text replace-from='.' replace-to=','
+									currency number-only separator=',.'
+									replace-text='{ ".": "," }'
 									ng-disabled='!order.internal.tempItem.product.product_code'
 									keys-shortcuts enter='order.setItemVlDiscount(order.internal.tempItemVlDiscount)')
 						

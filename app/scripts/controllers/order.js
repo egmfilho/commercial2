@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-24 12:55:02
+ * @Last Modified time: 2017-10-24 16:36:12
 */
 
 (function() {
@@ -414,6 +414,7 @@
 			var debtor = 0;
 			var authorized_modality_id = Globals.get('credit-limit').split(',');
 			var today = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+
 			for (var i = 0; i < self.budget.order_payments.length; i++) {
 				if (moment(self.budget.order_payments[i].order_payment_deadline).isBefore(today)) {
 					$rootScope.customDialog().showMessage('Erro', 'Não é possível salvar o orçamento pois o mesmo contém ao menos uma forma de pagamento com data anterior à data de hoje.');
@@ -626,23 +627,23 @@
 				$rootScope.loading.load();
 				providerOrder.getByCode(code, options).then(function(success) {
 					var temp = new Order(success.data);
-					temp.order_id = null;
-					temp.order_erp_id = null;
-					temp.order_user_id = null;
+					delete temp.order_id;
+					delete temp.order_erp_id;
+					delete temp.order_user_id;
 					temp.order_status_id = Globals.get('order-status-values')['open'];
-					temp.order_origin_id = null;
-					temp.order_code = null;
-					temp.order_code_erp = null;
-					temp.order_code_document = null;
+					delete temp.order_origin_id;
+					delete temp.order_code;
+					delete temp.order_code_erp;
+					delete temp.order_code_document;
 					temp.order_mail_sent = [];
-					temp.order_update = null;
-					temp.order_date = null;
-					temp.creditPayment = null;
-					temp.order_audit = null;
-					temp.order_credit = null;
-					temp.order_value_icms = null;
-					temp.order_value_st = null;
-					temp.status = null;
+					delete temp.order_update;
+					delete temp.order_date;
+					delete temp.creditPayment;
+					delete temp.order_audit;
+					delete temp.order_credit;
+					delete temp.order_value_icms;
+					delete temp.order_value_st;
+					delete temp.status;
 					temp.order_audit_discounts = [];
 
 					temp.order_items = temp.order_items.map(function(i) {
@@ -852,9 +853,11 @@
 								this.msg = msg;
 								this.timer = 10;
 
+								var _timer = null;
+
 								this.tick = function() {
 									var scope = this;
-									$timeout(function() {
+									_timer = $timeout(function() {
 										scope.timer --;
 										if (scope.timer <= 0) {
 											$scope.close(true);
@@ -865,6 +868,11 @@
 								};
 
 								this.tick();
+
+								this.stopTimer = function() {
+									this.timer = 10;
+									$timeout.cancel(_timer);
+								};
 							};
 
 						_backup = self.budget;
@@ -2029,9 +2037,11 @@
 					this.msg = msg;
 					this.timer = 10;
 
+					var _timer = null;
+
 					this.tick = function() {
 						var scope = this;
-						$timeout(function() {
+						_timer = $timeout(function() {
 							scope.timer --;
 							if (scope.timer <= 0) {
 								$scope.close(true);
@@ -2042,6 +2052,11 @@
 					};
 
 					this.tick();
+
+					this.stopTimer = function() {
+						this.timer = 10;
+						$timeout.cancel(_timer);
+					};
 				};
 
 			self.propagateSaveOrder(self.budget.order_company_id);

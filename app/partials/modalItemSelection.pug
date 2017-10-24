@@ -18,7 +18,7 @@
 					td {{i.product.product_name}}
 					td
 						input.text-right(ng-model='i.order_item_amount' ng-change='ctrl.updateItemValues(i)'
-							currency trim min-fraction-size='0' number-only separator=',.' replace-text replace-from='.' replace-to=',')
+							currency trim min-fraction-size='0' number-only separator=',.' replace-text='{ ".": "", ",": "{{i.order_item.product.unit.unit_format == "I" ? \'\' : \',\'}}" }')
 					td {{i.order_item_value_unitary | currency:'R$ '}}
 					td {{i.order_item_value_total | currency:'R$ '}}
 					td
