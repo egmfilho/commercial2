@@ -18,7 +18,9 @@
 					td {{i.product.product_name}}
 					td
 						input.text-right(ng-model='i.order_item_amount' ng-change='ctrl.updateItemValues(i)'
-							currency trim min-fraction-size='0' number-only separator=',.' replace-text='{ ".": "", ",": "{{i.product.unit.unit_format == "I" ? \'\' : \',\'}}" }')
+							currency trim min-fraction-size='0' number-only separator=',.' 
+							replace-text='{ ".": "", ",": "{{i.product.unit.unit_format == "I" ? \'\' : \',\'}}" }'
+							keys-shortcuts enter='ctrl.focusOkButton()')
 					td {{i.order_item_value_unitary | currency:'R$ '}}
 					td {{i.order_item_value_total | currency:'R$ '}}
 					td
@@ -27,5 +29,5 @@
 
 
 .footer.bordered(layout='row' layout-align='end center')
-	md-button.md-raised(ng-click='ctrl._close()')
+	md-button.md-raised(name='ok-button' ng-click='ctrl._close()')
 		| &nbsp; Ok &nbsp;
