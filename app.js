@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-06 09:08:17
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-25 13:58:57
+ * @Last Modified time: 2017-10-25 17:52:07
 */
 
 const { app, ipcMain, BrowserWindow, dialog } = require('electron');
@@ -120,9 +120,20 @@ ipcMain.on('callUpdater', (event, arg) => {
 	let relativePathUpdater;
 	
 	if (process.platform === 'darwin') {
-		relativePathUpdater = '../../../../../Atualizador/test.app';
+		try {
+			fs.accessSync('../../../../../Atualizador/test.app', fs.constants.F_OK);
+			relativePathUpdater = '../../../../../Atualizador/test.app';
+		} catch(e) {
+			dialog.showOpenDialog();
+		} finally {
+			
+		}
 	} else {
 		relativePathUpdater = '../Atualizador-win32-ia32/Atualizador.exe';
+	}
+
+	if (!relativePathUpdater) {
+		return;
 	}
 
 	dialog.showMessageBox({
