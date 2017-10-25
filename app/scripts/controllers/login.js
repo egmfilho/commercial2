@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-29 14:03:46
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-24 17:36:30
+ * @Last Modified time: 2017-10-25 12:15:41
  */
 
 (function() {
@@ -47,8 +47,16 @@
 							if (!!res.data.status.description) {
 								switch (res.data.status.action) {
 									case 'update':
+										$rootScope.toast('Atualização disponível', res.data.status.description, 10000, {
+											positiveButton: {
+												label: 'Atualizar',
+												action: function() { 
+													if (constants.isElectron)
+														require('electron').ipcRenderer.send('callUpdater'); 
+												}
+											}
+										});
 										// $rootScope.toast('Atualização disponível', 'Deseja atualizar agora ou tentar depois?', 10000);
-										$rootScope.toast('Atualização disponível', res.data.status.description, 10000);
 										break;
 
 									default: 

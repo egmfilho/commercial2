@@ -5,17 +5,10 @@ md-toast.custom-toast(layout='row')
 		span.md-title {{ctrl.title}}
 		span.md-subhead(ng-bind-html='ctrl.message | trusted')
 
-		.offset-top-15(layout='row' layout-align='end end')
-			md-button.md-primary(ng-click='ctrl.close()') Fechar
-
-//- md-toast.custom-toast(layout='row')
-	.logo(flex='30')
-		div
-	.info(flex layout='column')
-		span.md-title {{ctrl.title}}
-		span.md-subhead(ng-bind-html='ctrl.message | trusted')
-
 		.offset-top-15(layout='row' layout-align='start end')
-			md-button.md-primary(ng-click='ctrl.close()') Atualizar
-			span(flex='10')
-			md-button.md-primary(ng-click='ctrl.close()') Depois
+			md-button.md-primary(name='positive-button' ng-click='ctrl.positiveButton.action()' ng-if='!!ctrl.positiveButton') {{ctrl.positiveButton.label}}
+			
+			span(flex='10' ng-if='!!ctrl.positiveButton')
+			span(flex ng-if='!ctrl.positiveButton')
+
+			md-button.md-primary(name='negative-button' ng-click='ctrl.close()') Fechar

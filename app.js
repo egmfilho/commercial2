@@ -1,17 +1,11 @@
 /*
-* @Author: egmfilho <egmfilho@live.com>
-* @Date:   2017-06-06 09:08:17
+ * @Author: egmfilho <egmfilho@live.com>
+ * @Date:   2017-06-06 09:08:17
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-23 09:31:18
+ * @Last Modified time: 2017-10-25 13:58:57
 */
 
-const electron = require('electron');
-// Module to control application life.
-const app = electron.app;
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow;
-
-const ipcMain = electron.ipcMain;
+const { app, ipcMain, BrowserWindow, dialog } = require('electron');
 
 const path = require('path');
 const url = require('url');
@@ -70,17 +64,17 @@ global.temp = {
 	data: '{ }'
 };
 
-ipcMain.on('propagate-save-order', function(event, arg) {
+ipcMain.on('propagate-save-order', (event, arg) => {
 	writeLog('Propagate save order called');
 	mainWindow.webContents.send('refresh-orders', arg);
 });
 
-ipcMain.on('shutdown', function(event, arg) {
+ipcMain.on('shutdown', (event, arg) => {
 	writeLog('Kill\'em all!');
 
 	global.isValidSession.value = false;
 
-	for (var i = 0; i < global.children.array.length; i++) {
+	for (let i = 0; i < global.children.array.length; i++) {
 		global.children.array[i] && global.children.array[i].close();
 	}
 
@@ -89,12 +83,12 @@ ipcMain.on('shutdown', function(event, arg) {
 	mainWindow.webContents.send('shutdown', null);
 });
 
-ipcMain.on('killme', function(event, arg) {
+ipcMain.on('killme', (event, arg) => {
 	writeLog('Someone just asked to be killed!');
 	setTimeout(function() {
 		let win = null;
 
-		global.children.array = global.children.array.filter(function(w) {
+		global.children.array = global.children.array.filter(w => {
 			if (w.id == arg.winId) 
 				win = w;
 
@@ -109,17 +103,40 @@ ipcMain.on('killme', function(event, arg) {
 	}, arg.ttl || 500);
 });
 
-ipcMain.on('redeem', function(event, arg) {
+ipcMain.on('redeem', (event, arg) => {
 	if (arg.guid) {
 		writeLog('redeem fired by: ' + arg.guid);
 		order66(arg.guid);
 	}
 });
 
-ipcMain.on('writeLog', function(event, arg) {
+ipcMain.on('writeLog', (event, arg) => {
 	if (arg.log) {
 		writeLog(arg.log);
 	}
+});
+
+ipcMain.on('callUpdater', (event, arg) => {
+	let relativePathUpdater;
+	
+	if (process.platform === 'darwin') {
+		relativePathUpdater = '../../../../../Atualizador/test.app';
+	} else {
+		relativePathUpdater = '../Atualizador-win32-ia32/Atualizador.exe';
+	}
+
+	dialog.showMessageBox({
+		message: 'open ' + path.join(app.getPath('exe'), relativePathUpdater),
+		buttons: [ 'Sim', 'Não' ]
+	}, (response) => {
+		if (response == 0) {
+			const cp = require('child_process');
+			cp.exec('open ' + path.join(app.getPath('exe'), relativePathUpdater), (error, stdout, stderr) => {
+				global.globals = { };
+				app.quit();
+			});
+		}
+	});
 });
 
 function writeLog(log) {
@@ -127,20 +144,20 @@ function writeLog(log) {
 
 	console.log(log);
 
-	fs.appendFile(logFilename, '[' + getDateString('-', ' ', ':') + '] ' + log + '\n', function(err) {
+	fs.appendFile(logFilename, '[' + getDateString('-', ' ', ':') + '] ' + log + '\n', err => {
 		if (err) console.log(err);
 	});
 }
 
 function order66(guid, callback) {
-	var parsed = global.globals ? JSON.parse(global.globals.shared) : null,
+	const querystring = require('querystring');
+	const http = require('http');
+
+	let parsed = global.globals ? JSON.parse(global.globals.shared) : null,
 		token = parsed ? parsed['session-token'] : null,
 		host = parsed ? parsed['server-host'] : null;
 
-	var querystring = require('querystring'),
-		http = require('http');
-
-	var post_options = {
+	let post_options = {
 		hostname: host.split('/')[2],
 		path: '/commercial2.api/person_credit.php?action=order66',
 		method: 'GET',
@@ -151,17 +168,17 @@ function order66(guid, callback) {
 	};
 
 	writeLog('Order 66 in progress...');
-	var post_req = http.request(post_options, function(res) {
+	let post_req = http.request(post_options, res => {
 		res.setEncoding('utf8');
 		writeLog('Status: ', res.statusCode);
 
-		res.on('data', function(chunk) {
+		res.on('data', chunk => {
 			writeLog('Response: ' + chunk);
 			callback && callback();
 		});
 	});
 
-	post_req.on('error', function(e) {
+	post_req.on('error', e => {
 		writeLog('deu erro: ' + e.message );
 		callback && callback();
 	});
@@ -175,7 +192,7 @@ function createWindow() {
 		width: 1024, 
 		height: 768,
 		devTools: false,
-		title: 'Commercial - Gestor de vendas',
+		title: 'Commercial - Gestor de Vendas',
 		icon: './www/images/logo-icon.png',
 		show: false,
 		webPreferences: {
@@ -185,7 +202,7 @@ function createWindow() {
 
 	global.mainWindow.instance = mainWindow;
 
-	mainWindow.on('page-title-updated', function(e) {
+	mainWindow.on('page-title-updated', e => {
 		e.preventDefault();
 	});
 
@@ -196,24 +213,22 @@ function createWindow() {
 		slashes: true
 	}));
 
-	mainWindow.on('close', function(e) {
-		var choice = electron.dialog.showMessageBox(this, {
+	mainWindow.on('close', e => {
+		let choice = dialog.showMessageBox({
 			type: 'question',
 			buttons: ['Sim', 'Não'],
 			title: 'Confirmação',
 			message: 'Deseja encerrar o Commercial?'
 		});
 
-		if (choice != 1) {
-
-		} else {
+		if (choice == 1) {
 			e.preventDefault(); 
 		} 
 			
 	});
 
 	// Emitted when the window is closed.
-	mainWindow.on('closed', function () {
+	mainWindow.on('closed', () => {
 		// Dereference the window object, usually you would store windows
 		// in an array if your app supports multi windows, this is the time
 		// when you should delete the corresponding element.
@@ -231,7 +246,7 @@ function ready() {
 		try {
 			fs.mkdirSync(logDir);
 		} catch(exeption) {
-			electron.dialog.showMessageBox({
+			dialog.showMessageBox({
 				type: 'error',
 				title: 'Erro',
 				message: 'O Commercial encontrou um problema ao tentar criar arquivos internos. Verifique as permissões de usuário na pasta do Commercial.',
@@ -254,7 +269,7 @@ function ready() {
 app.on('ready', ready);
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function () {
+app.on('window-all-closed', () => {
 	// On OS X it is common for applications and their menu bar
 	// to stay active until the user quits explicitly with Cmd + Q
 	
@@ -263,8 +278,8 @@ app.on('window-all-closed', function () {
 	// }
 });
 
-app.on('before-quit', function (event) {
-	var parsed = global.globals ? JSON.parse(global.globals.shared) : null;
+app.on('before-quit', (event) => {
+	let parsed = global.globals ? JSON.parse(global.globals.shared) : null;
 
 	if (parsed && parsed['session-token']) {
 		order66(null, app.quit);
@@ -276,7 +291,7 @@ app.on('before-quit', function (event) {
 	writeLog('Closing Application');
 });
 
-app.on('activate', function () {
+app.on('activate', () => {
 	// On OS X it's common to re-create a window in the app when the
 	// dock icon is clicked and there are no other windows open.
 	if (mainWindow === null) {
