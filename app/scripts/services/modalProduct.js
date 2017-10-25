@@ -1,8 +1,8 @@
 /*
  * @Author: alessandro
  * @Date: 2017-10-20 17:12:56 
- * @Last Modified by:   egmfilho 
- * @Last Modified time: 2017-10-20 17:12:56 
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-10-25 16:22:53
  */
 
 (function() {
@@ -96,6 +96,11 @@
 
 						/* Fecha o modal retornando o produto selecionado */
 						this.select = function(p){
+							if (selection.length > 0) {
+								this.addProduct(p);
+								return;
+							}
+
 							if( p.product_active == 'Y'){
 								if (constants.isElectron) {
 									Mousetrap.unbind('up');
@@ -197,6 +202,9 @@
 										this.updateItemValues = function(i) { 
 											var n = i.order_item_amount;
 											i.setAmount(n);
+										};
+										this.focusOkButton = function() {
+											jQuery('button[name="ok-button"]').focus();
 										};
 									};
 
