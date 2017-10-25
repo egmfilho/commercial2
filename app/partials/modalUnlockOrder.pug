@@ -1,16 +1,18 @@
 .irineu(layout='row' layout-align='start center' layout-fill style='margin-bottom: 0')
+	i.fa.fa-lock
 	span(flex) Orçamento bloqueado
 
 .body(layout='column' layout-fill)
 
-	p(style='margin-top: 0') Este orçamento está bloqueado para edição pois já encontra-se exportado. Para editar um orçamento exportado é preciso recuperá-lo.
+	p(style='margin-top: 0' ng-if='ctrl._isDav') Não é possível recuperar um DAV. Você pode duplica-lo para exportar um novo.
+	p(style='margin-top: 0' ng-if='!ctrl._isDav') Este orçamento está bloqueado para edição pois já encontra-se exportado. Para editar um orçamento exportado é preciso recuperá-lo.
 
-	p.well.offset-top-15 Obs. Ao recuperar um orçamento que possui carta de crédito, o mesmo perderá esta forma de pagamento tendo o crédito devolvido ao cliente.
-	//- p.well Um orçamento recuperado pode ser exportado novamente para qualquer uma das opções (Pedido / DAV).
+	p.well.offset-top-15(ng-if='!ctrl._isDav') Obs. Ao recuperar um orçamento que possui carta de crédito, o mesmo perderá esta forma de pagamento tendo o crédito devolvido ao cliente.
 
 .footer(layout='row' layout-align='end center')
 	md-button.md-raised(ng-click='ctrl._cancel()')
 		| &nbsp; Apenas visualizar &nbsp;
 
 	md-button.md-primary.md-raised(ng-click='ctrl.confirm()')
-		| &nbsp; Recuperar &nbsp;
+		span(ng-if='ctrl._isDav') &nbsp; Duplicar &nbsp;
+		span(ng-if='!ctrl._isDav') &nbsp; Recuperar &nbsp;

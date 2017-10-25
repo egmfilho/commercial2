@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-24 16:36:12
+ * @Last Modified time: 2017-10-25 16:57:39
 */
 
 (function() {
@@ -3352,19 +3352,24 @@
 
 			function ctrl() {
 				this._showCloseButton = false;
+				this._isDav = self.budget.order_export_type == 'dav';
 				this.confirm = function() {
 					var msg, scope = this;
 
-					msg = 'Ao recuperar este orçamento seu pedido deixará de existir. O mesmo poderá ser reexportado futuramente.<br><br>Deseja continuar?'
+					if (this._isDav) {
+						msg = 'Ao duplicar este DAV o mesmo será inativado.<br><br>Deseja continuar?'
+					} else {
+						msg = 'Ao recuperar este orçamento seu pedido deixará de existir. O mesmo poderá ser reexportado futuramente.<br><br>Deseja continuar?'
+					}
 
-					$rootScope.customDialog().showConfirm('Recuperação de orçamento', msg)
+					$rootScope.customDialog().showConfirm('Aviso', msg)
 						.then(function(success) {
 							scope._close();
 						});
 				};
 			}
 
-			$rootScope.customDialog().showTemplate('Aviso', './partials/modalUnlockOrder.html', ctrl, options)
+			$rootScope.customDialog().showTemplate('Commercial', './partials/modalUnlockOrder.html', ctrl, options)
 				.then(function(success) {
 					$rootScope.loading.load();
 					providerOrder.unlock(self.budget.order_id)
@@ -3378,10 +3383,16 @@
 									}
 								};
 
-								ElectronWindow.createWindow('#/order/edit/' + self.budget.order_code, options);
+								if (self.budget.order_export_type == 'dav')
+									ElectronWindow.createWindow('#/order/clone/' + self.budget.order_code, options);
+								else
+									ElectronWindow.createWindow('#/order/edit/' + self.budget.order_code, options);
 							}
 							else {
-								$location.path('/order/edit/' + self.budget.order_code).search('source', 'recover');
+								if (self.budget.order_export_type == 'dav')
+									$location.path('/order/clone/' + self.budget.order_code);
+								else
+									$location.path('/order/edit/' + self.budget.order_code);
 							}
 							$timeout(function() {
 								window.close();
