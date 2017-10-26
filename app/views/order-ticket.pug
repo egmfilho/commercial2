@@ -11,10 +11,14 @@ md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row')
 					.name {{::ctrl.order.order_company.company_name}}
 			
 			.info(layout='row' layout-align='center')
-				.md-block.text-left(flex='60')
+				.md-block.text-left(flex='50')
 					| {{::now | date:'dd/MM/yyyy HH:mm:ss'}}
-				.md-block.text-right(flex='40')
+				.md-block.text-right(flex='50')
 					| COMMERCIAL {{::version}}
+
+			.offset-top-15(layout='column')
+				.md-block CLIENTE: {{::ctrl.order.order_client.person_code}} {{::ctrl.order.order_client.person_name}}
+				.md-block VENDEDOR: {{::ctrl.order.order_seller.person_code}} - {{::ctrl.order.order_seller.person_name}}
 
 		.body 
 			.md-headline.text-center.offset-top-15
