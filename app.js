@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-06 09:08:17
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-25 17:52:07
+ * @Last Modified time: 2017-10-26 09:50:44
 */
 
 const { app, ipcMain, BrowserWindow, dialog } = require('electron');
@@ -117,37 +117,70 @@ ipcMain.on('writeLog', (event, arg) => {
 });
 
 ipcMain.on('callUpdater', (event, arg) => {
-	let relativePathUpdater;
+	let relativePath = {
+		mac: {
+			path: '../../../../../',
+			file: './Atualizador-darwin-x64/Atualizador.app'
+		},
+		win: {
+			path: '../',
+			file: './Atualizador-win32-ia32/Atualizador.exe'
+		}
+	};
+
+	let updater;
 	
-	if (process.platform === 'darwin') {
-		try {
-			fs.accessSync('../../../../../Atualizador/test.app', fs.constants.F_OK);
-			relativePathUpdater = '../../../../../Atualizador/test.app';
-		} catch(e) {
-			dialog.showOpenDialog();
-		} finally {
+	try {
+		if (process.platform === 'darwin') {
+			let x = path.join(relativePath.mac.path + relativePath.mac.file);
+			let y = path.join(app.getPath('exe'), x);
 			
+			fs.accessSync(y, fs.constants.F_OK);
+			updater = y;
+		} else {
+			let x = path.join(relativePath.win.path, relativePath.win.file);
+			let y = path.join(app.getPath('exe'), x);
+			
+			fs.accessSync(y, fs.constants.F_OK);
+			updater = y;
 		}
-	} else {
-		relativePathUpdater = '../Atualizador-win32-ia32/Atualizador.exe';
-	}
+	} catch(e) {
+		let defaultPath = path.join(app.getPath('exe'), process.platform === 'darwin' ? relativePath.mac.path : relativePath.win.path);
+		
+		let filePaths = dialog.showOpenDialog({
+			title: 'Abrir atualizador',
+			defaultPath: defaultPath,
+			filters: [{ name: 'Aplicativo', extensions: ['app'] }],
+			properties: ['openFile']
+		});
 
-	if (!relativePathUpdater) {
-		return;
-	}
+		if (filePaths && filePaths.length) {
+			updater = filePaths[0];
+		}
+	} finally {
+		if (!!updater) {
+			dialog.showMessageBox({
+				title: 'Atualizador encontrado',
+				message: 'Deseja executar o atualizador? \n' + updater,
+				buttons: [ 'Sim', 'Não' ]
+			}, (response) => {
+				if (response == 0) {
+					const cp = require('child_process');
+					cp.exec('open ' + updater, (error, stdout, stderr) => {
+						if (error) {
+							dialog.showErrorBox('Erro', 'Não foi possível executar o atualizador.');
+							return;
+						}
 
-	dialog.showMessageBox({
-		message: 'open ' + path.join(app.getPath('exe'), relativePathUpdater),
-		buttons: [ 'Sim', 'Não' ]
-	}, (response) => {
-		if (response == 0) {
-			const cp = require('child_process');
-			cp.exec('open ' + path.join(app.getPath('exe'), relativePathUpdater), (error, stdout, stderr) => {
-				global.globals = { };
-				app.quit();
+						global.globals = { };
+						app.quit();
+					});
+				}
 			});
+		} else {
+			dialog.showErrorBox('Erro', 'O atualizador não pôde ser encontrado.');
 		}
-	});
+	}
 });
 
 function writeLog(log) {
@@ -207,7 +240,7 @@ function createWindow() {
 		icon: './www/images/logo-icon.png',
 		show: false,
 		webPreferences: {
-			zoomFactor: 1.15
+			zoomFactor: 1
 		}
 	});
 
@@ -234,7 +267,7 @@ function createWindow() {
 
 		if (choice == 1) {
 			e.preventDefault(); 
-		} 
+		}
 			
 	});
 
