@@ -1,8 +1,8 @@
 /*
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-06-06 14:13:57
-* @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 17:25:59
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-10-27 15:03:44
 */
 
 (function() {
@@ -60,7 +60,8 @@
 				this.company_id     = null;
 				this.price_value    = null;
 				this.price_date     = null;
-				this.price_erp       = new PriceERP();
+				this.price_name     = null;
+				this.price_erp      = new PriceERP();
 
 				if (price) {
 					Object.assign(this, price, {
