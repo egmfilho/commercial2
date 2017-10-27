@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-23 17:13:32
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 14:05:52
+ * @Last Modified time: 2017-10-27 08:32:39
  */
 
 (function() {
@@ -35,8 +35,8 @@
 				$rootScope.openOrderFilters.calendars = {};
 				$rootScope.openOrderFilters.calendars.start = {
 					isCalendarOpen: false,
-					value: moment().tz('America/Sao_Paulo').toDate(),
-					maxDate: moment().tz('America/Sao_Paulo').toDate(),
+					value: moment().tz('America/Sao_Paulo').set({ hour: 12, minute: 0, second: 0, millisecond: 0 }).toDate(),
+					maxDate: moment().tz('America/Sao_Paulo').set({ hour: 12, minute: 0, second: 0, millisecond: 0 }).toDate(),
 					update: function(){
 						$rootScope.openOrderFilters.calendars.end.value = moment($rootScope.openOrderFilters.calendars.start.value).toDate();
 						$rootScope.openOrderFilters.calendars.end.minDate = moment($rootScope.openOrderFilters.calendars.start.value).toDate();
@@ -46,7 +46,7 @@
 	
 				$rootScope.openOrderFilters.calendars.end = {
 					isCalendarOpen: false,
-					value: moment().tz('America/Sao_Paulo').toDate(),
+					value: moment().tz('America/Sao_Paulo').set({ hour: 12, minute: 0, second: 0, millisecond: 0 }).toDate(),
 					minDate: moment($rootScope.openOrderFilters.calendars.start.value).toDate(),
 					maxDate: moment($rootScope.openOrderFilters.calendars.start.value).add(dateRange,'days').toDate()
 				};
@@ -190,7 +190,7 @@
 							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 						});
 					}, function(error) { });
-			}
+			};
 
 			$scope.setSearchOpen = function(value) {
 				$scope.isSearchOpened = value;
@@ -277,7 +277,7 @@
 					constants.debug && console.log(error);
 					$rootScope.loading.unload();
 				});
-			}
+			};
 
 			function getPersonByName(name, category) {
 				var deferred = $q.defer();
