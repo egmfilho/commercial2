@@ -14,14 +14,14 @@
 				label Bairro
 				md-select(ng-model='ctrl.filters.district'
 						data-md-container-class='query-select-container'
-						ng-model-options='{ trackBy: "$value.district_id" }')
+						ng-model-options='{ trackBy: "$value.district_id", debounce: 500 }')
 					md-select-header.select-header
 						| &nbsp; &nbsp;
 						i.fa.fa-search
 						input.md-text(ng-model='queryDistrict' 
 								type='search' placeholder='Digite aqui o nome do bairro'
-								ng-keydown="ctrl.searchDistrict($event, queryDistrict)")
-						button(ng-click='queryDistrict = \'\'; ctrl.searchDistrict()')
+								ng-keydown="$event.stopPropagation()" ng-change='ctrl.searchDistrict(queryDistrict, { clearModel: true })')
+						button(ng-click='queryDistrict = \'\'; ctrl.searchDistrict(null, { clearModel: true })')
 							i.fa.fa-times-circle
 					md-opt-group(label='Bairros')
 						md-option(ng-value='d' 
@@ -32,14 +32,14 @@
 				label Cidade
 				md-select(ng-model='ctrl.filters.city'
 						data-md-container-class='query-select-container'
-						ng-model-options='{ trackBy: "$value.city_id" }')
+						ng-model-options='{ trackBy: "$value.city_id", debounce: 500 }')
 					md-select-header.select-header
 						| &nbsp; &nbsp;
 						i.fa.fa-search
 						input.md-text(ng-model='queryCity' 
 								type='search' placeholder='Digite aqui o nome da cidade'
-								ng-keydown="ctrl.searchCity($event, queryCity)")
-						button(ng-click='queryCity = \'\'; ctrl.searchCity()')
+								ng-keydown="$event.stopPropagation()" ng-change='ctrl.searchCity(queryCity, { clearModel: true })')
+						button(ng-click='queryCity = \'\'; ctrl.searchCity(null, { clearModel: true })')
 							i.fa.fa-times-circle
 					md-opt-group(label='Cidades')
 						md-option(ng-value='c' 

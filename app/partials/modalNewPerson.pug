@@ -97,8 +97,8 @@ div(flex layout='column')
 						i.fa.fa-search
 						input.md-text(ng-model='ctrl.queryDistrict' 
 								type='search' placeholder='Pesquisar bairro'
-								ng-keydown="$event.stopPropagation()" ng-change='ctrl.searchDistrict()')
-						button(ng-click='ctrl.queryDistrict = \'\'; ctrl.searchDistrict()')
+								ng-keydown="$event.stopPropagation()" ng-change='ctrl.searchDistrict({ clearModel: true })')
+						button(ng-click='ctrl.queryDistrict = \'\'; ctrl.searchDistrict({ clearModel: true })')
 							i.fa.fa-times-circle
 					md-opt-group(label='Bairros')
 						md-option(ng-value='d' 
@@ -117,8 +117,8 @@ div(flex layout='column')
 						i.fa.fa-search
 						input.md-text(ng-model='ctrl.queryCity' 
 								type='search' placeholder='Pesquisar cidade'
-								ng-keydown="$event.stopPropagation()" ng-change='ctrl.searchCity()')
-						button(ng-click='ctrl.queryCity = \'\'; ctrl.searchCity()')
+								ng-keydown="$event.stopPropagation()" ng-change='ctrl.searchCity({ clearModel: true })')
+						button(ng-click='ctrl.queryCity = \'\'; ctrl.searchCity({ clearModel: true })')
 							i.fa.fa-times-circle
 					md-opt-group(label='Cidades')
 						md-option(ng-value='c' 

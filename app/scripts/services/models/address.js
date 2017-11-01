@@ -1,8 +1,8 @@
 /*
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-05-29 09:39:24
-* @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-11 08:49:05
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-11-01 12:28:35
 */
 
 (function() {
@@ -74,6 +74,20 @@
 						city: this.city,
 						district: this.district
 					}
+				},
+
+				setDistrict: function(district) {
+					if (district) {
+						this.district = new District(district);
+						this.district_id = this.district.district_id;
+					}
+				},
+	
+				setCity: function(city) {
+					if (city) {
+						this.city = new City(city);
+						this.city_id = this.city.city_id;
+					}
 				}
 			};
 
@@ -143,18 +157,17 @@
 			}
 
 			function setDistrict(district) {
-				if (district)
+				if (district) {
 					this.district = new District(district);
-
-				// setTimeout(function() { this.district_id = this.district.district_id; }, 500);
-				this.district_id = this.district.district_id;
+					this.district_id = this.district.district_id;
+				}
 			}
 
 			function setCity(city) {
-				if (city)
+				if (city) {
 					this.city = new City(city);
-
-				this.city_id = this.city.city_id;
+					this.city_id = this.city.city_id;
+				}
 			}
 
 			function merge(address) {

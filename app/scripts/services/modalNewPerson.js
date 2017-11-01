@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-15 11:17:54
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 14:05:14
+ * @Last Modified time: 2017-11-01 12:24:23
  */
 
 (function() {
@@ -39,7 +39,7 @@
 
 					this.showModalPersonCheck = function(title, people) {
 						return ModalPersonCheck.show(title, people, scope.category);
-					}
+					};
 
 					this.checkDocument = function() {
 						providerPerson.check(this.customer.person_cpf, this.customer.person_cnpj, this.category)
@@ -135,7 +135,10 @@
 						});
 					};
 
-					this.searchDistrict = function() {
+					this.searchDistrict = function(options) {
+						if (options && options.clearModel)
+							this.customer.person_address[0].setDistrict(new District());
+
 						var options = {
 							limit: 10
 						};
@@ -147,7 +150,10 @@
 						});
 					};
 
-					this.searchCity = function() {
+					this.searchCity = function(options) {
+						if (options && options.clearModel)
+							this.customer.person_address[0].setCity(new City());
+
 						var options = {
 							limit: 10
 						};

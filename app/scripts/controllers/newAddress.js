@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-08 09:24:23
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 14:06:45
+ * @Last Modified time: 2017-11-01 12:31:20
  */
 
 (function() {
@@ -190,7 +190,10 @@
 			e.stopPropagation();
 		}
 
-		function searchDistrict() {
+		function searchDistrict(options) {
+			if (options && options.clearModel)
+				this.newAddress.setDistrict(new District());
+
 			var options = {
 				limit: 10
 			};
@@ -202,7 +205,10 @@
 			});
 		}
 
-		function searchCity() {
+		function searchCity(options) {
+			if (options && options.clearModel)
+				this.newAddress.setCity(new City());
+
 			var options = {
 				limit: 10
 			};

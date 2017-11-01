@@ -47,8 +47,8 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 				i.fa.fa-search
 				input.md-text(ng-model='address.queryDistrict' 
 						type='search' placeholder='Pesquisar bairro'
-						ng-keydown="$event.stopPropagation()" ng-change='address.searchDistrict()')
-				button(ng-click='address.queryDistrict = \'\'')
+						ng-keydown="$event.stopPropagation()" ng-change='address.searchDistrict({ clearModel: true })')
+				button(ng-click='address.queryDistrict = \'\'; address.searchDistrict({ clearModel: true })')
 					i.fa.fa-times-circle
 			md-opt-group(label='Bairros')
 				md-option(ng-value='d' 
@@ -67,8 +67,8 @@ div(layout='row' layout-wrap ng-controller='NewAddressCtrl as address')
 				i.fa.fa-search
 				input.md-text(ng-model='address.queryCity' 
 						type='search' placeholder='Pesquisar cidade'
-						ng-keydown="$event.stopPropagation()" ng-change='address.searchCity()')
-				button(ng-click='address.queryCity = \'\'; address.searchCity()')
+						ng-keydown="$event.stopPropagation()" ng-change='address.searchCity({ clearModel: true })')
+				button(ng-click='address.queryCity = \'\'; address.searchCity({ clearModel: true })')
 					i.fa.fa-times-circle
 			md-opt-group(label='Cidades')
 				md-option(ng-value='c' 

@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-09 08:39:25
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 14:05:03
+ * @Last Modified time: 2017-11-01 12:29:22
  */
 
 (function() {
@@ -22,12 +22,13 @@
 					this.filters = new Cep();
 					this.result = new Array();
 
-					this.searchDistrict = function(e, query) {
+					this.searchDistrict = function(query, options) {
+						if (options && options.clearModel)
+							this.filters.setDistrict(new District());
+
 						var options = {
 							limit: 10
 						};
-
-						e && e.stopPropagation();
 
 						providerDistrict.getByName(query, options).then(function(success) {
 							scope.queryDistrictResult = success.data.map(function(d) { return new District(d) });
@@ -36,12 +37,13 @@
 						});
 					};
 
-					this.searchCity = function(e, query) {
+					this.searchCity = function(query, options) {
+						if (options && options.clearModel)
+							this.filters.setCity(new City());
+
 						var options = {
 							limit: 10
 						};
-
-						e && e.stopPropagation();
 
 						providerCity.getByName(query, options).then(function(success) {
 							scope.queryCityResult = success.data.map(function(c) { return new City(c) });
