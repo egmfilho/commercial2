@@ -47,6 +47,11 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								|  Imprimir
 								span.md-alt-text {{ 'M-P' | keyboardShortcut }}
 						md-menu-item
+							md-button(ng-click='order.print(cupon)' ng-disabled='!order.canPrint()')
+								md-icon(md-font-set='material-icons') receipt
+								|  Imprimir em cupom
+								span.md-alt-text {{ 'M-P' | keyboardShortcut }}
+						md-menu-item
 							md-button(ng-click='order.savePDF()' ng-disabled='!order.canPrint()')
 								md-icon(md-font-icon='fa fa-file-pdf-o')
 								|  Salvar PDF
