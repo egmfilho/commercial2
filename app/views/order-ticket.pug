@@ -21,9 +21,9 @@ md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row')
 				.md-block VENDEDOR: {{::ctrl.order.order_seller.person_code}} - {{::ctrl.order.order_seller.person_name}}
 
 		.body 
-			.md-headline.text-center.offset-top-15
+			.title.text-center.offset-top-15
 				| {{ctrl.order.order_export_type == 'dav' ? 'DAV' : 'PEDIDO'}}: {{ctrl.order.order_code_erp}}
-			.title.offset-top-15
+			.title.lg.offset-top-15
 				.md-block.text-center
 					| ORÇAMENTO N&#186;: {{::ctrl.order.order_code}}
 

@@ -32,7 +32,7 @@ md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row')
 				.md-block.text-right(flex='50' ng-if='ctrl.order.order_code_erp')
 					| {{ctrl.order.order_export_type == 'dav' ? 'DAV' : 'PEDIDO'}}: {{ctrl.order.order_code_erp}}
 
-			.title ORÇAMENTO
+			.title.lg ### ORÇAMENTO ###
 			
 			.customer(layout='column')
 				.md-block CLIENTE: {{::ctrl.order.order_client.person_code}} {{::ctrl.order.order_client.person_name}}
