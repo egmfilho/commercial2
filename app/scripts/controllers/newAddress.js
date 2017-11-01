@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-08 09:24:23
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-01 12:31:20
+ * @Last Modified time: 2017-11-01 13:04:48
  */
 
 (function() {
@@ -16,6 +16,7 @@
 		'$rootScope',
 		'$scope', 
 		'$http',
+		'$timeout',
 		'ProviderAddress',
 		'Address', 
 		'ModalCep',
@@ -30,7 +31,7 @@
 		'Constants' 
 	];
 
-	function NewAddressCtrl($rootScope, $scope, $http, providerAddress, Address, ModalCep, providerCep, Cep, providerDistrict, District, providerCity, City, Contact, Globals, constants) {
+	function NewAddressCtrl($rootScope, $scope, $http, $timeout, providerAddress, Address, ModalCep, providerCep, Cep, providerDistrict, District, providerCity, City, Contact, Globals, constants) {
 
 		var self = this, _personId = null, _contacts = [];
 
@@ -107,6 +108,7 @@
 			providerCep.getByCode(cep).then(function(success) {
 				setCepFromSource(new Cep(success.data).toAddress());
 				$rootScope.loading.unload();
+				$timeout(function() { jQuery("input[name='numero']").focus(); }, 250);
 			}, function(error) {
 				constants.debug && console.log(error);
 				$rootScope.loading.unload();

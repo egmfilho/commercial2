@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-15 11:17:54
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-01 12:24:23
+ * @Last Modified time: 2017-11-01 13:04:55
  */
 
 (function() {
@@ -10,7 +10,7 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('ModalNewPerson', ['$rootScope', '$http', 'Constants', 'Globals', 'ModalPersonCheck', function($rootScope, $http, constants, Globals, ModalPersonCheck) {
+		.factory('ModalNewPerson', ['$rootScope', '$http', '$timeout', 'Constants', 'Globals', 'ModalPersonCheck', function($rootScope, $http, $timeout, constants, Globals, ModalPersonCheck) {
 
 
 			function show() {
@@ -128,6 +128,7 @@
 						providerCep.getByCode(code).then(function(success) {
 							setCepFromSource(new Cep(success.data).toAddress());
 							$rootScope.loading.unload();
+							$timeout(function() { jQuery("input[name='numero']").focus(); }, 250);
 						}, function(error) {
 							constants.debug && console.log(error);
 							$rootScope.loading.unload();
