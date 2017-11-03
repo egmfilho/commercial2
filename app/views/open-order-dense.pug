@@ -87,6 +87,8 @@
 				thead
 					tr
 						th.sortable &nbsp;
+
+						th.sortable &nbsp;
 						
 						th.sortable(ng-click="openOrder.sortBy('order_code')")
 							| CÓDIGO
@@ -121,6 +123,10 @@
 	div(flex)
 		md-virtual-repeat-container#virtual-repeat-container
 			.repeated-item(layout='row' layout-align='start center' md-virtual-repeat='o in (filteredList = (openOrder.orders | orderBy:openOrderFilters.grid.propertyName:openOrderFilters.grid.reverse | filter: { queryable: openOrderFilters.filters.query } | filter:openOrderFilters.filters.cerol))' ng-dblclick='open(o)')
+				span &nbsp;
+					i.material-icons 
+						md-tooltip(md-direction='right') {{ o.order_origin }} 
+						| {{o.order_icon}}
 				span &nbsp;
 					i.material-icons(ng-style='{ "color": o.cloudColor}' ng-class='{ "cloud-open": o.isOpen, "cloud-exported": o.isExported, "cloud-billed": o.isBilled }') &nbsp;
 				span {{o.order_code}}

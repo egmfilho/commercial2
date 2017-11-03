@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-23 17:13:32
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-27 08:32:39
+ * @Last Modified time: 2017-11-03 14:57:19
  */
 
 (function() {
@@ -96,8 +96,6 @@
 					return false;
 				});
 			}
-
-			$scope.globals = Globals.get;
 
 			$scope.info = {
 				count: 0,
@@ -234,7 +232,18 @@
 						orderStatusValues = Globals.get('order-status-values');
 
 					self.orders = success.data.map(function(order) {
+						var orderOrigin = Globals.get('order-origin-id'),
+							icons = { }, origins = { };
+						
+						icons[orderOrigin.desktop] = 'computer';
+						icons[orderOrigin.smartphone] = 'phone_iphone';
+
+						origins[orderOrigin.desktop] = 'Origem: computador';
+						origins[orderOrigin.smartphone] = 'Origem: smartphone';
+						
 						var temp = {
+							order_origin: origins[order.order_origin_id],
+							order_icon: icons[order.order_origin_id],
 							order_id: order.order_id,
 							order_code: order.order_code,
 							order_code_erp: order.order_code_erp_list,

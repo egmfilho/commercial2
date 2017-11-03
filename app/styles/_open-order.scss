@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-23 17:10:42
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-24 10:11:55
+ * @Last Modified time: 2017-11-03 16:06:44
  */
 
 .open-order-container-nav {
@@ -208,6 +208,10 @@ md-menu-content.open-order-menu-content {
 				text-transform: uppercase;
 
 				&:nth-child(1) {
+					opacity: .65;
+				}
+
+				&:nth-child(1), &:nth-child(2) {
 					width: 30px;
 					text-align: center;
 
@@ -216,25 +220,25 @@ md-menu-content.open-order-menu-content {
 					}
 				}
 
-				&:nth-child(2), &:nth-child(3) {
+				&:nth-child(3), &:nth-child(4) {
 					text-align: center;
 					width: 9%;
 				}
 
-				&:nth-child(5) {
+				&:nth-child(6) {
 					width: 12%;
 				}
 
-				&:nth-child(6) {
+				&:nth-child(7) {
 					width: 10%;
 				}
 
-				&:nth-child(7), &:nth-child(8) {
+				&:nth-child(8), &:nth-child(9) {
 					width: 11%;
 					box-sizing: border-box;
 				}
 
-				&:nth-child(9) {
+				&:nth-child(10) {
 					width: 50px;
 					padding: 0;
 					text-align: center;
