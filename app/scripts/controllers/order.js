@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-25 16:57:39
+ * @Last Modified time: 2017-11-03 18:00:04
 */
 
 (function() {
@@ -531,6 +531,9 @@
 		};
 
 		$scope.$on('$viewContentLoaded', function() {
+			$rootScope.writeLog('New Commercial window [' + $location.url() + ']');
+			$rootScope.writeLog('GUID: ' + GUID.get());
+
 			$timeout(function() {
 				jQuery('section[name="seller"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'seller' });
 				jQuery('section[name="products"] input').addClass('mousetrap').on('focus', function() { _focusOn = 'products' });
@@ -713,7 +716,6 @@
 				self.internal.flags.showInfo = true;
 
 				if ($routeParams.param) {
-					console.log('pegando empresa', $routeParams.param);
 					var company = Globals.get('user-companies-raw').find(function(company) {
 						return company.company_id == $routeParams.param;
 					});
@@ -778,6 +780,8 @@
 				_ipcRenderer.send('redeem', {
 					guid: GUID.get()
 				});
+
+				$rootScope.writeLog('Closing window with GUID: ' + GUID.get());
 
 				_remote.getCurrentWindow().close();
 			}
@@ -952,31 +956,75 @@
 					}
 
 					$rootScope.loading.load();
+					$rootScope.writeLog('Save function fired');
 					if (self.budget.order_code && self.budget.order_id) {
+						$rootScope.writeLog('Sending EDIT action [CODE: ' + self.budget.budget_code, ' ID: ' + self.budget.order_id + ']');
 						/* Edita o orcamento */
 						providerOrder.edit(filtered).then(function(success) {
 							$rootScope.loading.unload();
-
-							/* Modal de confirmacao */
-							afterSave('Orçamento editado!');
+							try {
+								JSON.stringify(success);
+								$rootScope.writeLog('Success');
+								$rootScope.writeLog(JSON.stringify(success));
+								/* Modal de confirmacao */
+								afterSave('Orçamento editado!');
+							} catch(e) {
+								$rootScope.writeLog('Error');
+								$rootScope.customDialog().showMessage('Erro', 'Erro ao processar os dados no servidor.');
+								$rootScope.writeLog(success.toString());
+							}
 						}, function(error) {
 							$rootScope.loading.unload();
-							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+							$rootScope.writeLog('Error');
+
+							var errorMessage = '', errorLog = '';
+							
+							try {
+								errorMessage = error.data.status.description;
+								errorLog = JSON.stringify(error);
+							} catch(e) {
+								errorMessage = 'Erro na comunicação com o servidor.';
+								errorLog = error.toString();
+							} finally {
+								$rootScope.customDialog().showMessage('Erro', errorMessage);
+								$rootScope.writeLog(errorLog);
+							}
 						});
 					} else {
+						$rootScope.writeLog('Sending INSERT action');
 						/* Salva o orcamento */
 						providerOrder.save(filtered).then(function(success) {
-							constants.debug && console.log('orcamento salvo', success);
-							self.budget.order_id = success.data.order_id;
-							self.budget.order_code = success.data.order_code;
-							self.budget.order_date = moment().tz('America/Sao_Paulo').toDate();
 							$rootScope.loading.unload();
+							try {
+								self.budget.order_id = success.data.order_id;
+								self.budget.order_code = success.data.order_code;
+								self.budget.order_date = moment().tz('America/Sao_Paulo').toDate();
 
-							/* Modal de confirmacao */
-							afterSave('Orçamento salvo!');
+								$rootScope.writeLog('Success');
+								$rootScope.writeLog(JSON.stringify(success));
+								/* Modal de confirmacao */
+								afterSave('Orçamento editado!');
+							} catch(e) {
+								$rootScope.writeLog('Error');
+								$rootScope.customDialog().showMessage('Erro', 'Erro ao processar os dados no servidor.');
+								$rootScope.writeLog(success.toString());
+							}
 						}, function(error) {
 							$rootScope.loading.unload();
-							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+							$rootScope.writeLog('Error');
+
+							var errorMessage = '', errorLog = '';
+							
+							try {
+								errorMessage = error.data.status.description;
+								errorLog = JSON.stringify(error);
+							} catch(e) {
+								errorMessage = 'Erro na comunicação com o servidor.';
+								errorLog = error.toString();
+							} finally {
+								$rootScope.customDialog().showMessage('Erro', errorMessage);
+								$rootScope.writeLog(errorLog);
+							}
 						});
 					}
 
@@ -2142,70 +2190,144 @@
 				.then(function(success) {
 					constants.debug && console.log('exportando pedido: ' + self.budget.order_id);					
 
+
+					$rootScope.writeLog('Export PEDIDO action fired');
 					$rootScope.loading.load();
 					/* O orcamento ja esta salvo. */
 					if (self.budget.order_id) {
 						/* Nao foi editado. */
 						if (!self.canSave()) {
+							$rootScope.writeLog('Sending EXPORT action [CODE: ' + self.budget.order_code, ' ID: ' + self.budget.order_id + ']');
+
 							/* Apenas exporta. */
 							providerOrder.exportOrder(self.budget.order_id).then(function(success) {
-								self.budget.order_erp = success.data.budget_code;
-								self.budget.order_status_id = Globals.get('order-status-values')['exported'];
-								$rootScope.loading.unload();
-								
-								_backup = self.budget;
-								self.internal.flags.printable = true;
+								try {
+									$rootScope.loading.unload();
+									self.budget.order_erp = success.data.budget_code;
+									self.budget.order_status_id = Globals.get('order-status-values')['exported'];
+									
+									_backup = self.budget;
+									self.internal.flags.printable = true;
+									
+									$rootScope.writeLog('Success');
+									$rootScope.writeLog(JSON.stringify(success));
 
-								deferred.resolve(success);
-
-								self.afterExportDialog('Orçamento exportado!', success.data.budget_code);
+									deferred.resolve(success);
+									/* Modal de confirmacao */
+									self.afterExportDialog('Orçamento exportado!', success.data.budget_code);
+								} catch(e) {
+									$rootScope.writeLog('Error');
+									$rootScope.customDialog().showMessage('Erro', 'Erro ao processar os dados no servidor.');
+									$rootScope.writeLog(success.toString());
+									deferred.reject(e);
+								}
 							}, function(error) {
-								constants.debug && console.log(error);
 								$rootScope.loading.unload();
-								$rootScope.customDialog().showMessage('Erro', error.data.status.description);
-								deferred.reject(error);
+								$rootScope.writeLog('Error');
+	
+								var errorMessage = '', errorLog = '';
+								
+								try {
+									errorMessage = error.data.status.description;
+									errorLog = JSON.stringify(error);
+								} catch(e) {
+									errorMessage = 'Erro na comunicação com o servidor.';
+									errorLog = error.toString();
+								} finally {
+									$rootScope.customDialog().showMessage('Erro', errorMessage);
+									$rootScope.writeLog(errorLog);
+									deferred.reject(error);
+								}
 							});
 						} else {
+							$rootScope.writeLog('Sending EDIT&EXPORT action [CODE: ' + self.budget.order_code, ' ID: ' + self.budget.order_id + ']');
+
 							/* Edita e exporta. */
 							providerOrder.editAndExportOrder(filterBudget()).then(function(success) {
-								self.budget.order_erp = success.data.budget_code;
-								self.budget.order_status_id = Globals.get('order-status-values')['exported'];
-								$rootScope.loading.unload();
-								
-								_backup = self.budget;
-								self.internal.flags.printable = true;
+								try {
+									$rootScope.loading.unload();
+									self.budget.order_erp = success.data.budget_code;
+									self.budget.order_status_id = Globals.get('order-status-values')['exported'];
+									
+									_backup = self.budget;
+									self.internal.flags.printable = true;
 
-								deferred.resolve(success);
-								
-								self.afterExportDialog('Orçamento exportado!', success.data.budget_code);
+									$rootScope.writeLog('Success');
+									$rootScope.writeLog(JSON.stringify(success));
+
+									deferred.resolve(success);
+									/* Modal de confirmacao */
+									self.afterExportDialog('Orçamento exportado!', success.data.budget_code);
+								} catch(e) {
+									$rootScope.writeLog('Error');
+									$rootScope.customDialog().showMessage('Erro', 'Erro ao processar os dados no servidor.');
+									$rootScope.writeLog(success.toString());
+									deferred.reject(e);
+								}
 							}, function(error) {
-								constants.debug && console.log(error);
 								$rootScope.loading.unload();
-								$rootScope.customDialog().showMessage('Erro', error.data.status.description);
-								deferred.reject(error);
+								$rootScope.writeLog('Error');
+	
+								var errorMessage = '', errorLog = '';
+								
+								try {
+									errorMessage = error.data.status.description;
+									errorLog = JSON.stringify(error);
+								} catch(e) {
+									errorMessage = 'Erro na comunicação com o servidor.';
+									errorLog = error.toString();
+								} finally {
+									$rootScope.customDialog().showMessage('Erro', errorMessage);
+									$rootScope.writeLog(errorLog);
+									deferred.reject(error);
+								}
 							});
 						}
 					} else {
+						$rootScope.writeLog('Sending INSERT&EXPORT action');
+
 						/* Novo orcamento, salva e exporta */
 						providerOrder.saveAndExportOrder(filterBudget()).then(function(success) {
-							self.budget.order_id = success.data.order_id;
-							self.budget.order_code = success.data.order_code;
-							self.budget.order_date = moment().tz('America/Sao_Paulo').toDate();
-							self.budget.order_erp = success.data.budget_code;
-							self.budget.order_status_id = Globals.get('order-status-values')['exported'];
-							$rootScope.loading.unload();
-
-							_backup = self.budget;
-							self.internal.flags.printable = true;
-
-							deferred.resolve(success);
+							try {
+								$rootScope.loading.unload();
+								self.budget.order_id = success.data.order_id;
+								self.budget.order_code = success.data.order_code;
+								self.budget.order_date = moment().tz('America/Sao_Paulo').toDate();
+								self.budget.order_erp = success.data.budget_code;
+								self.budget.order_status_id = Globals.get('order-status-values')['exported'];
+								
+								_backup = self.budget;
+								self.internal.flags.printable = true;
 							
-							self.afterExportDialog('Orçamento exportado!', success.data.budget_code);
+								$rootScope.writeLog('Success');
+								$rootScope.writeLog(JSON.stringify(success));
+							
+								deferred.resolve(success);
+								/* Modal de confirmacao */
+								self.afterExportDialog('Orçamento exportado!', success.data.budget_code);
+							} catch(e) {
+								$rootScope.writeLog('Error');
+								$rootScope.customDialog().showMessage('Erro', 'Erro ao processar os dados no servidor.');
+								$rootScope.writeLog(success.toString());
+								deferred.reject(e);
+							}
 						}, function(error) {
-							constants.debug && console.log(error);
 							$rootScope.loading.unload();
-							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
-							deferred.reject(error);
+							$rootScope.writeLog('Error');
+
+							var errorMessage = '', errorLog = '';
+							
+							try {
+								errorMessage = error.data.status.description;
+								errorLog = JSON.stringify(error);
+							} catch(e) {
+								errorMessage = 'Erro na comunicação com o servidor.';
+								errorLog = error.toString();
+							} finally {
+								$rootScope.customDialog().showMessage('Erro', errorMessage);
+								$rootScope.writeLog(errorLog);
+								deferred.reject(error);
+							}
 						});
 					}
 
@@ -2242,70 +2364,143 @@
 				.then(function(success) {
 					constants.debug && console.log('exportando DAV: ' + self.budget.order_id);
 					
+					$rootScope.writeLog('Export DAV action fired');
 					$rootScope.loading.load();
 					/* O orcamento ja esta salvo. */
 					if (self.budget.order_id) {
 						/* Nao foi editado. */
 						if (!self.canSave()) {
+							$rootScope.writeLog('Sending EXPORT action [CODE: ' + self.budget.order_code, ' ID: ' + self.budget.order_id + ']');
+
 							/* Apenas exporta. */
 							providerOrder.exportDAV(self.budget.order_id).then(function(success) {
-								self.budget.order_erp = success.data.budget_code;
-								self.budget.order_status_id = Globals.get('order-status-values')['exported'];
-								$rootScope.loading.unload();
+								try {
+									$rootScope.loading.unload();
+									self.budget.order_erp = success.data.budget_code;
+									self.budget.order_status_id = Globals.get('order-status-values')['exported'];
+									
+									_backup = self.budget;
+									self.internal.flags.printable = true;
 								
-								_backup = self.budget;
-								self.internal.flags.printable = true;
-
-								deferred.resolve(success);
-
-								self.afterExportDialog('Orçamento exportado!', success.data.dav_code);
+									$rootScope.writeLog('Success');
+									$rootScope.writeLog(JSON.stringify(success));
+								
+									deferred.resolve(success);
+									/* Modal de confirmacao */
+									self.afterExportDialog('Orçamento exportado!', success.data.dav_code);
+								} catch(e) {
+									$rootScope.writeLog('Error');
+									$rootScope.customDialog().showMessage('Erro', 'Erro ao processar os dados no servidor.');
+									$rootScope.writeLog(success.toString());
+									deferred.reject(e);
+								}
 							}, function(error) {
-								constants.debug && console.log(error);
 								$rootScope.loading.unload();
-								$rootScope.customDialog().showMessage('Erro', error.data.status.description);
-								deferred.reject(error);
+								$rootScope.writeLog('Error');
+	
+								var errorMessage = '', errorLog = '';
+								
+								try {
+									errorMessage = error.data.status.description;
+									errorLog = JSON.stringify(error);
+								} catch(e) {
+									errorMessage = 'Erro na comunicação com o servidor.';
+									errorLog = error.toString();
+								} finally {
+									$rootScope.customDialog().showMessage('Erro', errorMessage);
+									$rootScope.writeLog(errorLog);
+									deferred.reject(error);
+								}
 							});	
 						} else {
+							$rootScope.writeLog('Sending EDIT&EXPORT action [CODE: ' + self.budget.order_code, ' ID: ' + self.budget.order_id + ']');
+
 							/* Edita e exporta. */
 							providerOrder.editAndExportDAV(filterBudget()).then(function(success) {
-								self.budget.order_erp = success.data.budget_code;
-								self.budget.order_status_id = Globals.get('order-status-values')['exported'];
-								$rootScope.loading.unload();
+								try {
+									$rootScope.loading.unload();
+									self.budget.order_erp = success.data.budget_code;
+									self.budget.order_status_id = Globals.get('order-status-values')['exported'];
+									
+									_backup = self.budget;
+									self.internal.flags.printable = true;
 								
-								_backup = self.budget;
-								self.internal.flags.printable = true;
+									$rootScope.writeLog('Success');
+									$rootScope.writeLog(JSON.stringify(success));
 								
-								deferred.resolve(success);
-								
-								self.afterExportDialog('Orçamento exportado!', success.data.dav_code);
+									deferred.resolve(success);
+									/* Modal de confirmacao */
+									self.afterExportDialog('Orçamento exportado!', success.data.dav_code);
+								} catch(e) {
+									$rootScope.writeLog('Error');
+									$rootScope.customDialog().showMessage('Erro', 'Erro ao processar os dados no servidor.');
+									$rootScope.writeLog(success.toString());
+									deferred.reject(e);
+								}
 							}, function(error) {
-								constants.debug && console.log(error);
 								$rootScope.loading.unload();
-								$rootScope.customDialog().showMessage('Erro', error.data.status.description);
-								deferred.reject(error);
+								$rootScope.writeLog('Error');
+	
+								var errorMessage = '', errorLog = '';
+								
+								try {
+									errorMessage = error.data.status.description;
+									errorLog = JSON.stringify(error);
+								} catch(e) {
+									errorMessage = 'Erro na comunicação com o servidor.';
+									errorLog = error.toString();
+								} finally {
+									$rootScope.customDialog().showMessage('Erro', errorMessage);
+									$rootScope.writeLog(errorLog);
+									deferred.reject(error);
+								}
 							});
 						}
 					} else {
+						$rootScope.writeLog('Sending INSERT&EXPORT action');
+
 						/* Novo orcamento, salva e exporta */
 						providerOrder.saveAndExportDAV(filterBudget()).then(function(success) {
-							$rootScope.loading.unload(success);
-							self.budget.order_id = success.data.order_id;
-							self.budget.order_code = success.data.order_code;
-							// self.budget.order_date = moment().tz('America/Sao_Paulo').toDate();
-							self.budget.order_erp = success.data.budget_code;
-							self.budget.order_status_id = Globals.get('order-status-values')['exported'];
+							try {
+								$rootScope.loading.unload();
+								self.budget.order_id = success.data.order_id;
+								self.budget.order_code = success.data.order_code;
+								// self.budget.order_date = moment().tz('America/Sao_Paulo').toDate();
+								self.budget.order_erp = success.data.budget_code;
+								self.budget.order_status_id = Globals.get('order-status-values')['exported'];
+								
+								_backup = self.budget;
+								self.internal.flags.printable = true;
 							
-							_backup = self.budget;
-							self.internal.flags.printable = true;
-
-							deferred.resolve(success);
+								$rootScope.writeLog('Success');
+								$rootScope.writeLog(JSON.stringify(success));
 							
-							self.afterExportDialog('Orçamento exportado!', success.data.dav_code);
+								deferred.resolve(success);
+								/* Modal de confirmacao */
+								self.afterExportDialog('Orçamento exportado!', success.data.dav_code);
+							} catch(e) {
+								$rootScope.writeLog('Error');
+								$rootScope.customDialog().showMessage('Erro', 'Erro ao processar os dados no servidor.');
+								$rootScope.writeLog(success.toString());
+								deferred.reject(e);
+							}
 						}, function(error) {
-							constants.debug && console.log(error);
 							$rootScope.loading.unload();
-							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
-							deferred.reject(error);
+							$rootScope.writeLog('Error');
+
+							var errorMessage = '', errorLog = '';
+							
+							try {
+								errorMessage = error.data.status.description;
+								errorLog = JSON.stringify(error);
+							} catch(e) {
+								errorMessage = 'Erro na comunicação com o servidor.';
+								errorLog = error.toString();
+							} finally {
+								$rootScope.customDialog().showMessage('Erro', errorMessage);
+								$rootScope.writeLog(errorLog);
+								deferred.reject(error);
+							}
 						});
 					}
 
@@ -3181,20 +3376,27 @@
 				this.confirm = function() {
 					if (scope.al_discount < 0) return;
 					
-					authorizationDialog('Orçamento', { title: 'Autorização de desconto geral' }, 'order', 'user_discount').then(function(success) {
-						if (success.user_max_discount >= scope.al_discount) {
-							authorizedBy = success;
+					if (scope.al_discount == 0) {
+						scope._close({
+							al_discount: scope.al_discount, 
+							vl_discount: scope.vl_discount
+						});
+					} else {
+						authorizationDialog('Orçamento', { title: 'Autorização de desconto geral' }, 'order', 'user_discount').then(function(success) {
+							if (success.user_max_discount >= scope.al_discount) {
+								authorizedBy = success;
 
-							scope._close({
-								al_discount: scope.al_discount, 
-								vl_discount: scope.vl_discount
-							});
-						} else {
-							$rootScope.customDialog().showMessage('Erro', 'Não autorizado!');
-						}
-					}, function(error) {
-						deferred.reject(error);
-					});
+								scope._close({
+									al_discount: scope.al_discount, 
+									vl_discount: scope.vl_discount
+								});
+							} else {
+								$rootScope.customDialog().showMessage('Erro', 'Não autorizado!');
+							}
+						}, function(error) {
+							deferred.reject(error);
+						});
+					}
 				}
 			};
 
