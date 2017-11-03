@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-19 08:59:02
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 14:06:12
+ * @Last Modified time: 2017-11-03 14:25:47
  */
 
 (function() {
@@ -108,6 +108,11 @@
 			Globals.set('public-place-types', [ 'AV', 'EST', 'PC', 'R', 'RUA', 'ROD' ]);
 
 			Globals.set('obsFlag', '\n\nObs. de Entrega: ');
+
+			Globals.set('order-origin-id', {
+				'desktop': 1001,
+				'smartphone': 1002
+			});
 
 			Globals.set('order-status-labels', {
 				'1001': 'Aberto',
