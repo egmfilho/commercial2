@@ -12,8 +12,8 @@ div(flex layout='column')
 				label
 					span Tipo
 				md-select(name='type' ng-model='ctrl.customer.person_type')
-					md-option(value='F') Pessoa Física
-					md-option(value='J') Pessoa Jurídica
+					md-option(value='F' ng-click='ctrl.customer.person_cnpj = \'\'') Pessoa Física
+					md-option(value='J' ng-click='ctrl.customer.person_cpf = \'\'') Pessoa Jurídica
 
 			md-input-container(flex='15')
 				label 

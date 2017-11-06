@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-15 11:17:54
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-01 13:04:55
+ * @Last Modified time: 2017-11-06 13:48:16
  */
 
 (function() {
@@ -10,7 +10,7 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('ModalNewPerson', ['$rootScope', '$http', '$timeout', 'Constants', 'Globals', 'ModalPersonCheck', function($rootScope, $http, $timeout, constants, Globals, ModalPersonCheck) {
+		.factory('ModalNewPerson', ['$rootScope', '$http', '$timeout', 'Constants', 'Globals', 'ModalPersonCheck', 'DocumentValidator', function($rootScope, $http, $timeout, constants, Globals, ModalPersonCheck, DocumentValidator) {
 
 
 			function show() {
@@ -66,6 +66,20 @@
 						if (!scope.customer.person_cpf && !scope.customer.person_cnpj) {
 							$rootScope.customDialog().showMessage('Erro', 'Informe o ' + (scope.customer.person_type == 'F' ? 'CPF' : 'CNPJ') + ' do cliente!');
 							return;
+						} else {
+							if (scope.customer.person_cpf) {
+								if (!DocumentValidator(scope.customer.person_cpf)) {
+									$rootScope.customDialog().showMessage('Erro', 'CPF inválido!');
+									return;
+								}
+							}
+
+							if (scope.customer.person_cnpj) {
+								if (!DocumentValidator(scope.customer.person_cnpj)) {
+									$rootScope.customDialog().showMessage('Erro', 'CNPJ inválido!');
+									return;
+								}
+							}
 						}
 
 						if (!scope.customer.person_address[0].person_address_cep) {
