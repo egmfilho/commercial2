@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-03 18:00:04
+ * @Last Modified time: 2017-11-06 12:42:46
 */
 
 (function() {
@@ -275,6 +275,7 @@
 		}
 
 		function newOrder() {
+			OpenedOrderManager.remove(self.budget.order_code);
 			$location.path() == '/order/new' ? $route.reload() : $location.path('/order/new');
 		}
 
