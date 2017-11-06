@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-05-31 09:00:47
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-24 10:40:30
+ * @Last Modified time: 2017-11-06 12:19:18
 */
 
 (function() {
@@ -12,9 +12,9 @@
 	angular.module('commercial2.services')
 		.factory('CustomDialog', CustomDialog);
 
-	CustomDialog.$inject = [ '$q', '$timeout', '$mdPanel', 'CustomDialogManager' ];
+	CustomDialog.$inject = [ '$q', '$timeout', '$mdPanel', 'CustomDialogManager', 'GUID' ];
 
-	function CustomDialog($q, $timeout, $mdPanel, CustomDialogManager) {
+	function CustomDialog($q, $timeout, $mdPanel, CustomDialogManager, GUID) {
 
 		var _animationPosition, _animation;
 
@@ -128,7 +128,7 @@
 		 * Fecha a janela.
 		 */
 		function close() {
-			this._dialog.close();
+			// this._dialog.close();
 			CustomDialogManager.removeDialog(this._dialog);
 		}
 
@@ -184,6 +184,7 @@
 			};
 
 			scope._dialog = $mdPanel.create(angular.extend({ }, _options, options));
+			scope._dialog.guid = GUID.generate();
 			scope._dialog.open();
 			CustomDialogManager.addDialog(scope._dialog);
 

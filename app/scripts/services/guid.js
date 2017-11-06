@@ -1,8 +1,8 @@
 /*
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-08-07 08:24:32
-* @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-07 11:12:26
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-11-06 12:17:05
 */
 
 (function() {
@@ -26,7 +26,8 @@
 			}
 
 			return {
-				get: function() { return _guid; }
+				get: function() { return _guid; },
+				generate: generate
 			};
 
 		}]);
