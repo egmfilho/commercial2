@@ -293,7 +293,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									ng-model-options='{ trackBy: "$value.price_id" }')
 								md-option(ng-value='p' ng-repeat='p in order.internal.tempProduct.product_prices' 
 										ng-click='order.priceTableChanged(p)')
-									| {{p.price_name}} ({{p.price_value | currency:'R$ '}})
+									| {{p.price_code}} {{p.price_name}} ({{p.price_value | currency:'R$ '}})
 					
 					div(layout='row')
 						div(layout='col' flex='25')
