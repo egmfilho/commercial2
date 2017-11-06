@@ -20,7 +20,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								|  Abrir
 								span.md-alt-text {{ 'M-A' | keyboardShortcut }}
 						md-menu-item
-							md-button(ng-click='clone()' ng-disabled='!order.budget.order_code')
+							md-button(ng-click='clone()' ng-disabled='!order.canPrint()')
 								md-icon(md-font-icon='fa fa-files-o')
 								|  Duplicar
 						md-menu-divider
@@ -50,7 +50,6 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 							md-button(ng-click='order.print(cupon)' ng-disabled='!order.canPrint()')
 								md-icon(md-font-set='material-icons') receipt
 								|  Imprimir em cupom
-								span.md-alt-text {{ 'M-P' | keyboardShortcut }}
 						md-menu-item
 							md-button(ng-click='order.savePDF()' ng-disabled='!order.canPrint()')
 								md-icon(md-font-icon='fa fa-file-pdf-o')
@@ -127,7 +126,7 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 						span.md-alt-text ({{ 'M-N' | keyboardShortcut }})
 					md-icon(md-font-icon='fa fa-file-o')
 
-				md-button.toolbar-btn(ng-click='clone()' ng-disabled='!order.budget.order_code')
+				md-button.toolbar-btn(ng-click='clone()' ng-disabled='!order.canPrint()')
 					md-tooltip(md-direction='bottom') 
 						| Duplicar
 					md-icon(md-font-icon='fa fa-files-o')
