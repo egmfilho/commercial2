@@ -2,12 +2,12 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-29 17:03:59
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 14:04:37
+ * @Last Modified time: 2017-11-06 13:06:34
  */
 
 (function() {
 
-	// 'use strict';
+	'use strict';
 
 	angular.module('commercial2.services')
 		.factory('Authentication', Authentication);
