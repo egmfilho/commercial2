@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-06 12:42:46
+ * @Last Modified time: 2017-11-06 15:46:34
 */
 
 (function() {
@@ -1426,42 +1426,50 @@
 				return;
 			}
 
-			var options = {
-				getPrice: true,
-				getStock: true,
-				getUnit: true
-			};
-
-			$rootScope.loading.load();
-			constants.debug && console.log('buscando produto por codigo', code);
-			providerProduct.getByCode(code, self.budget.order_company_id, self.internal.tempItem.price_id, options).then(function(success) {
-				if (success.data.product_active == 'N') {
-					$rootScope.customDialog().showMessage('Aviso', 'Produto inativo!');
+			if (self.internal.tempItem.isEditing) {
+				$rootScope.customDialog().showConfirm('Aviso', 'Um item encontra-se em processo de edição. Deseja descartá-lo?')
+					.then(function(success) {
+						self.internal.tempItem.isEditing = false;
+						getProductByCode(code);
+					}, function(error) { return; });
+			} else {
+				var options = {
+					getPrice: true,
+					getStock: true,
+					getUnit: true
+				};
+	
+				$rootScope.loading.load();
+				constants.debug && console.log('buscando produto por codigo', code);
+				providerProduct.getByCode(code, self.budget.order_company_id, self.internal.tempItem.price_id, options).then(function(success) {
+					if (success.data.product_active == 'N') {
+						$rootScope.customDialog().showMessage('Aviso', 'Produto inativo!');
+						$rootScope.loading.unload();
+						return;
+					}
+	
+					if (!success.data.product_prices || !success.data.product_prices.length) {
+						$rootScope.customDialog().showMessage('Aviso', 'Produto sem preço!');
+						$rootScope.loading.unload();
+						return;
+					}
+	
+					self.internal.tempProduct = new Product(success.data);
+					self.internal.tempItem.setProduct(new Product(success.data));
+					self.internal.tempPrice = new Price(self.internal.tempItem.price);
+					
+					self.setItemAmount(1);
+					
+					self.focusOn('input[name="amount"]');
 					$rootScope.loading.unload();
-					return;
-				}
-
-				if (!success.data.product_prices || !success.data.product_prices.length) {
-					$rootScope.customDialog().showMessage('Aviso', 'Produto sem preço!');
+				}, function(error) {
+					constants.debug && console.log(error);
 					$rootScope.loading.unload();
-					return;
-				}
-
-				self.internal.tempProduct = new Product(success.data);
-				self.internal.tempItem.setProduct(new Product(success.data));
-				self.internal.tempPrice = new Price(self.internal.tempItem.price);
-				
-				self.setItemAmount(1);
-				
-				self.focusOn('input[name="amount"]');
-				$rootScope.loading.unload();
-			}, function(error) {
-				constants.debug && console.log(error);
-				$rootScope.loading.unload();
-
-				if (error.status == 404)
-					self.showNotFound();
-			});
+	
+					if (error.status == 404)
+						self.showNotFound();
+				});
+			}
 		}
 
 		/**
@@ -1827,29 +1835,38 @@
 			if ($scope.isDisabled)
 				return;
 
-			if (!item.product.product_prices.find(function(p) { return p.price_id == item.price_id })) {
-				var msg = 'Este item está usando uma tabela de preços restrita, ';
-				msg += 'editá-lo fará com que tanto a tabela de preços quanto o desconto sejam removidos. Deseja continuar?';
-
-				$rootScope.customDialog().showConfirm('Aviso', msg)
+			if (self.internal.tempItem.isEditing) {
+				$rootScope.customDialog().showConfirm('Aviso', 'Um item encontra-se em processo de edição. Deseja descartá-lo?')
 					.then(function(success) {
-						item.setPrice(item.product.getDefaultPriceTable());
-						item.setAlDiscount(0);
-						item.removeAudit();
-						self.editItem(item);
-					}, function(error) { });
-
-				return;
+						self.internal.tempItem.isEditing = false;
+						editItem(item);
+					}, function(error) { return; });
+			} else {
+				if (!item.product.product_prices.find(function(p) { return p.price_id == item.price_id })) {
+					var msg = 'Este item está usando uma tabela de preços restrita, ';
+					msg += 'editá-lo fará com que tanto a tabela de preços quanto o desconto sejam removidos. Deseja continuar?';
+	
+					$rootScope.customDialog().showConfirm('Aviso', msg)
+						.then(function(success) {
+							item.setPrice(item.product.getDefaultPriceTable());
+							item.setAlDiscount(0);
+							item.removeAudit();
+							self.editItem(item);
+						}, function(error) { });
+	
+					return;
+				}
+	
+				self.internal.tempItem = new OrderItem(item);
+				self.internal.tempItem.isEditing = true;
+				self.internal.tempItemAlDiscount = item.order_item_al_discount;
+				self.internal.tempItemVlDiscount = item.order_item_vl_discount;
+				self.internal.tempPrice = new Price(self.internal.tempItem.price);
+				self.internal.tempProduct = new Product(item.product);
+				
+				self.budget.removeItem(item);
+				self.recalcPayments();
 			}
-
-			self.internal.tempItem = new OrderItem(item);
-			self.internal.tempItemAlDiscount = item.order_item_al_discount;
-			self.internal.tempItemVlDiscount = item.order_item_vl_discount;
-			self.internal.tempPrice = new Price(self.internal.tempItem.price);
-			self.internal.tempProduct = new Product(item.product);
-			
-			self.budget.removeItem(item);
-			self.recalcPayments();
 		}
 
 		/**

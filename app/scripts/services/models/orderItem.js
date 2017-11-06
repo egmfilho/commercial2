@@ -50,6 +50,7 @@
 				this.order_item_audit         = new Audit();
 				this.product                  = new Product();
 				this.price                    = new Price();
+				this.isEditing                = false;
 
 				if (item) {
 					Object.assign(this, item, {
