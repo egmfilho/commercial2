@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-05 17:56:31
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 14:06:00
+ * @Last Modified time: 2017-11-06 16:18:28
  */
 
 (function() {
@@ -20,6 +20,8 @@
 		self.order = new Order();
 		self.logo = null;
 		self.isPdf = $location.path().indexOf('print') && $routeParams.type && $routeParams.type == 'pdf';
+
+		self.hasST = false;
 
 		$scope.now = moment().tz('America/Sao_Paulo').toDate();
 		$scope.globals = Globals.get;
@@ -54,6 +56,7 @@
 			provider.getByCode(code, options).then(function(success) {
 				self.order = new Order(success.data);
 				self.logo = Globals.get("logo")[self.order.order_company_id].company_logo;
+				self.hasST = Globals.get('st')[self.order.order_company.company_code];
 				constants.debug && console.log(self.order);
 				$rootScope.loading.unload();
 				

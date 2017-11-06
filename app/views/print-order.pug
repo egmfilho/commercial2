@@ -63,6 +63,7 @@ md-content.print-order.zoom-50(layout-fill ng-if='ctrl.order.order_code')
 				th VALOR
 				th(colspan='2') DESCONTO
 				th LÍQUIDO
+				th(ng-if='ctrl.hasST') ST
 				th TOTAL
 		tbody
 			tr(ng-repeat='i in ctrl.order.order_items' layout='row')
@@ -73,6 +74,7 @@ md-content.print-order.zoom-50(layout-fill ng-if='ctrl.order.order_code')
 				td {{::i.order_item_al_discount | currency:''}}%
 				td {{::i.order_item_vl_discount | currency:'R$ '}}
 				td {{::(i.order_item_value_total / i.order_item_amount) | currency:'R$ '}}
+				td(ng-if='ctrl.hasST') {{::i.order_item_value_st | currency:'R$ '}}
 				td {{::i.order_item_value_total | currency:'R$ '}}
 
 	.offset-top-15(layout='row')
@@ -108,6 +110,11 @@ md-content.print-order.zoom-50(layout-fill ng-if='ctrl.order.order_code')
 								| DESCONTO TOTAL
 							td
 								| {{::ctrl.order.order_vl_discount | currency:'R$ '}}
+						tr(ng-if='ctrl.hasST')
+							td
+								| SUBSTITUIÇÃO TRIBUTÁRIA
+							td
+								| {{::ctrl.order.order_value_st | currency:'R$ '}}
 						tr
 							td
 								| VALOR TOTAL

@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-19 08:59:02
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-03 14:25:47
+ * @Last Modified time: 2017-11-06 16:24:49
  */
 
 (function() {
@@ -68,6 +68,12 @@
 					name: success.data.data.default_customer.default_customer_name,
 					code: success.data.data.default_customer.default_customer_code
 				});
+
+				var st = {};
+				angular.forEach(success.data.data.st, function(value, key) {
+					st[key] = value.has_st == 'Y';
+				});
+				Globals.set('st', st);
 				
 				deferred.resolve();
 			}, function(error) {

@@ -80,6 +80,12 @@ md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row')
 						tr
 							td(colspan='5')
 				
+				.st(layout='row' ng-if='ctrl.hasST')
+					.md-block.text-left(flex='50')
+						| SUBST. TRIBUTÁRIA R$
+					.md-block.text-right(flex='50')
+						| {{::ctrl.order.order_value_st | currency:''}}
+
 				.total(layout='row')
 					.md-block.text-left(flex='50')
 						| TOTAL R$
