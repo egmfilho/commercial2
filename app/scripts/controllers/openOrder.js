@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-23 17:13:32
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-03 14:57:19
+ * @Last Modified time: 2017-11-06 09:04:47
  */
 
 (function() {
@@ -238,11 +238,11 @@
 						icons[orderOrigin.desktop] = 'computer';
 						icons[orderOrigin.smartphone] = 'phone_iphone';
 
-						origins[orderOrigin.desktop] = 'Origem: computador';
-						origins[orderOrigin.smartphone] = 'Origem: smartphone';
+						origins[orderOrigin.desktop] = 'computador';
+						origins[orderOrigin.smartphone] = 'celular';
 						
 						var temp = {
-							order_origin: origins[order.order_origin_id],
+							order_origin: 'Origem: ' + origins[order.order_origin_id],
 							order_icon: icons[order.order_origin_id],
 							order_id: order.order_id,
 							order_code: order.order_code,
@@ -276,6 +276,7 @@
 						temp.queryable += '@cliente:' + order.order_client.person_name + ' ';
 						temp.queryable += '@vendedor:' + (order.order_seller.person_shortname ? order.order_seller.person_shortname : order.order_seller.person_name) + ' ',
 						temp.queryable += '@vendedor:' + order.order_seller.person_code + ' ';
+						temp.queryable += '@origem:' + origins[order.order_origin_id] + ' ';
 
 						return temp;
 					});
