@@ -368,7 +368,10 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 										td {{i.product.product_code}} - {{i.product.product_name}}
 										td {{i.product.unit.unit_initials}}
 										td {{i.order_item_amount | currency : '' : (i.product.unit.unit_format == 'I' ? 0 : 4)}}
-										td {{i.order_item_value_unitary | currency:'R$ '}}
+										td 
+											md-tooltip(md-direction='left')
+												| {{i.price.price_code}} {{i.price.price_name}}
+											| {{i.order_item_value_unitary | currency:'R$ '}}
 										td {{i.order_item_al_discount | currency:''}}%
 										td {{i.order_item_vl_discount | currency:'R$ '}}
 										td {{i.order_item_value_total | currency:'R$ '}}
