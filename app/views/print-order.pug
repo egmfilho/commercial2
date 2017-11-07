@@ -120,7 +120,7 @@ md-content.print-order.zoom-50(layout-fill ng-if='ctrl.order.order_code')
 								| VALOR TOTAL
 							td
 								| {{::ctrl.order.order_value_total | currency:'R$ '}}
-						tr
+						tr(ng-if='ctrl.hasST')
 							td
 								| VALOR TOTAL COM ST
 							td
