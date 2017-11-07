@@ -161,7 +161,7 @@
 				if (!this.order_item_value_unitary) {
 					return 0;
 				} else {
-					var antiBug = 0.005555; // bug: console.log( (24.115).toFixed(2) ) // nao arredonda
+					var antiBug = 0.004999; // bug: console.log( (24.115).toFixed(2) ) // nao arredonda
 					return parseFloat(( this.order_item_amount * parseFloat((this.order_item_value_unitary + antiBug).toFixed(2)) ).toFixed(2));
 				}
 			}
