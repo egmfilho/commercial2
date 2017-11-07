@@ -92,6 +92,12 @@ md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row')
 					.md-block.text-right(flex='50')
 						| {{::ctrl.order.order_value_total | currency:''}}
 
+				.total(layout='row' ng-if='ctrl.hasST')
+					.md-block.text-left(flex='50')
+						| TOTAL COM ST R$
+					.md-block.text-right(flex='50')
+						| {{::(ctrl.order.order_value_total+ctrl.order.order_value_st) | currency:''}}
+
 			.payment(ng-if='ctrl.order.order_payments.length')
 				table
 					tbody
