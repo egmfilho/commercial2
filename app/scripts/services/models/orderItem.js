@@ -1,8 +1,8 @@
 /*
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-06-08 17:01:06
-* @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-31 17:23:19
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-11-07 13:23:25
 */
 
 (function() {
@@ -158,10 +158,12 @@
 				// return this.order_item_amount * this.order_item_value_unitary;
 				
 				/* JEITO ALTERDATANO */
-				if (!this.order_item_value_unitary)
+				if (!this.order_item_value_unitary) {
 					return 0;
-				else
-					return parseFloat(( this.order_item_amount * parseFloat((this.order_item_value_unitary).toFixed(2)) ).toFixed(2));
+				} else {
+					var antiBug = 0.005555; // bug: console.log( (24.115).toFixed(2) ) // nao arredonda
+					return parseFloat(( this.order_item_amount * parseFloat((this.order_item_value_unitary + antiBug).toFixed(2)) ).toFixed(2));
+				}
 			}
 
 			function getValueTotal() {
