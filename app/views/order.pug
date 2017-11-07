@@ -371,6 +371,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 										td 
 											md-tooltip(md-direction='left')
 												| {{i.price.price_code}} {{i.price.price_name}}
+												| {{i.price.price_date | date:'dd/MM/yyyy' }}
 											| {{i.order_item_value_unitary | currency:'R$ '}}
 										td {{i.order_item_al_discount | currency:''}}%
 										td {{i.order_item_vl_discount | currency:'R$ '}}
