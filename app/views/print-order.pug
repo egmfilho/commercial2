@@ -120,6 +120,11 @@ md-content.print-order.zoom-50(layout-fill ng-if='ctrl.order.order_code')
 								| VALOR TOTAL
 							td
 								| {{::ctrl.order.order_value_total | currency:'R$ '}}
+						tr
+							td
+								| VALOR TOTAL COM ST
+							td
+								| {{::(ctrl.order.order_value_total+ctrl.order.order_value_st) | currency:'R$ '}}
 
 			.note.offset-top-15 
 				p
