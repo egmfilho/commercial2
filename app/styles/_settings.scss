@@ -1,0 +1,119 @@
+/*
+ * @Author: egmfilho <egmfilho@live.com>
+ * @Date:   2017-07-25 13:54:12
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-11-07 18:04:51
+ */
+
+.config {
+	background-color: white;
+
+	md-sidenav {
+		max-width: 300px;
+		background-color: #232324;
+
+		md-content {
+			background-color: transparent;
+
+			.btn-close {
+				color: white;
+				background-color: transparent;
+				text-align: left;
+				text-transform: capitalize;
+				font-size: 18px;
+				margin: 0;
+				padding: 16px;
+				border-top: 1px solid #323234;
+
+				.fa {
+					font-size: 30px;
+					margin-right: 32px;
+					vertical-align: middle;
+					line-height: 30px;
+				}
+			}
+		}
+
+		md-list {
+			padding: 0;
+			
+			md-list-item {
+				color: white;
+				border-bottom: 1px solid #323234;
+
+				&.active {
+					background-color: $secondary-color;
+				}
+				
+				md-icon {
+					font-size: 32px;
+					margin: 0;
+					color: white;
+				}
+			}
+		}
+	}
+
+	.views {
+		overflow-y: auto;
+
+		.view {
+			height: auto;
+
+			.form-container {
+				background-color: white;
+		
+				.form {
+		
+					.form-body {
+						padding: 16px;
+					}
+				}
+			}
+
+			.md-subheader-inner {
+				font-size: 22px;
+				color: white;
+				background-color: $main-color-lighter;
+				padding: 16px;
+
+				box-shadow: 0 2px 4px rgba(#000, .3);
+
+				.fa {
+					margin-right: 16px;
+				}
+			}
+
+			dl {
+				width: 100%;
+				overflow: hidden;
+		
+				dt {
+					min-width: 250px;
+					text-align: right;
+					float: left;
+					clear: left;
+					padding: 15px;
+					line-height: 35px;
+				}
+		
+				dd {
+					padding: 15px;
+		
+					input {
+						min-width: 250px;
+						padding: 6px;
+					}
+		
+					md-switch {
+						margin: 3px !important;
+					}
+				}
+			}
+		}
+	}
+
+	@import "settings/users";
+	@import "settings/connections";
+	// @import "settings/general";
+}

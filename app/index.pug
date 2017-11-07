@@ -4,7 +4,8 @@ block page
 	div(ng-view='' autoscroll layout='column' flex)
 
 block header
-	header(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath !== "/loading" && currentPath.indexOf("order/") < 0 && currentPath.indexOf("print/") < 0 && currentPath.indexOf("mail/") < 0 && currentPath.indexOf("cupon/") < 0 && currentPath.indexOf("ticket/") < 0')
+	//- header(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPath !== "/loading" && currentPath.indexOf("order/") < 0 && currentPath.indexOf("print/") < 0 && currentPath.indexOf("mail/") < 0 && currentPath.indexOf("cupon/") < 0 && currentPath.indexOf("ticket/") < 0')
+	header(ng-if='currentPath == "/home" || currentPath == "/open-order"')
 		md-toolbar
 			.md-toolbar-tools
 				md-button.md-icon-button(ng-click='showMainMenu()')

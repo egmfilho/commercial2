@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 16:09:13
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-31 11:51:33
+ * @Last Modified time: 2017-11-07 10:30:30
  */
 
 
@@ -22,7 +22,7 @@ $main-color: #4b4b4d;
 $main-color-darker: darken($main-color, 15%);
 $main-color-dark: darken($main-color, 10%);
 $main-color-light: lighten($main-color, 8%);
-$main-color-lighter: lighten($main-color, 13%);
+$main-color-lighter: lighten($main-color, 17%);
 
 // $secondary-color: #F99F57; original
 $secondary-color: #f98444;
@@ -581,7 +581,7 @@ md-select md-select-value span {
 @import "print-order";
 @import "mail-order";
 @import "order-cupon";
-@import "config";
+@import "settings";
 
 @import "utils";
 

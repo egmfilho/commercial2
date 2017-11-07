@@ -1,8 +1,8 @@
 /*
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-06-01 15:57:25
-* @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-17 14:12:26
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-11-06 17:56:41
 */
 
 (function() {
@@ -64,6 +64,17 @@
 						}, function(error){
 							constants.debug && console.log(error);
 						});
+				};
+
+				this.settings = function() {
+					if (constants.isElectron) {
+						ElectronWindow.createWindow('#/settings');
+						if (mdPanelRef) mdPanelRef.close();
+					}
+					else {
+						if (mdPanelRef) mdPanelRef.close();
+						$location.path('/settings');
+					}
 				};
 
 				this.logout = function() {

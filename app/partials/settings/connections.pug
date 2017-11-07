@@ -1,0 +1,98 @@
+.connections(flex layout='column')
+		
+	.form-container
+		.form#mail
+			md-subheader
+				i.fa.fa-wrench
+				| Email
+
+			.emails(layout='row')
+				md-list.md-dense(md-whiteframe='4')
+					md-list-item.md-2-line(ng-repeat='n in getNumber(4) track by $index' ng-class='{ "active": false }' ng-click='null')
+						.md-list-item-text
+							h3 Empresa {{$index}}
+							p Nome completo da empresa aparece aqui
+
+				div(flex)
+					dl
+						dt 
+							| Nome do remetente
+						dd
+							input
+
+						dt 
+							| Servidor de saída
+						dd
+							input
+
+						dt 
+							| Porta
+						dd
+							input
+
+						dt 
+							| Autenticação SMTP
+						dd
+							md-switch.text-primary(style='margin: 16px 0 0 0')
+
+						dt 
+							| Email
+						dd
+							input
+
+						dt 
+							| Senha
+						dd
+							input(type='password')
+
+						dt
+
+						dd
+							md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+								i.fa.fa-floppy-o &nbsp;
+								| Salvar
+
+							md-button.md-raised.text-primary(ng-click='')
+								i.fa.fa-retweet &nbsp;
+								| Testar
+
+	.form-container
+		.form#api
+			md-subheader
+				i.fa.fa-wrench
+				| API
+
+			.api(layout='row')
+				md-list.md-dense(md-whiteframe='4')
+					md-list-item.md-1-line(ng-class='{ "active": false }' ng-click='null')
+						.md-list-item-text
+							h3 Principal
+
+				div(flex)
+					
+					dl
+						dt 
+							| Nome
+						dd
+							input
+
+						dt 
+							| URL
+						dd
+							input
+
+						dt 
+							| Token
+						dd
+							input
+
+						dt
+
+						dd
+							md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+								i.fa.fa-floppy-o &nbsp;
+								| Salvar	
+							
+							md-button.md-raised.text-primary(ng-click='')
+								i.fa.fa-retweet &nbsp;
+								| Testar

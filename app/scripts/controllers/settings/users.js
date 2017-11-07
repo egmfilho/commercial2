@@ -1,15 +1,15 @@
 /*
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-07-25 16:51:12
-* @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-25 18:11:27
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-11-07 09:02:24
 */
 
 (function() {
 	'use strict';
 
 	angular.module('commercial2.controllers')
-		.controller('ConfigCtrl.Users', Users);
+		.controller('SettingsCtrl.Users', Users);
 
 	Users.$inject = [ '$rootScope', '$scope', 'ProviderUser', 'User', 'Constants' ];
 
@@ -19,7 +19,7 @@
 
 		this.users = [ ];
 
-		constants.debug && console.log('ConfigCtrl.Users pronto!');
+		constants.debug && console.log('SettingsCtrl.Users pronto!');
 
 		$rootScope.loading.load();
 		providerUser.getAll().then(function(success) {

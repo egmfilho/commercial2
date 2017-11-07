@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-29 10:49:05
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-01 10:17:46
+ * @Last Modified time: 2017-11-01 15:31:08
  */
 
 (function() {
@@ -39,7 +39,7 @@
 				}
 			],
 			'app-name': 'Commercial - Gestor de vendas',
-			'version': '2.0.0 rc7.3',
+			'version': '2.0.0 rc8',
 			'cookie': 'commercial.currentUser',
 			'debug': false,
 			'isElectron': window && window.process && window.process.versions['electron'],

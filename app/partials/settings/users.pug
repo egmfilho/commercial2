@@ -1,11 +1,12 @@
-.users(layout='row' layout-fill)
+.users(layout='column' layout-fill)
 
-	.content(layout='row')
-		.form-container(flex='30')
-			.form.md-whiteframe-1dp(layout='column')
-				.title
-					| Perfis de usuários
+	.form-container
+		.form#profiles(layout='column')
+			md-subheader
+				i.fa.fa-wrench
+				| Perfis de usuários
 
+			.form-body
 				.profiles-table-header-container
 					table.table.profiles-table
 						thead
@@ -43,11 +44,13 @@
 						i.fa.fa-plus-square-o &nbsp;
 						| Novo perfil
 
-		.form-container(flex='70')
-			.form.md-whiteframe-1dp(layout='column')
-				.title
-					| Lista de usuários
+	.form-container
+		.form#users(layout='column')
+			md-subheader
+				i.fa.fa-wrench
+				| Lista de usuários
 
+			.form-body
 				.users-table-header-container
 					table.table.users-table
 						thead
@@ -57,7 +60,6 @@
 								th USUÁRIO
 								th EMAIL
 								th ÚLTIMO ACESSO
-								th &nbsp;
 								th &nbsp;
 
 				.container-table(flex)
@@ -70,11 +72,19 @@
 								td {{u.user_mail}}
 								td {{u.user_login | date: 'dd/MM/yyyy HH:mm:ss'}}
 								td 
-									md-button.md-icon-button(ng-click='' md-no-ink)
-										md-icon.text-primary(md-font-icon='fa fa-pencil')
-								td 
-									md-button.md-icon-button(ng-click='' md-no-ink)
-										md-icon.text-primary(md-font-icon='material-icons') delete_forever
+									md-menu
+										md-button.md-icon-button(ng-click='$mdMenu.open($event)')
+											md-icon(md-menu-origin md-font-icon='fa fa-ellipsis-v')
+										md-menu-content.open-order-menu-content(width='4')
+											md-menu-item
+												md-button(ng-click='open(o)')
+													md-icon(md-font-icon='fa fa-folder-open-o')
+													| ABRIR
+
+											md-menu-item
+												md-button(ng-click='clone(o)')
+													md-icon(md-font-icon='fa fa-files-o')
+													| DUPLICAR
 
 				.users-table-footer(layout='row')
 					span(flex)

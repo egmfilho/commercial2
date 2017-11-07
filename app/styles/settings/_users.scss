@@ -1,0 +1,73 @@
+/*
+ * @Author: egmfilho <egmfilho@live.com>
+ * @Date:   2017-08-01 08:42:58
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-11-07 16:25:50
+ */
+
+.users {	
+	.users-table-header-container, .profiles-table-header-container {
+		padding-top: 14px;
+		padding-right: 10px;
+		border: 1px solid $border-color;
+		border-bottom: none;
+	}
+
+	.container-table {
+		height: 300px;
+		border: 1px solid $border-color;
+	}
+
+	.users-table {
+		tr {
+			th, td {
+				&:nth-child(1) {
+					width: 100px;
+				}
+
+				&:nth-child(2) {
+					width: auto;
+				}
+
+				&:nth-child(3) {
+					width: 120px;
+				}
+
+				&:nth-child(4) {
+					width: 200px;
+				}
+
+				&:nth-child(5) {
+					width: 115px;
+				}
+
+				&:nth-child(6) {
+					width: 30px;
+				}
+			}
+		}
+	}
+
+	.profiles-table {
+		tr {
+			th, td {
+				&:nth-child(1) {
+					width: auto;
+				}
+
+				&:nth-child(2), &:nth-child(3) {
+					width: 25%;
+				}
+
+				&:nth-child(4), &:nth-child(5) {
+					width: 30px;
+				}
+			}
+		}
+	}
+
+	.users-table-footer, .profiles-table-footer {
+		border: 1px solid $border-color;
+		border-top: none;	
+	}
+}

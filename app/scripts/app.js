@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 10:21:29
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-06 09:39:10
+ * @Last Modified time: 2017-11-06 17:56:07
  */
 
 'use strict';
@@ -306,12 +306,12 @@ angular.module('commercial2', [
 				controller: 'AboutCtrl',
 				controllerAs: 'about'
 			})
-			// .when('/config', {
-			// 	module: 'config',
-			// 	templateUrl: 'views/config.html',
-			// 	controller: 'ConfigCtrl',
-			// 	controllerAs: 'config'
-			// })
+			.when('/settings', {
+				module: 'settings',
+				templateUrl: 'views/settings.html',
+				controller: 'SettingsCtrl',
+				controllerAs: 'settings'
+			})
 			.otherwise({
 				redirectTo: '/login'
 			});

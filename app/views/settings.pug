@@ -1,0 +1,56 @@
+.config(layout='column' layout-fill ng-cloak)
+	md-toolbar(md-whiteframe='4')
+		.md-toolbar-tools
+			md-button.md-icon-button(hide-gt-md ng-click='settings.toggleSidenav()')
+				md-icon(md-font-icon='fa fa-bars' aria-label='Menu')
+			h1 Configurações
+		
+	div(flex layout='row')
+		md-sidenav.md-sidenav-left(md-component-id='left' md-is-locked-open='$mdMedia("gt-md")' md-whiteframe='4')
+			md-content(layout='column' layout-fill)
+				md-list.md-dense(flex)
+					md-list-item.md-1-line(ng-click='settings.currentView = "users"' ng-class='{ "active": settings.currentView == "users" }')
+						md-icon(md-font-icon='fa fa-user-circle-o')
+						.md-list-item-text
+							h3 Usuários
+
+					md-list-item.md-1-line(ng-click='settings.currentView = "connections"' ng-class='{ "active": settings.currentView == "connections" }')
+						md-icon(md-font-icon='fa fa-globe')
+						.md-list-item-text
+							h3 Conexões
+
+					md-list-item.md-1-line(ng-click='settings.currentView = "general"' ng-class='{ "active": settings.currentView == "general" }')
+						md-icon(md-font-icon='fa fa-cogs')
+						.md-list-item-text
+							h3 Variáveis gerais
+
+					md-list-item.md-1-line(ng-click='settings.currentView = "financial"' ng-class='{ "active": settings.currentView == "financial" }')
+						md-icon(md-font-icon='fa fa-credit-card')
+						.md-list-item-text
+							h3 Financeiro
+
+					md-list-item.md-1-line(ng-click='settings.currentView = "products"' ng-class='{ "active": settings.currentView == "products" }')
+						md-icon(md-font-icon='fa fa-tags')
+						.md-list-item-text
+							h3 Produtos
+
+					md-list-item.md-1-line(ng-click='settings.currentView = "about"' ng-class='{ "active": settings.currentView == "about" }')
+						md-icon(md-font-icon='fa fa-question-circle-o')
+						.md-list-item-text
+							h3 Sobre
+
+				span(flex)
+
+				md-button.btn-close(ng-click='')
+					i.fa.fa-remove
+					| Fechar
+
+		.views(flex layout='column' layout-fill ng-switch='settings.currentView')
+			md-content.view(flex ng-switch-when='users')
+				div(flex layout-fill layout='column' ng-include='"./partials/settings/users.html"' ng-controller='SettingsCtrl.Users as users')
+
+			md-content.view(flex ng-switch-when='connections')
+				div(flex layout-fill layout='column' ng-include='"./partials/settings/connections.html"' ng-controller='SettingsCtrl.Connections as connections')
+
+			md-content.view(flex ng-switch-when='general')
+				div(flex layout-fill layout='column' ng-include='"./partials/settings/general.html"' ng-controller='SettingsCtrl.General as general')
