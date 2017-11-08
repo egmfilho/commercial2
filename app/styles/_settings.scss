@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-07-25 13:54:12
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-08 13:32:17
+ * @Last Modified time: 2017-11-08 17:30:50
  */
 
 .settings {
@@ -14,7 +14,8 @@
 	}
 
 	md-sidenav {
-		max-width: 300px;
+		width: 250px;
+		max-width: 250px;
 		background-color: #232324;
 		z-index: 2;
 
