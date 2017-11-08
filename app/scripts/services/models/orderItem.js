@@ -161,8 +161,11 @@
 				if (!this.order_item_value_unitary) {
 					return 0;
 				} else {
-					var antiBug = 0.004999; // bug: console.log( (24.115).toFixed(2) ) // nao arredonda
-					return parseFloat(( this.order_item_amount * parseFloat((this.order_item_value_unitary + antiBug).toFixed(2)) ).toFixed(2));
+					var antiBug = 0.005; // bug: console.log( (24.115).toFixed(2) ) // nao arredonda
+					//var product_value = parseFloat( parseInt( ( this.order_item_value_unitary + antiBug) * 100 ) / 100 );
+					var total = parseFloat( parseInt( (( this.order_item_amount * this.order_item_value_unitary ) + antiBug ) * 100 ) / 100 );
+					return total;					
+					//return parseFloat(( this.order_item_amount * parseFloat((this.order_item_value_unitary + antiBug).toFixed(2)) ).toFixed(2));
 				}
 			}
 
