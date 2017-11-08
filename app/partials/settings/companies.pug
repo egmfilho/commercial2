@@ -1,0 +1,172 @@
+.companies(flex layout='column')
+
+	div(layout='row' layout-fill)
+		.side-menu(layout='column' md-whiteframe='4')
+			md-toolbar
+				.md-toolbar-tools
+					h1 
+						i.fa.fa-angle-right
+						| Lista de empresas
+
+			md-list.md-dense(flex)
+				md-list-item.md-2-line(ng-repeat='c in companies.array track by $index' ng-class='{ "active": companies.internal.companyCode == c.company_code }' ng-click='companies.selectCompany(c)')
+					.md-list-item-text
+						h3 Empresa {{c.company_code}}
+						p {{c.company_name}}
+
+		md-content(flex)
+			.form-container#active
+				.form
+					md-subheader
+						i.fa.fa-wrench
+						| Ativação
+
+					div(layout='column')
+							
+						dl
+							dt 
+								| Ativar empresa
+							dd
+								md-switch.text-primary(style='margin: 16px 0 0 0' ng-model='companies.internal.isActive')
+
+							dt
+
+							dd
+								md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+									i.fa.fa-floppy-o &nbsp;
+									| Salvar
+
+			.form-container#logo
+				.form
+					md-subheader
+						i.fa.fa-wrench
+						| Logotipo
+
+					div(layout='column')
+							
+						dl
+							dt
+
+							dd
+								img.logo-preview(ng-src='{{companies.internal.logo}}' ng-if='companies.internal.logo')
+							dt 
+								| Escolher logotipo
+							dd
+								.open-file-input
+									input#file-input(type='file' file-read='companies.watchFile')
+									input(type='text' readonly ng-click='companies.openDialog()' ng-value='companies.internal.logoUrl')
+									button(ng-click='companies.openDialog()') Escolher imagem
+
+							dt
+
+							dd
+								md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+									i.fa.fa-floppy-o &nbsp;
+									| Salvar
+
+			.form-container#mail
+				.form
+					md-subheader
+						i.fa.fa-wrench
+						| Email
+
+					div(layout='column')
+
+						dl
+							dt 
+								| Nome do remetente
+							dd
+								input(type='text' ng-model='companies.internal.mail.sender')
+
+							dt 
+								| Servidor de saída
+							dd
+								input(type='text' ng-model='companies.internal.mail.host')
+
+							dt 
+								| Porta
+							dd
+								input(type='text' number-only ng-model='companies.internal.mail.port')
+
+							dt 
+								| Autenticação SMTP
+							dd
+								md-switch.text-primary(style='margin: 16px 0 0 0' ng-model='companies.internal.mail.smtp')
+
+							dt 
+								| Email
+							dd
+								input(type='email' ng-model='companies.internal.mail.address')
+
+							dt 
+								| Senha
+							dd
+								input(type='password' ng-model='companies.internal.mail.password')
+
+							dt
+
+							dd
+								md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+									i.fa.fa-floppy-o &nbsp;
+									| Salvar
+
+								md-button.md-raised.text-primary(ng-click='')
+									i.fa.fa-retweet &nbsp;
+									| Testar
+
+			.form-container#order
+				.form
+					md-subheader
+						i.fa.fa-wrench
+						| Impressão
+
+					div(layout='column')
+							
+						dl
+							dt 
+								| Mensagem de rodapé
+							dd
+								textarea(ng-model='companies.internal.orderMessage')
+
+							dt
+
+							dd
+								md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+									i.fa.fa-floppy-o &nbsp;
+									| Salvar
+
+			.form-container#general
+				.form
+					md-subheader
+						i.fa.fa-wrench
+						| Geral
+
+					div(layout='column')
+							
+						dl
+							dt 
+								| Usar crédito
+							dd
+								md-switch.text-primary(style='margin: 16px 0 0 0' ng-model='companies.internal.usesCredit')
+
+							dt 
+								| ICMS
+							dd
+								md-switch.text-primary(style='margin: 16px 0 0 0' ng-model='companies.internal.hasICMS')
+
+							dt 
+								| Subistituição tributária
+							dd
+								md-switch.text-primary(style='margin: 16px 0 0 0' ng-model='companies.internal.hasST')
+
+							dt 
+								| UF
+							dd
+								input.text-uppercase(type='text' ng-model='companies.internal.uf')
+
+							dt
+
+							dd
+								md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+									i.fa.fa-floppy-o &nbsp;
+									| Salvar
