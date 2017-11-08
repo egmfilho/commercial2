@@ -2,30 +2,9 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-01 10:09:41
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-07 17:54:39
+ * @Last Modified time: 2017-11-08 10:46:58
  */
 
 .connections {
 
-	.emails, .api {
-		md-list {
-			min-width: 300px;
-			overflow-y: auto;
-			padding: 0;
-
-			md-list-item {
-				// height: 34px;
-				color: $main-color;
-				border-bottom: 1px solid #ddd;
-
-				&.active {
-					background-color: #ccc;
-				}
-			}
-		}
-	}
-
-	.emais {
-		max-height: 500px;
-	}
 }

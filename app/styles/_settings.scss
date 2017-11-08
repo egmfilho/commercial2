@@ -2,15 +2,21 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-07-25 13:54:12
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-07 18:04:51
+ * @Last Modified time: 2017-11-08 13:32:17
  */
 
-.config {
+.settings {
 	background-color: white;
+
+	> md-toolbar {
+		position: relative;
+		z-index: 3;
+	}
 
 	md-sidenav {
 		max-width: 300px;
 		background-color: #232324;
+		z-index: 2;
 
 		md-content {
 			background-color: transparent;
@@ -20,16 +26,16 @@
 				background-color: transparent;
 				text-align: left;
 				text-transform: capitalize;
-				font-size: 18px;
+				font-size: 16px;
 				margin: 0;
 				padding: 16px;
 				border-top: 1px solid #323234;
 
 				.fa {
-					font-size: 30px;
-					margin-right: 32px;
-					vertical-align: middle;
-					line-height: 30px;
+					font-size: 32px;
+					margin-right: 34px;
+					vertical-align: sub;
+					line-height: 24px;
 				}
 			}
 		}
@@ -75,7 +81,8 @@
 				font-size: 22px;
 				color: white;
 				background-color: $main-color-lighter;
-				padding: 16px;
+				padding: 21px;
+				z-index: 1;
 
 				box-shadow: 0 2px 4px rgba(#000, .3);
 
@@ -89,7 +96,7 @@
 				overflow: hidden;
 		
 				dt {
-					min-width: 250px;
+					min-width: 200px;
 					text-align: right;
 					float: left;
 					clear: left;
@@ -104,6 +111,14 @@
 						min-width: 250px;
 						padding: 6px;
 					}
+
+					textarea {
+						min-width: 350px;
+						min-height: 120px;
+						padding: 6px;
+						resize: none;
+						border-color: #ccc;
+					}
 		
 					md-switch {
 						margin: 3px !important;
@@ -115,5 +130,6 @@
 
 	@import "settings/users";
 	@import "settings/connections";
-	// @import "settings/general";
+	@import "settings/general";
+	@import "settings/companies";
 }

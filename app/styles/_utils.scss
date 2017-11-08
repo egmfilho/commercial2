@@ -1,8 +1,8 @@
 /*
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-07 13:57:12
- * @Last Modified by:   egmfilho
- * @Last Modified time: 2017-08-10 09:37:20
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-11-08 13:25:57
  */
 
 .clearfix {
@@ -104,6 +104,10 @@
 
 .text-400 {
 	font-weight: 400 !important;
+}
+
+.text-uppercase {
+	text-transform: uppercase;
 }
 
 .label {
