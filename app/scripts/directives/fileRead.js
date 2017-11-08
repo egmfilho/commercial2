@@ -2,7 +2,7 @@
  * @Author: egmfilho &lt;egmfilho@live.com&gt; 
  * @Date: 2017-11-08 14:12:52 
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-08 14:30:51
+ * @Last Modified time: 2017-11-08 15:46:26
  */
 
 (function() {
@@ -28,7 +28,8 @@
 							});
 						};
 
-						reader.readAsDataURL(changeEvent.target.files[0]);
+						if (changeEvent.target.files.length)
+							reader.readAsDataURL(changeEvent.target.files[0]);
 					});
 				}
 			};
