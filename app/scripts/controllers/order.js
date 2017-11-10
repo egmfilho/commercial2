@@ -1,8 +1,8 @@
 /*
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
- * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-06 15:46:34
+ * @Last Modified by:   egmfilho
+ * @Last Modified time: 2017-11-10 11:58:52
 */
 
 (function() {
@@ -653,8 +653,11 @@
 					temp.order_items = temp.order_items.map(function(i) {
 						i.order_item_al_discount = 0;
 						i.order_item_vl_discount = 0;
+						i.updateValues();
 						return i;
 					});
+
+					temp.updateValues();
 
 					if (success.data.order_credit === 'Y') {
 						temp.order_payments.shift();
