@@ -2,7 +2,7 @@
  * @Author: egmfilho &lt;egmfilho@live.com&gt; 
  * @Date: 2017-11-08 08:44:05 
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-08 17:11:35
+ * @Last Modified time: 2017-11-08 18:04:22
  */
 
 (function() {
@@ -180,7 +180,7 @@
 			};
 
 			$rootScope.loading.load();
-			post('', { active: data }).then(function(success) {
+			post('edit', [{ active: data }]).then(function(success) {
 				$rootScope.loading.unload();
 			}, function(error) {
 				$rootScope.loading.unload();
@@ -198,7 +198,7 @@
 			};
 
 			$rootScope.loading.load();
-			post('', { logo: data }).then(function(success) {
+			post('edit', [{ logo: data }]).then(function(success) {
 				$rootScope.loading.unload();
 			}, function(error) {
 				$rootScope.loading.unload();
@@ -241,7 +241,7 @@
 			};
 
 			$rootScope.loading.load();
-			post('', { mail: data }).then(function(success) {
+			post('edit', [{ mail: data }]).then(function(success) {
 				$rootScope.loading.unload();
 			}, function(error) {
 				$rootScope.loading.unload();
@@ -258,7 +258,7 @@
 			};
 
 			$rootScope.loading.load();
-			post('', { order: data }).then(function(success) {
+			post('edit', [{ order: data }]).then(function(success) {
 				$rootScope.loading.unload();
 			}, function(error) {
 				$rootScope.loading.unload();
@@ -286,7 +286,7 @@
 				}];
 
 			$rootScope.loading.load();
-			post('', data).then(function(success) {
+			post('edit', data).then(function(success) {
 				$rootScope.loading.unload();
 			}, function(error) {
 				$rootScope.loading.unload();
