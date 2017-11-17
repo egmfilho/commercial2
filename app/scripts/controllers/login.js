@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-29 14:03:46
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-25 12:15:41
+ * @Last Modified time: 2017-11-17 12:19:20
  */
 
 (function() {
@@ -51,8 +51,7 @@
 											positiveButton: {
 												label: 'Atualizar',
 												action: function() { 
-													if (constants.isElectron)
-														require('electron').ipcRenderer.send('callUpdater'); 
+													
 												}
 											}
 										});

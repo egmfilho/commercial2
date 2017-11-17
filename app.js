@@ -2,14 +2,25 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-06 09:08:17
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-26 09:50:44
+ * @Last Modified time: 2017-11-16 08:53:59
 */
 
-const { app, ipcMain, BrowserWindow, dialog } = require('electron');
+const { app, autoUpdater, ipcMain, BrowserWindow, dialog } = require('electron');
+
+if (require('electron-squirrel-startup')) return;
 
 const path = require('path');
 const url = require('url');
 const fs = require('fs');
+
+const appVersion = require('./package.json').version;
+const platform = require('os').platform();
+
+// this should be placed at top of main.js to handle setup events quickly
+if (handleSquirrelEvent()) {
+	// squirrel event handled and app will exit in 1000ms, so don't do anything else
+	return;
+}
 
 let api = null;
 try {
@@ -116,72 +127,72 @@ ipcMain.on('writeLog', (event, arg) => {
 	}
 });
 
-ipcMain.on('callUpdater', (event, arg) => {
-	let relativePath = {
-		mac: {
-			path: '../../../../../',
-			file: './Atualizador-darwin-x64/Atualizador.app'
-		},
-		win: {
-			path: '../',
-			file: './Atualizador-win32-ia32/Atualizador.exe'
-		}
-	};
+// ipcMain.on('callUpdater', (event, arg) => {
+// 	let relativePath = {
+// 		mac: {
+// 			path: '../../../../../',
+// 			file: './Atualizador-darwin-x64/Atualizador.app'
+// 		},
+// 		win: {
+// 			path: '../',
+// 			file: './Atualizador-win32-ia32/Atualizador.exe'
+// 		}
+// 	};
 
-	let updater;
+// 	let updater;
 	
-	try {
-		if (process.platform === 'darwin') {
-			let x = path.join(relativePath.mac.path + relativePath.mac.file);
-			let y = path.join(app.getPath('exe'), x);
+// 	try {
+// 		if (process.platform === 'darwin') {
+// 			let x = path.join(relativePath.mac.path + relativePath.mac.file);
+// 			let y = path.join(app.getPath('exe'), x);
 			
-			fs.accessSync(y, fs.constants.F_OK);
-			updater = y;
-		} else {
-			let x = path.join(relativePath.win.path, relativePath.win.file);
-			let y = path.join(app.getPath('exe'), x);
+// 			fs.accessSync(y, fs.constants.F_OK);
+// 			updater = y;
+// 		} else {
+// 			let x = path.join(relativePath.win.path, relativePath.win.file);
+// 			let y = path.join(app.getPath('exe'), x);
 			
-			fs.accessSync(y, fs.constants.F_OK);
-			updater = y;
-		}
-	} catch(e) {
-		let defaultPath = path.join(app.getPath('exe'), process.platform === 'darwin' ? relativePath.mac.path : relativePath.win.path);
+// 			fs.accessSync(y, fs.constants.F_OK);
+// 			updater = y;
+// 		}
+// 	} catch(e) {
+// 		let defaultPath = path.join(app.getPath('exe'), process.platform === 'darwin' ? relativePath.mac.path : relativePath.win.path);
 		
-		let filePaths = dialog.showOpenDialog({
-			title: 'Abrir atualizador',
-			defaultPath: defaultPath,
-			filters: [{ name: 'Aplicativo', extensions: ['app'] }],
-			properties: ['openFile']
-		});
+// 		let filePaths = dialog.showOpenDialog({
+// 			title: 'Abrir atualizador',
+// 			defaultPath: defaultPath,
+// 			filters: [{ name: 'Aplicativo', extensions: ['app'] }],
+// 			properties: ['openFile']
+// 		});
 
-		if (filePaths && filePaths.length) {
-			updater = filePaths[0];
-		}
-	} finally {
-		if (!!updater) {
-			dialog.showMessageBox({
-				title: 'Atualizador encontrado',
-				message: 'Deseja executar o atualizador? \n' + updater,
-				buttons: [ 'Sim', 'Não' ]
-			}, (response) => {
-				if (response == 0) {
-					const cp = require('child_process');
-					cp.exec('open ' + updater, (error, stdout, stderr) => {
-						if (error) {
-							dialog.showErrorBox('Erro', 'Não foi possível executar o atualizador.');
-							return;
-						}
+// 		if (filePaths && filePaths.length) {
+// 			updater = filePaths[0];
+// 		}
+// 	} finally {
+// 		if (!!updater) {
+// 			dialog.showMessageBox({
+// 				title: 'Atualizador encontrado',
+// 				message: 'Deseja executar o atualizador? \n' + updater,
+// 				buttons: [ 'Sim', 'Não' ]
+// 			}, (response) => {
+// 				if (response == 0) {
+// 					const cp = require('child_process');
+// 					cp.exec('open ' + updater, (error, stdout, stderr) => {
+// 						if (error) {
+// 							dialog.showErrorBox('Erro', 'Não foi possível executar o atualizador.');
+// 							return;
+// 						}
 
-						global.globals = { };
-						app.quit();
-					});
-				}
-			});
-		} else {
-			dialog.showErrorBox('Erro', 'O atualizador não pôde ser encontrado.');
-		}
-	}
-});
+// 						global.globals = { };
+// 						app.quit();
+// 					});
+// 				}
+// 			});
+// 		} else {
+// 			dialog.showErrorBox('Erro', 'O atualizador não pôde ser encontrado.');
+// 		}
+// 	}
+// });
 
 function writeLog(log) {
 	if (!log) return;
@@ -305,6 +316,7 @@ function ready() {
 	writeLog('Initializing application');
 
 	createWindow();
+	updater();
 }
 
 // This method will be called when Electron has finished
@@ -342,3 +354,106 @@ app.on('activate', () => {
 		createWindow();
 	}
 });
+
+function updater() {
+	writeLog('updater function called');
+
+	var url;
+	
+	// Rodar o MAMP
+	
+	if (platform == 'darwin') {
+		url = 'http://172.16.0.136:3000';
+	} else if (platform == 'win32') {
+		url = 'http://172.16.0.136/commercial-update-server/releases/';
+		writeLog('Searching for updates on: ' + url);
+	}
+
+	autoUpdater.setFeedURL(url);
+
+	autoUpdater.on('error', (e) => {
+		writeLog('Error while trying to update');
+		writeLog(JSON.stringify(e));
+	});
+
+	autoUpdater.on('checking-for-update', (e) => {
+		writeLog('Checking for update...');
+	});
+
+	autoUpdater.on('update-available', (e) => {
+		writeLog('Update available!');
+	});
+
+	autoUpdater.on('update-downloaded', (e) => {
+		writeLog('Update downloaded!');
+		autoUpdater.quitAndInstall();		
+	});
+
+	autoUpdater.checkForUpdates();
+}
+
+function handleSquirrelEvent() {
+	if (process.argv.length === 1) {
+		return false;
+	}
+	
+	const ChildProcess = require('child_process');
+	const path = require('path');
+	
+	const appFolder = path.resolve(process.execPath, '..');
+	const rootAtomFolder = path.resolve(appFolder, '..');
+	const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
+	const exeName = path.basename(process.execPath);
+	
+	const spawn = function(command, args) {
+		let spawnedProcess, error;
+		
+		try {
+			spawnedProcess = ChildProcess.spawn(command, args, {detached: true});
+		} catch (error) {}
+		
+		return spawnedProcess;
+	};
+	
+	const spawnUpdate = function(args) {
+		return spawn(updateDotExe, args);
+	};
+	
+	const squirrelEvent = process.argv[1];
+	switch (squirrelEvent) {
+		case '--squirrel-install':
+		case '--squirrel-updated':
+		// Optionally do things such as:
+		// - Add your .exe to the PATH
+		// - Write to the registry for things like file associations and
+		//   explorer context menus
+		
+		// Install desktop and start menu shortcuts
+		spawnUpdate(['--createShortcut', exeName]);
+
+		writeLog('Squirrel after install/update event fired!');
+		
+		setTimeout(app.quit, 1000);
+		return true;
+		
+		case '--squirrel-uninstall':
+		// Undo anything you did in the --squirrel-install and
+		// --squirrel-updated handlers
+		
+		// Remove desktop and start menu shortcuts
+		spawnUpdate(['--removeShortcut', exeName]);
+		
+		setTimeout(app.quit, 1000);
+		return true;
+		
+		case '--squirrel-obsolete':
+		// This is called on the outgoing version of your app before
+		// we update to the new version - it's the opposite of
+		// --squirrel-updated
+
+		writeLog('Squirrel obsolete event fired!');
+		
+		app.quit();
+		return true;
+	}
+};

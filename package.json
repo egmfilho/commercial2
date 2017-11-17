@@ -1,13 +1,16 @@
 {
-  "name": "commercial2",
-  "version": "2.0.0",
-  "description": "",
+  "name": "Commercial2",
   "main": "app.js",
+  "private": true,
+  "productName": "Commercial2",
+  "version": "2.0.0",
+  "description": "Commercial - Gestor de vendas",
   "scripts": {
     "start": "electron ./app.js",
     "build-mac": "node ./builder.js darwin",
     "build-win32": "node ./builder.js win32",
-    "build-linux": "node ./builder.js linux"
+    "build-linux": "node ./builder.js linux",
+    "winstaller": "node ./winstaller.js"
   },
   "author": "@egmfilho",
   "license": "ISC",
@@ -16,6 +19,7 @@
     "bower": "^1.8.0",
     "electron": "^1.7.9",
     "electron-packager": "^9.1.0",
+    "electron-winstaller": "^2.6.3",
     "gulp": "^3.9.1",
     "gulp-bower": "0.0.13",
     "gulp-concat": "^2.6.1",
@@ -30,6 +34,7 @@
     "merge-stream": "^1.0.1"
   },
   "dependencies": {
-    "mousetrap": "^1.6.1"
+    "mousetrap": "^1.6.1",
+    "electron-squirrel-startup": "^1.0.0"
   }
 }
