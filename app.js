@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-06 09:08:17
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-16 08:53:59
+ * @Last Modified time: 2017-11-27 09:18:37
 */
 
 const { app, autoUpdater, ipcMain, BrowserWindow, dialog } = require('electron');
@@ -52,6 +52,10 @@ const logFilename = path.join(logDir, getDateString('-', 'T', '-') + '.log');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+
+global.version = {
+	value: appVersion
+}
 
 global.globals = {
 	apiList: api,
@@ -316,7 +320,12 @@ function ready() {
 	writeLog('Initializing application');
 
 	createWindow();
-	updater();
+	try {
+		updater();
+	} catch(e) {
+		writeLog('Updater error.');
+		writeLog(JSON.stringify(e));
+	}
 }
 
 // This method will be called when Electron has finished

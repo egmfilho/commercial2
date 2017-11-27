@@ -2,12 +2,17 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-29 10:49:05
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-16 09:12:39
+ * @Last Modified time: 2017-11-27 09:28:24
  */
 
 (function() {
 
 	'use strict';
+	var _ver = '2.0.0';
+
+	if (window && window.process && window.process.versions['electron']) {
+		_ver = require('electron').remote.getGlobal('version').value || '2.*';
+	}
 
 	angular.module('commercial2.constants')
 		.constant('Constants', {
@@ -39,7 +44,7 @@
 				}
 			],
 			'app-name': 'Commercial - Gestor de vendas',
-			'version': '2.0.0 teste1',
+			'version': _ver,
 			'cookie': 'commercial.currentUser',
 			'debug': false,
 			'isElectron': window && window.process && window.process.versions['electron'],

@@ -12,7 +12,7 @@
     "build-linux": "node ./builder.js linux",
     "winstaller": "node ./winstaller.js"
   },
-  "author": "@egmfilho",
+  "author": "Futura Agência",
   "license": "ISC",
   "devDependencies": {
     "asar": "^0.13.0",
