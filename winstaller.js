@@ -3,7 +3,7 @@ var electronInstaller = require('electron-winstaller');
 electronInstaller.createWindowsInstaller({
 	appDirectory: './releases/Commercial-win32-x64',
 	outputDirectory: './releases/winstaller/Winstaller-win32-x64',
-	authors: 'egmfilho',
+	authors: 'Futura Agência',
 	exe: 'Commercial.exe',
 	setupExe: 'Instalador_Commercial.exe',
 	noMsi: false,
