@@ -2,20 +2,36 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-01 08:42:58
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-07 16:25:50
+ * @Last Modified time: 2017-11-27 14:17:42
  */
 
 .users {	
 	.users-table-header-container, .profiles-table-header-container {
 		padding-top: 14px;
-		padding-right: 10px;
-		border: 1px solid $border-color;
-		border-bottom: none;
+		padding-right: 10px;		
+		// background-color: #ddd;
+		box-shadow: 0 2px 4px rgba(#000, .3);
+		z-index: 0;
 	}
 
 	.container-table {
 		height: 300px;
-		border: 1px solid $border-color;
+		border: none;
+		z-index: -1px;
+	}
+
+	.users-table, .profiles-table {
+		tr {
+			th {
+				// background-color: #ddd;
+			}
+
+			border-bottom: 1px solid #ddd;
+
+			&:last-child {
+				border-bottom: none;
+			}
+		}
 	}
 
 	.users-table {
@@ -34,7 +50,7 @@
 				}
 
 				&:nth-child(4) {
-					width: 200px;
+					width: 300px;
 				}
 
 				&:nth-child(5) {
@@ -67,7 +83,6 @@
 	}
 
 	.users-table-footer, .profiles-table-footer {
-		border: 1px solid $border-color;
-		border-top: none;	
+		border-top: 1px solid #ddd;	
 	}
 }

@@ -4,7 +4,7 @@
 		.form#system()
 			md-subheader
 				i.fa.fa-wrench
-				| Sistema
+				| Pedido
 
 			div(layout='column')
 					
@@ -12,38 +12,27 @@
 					dt 
 						| ID de sistema
 					dd
-						input
+						input(type='text' ng-model='general.internal.order.systemId')
 
 					dt 
-						| Nome
+						| Nome de sistema
 					dd
-						input
+						input(type='text' ng-model='general.internal.order.systemName')
 
-					dt
-
-					dd
-						md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
-							i.fa.fa-floppy-o &nbsp;
-							| Salvar
-
-	.form-container
-		.form#user
-			md-subheader
-				i.fa.fa-wrench
-				| Usuário
-
-			div(layout='column')
-					
-				dl
 					dt 
 						| ID de usuário
 					dd
-						input
+						input(type='text' ng-model='general.internal.order.userId')
 
 					dt 
-						| Nome
+						| Nome de usuário
 					dd
-						input
+						input(type='text' ng-model='general.internal.order.userName')
+
+					dt 
+						| Operação
+					dd
+						input(type='text' ng-model='general.internal.order.operationId')
 
 					dt
 
@@ -64,12 +53,12 @@
 					dt 
 						| ID de cliente
 					dd
-						input
+						input(type='text' ng-model='general.internal.personCategory.customerId')
 
 					dt 
 						| ID de vendedor
 					dd
-						input
+						input(type='text' ng-model='general.internal.personCategory.sellerId')
 
 					dt
 
@@ -90,7 +79,7 @@
 					dt 
 						| ID da tabela padrão
 					dd
-						input
+						input(type='text' ng-model='general.internal.price.defaultId')
 
 					dt
 
@@ -111,17 +100,17 @@
 					dt 
 						| ID cód. principal
 					dd
-						input
+						input(type='text' ng-model='general.internal.productCodes.mainId')
 
 					dt 
 						| ID cód. de barras
 					dd
-						input
+						input(type='text' ng-model='general.internal.productCodes.eanId')
 
 					dt 
 						| ID cód. do fornecedor
 					dd
-						input
+						input(type='text' ng-model='general.internal.productCodes.providerId')
 
 					dt
 
@@ -142,7 +131,7 @@
 					dt 
 						| ID do contato
 					dd
-						input
+						input(type='text' ng-model='general.internal.mail.typeId')
 
 					dt
 

@@ -1,3 +1,109 @@
 //- payment > authorized_payments
 //- credit_limit > authorized_modality_id && debit_day_limit
 //- bank
+
+.financial(layout='column' flex)
+
+	.form-container#payments
+		.form
+			md-subheader
+				i.fa.fa-wrench
+				| Pagamento
+
+			div(layout='column')
+					
+				dl
+					dt 
+						| Pagamentos autorizados
+					dd
+						input(type='text' ng-model='')
+
+					dt
+
+					dd
+						md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+							i.fa.fa-floppy-o &nbsp;
+							| Salvar
+
+	.form-container#credit
+		.form
+			md-subheader
+				i.fa.fa-wrench
+				| Crédito
+
+			div(layout='column')
+					
+				dl
+					dt 
+						| Natureza de lançamento
+					dd
+						input(type='text' ng-model='')
+
+					dt 
+						| Modalidade
+					dd
+						input(type='text' ng-model='')
+
+					dt 
+						| Tipo de baixa parcial
+					dd
+						input(type='text' ng-model='')
+
+					dt 
+						| Tipo de baixa total
+					dd
+						input(type='text' ng-model='')
+
+					dt
+
+					dd
+						md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+							i.fa.fa-floppy-o &nbsp;
+							| Salvar
+
+	.form-container#credit-limit
+		.form
+			md-subheader
+				i.fa.fa-wrench
+				| Limite de crédito
+
+			div(layout='column')
+					
+				dl
+					dt 
+						| Modalidades autorizadas
+					dd
+						input(type='text' ng-model='')
+
+					dt 
+						| Máx. de dias em débito
+					dd
+						input(type='text' ng-model='')
+
+					dt
+
+					dd
+						md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+							i.fa.fa-floppy-o &nbsp;
+							| Salvar
+
+	.form-container#bank
+		.form
+			md-subheader
+				i.fa.fa-wrench
+				| Banco
+
+			div(layout='column')
+					
+				dl
+					dt 
+						| Bancos permitidos
+					dd
+						input(type='text' ng-model='')
+
+					dt
+
+					dd
+						md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+							i.fa.fa-floppy-o &nbsp;
+							| Salvar

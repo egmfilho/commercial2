@@ -39,6 +39,11 @@
 						.md-list-item-text
 							h3 Empresas
 
+					md-list-item.md-1-line(ng-click='settings.currentView = "person"' ng-class='{ "active": settings.currentView == "person" }')
+						md-icon(md-font-icon='fa fa-users')
+						.md-list-item-text
+							h3 Pessoas
+
 					md-list-item.md-1-line(ng-click='settings.currentView = "about"' ng-class='{ "active": settings.currentView == "about" }')
 						md-icon(md-font-icon='fa fa-question-circle-o')
 						.md-list-item-text
@@ -59,6 +64,9 @@
 
 			md-content.view(flex ng-switch-when='general')
 				div(flex layout-fill layout='column' ng-include='"./partials/settings/general.html"' ng-controller='SettingsCtrl.General as general')
+
+			md-content.view(flex ng-switch-when='financial')
+				div(flex layout-fill layout='column' ng-include='"./partials/settings/financial.html"' ng-controller='SettingsCtrl.Financial as financial')
 
 			md-content.view(flex ng-switch-when='companies')
 				div(flex layout-fill layout='column' ng-include='"./partials/settings/companies.html"' ng-controller='SettingsCtrl.Companies as companies')

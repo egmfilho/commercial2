@@ -12,17 +12,17 @@
 					dt 
 						| Nome
 					dd
-						input
+						input(type='text' ng-model='connections.internal.api.name')
 
 					dt 
 						| URL
 					dd
-						input
+						input(type='text' ng-model='connections.internal.api.url')
 
 					dt 
 						| Token
 					dd
-						input
+						textarea(ng-model='connections.internal.api.token')
 
 					dt
 

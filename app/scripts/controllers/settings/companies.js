@@ -2,7 +2,7 @@
  * @Author: egmfilho &lt;egmfilho@live.com&gt; 
  * @Date: 2017-11-08 08:44:05 
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-08 18:04:22
+ * @Last Modified time: 2017-11-27 10:51:15
  */
 
 (function() {
@@ -53,6 +53,10 @@
 			$rootScope.loading.unload();
 		}, function(error) {
 			$rootScope.loading.unload();
+			$rootScope.customDialog().showMessage('Erro', 'Erro ao receber as informações');
+			angular.forEach(error, function(e) {
+				$rootScope.writeLog(JSON.stringify(e));
+			});
 		});
 
 		function resetInternalData() {

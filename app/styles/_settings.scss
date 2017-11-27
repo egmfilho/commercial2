@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-07-25 13:54:12
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-08 17:30:50
+ * @Last Modified time: 2017-11-27 13:15:33
  */
 
 .settings {
@@ -123,6 +123,49 @@
 		
 					md-switch {
 						margin: 3px !important;
+					}
+				}
+			}
+		}
+	}
+
+	.side-menu {
+		position: relative;
+		z-index: 1;
+
+		md-toolbar {
+			background-color: $main-color-light;
+
+			.fa {
+				margin-right: 16px;
+			}
+		}
+
+		md-list {
+			width: 250px;
+			max-width: 250px;
+			overflow-y: auto;
+			padding: 0;
+	
+			md-list-item {
+				color: $main-color;
+				border-bottom: 1px solid #ddd;
+
+				h2 {
+					font-size: 16px;
+				}
+	
+				&.active {
+					background-color: $secondary-color;
+	
+					h2, h3, p {
+						color: white;
+					}
+				}
+	
+				.md-list-item-text {
+					h3 {
+						margin-bottom: 7px;
 					}
 				}
 			}

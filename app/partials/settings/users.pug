@@ -1,100 +1,119 @@
 .users(layout='column' layout-fill)
 
-	.form-container
-		.form#profiles(layout='column')
-			md-subheader
-				i.fa.fa-wrench
-				| Perfis de usuários
+	div(layout='row' layout-fill)
+		.side-menu(layout='column' md-whiteframe='4')
+			md-toolbar
+				.md-toolbar-tools
+					h1 
+						i.fa.fa-angle-right
+						| Categorias
 
-			.form-body
-				.profiles-table-header-container
-					table.table.profiles-table
-						thead
-							tr
-								th NOME
-								th CADASTRO
-								th ATUALIZAÇÃO
-								th &nbsp;
-								th &nbsp;
+			md-list.md-dense(flex)
+				md-list-item.md-2-line(ng-click='users.changeView(\'profiles\')' ng-class='{ \'active\': users.view == \'profiles\' }')
+					.md-list-item-text
+						h2 Perfis de usuários
 
-				.container-table(flex)
-					table.table.profiles-table
-						tbody
-							tr(ng-repeat='n in getNumber(12) track by $index')
-								td NOME
-								td DATA
-								td DATA
-								td 
-									md-button.md-icon-button(ng-click='' md-no-ink)
-										md-icon.text-primary(md-font-icon='fa fa-pencil')
-								td 
-									md-button.md-icon-button(ng-click='' md-no-ink)
-										md-icon.text-primary(md-font-icon='material-icons') delete_forever
+				md-list-item.md-2-line(ng-click='users.changeView(\'users\')' ng-class='{ \'active\': users.view == \'users\' }')
+					.md-list-item-text
+						h2 Lista de usuários
 
-				.profiles-table-footer(layout='row')
-					span(flex)
+		md-content(flex)
+			div(flex ng-if='users.view == \'profiles\'' layout-fill)
+				.form#profiles(flex layout='column' layout-fill)
+					md-subheader
+						i.fa.fa-wrench
+						| Perfis de usuários
 
-					md-button.md-primary(ng-click='')
-						md-tooltip(md-direction='top') Atualiza a tabela de perfis.
-						i.fa.fa-refresh &nbsp;
-						| Atualizar
+					.form-body(flex layout='column')
+						.profiles-table-header-container
+							table.table.profiles-table
+								thead
+									tr
+										th NOME
+										th CADASTRO
+										th ATUALIZAÇÃO
+										th &nbsp;
+										th &nbsp;
 
-					md-button.md-primary(ng-click='')
-						md-tooltip(md-direction='top') Cria um novo perfil de usuário.
-						i.fa.fa-plus-square-o &nbsp;
-						| Novo perfil
+						.container-table(flex)
+							table.table.profiles-table
+								tbody
+									tr(ng-repeat='p in users.profiles track by $index')
+										td {{p.user_profile_name}}
+										td {{p.user_profile_date | date:'dd/MM/yyyy'}}
+										td {{p.user_profile_update | date:'dd/MM/yyyy'}}
+										td 
+											md-button.md-icon-button(ng-click='' md-no-ink)
+												md-icon.text-primary(md-font-icon='fa fa-pencil')
+										td 
+											md-button.md-icon-button(ng-click='' md-no-ink)
+												md-icon.text-primary(md-font-icon='material-icons') delete_forever
 
-	.form-container
-		.form#users(layout='column')
-			md-subheader
-				i.fa.fa-wrench
-				| Lista de usuários
+						.profiles-table-footer(layout='row')
+							span(flex)
 
-			.form-body
-				.users-table-header-container
-					table.table.users-table
-						thead
-							tr
-								th PERFIL
-								th NOME
-								th USUÁRIO
-								th EMAIL
-								th ÚLTIMO ACESSO
-								th &nbsp;
+							md-button.md-primary(ng-click='')
+								md-tooltip(md-direction='top') Atualiza a tabela de perfis.
+								i.fa.fa-refresh &nbsp;
+								| Atualizar
 
-				.container-table(flex)
-					table.table.users-table
-						tbody
-							tr(ng-repeat='u in users.users track by $index' ng-dblclick='')
-								td {{u.user_profile.user_profile_name}}
-								td {{u.user_name}}
-								td {{u.user_user}}
-								td {{u.user_mail}}
-								td {{u.user_login | date: 'dd/MM/yyyy HH:mm:ss'}}
-								td 
-									md-menu
-										md-button.md-icon-button(ng-click='$mdMenu.open($event)')
-											md-icon(md-menu-origin md-font-icon='fa fa-ellipsis-v')
-										md-menu-content.open-order-menu-content(width='4')
-											md-menu-item
-												md-button(ng-click='open(o)')
-													md-icon(md-font-icon='fa fa-folder-open-o')
-													| ABRIR
+							md-button.md-primary(ng-click='')
+								md-tooltip(md-direction='top') Cria um novo perfil de usuário.
+								i.fa.fa-plus-square-o &nbsp;
+								| Novo perfil
 
-											md-menu-item
-												md-button(ng-click='clone(o)')
-													md-icon(md-font-icon='fa fa-files-o')
-													| DUPLICAR
+			div(flex ng-if='users.view == \'users\'' layout-fill)
+				.form#users(layout='column'  layout-fill)
+					md-subheader
+						i.fa.fa-wrench
+						| Lista de usuários
 
-				.users-table-footer(layout='row')
-					span(flex)
+					.form-body(flex layout='column')
+						.users-table-header-container
+							table.table.users-table
+								thead
+									tr
+										th PERFIL
+										th NOME
+										th USUÁRIO
+										th EMAIL
+										th ÚLTIMO ACESSO
+										th &nbsp;
 
-					md-button.md-primary(ng-click='')
-						md-tooltip(md-direction='top') Atualiza a tabela de usuários.
-						i.fa.fa-refresh &nbsp;
-						| Atualizar
+						.container-table(flex)
+							table.table.users-table
+								tbody
+									tr(ng-repeat='u in users.users track by $index' ng-dblclick='')
+										td {{u.user_profile.user_profile_name}}
+										td {{u.user_name}}
+										td {{u.user_user}}
+										td {{u.user_mail}}
+										td {{u.user_login | date: 'dd/MM/yyyy HH:mm:ss'}}
+										td 
+											md-menu
+												md-button.md-icon-button(ng-click='$mdMenu.open($event)')
+													md-icon(md-menu-origin md-font-icon='fa fa-ellipsis-v')
+												md-menu-content.open-order-menu-content(width='4')
+													md-menu-item
+														md-button(ng-click='open(o)')
+															md-icon(md-font-icon='fa fa-folder-open-o')
+															| ABRIR
 
-					md-button.md-primary(ng-click='')
-						md-tooltip(md-direction='top') Adiciona um novo usuário
-						i.fa.fa-plus-square-o &nbsp;
-						| Novo usuário
+													md-menu-item
+														md-button(ng-click='clone(o)')
+															md-icon(md-font-icon='fa fa-files-o')
+															| DUPLICAR
+
+						.users-table-footer(layout='row')
+							span(flex)
+
+							md-button.md-primary(ng-click='')
+								md-tooltip(md-direction='top') Atualiza a tabela de usuários.
+								i.fa.fa-refresh &nbsp;
+								| Atualizar
+
+							md-button.md-primary(ng-click='')
+								md-tooltip(md-direction='top') Adiciona um novo usuário
+								i.fa.fa-plus-square-o &nbsp;
+								| Novo usuário
+							
