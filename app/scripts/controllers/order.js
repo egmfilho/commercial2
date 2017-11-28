@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-28 09:46:33
+ * @Last Modified time: 2017-11-28 12:17:08
 */
 
 (function() {
@@ -3617,6 +3617,8 @@
 					$rootScope.loading.load();
 					providerOrder.unlock(self.budget.order_id)
 						.then(function(success) {
+							OpenedOrderManager.remove(self.budget.order_code);
+							
 							$rootScope.loading.unload();
 							if (constants.isElectron) {
 								var options = {

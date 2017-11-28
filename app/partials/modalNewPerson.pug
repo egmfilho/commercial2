@@ -4,9 +4,13 @@ div(flex layout='column')
 			div(flex='100' layout='row')
 				span.md-subhead Dados pessoais
 
-			md-input-container(flex='55')
+			md-input-container(flex='40')
 				label Nome
 				input(name='name' ng-model='ctrl.customer.person_name')
+
+			md-input-container(flex='15')
+				label Nome curto
+				input(name='shortname' ng-model='ctrl.customer.person_shortname')
 
 			md-input-container.md-icon-float(flex='15')
 				label
@@ -44,8 +48,6 @@ div(flex layout='column')
 					  ng-disabled='ctrl.customer.person_type != "J"')
 				div(ng-messages='newCostumerForm.cnpj.$error')
 					div(ng-message='pattern') CNPJ inválido!
-
-		span(flex)
 		
 		//- ENDERECO
 		div(layout='row' layout-wrap)
@@ -141,14 +143,12 @@ div(flex layout='column')
 				input(ng-model='ctrl.customer.person_address[0].person_address_ie' 
 						ng-disabled='ctrl.customer.person_address[0].icms_type == 2')
 
-		span(flex)
+		//- Contatos & Observacoes
+		.offset-top-30(flex layout='row' layout-wrap)
+			div(flex='50' layout='column')
+				p.md-subhead(style='margin: 0') Contatos
 
-		div(layout='row' layout-wrap)
-			.offset-top-15(flex='50' layout='row' layout-wrap style='padding-right: 8px')
-				div(flex='100') 
-					p.md-subhead(style='margin: 0') Contatos
-
-				.container-table(flex style='max-height: 100px')
+				.container-table.offset-top-15(flex style='max-height: 250px')
 					table.contacts-table
 						tbody
 							tr(ng-repeat='contact in ctrl.customer.person_address[0].person_address_contact')
@@ -156,10 +156,9 @@ div(flex layout='column')
 								td 
 									input(type='text' ng-model='contact.person_address_contact_value')
 
-			div(flex='50' style='padding-left: 8px')
-				.custom-textarea.offset-top-15.offset-bottom-15
-					p(style='margin: 0').md-subhead Observações
-					textarea.offset-top-15(ng-model='ctrl.customer.person_address[0].person_address_note')
+			.custom-textarea(flex='50' style='padding-left: 8px' layout='column')
+				p.md-subhead(style='margin: 0') Observações
+				textarea.offset-top-15(flex style='max-height: 250px' ng-model='ctrl.customer.person_address[0].person_address_note')
 
 //- FOOTER
 

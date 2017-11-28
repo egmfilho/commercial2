@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 16:09:13
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-07 10:30:30
+ * @Last Modified time: 2017-11-28 13:11:32
  */
 
 
@@ -497,8 +497,7 @@ md-tabs.mussum {
 }
 
 .custom-textarea {
-	display: block;
-	
+		
 	label {
 		display: block;
 		margin-bottom: 10px;
@@ -507,7 +506,7 @@ md-tabs.mussum {
 	textarea {
 		display: block;
 		width: 100%;
-		height: 100px;
+		min-height: 100px;
 		resize: none;
 		border: 1px solid $border-color !important;
 		box-sizing: border-box;
