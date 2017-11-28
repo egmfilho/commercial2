@@ -1,27 +1,28 @@
-.body.modal-saved(layout='column' layout-fill layout-align='center center')
-	span.md-title
-		| Cód: {{ctrl.code}}
+span(ng-mouseenter='ctrl.stopTimer()' ng-mouseleave='ctrl.tick()')
+	.body.modal-saved(layout='column' layout-fill layout-align='center center')
+		span.md-title
+			| Cód: {{ctrl.code}}
 
-	span.md-subhead.offset-top-5
-		| {{ctrl.msg}}
-	
-	.offset-top-15(layout='row')
-		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("ticket")' md-colors="{background: 'lime'}")
-			md-tooltip(md-direction='bottom') Imprimir ticket
-			md-icon(md-font-icon='fa fa-2x fa-ticket')
-
-		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("print")' md-colors="{background: 'green'}")
-			md-tooltip(md-direction='bottom') Imprimir
-			md-icon(md-font-icon='fa fa-2x fa-print')
-
-		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("cupon")' md-colors="{background: 'indigo'}")
-			md-tooltip(md-direction='bottom') Imprimir em cupom
-			md-icon(md-font-set='material-icons') receipt
+		span.md-subhead.offset-top-5
+			| {{ctrl.msg}}
 		
-		md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("mail")' md-colors="{background: 'teal'}")
-			md-tooltip(md-direction='bottom') Enviar por email
-			md-icon(md-font-icon='fa fa-2x fa-envelope-o')
+		.offset-top-15(layout='row')
+			md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("ticket")' md-colors="{background: 'lime'}")
+				md-tooltip(md-direction='bottom') Imprimir ticket
+				md-icon(md-font-icon='fa fa-2x fa-ticket')
 
-.footer.bordered(layout='row' layout-align='end center')
-	md-button.md-raised.md-primary(name='positive' ng-click='ctrl._cancel()')
-		| &nbsp; Fechar ({{ctrl.timer}}) &nbsp;
+			md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("print")' md-colors="{background: 'green'}")
+				md-tooltip(md-direction='bottom') Imprimir
+				md-icon(md-font-icon='fa fa-2x fa-print')
+
+			md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("cupon")' md-colors="{background: 'indigo'}")
+				md-tooltip(md-direction='bottom') Imprimir em cupom
+				md-icon(md-font-set='material-icons') receipt
+			
+			md-button.md-fab.md-raised.md-primary(ng-click='ctrl._close("mail")' md-colors="{background: 'teal'}")
+				md-tooltip(md-direction='bottom') Enviar por email
+				md-icon(md-font-icon='fa fa-2x fa-envelope-o')
+
+	.footer.bordered(layout='row' layout-align='end center')
+		md-button.md-raised.md-primary(name='positive' ng-click='ctrl._cancel()')
+			| &nbsp; Fechar ({{ctrl.timer}}) &nbsp;
