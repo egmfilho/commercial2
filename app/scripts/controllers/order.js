@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-28 14:19:15
+ * @Last Modified time: 2017-11-28 16:11:02
 */
 
 (function() {
@@ -1344,10 +1344,10 @@
 		 * Limpa o campo de pagamento.
 		 */
 		function clearPayments() {
-			$rootScope.customDialog().showConfirm('Aviso', 'Deseja remover todos os pagamentos?').then(function() {
-				self.clearTerm();
-				self.budget.order_payments = new Array();
-				self.clearTerm();
+			$rootScope.customDialog().showConfirm('Aviso', 'Deseja remover todos os dados?').then(function() {
+				removeAllPayments(true);
+				self.budget.order_value_addition = 0;
+				self.budget.updateValues();
 			}, function() { });
 		}
 
@@ -2906,16 +2906,24 @@
 		/**
 		 * Remove todos os pagamentos do orcamento
 		 */
-		function removeAllPayments() {
+		function removeAllPayments(skip) {
 			self.clearTerm();
 			
 			var msg = 'Deseja remover todos os pagamentos?';
 
-			$rootScope.customDialog().showConfirm('Aviso', msg).then(function(success) {
+			function clear() {
 				self.removeCredit();
 				self.budget.order_payments = new Array();
 				self.budget.creditPayment = null;
-			}, function(error) { });
+			}
+ 			
+			if (skip) {
+				clear();
+			} else {
+				$rootScope.customDialog().showConfirm('Aviso', msg).then(function(success) {
+					clear();
+				}, function(error) { });
+			}
 		}
 
 		/**
