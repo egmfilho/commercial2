@@ -73,19 +73,20 @@
 							ng-click='ctrl.getBankById(b.bank_id)')
 						| {{b.bank_id}} - {{b.bank_name}}
 
-		md-input-container(flex='50')
-			label Agência
-			md-select(ng-model='ctrl.payment.order_payment_agency_id' data-md-container-class='query-select-container' 
-					ng-disabled='!ctrl.tempBank.bank_agencies.length || !ctrl.isCheck()')
-				md-select-header.select-header
-					| &nbsp; &nbsp;
-					i.fa.fa-search
-					input.md-text(ng-model='ctrl.queryAgency' type='search' placeholder='Buscar agência' ng-keydown="ctrl.updateSearch($event)")
-					button(ng-click='ctrl.queryAgency = \'\';')
-						i.fa.fa-times-circle
-				md-opt-group(label='Agências')
-					md-option(ng-value='a.bank_agency_id' ng-repeat='a in ctrl.tempBank.bank_agencies | filter: { queryable: ctrl.queryAgency }' ng-click='ctrl.queryAgency = ""')
-						| {{a.bank_agency_number}} - {{a.bank_agency_name}}
+		md-autocomplete(
+				flex='50'
+				ng-disabled='!ctrl.isCheck() || !ctrl.payment.order_payment_bank_id'
+				md-selected-item='ctrl.payment.order_payment_agency_id'
+				md-search-text='ctrl.payment.order_payment_new_agency_code'
+				md-items='agency in ctrl.getBankAgency(ctrl.payment.order_payment_new_agency_code)'
+				md-item-text='agency.queryable'
+				md-min-length='0'
+				md-floating-label='Agência')
+			md-item-template
+				span(md-highlight-text='ctrl.payment.order_payment_new_agency_code' md-highlight-flags='^i')
+					| {{agency.queryable}}
+			md-not-found
+				.text-light Nova agência
 
 	div(layout='row')
 		md-input-container(flex)

@@ -97,6 +97,10 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 							md-button(ng-click='order.showModalDiscount()' ng-disabled='order.isToolbarLocked() || !order.budget.order_items.length')
 								md-icon(md-font-set='material-icons') monetization_on
 								| Aplicar desconto geral
+						md-menu-item
+							md-button(ng-click='order.removeDiscounts()' ng-disabled='order.isToolbarLocked() || !order.budget.order_items.length')
+								md-icon(md-font-set='material-icons') delete_sweep
+								| Remover descontos
 				md-menu
 					button(ng-click='$mdMenu.open()' ng-disabled='order.isToolbarLocked()') Ir
 					md-menu-content.order-menu-content

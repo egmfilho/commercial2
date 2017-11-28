@@ -1,8 +1,8 @@
 /*
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
- * @Last Modified by:   egmfilho
- * @Last Modified time: 2017-11-10 11:58:52
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-11-28 09:46:33
 */
 
 (function() {
@@ -350,6 +350,7 @@
 		self.showModalProduct      = showModalProduct;
 		self.showModalNotes        = showModalNotes;
 		self.showModalDiscount     = showModalDiscount;
+		self.removeDiscounts       = removeDiscounts;
 		self.goToSection           = goToSection;
 		self.showModalOrderSeller  = showModalOrderSeller;
 		self.showLockModal         = showLockModal;
@@ -2808,7 +2809,7 @@
 						newPayment = new OrderPayment(success);
 
 					/* Copiado do addPayment(). */
-					if (newPayment.order_payment_initial == 'Y') {
+					if (newPayment.order_payment_initial == 'Y' && payment.order_payment_initial != 'Y') {
 						var i, flag;
 
 						for (i = 0; i < self.budget.order_payments.length; i++) {
@@ -2997,6 +2998,13 @@
 							$rootScope.loading.unload();
 						});
 					};
+
+					this.getBankAgency = function(query) {
+						console.log('ja raiou ou a liberdade no horizonte do o Brasil');
+						return this.tempBank.bank_agencies.filter(function(a) { 
+							return a.queryable.indexOf(query) >= 0;
+						});
+					}
 
 					/* Starters */
 					if (this.payment.order_payment_bank_id)
@@ -3442,6 +3450,18 @@
 					
 					self.budget.updateValues();
 					self.recalcPayments();
+				}, function(error) { });
+		}
+
+		/**
+		 * Remove o desconto de todos os items do pedido.
+		 */
+		function removeDiscounts() {
+			$rootScope.customDialog().showConfirm('Aviso', 'Deseja remover os descontos de todos os itens?')
+				.then(function(success) {
+					angular.forEach(self.budget.order_items, function(item) {
+						item.setAlDiscount(0);
+					});
 				}, function(error) { });
 		}
 

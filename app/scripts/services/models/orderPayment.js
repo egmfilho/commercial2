@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-28 12:11:57
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 17:15:32
+ * @Last Modified time: 2017-11-28 09:02:56
  */
 
 (function() {
@@ -34,6 +34,7 @@
 			this.order_payment_update                 = null;
 			this.order_payment_bank_id                = null;
 			this.order_payment_agency_id              = null;
+			this.order_payment_new_agency_code        = null;
 			this.order_payment_check_number           = null;
 			this.modality_id                          = null;
 			this.modality                             = new PaymentModality();
