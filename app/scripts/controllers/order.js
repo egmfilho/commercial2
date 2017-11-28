@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-28 16:24:13
+ * @Last Modified time: 2017-11-28 17:06:57
 */
 
 (function() {
@@ -3660,16 +3660,19 @@
 									}
 								};
 
-								if (self.budget.order_export_type == 'dav')
+								if (self.budget.order_export_type == 'dav') {
+									$rootScope.writeLog('Order ' + self.budget.order_code + ' was clonned');
 									ElectronWindow.createWindow('#/order/clone/' + self.budget.order_code, options);
-								else
+								} else {
 									ElectronWindow.createWindow('#/order/edit/' + self.budget.order_code, options);
+								}
 							}
 							else {
-								if (self.budget.order_export_type == 'dav')
+								if (self.budget.order_export_type == 'dav') {
 									$location.path('/order/clone/' + self.budget.order_code);
-								else
+								} else {
 									$location.path('/order/edit/' + self.budget.order_code);
+								}
 							}
 							$timeout(function() {
 								window.close();
