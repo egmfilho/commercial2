@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-28 12:17:08
+ * @Last Modified time: 2017-11-28 14:19:15
 */
 
 (function() {
@@ -21,6 +21,7 @@
 		'$routeParams', 
 		'$q',
 		'$filter', 
+		'$http',
 		'$mdPanel', 
 		'Cookies',
 		'Constants',
@@ -66,6 +67,7 @@
 		$routeParams, 
 		$q, 
 		$filter,
+		$http,
 		$mdPanel,
 		Cookies, 
 		constants, 
@@ -548,6 +550,25 @@
 
 			self.searchTerm();
 
+			function checkCreditAvailability(companyId) {
+				$rootScope.loading.load();
+				$http({
+					method: 'POST',
+					url: Globals.api.get().address + 'config.php?action=get',
+					data: {
+						company_id: companyId,
+						config_category: 'credit',
+						config_name: 'use_credit'
+					}
+				}).then(function(success) {
+					self.internal.canUseCredit = success.data.data.config_value == 'Y';
+					$rootScope.loading.unload();
+				}, function(error) {
+					$rootScope.loading.unload();
+					$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+				});
+			}
+
 			/************** 
 			 * EDIT
 			 * CLONE
@@ -573,6 +594,7 @@
 					OpenedOrderManager.add(self.budget.order_code);
 
 					self.showLockModal();
+					checkCreditAvailability(self.budget.order_company_id);
 
 					/* Configura a barra de titulo interna do Commercial */
 					// $rootScope.titleBarText = 'Editar orçamento - Código: ' + self.budget.order_code + ' (' + $filter('date')(self.budget.order_date, 'short') + ')';
@@ -686,6 +708,7 @@
 					});
 
 					self.budget = new Order(temp);
+					checkCreditAvailability(self.budget.order_company_id);
 					self.recalcPayments();
 
 					if (constants.isElectron)
@@ -726,6 +749,7 @@
 					});
 
 					self.budget.setCompany(new UserCompany(company).company_erp);
+					checkCreditAvailability(self.budget.order_company_id);
 				}
 
 				if (!self.budget.order_company_id) {
@@ -1041,6 +1065,7 @@
 
 		function internalItems() {
 			return {
+				canUseCredit: false,
 				userPrices: Globals.get('user-prices-raw'),
 				tempSeller: null,
 				tempCustomer: null,

@@ -612,17 +612,18 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 
 						div(flex='40' layout='column')
 
-							.well.credit(layout='row' layout-align='center center')
+							div(style='margin-top: 50px' ng-if='!order.internal.canUseCredit')
+							.well.credit(layout='row' layout-align='center center' ng-if='order.internal.canUseCredit')
 								span(flex)
 									b.text-light Carta de crédito:&nbsp;
 									| {{order.budget.creditPayment.order_payment_credit_available || '0' | currency:"R$ "}}
 
 								md-button.md-primary.md-icon-button.md-raised(style='margin: 0;' ng-click='order.addCredit()' 
-										ng-disabled='!order.budget.order_client.person_credit.length')
+										ng-disabled='!order.budget.order_client.person_credit.length || !order.internal.canUseCredit')
 									i.fa.fa-plus
 									md-tooltip(md-direction='bottom') Adicionar crédito
 							
-							.summary(layout='column')
+							.summary(flex layout='column')
 								md-toolbar.md-toolbar-tools.toolbar-orange(style='z-index:0')
 									h2 Resumo do orçamento
 
