@@ -2,7 +2,7 @@
  * @Author: alessandro
  * @Date:   2017-08-09 09:36:07
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 17:12:30
+ * @Last Modified time: 2017-11-28 17:23:06
  */
 
 (function() {
@@ -92,6 +92,9 @@
 								}
 							}, function(error) {
 								$rootScope.loading.unload();
+								$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+								vm.result = [];
+								endSearch();
 							});
 						}
 
