@@ -78,9 +78,11 @@
 				ng-disabled='!ctrl.isCheck() || !ctrl.payment.order_payment_bank_id'
 				md-selected-item='ctrl.payment.order_payment_agency_id'
 				md-search-text='ctrl.payment.order_payment_new_agency_code'
+				md-search-text-change='ctrl.payment.order_payment_new_agency_code = ctrl.payment.order_payment_new_agency_code.substring(0, 10)'
 				md-items='agency in ctrl.getBankAgency(ctrl.payment.order_payment_new_agency_code)'
 				md-item-text='agency.queryable'
 				md-min-length='0'
+				md-input-maxlength='10'
 				md-floating-label='Agência')
 			md-item-template
 				span(md-highlight-text='ctrl.payment.order_payment_new_agency_code' md-highlight-flags='^i')
@@ -91,7 +93,7 @@
 	div(layout='row')
 		md-input-container(flex)
 			label Número do cheque
-			input.text-right(ng-model='ctrl.payment.order_payment_check_number' ng-disabled='!ctrl.isCheck()')
+			input.text-right(ng-model='ctrl.payment.order_payment_check_number' ng-change='ctrl.payment.order_payment_check_number = ctrl.payment.order_payment_check_number.substring(0, 10)' ng-disabled='!ctrl.isCheck()')
 	
 .footer.bordered(layout='row' layout-align='end center')
 	md-button.md-primary.md-raised(name='positive' ng-click='ctrl._close(ctrl.payment)' ng-disabled='!ctrl.payment.modality_id')
