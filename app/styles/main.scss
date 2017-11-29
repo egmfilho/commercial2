@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 16:09:13
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-28 13:11:32
+ * @Last Modified time: 2017-11-29 16:03:20
  */
 
 
@@ -593,5 +593,16 @@ md-select md-select-value span {
 md-input-container {
 	&:not(.md-input-invalid) .md-input:enabled, md-select:not([disabled]) .md-select-value {
 		border-color: $border-color;
+	}
+}
+
+md-chips .md-chips {
+	box-shadow: 0 1px $border-color;
+	margin: 0 2px;
+	font-size: 14px;
+
+	md-chip .md-chip-content {
+		font-size: 12px;
+		margin-right: 5px;
 	}
 }

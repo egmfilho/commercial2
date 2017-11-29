@@ -1,0 +1,109 @@
+.irineu(layout='row' layout-align='start center' layout-fill)
+	i.fa.fa-user
+	span(flex) {{ctrl.newUser.user_id ? 'Editar' : 'Novo'}} usuário
+	md-switch.md-accent.md-hue-3(ng-true-value='\'Y\'' ng-false-value='\'N\'' ng-model='ctrl.newUser.user_active')
+		| Ativo
+
+.body(layout='column' style='max-height: 480px; overflow-y: auto')
+	div(layout='row' layout-wrap)
+		md-input-container(flex='60')
+			label Nome
+			input(name='name' ng-model='ctrl.newUser.user_name')
+
+		md-input-container(flex='40')
+			label Email
+			input(name='name' ng-model='ctrl.newUser.user_mail')
+
+		md-input-container(flex='33')
+			label Nome de usuário
+			input(name='name' ng-model='ctrl.newUser.user_user')
+
+		md-input-container(flex='33')
+			label Senha
+			input(name='name' type='password' ng-model='ctrl.newUser.user_password')
+
+		md-input-container(flex='33')
+			label Repita a senha
+			input(name='name' type='password' ng-model='ctrl.newUser.user_password_confirmation')
+
+		md-autocomplete(
+				flex='50'
+				ng-model='ctrl.newUser.user_seller'
+				md-selected-item='tempSeller'
+				md-search-text='searchSeller'
+				md-items='seller in ctrl.querySeller(searchSeller)'
+				md-item-text='seller.person_shortname'
+				md-min-length='0'
+				md-floating-label='Representante')
+			span(md-highlight-text='searchSeller') {{seller.person_code}} {{seller.person_name}}
+
+		md-input-container(flex='30')
+			label Perfil
+			md-select(ng-model='ctrl.newUser.user_profile')
+				md-option(ng-repeat='profile in ctrl.profiles' ng-value='profile')
+					| {{profile.user_profile_name}}
+
+		md-input-container(flex='20')
+			label Máx. Desconto %
+			input(name='name' ng-model='ctrl.newUser.user_name')
+
+		h3(flex='100' style='0') Características
+		div(flex='33' layout='row')
+			md-switch(ng-true-value='\'Y\'' ng-false-value='\'N\'' ng-model='ctrl.newUser.user_session_expires')
+				| Sessão expira
+
+		div(flex='33' layout='row')
+			md-switch(ng-true-value='\'Y\'' ng-false-value='\'N\'' ng-model='ctrl.newUser.user_mobile_access')
+				| Usa Commercial Lite
+		
+		div(flex='33' layout='row')
+			md-switch(ng-true-value='\'Y\'' ng-false-value='\'N\'' ng-model='ctrl.newUser.user_unlock_device')
+				| Desbloqueia Commercial Lite
+
+		h3(flex='100' style='margin: 0') Empresas
+		md-chips(flex='100' 
+				ng-model='ctrl.newUser.user_company' 
+				md-require-match='true'
+				md-autocomplete-snap)
+			md-autocomplete(
+					md-selected-item='tempCompany'
+					md-search-text='searchCompany'
+					md-items='company in ctrl.queryCompany(searchCompany)'
+					md-item-text='company.company_short_name'
+					md-min-length='0'
+					placeholder='+ empresa')
+				span(md-highlight-text='searchCompany') {{company.queryable}}
+				
+			md-chip-template
+				span
+					| {{$chip.company_code}} {{$chip.company_short_name}}
+
+		h3(flex='100' style='margin: 30px 0 0 0') Tabelas de preço	
+		md-chips(flex='100' 
+				ng-model='ctrl.newUser.user_price' 
+				md-require-match='true'
+				md-autocomplete-snap)
+			md-autocomplete(
+					md-selected-item='tempPrice'
+					md-search-text='searchPrice'
+					md-items='price in ctrl.queryPrice(searchPrice)'
+					md-item-text='price.price_name'
+					md-min-length='0'
+					placeholder='+ tabela')
+				span(md-highlight-text='searchPrice') {{price.queryable}}
+				
+			md-chip-template
+				span
+					| {{$chip.price_code}} {{$chip.price_name}}
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-raised(ng-click='ctrl._cancel()')
+		| &nbsp;
+		i.fa.fa-remove &nbsp; 
+		| Cancelar &nbsp;
+
+	md-button.md-raised.md-primary(ng-click='ctrl.save()')
+		| &nbsp;
+		i.fa.fa-check &nbsp;
+		| Salvar &nbsp;
+	

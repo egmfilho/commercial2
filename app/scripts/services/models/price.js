@@ -63,11 +63,13 @@
 				this.price_name     = null;
 				this.proce_code     = null;
 				this.price_erp      = new PriceERP();
+				this.queryable      = null;
 
 				if (price) {
 					Object.assign(this, price, {
 						price_date: price.price_date ? new Date(price.price_date) : null,
-						price_erp: new PriceERP(price.price_erp)
+						price_erp: new PriceERP(price.price_erp),
+						queryable: price.price_code + ' ' + price.price_name
 					});
 				}
 			}

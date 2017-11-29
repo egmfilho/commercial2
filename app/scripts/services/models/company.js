@@ -1,8 +1,8 @@
 /*
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-06-06 14:07:56
-* @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-24 17:24:49
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-11-29 14:03:24
 */
 
 (function() {
@@ -13,14 +13,18 @@
 		.factory('CompanyERP', [function() {
 
 			function CompanyERP(companyERP) {
-				this.company_id    = null;
-				this.company_code  = null;
-				this.company_name  = null;
-				this.company_cnpj  = null;
-				this.company_phone = null;	
+				this.company_id         = null;
+				this.company_code       = null;
+				this.company_name       = null;
+				this.company_cnpj       = null;
+				this.company_phone      = null;
+				this.company_short_name = null;	
+				this.queryable          = null;
 
 				if (companyERP) {
-					Object.assign(this, companyERP);				
+					Object.assign(this, companyERP, {
+						queryable: companyERP.company_code + ' ' + companyERP.company_short_name
+					});
 				}
 			}
 

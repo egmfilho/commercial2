@@ -1,8 +1,8 @@
 /*
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-05-29 17:06:00
-* @Last Modified by:   egmfilho
-* @Last Modified time: 2017-07-25 18:11:08
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-11-29 13:08:51
 */
 
 (function() {
@@ -16,7 +16,7 @@
 				this.user_id              = null;
 				this.user_profile_id      = null;
 				this.user_seller_id       = null;
-				this.user_active          = null;
+				this.user_active          = 'Y';
 				this.user_user            = null;
 				this.user_pass            = null;
 				this.user_name            = null;
