@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-01 08:42:58
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-27 14:17:42
+ * @Last Modified time: 2017-11-29 12:27:33
  */
 
 .users {	
@@ -20,10 +20,20 @@
 		z-index: -1px;
 	}
 
+	.fa-sort, .fa-sort-up, .fa-sort-down {
+		font-size: 14px;
+		margin-right: 4px;
+	}
+
+	.fandangos {
+		opacity: .3;
+	}
+
 	.users-table, .profiles-table {
 		tr {
 			th {
 				// background-color: #ddd;
+				cursor: pointer;
 			}
 
 			border-bottom: 1px solid #ddd;
@@ -46,11 +56,14 @@
 				}
 
 				&:nth-child(3) {
-					width: 120px;
+					width: 100px;
 				}
 
 				&:nth-child(4) {
-					width: 300px;
+					width: 200px;
+					word-break: break-all;
+					white-space: normal;
+					overflow: hidden;
 				}
 
 				&:nth-child(5) {
@@ -58,7 +71,7 @@
 				}
 
 				&:nth-child(6) {
-					width: 30px;
+					width: 24px;
 				}
 			}
 		}

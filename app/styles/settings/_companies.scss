@@ -2,7 +2,7 @@
  * @Author: egmfilho &lt;egmfilho@live.com&gt; 
  * @Date: 2017-11-08 08:45:51 
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-27 13:13:22
+ * @Last Modified time: 2017-11-29 09:30:52
  */
 
 .companies {
@@ -34,6 +34,27 @@
 			border: none;
 			vertical-align: top;
 			border-radius: 0;
+		}
+	}
+
+	.discount {
+		input {
+			&:nth-child(1) {
+				margin-right: 15px;
+				min-width: 140px;
+				max-width: 140px;
+			}
+
+			&:nth-child(2) {
+				margin-left: 15px;
+				min-width: 40px;
+				max-width: 40px;
+			}
+		}
+
+		button {
+			font-size: 18px;
+			vertical-align: initial;
 		}
 	}
 

@@ -17,7 +17,7 @@
 
 		var self = this;
 
-		self.currentView = 'financial';
+		self.currentView = 'users';
 
 		$scope.$on('$viewContentLoaded', function() {
 			$rootScope.titleBarText = 'Ajustes';

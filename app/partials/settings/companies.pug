@@ -135,6 +135,35 @@
 									i.fa.fa-floppy-o &nbsp;
 									| Salvar
 
+			.form-container#maxDiscounts
+				.form
+					md-subheader
+						i.fa.fa-wrench
+						| Desconto máximo por modalidade
+
+					div(layout='column')
+							
+						dl
+							dt(ng-repeat-start='m in companies.internal.maxDiscounts')
+								| Modalidade
+							dd.discount(ng-repeat-end)
+								input(type='text' ng-model='m.id')
+								| Desconto
+								input(type='text' ng-model='m.value')
+								md-button.md-icon-button(ng-click='companies.removeModalityDiscount(m)')
+									md-icon(md-font-icon='fa fa-remove')
+
+							dt
+
+							dd
+								md-button.md-raised(ng-click='companies.addModalityDiscount()' style='margin-left: 0')
+									i.fa.fa-plus &nbsp;
+									| Modalidade
+
+								md-button.md-raised.md-primary(ng-click='companies.postFinancial()')
+									i.fa.fa-floppy-o &nbsp;
+									| Salvar
+
 			.form-container#general
 				.form
 					md-subheader
@@ -144,6 +173,11 @@
 					div(layout='column')
 							
 						dl
+							dt 
+								| Consumidor padrão
+							dd
+								input.text-uppercase(type='text' ng-model='companies.internal.defaultCustomerCode')
+
 							dt 
 								| Usar crédito
 							dd

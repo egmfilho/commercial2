@@ -39,7 +39,7 @@
 						.md-list-item-text
 							h3 Empresas
 
-					md-list-item.md-1-line(ng-click='settings.currentView = "person"' ng-class='{ "active": settings.currentView == "person" }')
+					md-list-item.md-1-line(ng-click='settings.currentView = "people"' ng-class='{ "active": settings.currentView == "people" }')
 						md-icon(md-font-icon='fa fa-users')
 						.md-list-item-text
 							h3 Pessoas
@@ -70,3 +70,6 @@
 
 			md-content.view(flex ng-switch-when='companies')
 				div(flex layout-fill layout='column' ng-include='"./partials/settings/companies.html"' ng-controller='SettingsCtrl.Companies as companies')
+
+			md-content.view(flex ng-switch-when='people')
+				div(flex layout-fill layout='column' ng-include='"./partials/settings/people.html"' ng-controller='SettingsCtrl.People as people')

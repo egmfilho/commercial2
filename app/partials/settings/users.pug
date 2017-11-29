@@ -73,22 +73,37 @@
 							table.table.users-table
 								thead
 									tr
-										th PERFIL
-										th NOME
-										th USUÁRIO
-										th EMAIL
-										th ÚLTIMO ACESSO
+										th(ng-click='users.setUsersTableFilters(\'user_profile_name\')') 
+											i(ng-class='users.filters.users.getClassesFor(\'user_profile_name\')') 
+											| PERFIL
+										th(ng-click='users.setUsersTableFilters(\'user_name\')') 
+											i(ng-class='users.filters.users.getClassesFor(\'user_name\')') 
+											| NOME
+										th(ng-click='users.setUsersTableFilters(\'user_user\')') 
+											i(ng-class='users.filters.users.getClassesFor(\'user_user\')') 
+											| USUÁRIO
+										th(ng-click='users.setUsersTableFilters(\'user_mail\')')
+											i(ng-class='users.filters.users.getClassesFor(\'user_mail\')')  
+											| EMAIL
+										th(ng-click='users.setUsersTableFilters(\'user_login\')') 
+											i(ng-class='users.filters.users.getClassesFor(\'user_login\')') 
+											| ÚLTIMO ACESSO
 										th &nbsp;
 
 						.container-table(flex)
 							table.table.users-table
 								tbody
-									tr(ng-repeat='u in users.users track by $index' ng-dblclick='')
-										td {{u.user_profile.user_profile_name}}
-										td {{u.user_name}}
-										td {{u.user_user}}
-										td {{u.user_mail}}
-										td {{u.user_login | date: 'dd/MM/yyyy HH:mm:ss'}}
+									tr(ng-repeat='u in users.users | orderBy:users.filters.users.property:users.filters.users.reverse' ng-dblclick='')
+										td
+											| {{u.user_profile_name}}
+										td 
+											| {{u.user_name}}
+										td 
+											| {{u.user_user}}
+										td 
+											| {{u.user_mail}}
+										td 
+											| {{u.user_login | date: 'dd/MM/yyyy HH:mm:ss'}}
 										td 
 											md-menu
 												md-button.md-icon-button(ng-click='$mdMenu.open($event)')

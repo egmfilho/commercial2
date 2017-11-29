@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-07-25 14:03:54
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-27 10:52:39
+ * @Last Modified time: 2017-11-29 08:28:08
 */
 
 (function() {
@@ -19,11 +19,21 @@
 
 		this.internal = {
 			order: {
+				commissionTypeId: null,
+				davStatus: null,
+				dav_type: null,
+				deadline: null,
+				deliveryType: null,
+				messageId: null,
+				operationId: null,
+				operationOEId: null,
+				scheduleDelivery: null,
+				status: null,
 				systemId: null,
 				systemName: null,
+				type: null,
 				userId: null,
-				userName: null,
-				operationId: null,
+				userName: null
 			},
 			personCategory: {
 				customerId: null,
@@ -45,11 +55,21 @@
 		function convertConfigToInternalData(config) {
 			self.internal = {
 				order: {
+					commissionTypeId: config.order? config.order.commission_type_id : null,
+					davStatus: config.order ? config.order.dav_status : null,
+					davType: config.order ? config.order.dav_type : null,
+					deadline: config.order ? config.order.deadline : null,
+					deliveryType: config.order ? config.order.delivery_type : null,
+					messageId: config.order ? config.order.message_id : null,
+					operationId: config.order ? config.order.operation_id : null,
+					operationOEId: config.order ? config.order.operation_oe_id : null,
+					scheduleDelivery: config.order ? config.order.schedule_delivery : null,
+					status: config.order ? config.order.status : null,
 					systemId: config.order ? config.order.system_id : null,
 					systemName: config.order ? config.order.system_name : null,
+					type: config.order ? config.order.type : null,
 					userId: config.order ? config.order.user_id : null,
-					userName: config.order ? config.order.user_name : null,
-					operationId: config.order ? config.order.operation_id : null,
+					userName: config.order ? config.order.user_name : null
 				},
 				personCategory: {
 					customerId: config.person_category ? config.person_category.client_category : null,

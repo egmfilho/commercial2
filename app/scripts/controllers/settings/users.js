@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-07-25 16:51:12
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-27 15:47:29
+ * @Last Modified time: 2017-11-29 12:27:15
 */
 
 (function() {
@@ -20,13 +20,36 @@
 		this.view = 'profiles';
 		this.profiles = [ ];
 		this.users = [ ];
+		this.filters = {
+			profiles: {
+				property: null,
+				reverse: false
+			},
+			users: {
+				property: 'user_name',
+				reverse: false,
+				getClassesFor: function(property) {
+					var classes = 'fa ';
+					if (property == self.filters.users.property) {
+						classes += self.filters.users.reverse ? 'fa-sort-down' : 'fa-sort-up';
+					} else {
+						classes += 'fa-sort fandangos';
+					}
+					return classes;
+				}
+			}
+		};
 
 		constants.debug && console.log('SettingsCtrl.Users pronto!');
 
 		function getUsers() {
 			$rootScope.loading.load();
 			providerUser.getAll().then(function(success) {
-				self.users = success.data.map(function(u) { return new User(u) });
+				self.users = success.data.map(function(u) { 
+					var user = new User(u);
+					user.user_profile_name = user.user_profile.user_profile_name;
+					return user;
+				});
 				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);
@@ -67,6 +90,16 @@
 				}
 			}
 		}
+
+		this.setUsersTableFilters = function(property) {
+			if (property == self.filters.users.property) {
+				self.filters.users.reverse = !self.filters.users.reverse;
+			} else {
+				self.filters.users.reverse = false;
+			}
+			
+			self.filters.users.property = property;
+		};
 	}
 
 })();
