@@ -1,8 +1,8 @@
 /*
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-07-27 12:24:55
-* @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-30 16:40:11
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-11-29 11:50:35
 */
 
 (function() {
@@ -187,10 +187,6 @@
 							to: self.form.to,
 							subject: self.form.subject,
 							message: self.form.message,
-							reply: {
-								name: Globals.get('user').user_name,
-								mail: Globals.get('user').user_mail
-							},
 							pdf: success 
 						}
 					}).then(function(success) {
