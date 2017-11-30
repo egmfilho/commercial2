@@ -55,6 +55,7 @@
 							category: category,
 							name: '',
 							doc: '',
+							contact: '',
 							active: false
 						};
 						
@@ -77,7 +78,7 @@
 						}
 
 						this.search = function(filter){
-							if( !vm.filter.doc.length && !vm.filter.name.length ){
+							if( !vm.filter.contact.length && !vm.filter.doc.length && !vm.filter.name.length ){
 								$rootScope.customDialog().showMessage('Aviso', 'Pelo menos um dos campos deverá ser informado.');
 								return;
 							}							
