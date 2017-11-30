@@ -28,24 +28,24 @@
 
 		md-autocomplete(
 				flex='50'
-				ng-model='ctrl.newUser.user_seller'
-				md-selected-item='tempSeller'
+				md-selected-item='ctrl.tempSeller'
+				md-selected-item-change='ctrl.newUser.setSeller(tempSeller)'
 				md-search-text='searchSeller'
 				md-items='seller in ctrl.querySeller(searchSeller)'
-				md-item-text='seller.person_shortname'
+				md-item-text='seller.exibition_name'
 				md-min-length='0'
 				md-floating-label='Representante')
-			span(md-highlight-text='searchSeller') {{seller.person_code}} {{seller.person_name}}
+			span(md-highlight-text='searchSeller') {{seller.exibition_name}}
 
 		md-input-container(flex='30')
 			label Perfil
-			md-select(ng-model='ctrl.newUser.user_profile')
-				md-option(ng-repeat='profile in ctrl.profiles' ng-value='profile')
+			md-select(ng-model='ctrl.newUser.user_profile_id')
+				md-option(ng-repeat='profile in ctrl.profiles track by profile.user_profile_id' ng-value='profile.user_profile_id')
 					| {{profile.user_profile_name}}
 
 		md-input-container(flex='20')
 			label Máx. Desconto %
-			input(name='name' ng-model='ctrl.newUser.user_name')
+			input(name='name' ng-model='ctrl.newUser.user_max_discount')
 
 		h3(flex='100' style='0') Características
 		div(flex='33' layout='row')
@@ -64,6 +64,7 @@
 		md-chips(flex='100' 
 				ng-model='ctrl.newUser.user_company' 
 				md-require-match='true'
+				md-transform-chip='ctrl.transformCompany($chip)'
 				md-autocomplete-snap)
 			md-autocomplete(
 					md-selected-item='tempCompany'
@@ -76,12 +77,13 @@
 				
 			md-chip-template
 				span
-					| {{$chip.company_code}} {{$chip.company_short_name}}
+					| {{$chip.company_id}} {{$chip.company_short_name}}
 
 		h3(flex='100' style='margin: 30px 0 0 0') Tabelas de preço	
 		md-chips(flex='100' 
 				ng-model='ctrl.newUser.user_price' 
 				md-require-match='true'
+				md-transform-chip='ctrl.transformPrice($chip)'
 				md-autocomplete-snap)
 			md-autocomplete(
 					md-selected-item='tempPrice'

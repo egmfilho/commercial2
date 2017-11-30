@@ -109,6 +109,7 @@
 						get_person_address_city: options && options.getAddress,
 						get_person_address_district: options && options.getAddress,
 						get_person_address_contact: options && options.getContact,
+						person_active: options && options.activeOnly,
 						limit: options && options.limit,
 						page: options && options.page
 					}).$promise;

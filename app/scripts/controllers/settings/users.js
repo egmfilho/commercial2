@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-07-25 16:51:12
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-29 17:46:30
+ * @Last Modified time: 2017-11-30 12:49:33
 */
 
 (function() {
@@ -101,7 +101,7 @@
 			self.filters.users.property = property;
 		};
 
-		this.newUserModal = function() {
+		this.newUserModal = function(userToEdit) {
 			var options = {
 				width: 800,
 				focusOnOpen: false,
@@ -118,8 +118,16 @@
 				this.prices = [ ];
 				this.newUser = new User();
 
+				function getUserToEdit() {
+					if (userToEdit) {
+						return providerUser.getById(userToEdit.user_id);
+					} else {
+						return null;
+					}
+				}
+
 				function getSellers() {
-					return ProviderPerson.getByType(Globals.get('person-categories').seller);
+					return ProviderPerson.getByType(Globals.get('person-categories').seller, { limit: -1, activeOnly: true });
 				}
 
 				function getCompanies() {
@@ -136,24 +144,71 @@
 					});
 				}
 
+				$rootScope.loading.load();
 				$q.all([
 					getCompanies(),
 					getPrices(),
-					getSellers()
+					getSellers(), 
+					getUserToEdit()
 				]).then(function(success) {
 					scope.companies = success[0].data.data.map(function(c) { return new CompanyERP(c) });
 					scope.prices = success[1].data.data.map(function(p) { return new Price(p) });
 					scope.sellers = success[2].data.map(function(p) { return new Person(p) });
+					if (success[3] && success[3].data) {
+						var temp = new User(success[3].data);
+						scope.newUser = new User(Object.assign({ }, temp, {
+							user_company: temp.user_company.map(function(c) {
+								return scope.transformCompany(c);
+							}),
+							user_price: temp.user_price.map(function(p) {
+								return scope.transformPrice(p);
+							})
+						}));
+
+						scope.tempSeller = scope.sellers.find(function(s) {
+							return s.person_id == temp.user_seller_id;
+						});
+					}
 					$rootScope.loading.unload();
 				}, function(error) {
 					$rootScope.loading.unload();
 					$rootScope.customDialog().showMessage('Erro', 'Erro ao receber as informações do servidor.');
 				});
 
+				this.transformCompany = function(chip) {
+					if (chip instanceof CompanyERP) {
+						return {
+							company_id: chip.company_id,
+							company_short_name: chip.company_short_name
+						}
+					} else {
+						return {
+							company_id: chip.company_id,
+							company_short_name: chip.company_erp.company_short_name
+						}
+					}
+				};
+
 				this.queryCompany = function(query) {
 					return scope.companies.filter(function(c) { 
 						return c.queryable.toLowerCase().indexOf(query.toLowerCase()) >= 0 && scope.newUser.user_company.indexOf(c) == -1;
 					});
+				};
+
+				this.transformPrice = function(chip) {
+					if (chip instanceof Price) {
+						return {
+							price_id: chip.price_id,
+							price_code: chip.price_code,
+							price_name: chip.price_name
+						}
+					} else {
+						return {
+							price_id: chip.price_id,
+							price_code: chip.price_erp.price_code,
+							price_name: chip.price_erp.price_name
+						}
+					}
 				};
 
 				this.queryPrice = function(query) {
@@ -166,7 +221,11 @@
 					return scope.sellers.filter(function(p) {
 						return p.queryable.toLowerCase().indexOf(query.toLowerCase()) >= 0;
 					});
-				}
+				};
+
+				this.save = function() {
+					console.log(scope.newUser);
+				};
 			};
 			 
 			controller.$inject = [ 'ProviderPerson', 'Person', 'CompanyERP', 'Price' ];

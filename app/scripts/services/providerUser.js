@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-07-25 17:17:10
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 14:00:39
+ * @Last Modified time: 2017-11-30 11:00:46
  */
 
 (function() {
@@ -25,6 +25,7 @@
 				});
 
 				return {
+					getById: getById,
 					getAll: getAll,
 					setNewPass: setNewPass
 				};
@@ -32,6 +33,19 @@
 				// ******************************
 				// Methods declaration
 				// ******************************
+
+				function getById(id) {
+					return provider.query({
+						action: 'get'
+					}, {
+						user_id: id,
+						get_user_profile: true,
+						get_user_price: true,
+						get_user_company_erp: true,
+						get_user_price_erp: true,
+						get_user_company: true
+					}).$promise;
+				}
 
 				function getAll() {
 					return provider.query({

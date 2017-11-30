@@ -1,8 +1,8 @@
 /*
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-05-29 10:32:39
-* @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-16 12:25:33
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-11-30 11:59:15
 */
 
 (function() {
@@ -23,6 +23,7 @@
 				this.person_address       = new Array();
 				this.person_credit        = new Array();
 				this.person_credit_limit  = new PersonCreditLimit();
+				this.exibition_name       = null;
 				this.queryable            = '';
 
 				if (person) {
@@ -30,6 +31,7 @@
 						person_address: person.person_address ? person.person_address.map(function(a) { return new Address(a); }) : new Array(),
 						person_credit: person.person_credit ? person.person_credit.map(function(a) { return new PersonCredit(a); }) : new Array(),
 						person_credit_limit: person.person_credit_limit ? new PersonCreditLimit(person.person_credit_limit) : new PersonCreditLimit(),
+						exibition_name: person.person_code + ' ' + person.person_name,
 						queryable: person.person_code + ' - ' + person.person_name + ' ' + person.person_shortname
 					});
 				}

@@ -93,7 +93,7 @@
 						.container-table(flex)
 							table.table.users-table
 								tbody
-									tr(ng-repeat='u in users.users | orderBy:users.filters.users.property:users.filters.users.reverse' ng-dblclick='')
+									tr(ng-repeat='u in users.users | orderBy:users.filters.users.property:users.filters.users.reverse' ng-dblclick='users.newUserModal(u)')
 										td
 											| {{u.user_profile_name}}
 										td 
