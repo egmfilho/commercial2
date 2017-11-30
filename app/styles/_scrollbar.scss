@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 13:06:07
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 17:08:22
+ * @Last Modified time: 2017-11-30 14:16:48
  */
 
 .scrollbar1 {
@@ -39,7 +39,7 @@
 	}
 
 	&::-webkit-scrollbar-thumb {
-		background-color: $secondary-color;
+		background-color: $secondary-color-lighter;
 		// border: 1px solid lighten($main-color, 20%);
 	}
 }
