@@ -20,16 +20,16 @@
 
 		md-input-container(flex='33')
 			label Senha
-			input(name='name' type='password' ng-model='ctrl.newUser.user_password')
+			input(name='name' type='password' ng-model='ctrl.newUser.user_pass')
 
 		md-input-container(flex='33')
 			label Repita a senha
-			input(name='name' type='password' ng-model='ctrl.newUser.user_password_confirmation')
+			input(name='name' type='password' ng-model='ctrl.newUser.user_pass_confirmation')
 
 		md-autocomplete(
 				flex='50'
 				md-selected-item='ctrl.tempSeller'
-				md-selected-item-change='ctrl.newUser.setSeller(tempSeller)'
+				md-selected-item-change='ctrl.newUser.setSeller(ctrl.tempSeller)'
 				md-search-text='searchSeller'
 				md-items='seller in ctrl.querySeller(searchSeller)'
 				md-item-text='seller.exibition_name'
@@ -53,6 +53,10 @@
 				| Sessão expira
 
 		div(flex='33' layout='row')
+			md-switch(ng-true-value='\'1\'' ng-false-value='\'0\'' ng-model='ctrl.newUser.user_max_credit_authorization')
+				| Autoriza crédito
+
+		div(flex='33' layout='row')
 			md-switch(ng-true-value='\'Y\'' ng-false-value='\'N\'' ng-model='ctrl.newUser.user_mobile_access')
 				| Usa Commercial Lite
 		
@@ -65,9 +69,11 @@
 				ng-model='ctrl.newUser.user_company' 
 				md-require-match='true'
 				md-transform-chip='ctrl.transformCompany($chip)'
+				md-on-remove='ctrl.setMainCompany(0)'
 				md-autocomplete-snap)
 			md-autocomplete(
 					md-selected-item='tempCompany'
+					md-no-cache='true'
 					md-search-text='searchCompany'
 					md-items='company in ctrl.queryCompany(searchCompany)'
 					md-item-text='company.company_short_name'
@@ -78,6 +84,15 @@
 			md-chip-template
 				span
 					| {{$chip.company_id}} {{$chip.company_short_name}}
+
+		md-input-container.offset-top-30(flex='33')
+			label Empresa principal
+			md-select(ng-model='ctrl.mainCompanyId' ng-disabled='!ctrl.newUser.user_company.length')
+				md-option(ng-repeat='company in ctrl.newUser.user_company track by $index' ng-value='company.company_id' ng-click='ctrl.setMainCompany($index)')
+					| {{company.company_id}} {{company.company_short_name}}
+
+		span(flex='33')
+		span(flex='33')
 
 		h3(flex='100' style='margin: 30px 0 0 0') Tabelas de preço	
 		md-chips(flex='100' 

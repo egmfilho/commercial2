@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-07-25 16:51:12
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-30 12:49:33
+ * @Last Modified time: 2017-11-30 17:27:16
 */
 
 (function() {
@@ -112,6 +112,7 @@
 				
 				var scope = this;
 
+				this.providerUser = providerUser;
 				this.sellers = [ ];
 				this.profiles = self.profiles;
 				this.companies = [ ];
@@ -156,43 +157,76 @@
 					scope.sellers = success[2].data.map(function(p) { return new Person(p) });
 					if (success[3] && success[3].data) {
 						var temp = new User(success[3].data);
-						scope.newUser = new User(Object.assign({ }, temp, {
-							user_company: temp.user_company.map(function(c) {
-								return scope.transformCompany(c);
-							}),
-							user_price: temp.user_price.map(function(p) {
-								return scope.transformPrice(p);
-							})
-						}));
+
+						scope.newUser = new User(temp);
+						scope.newUser.user_company = temp.user_company.map(function(c) {
+							return scope.transformCompany(c);
+						});
+						scope.newUser.user_price = temp.user_price.map(function(p) {
+							return scope.transformPrice(p);
+						});
 
 						scope.tempSeller = scope.sellers.find(function(s) {
 							return s.person_id == temp.user_seller_id;
 						});
+						scope.mainCompanyId = scope.newUser.user_company.find(function(c) {
+							return c.user_company_main == 'Y';
+						}).company_id;
 					}
 					$rootScope.loading.unload();
 				}, function(error) {
 					$rootScope.loading.unload();
-					$rootScope.customDialog().showMessage('Erro', 'Erro ao receber as informações do servidor.');
+					$rootScope.customDialog().showMessage('Erro', 'Erro ao receber as informações do servidor.')
+						.then(function(success) {
+							scope._cancel();
+						}, function(error) {
+							scope._cancel();
+						});
 				});
 
 				this.transformCompany = function(chip) {
 					if (chip instanceof CompanyERP) {
 						return {
 							company_id: chip.company_id,
-							company_short_name: chip.company_short_name
+							company_name: chip.company_name,
+							company_short_name: chip.company_short_name,
+							user_company_main: 'N'
 						}
 					} else {
 						return {
 							company_id: chip.company_id,
-							company_short_name: chip.company_erp.company_short_name
+							company_name: chip.company_erp.company_name,
+							company_short_name: chip.company_erp.company_short_name,
+							user_company_main: chip.user_company_main
 						}
 					}
 				};
 
 				this.queryCompany = function(query) {
 					return scope.companies.filter(function(c) { 
-						return c.queryable.toLowerCase().indexOf(query.toLowerCase()) >= 0 && scope.newUser.user_company.indexOf(c) == -1;
+						if (!scope.newUser.user_company.find(function(x) { return x.company_id == c.company_id }))
+							return c.queryable.toLowerCase().indexOf(query.toLowerCase()) >= 0;
 					});
+				};
+
+				this.setMainCompany = function(index) {
+					if (index >= scope.newUser.user_company.length) {
+						scope.mainCompanyId = null;
+						return;
+					}
+
+					// quando nao vem index, seleciona o primeiro elemento 
+					// mas so se o array for de 1 elemento
+					if (!index && scope.newUser.user_company.length == 1) {
+						scope.newUser.user_company[0].user_company_main = 'Y';
+						scope.mainCompanyId = scope.newUser.user_company[0].company_id;
+						return;
+					}
+
+					angular.forEach(scope.newUser.user_company, function(item) {
+						item.user_company_main = 'N';
+					});
+					scope.newUser.user_company[index].user_company_main = 'Y';
 				};
 
 				this.transformPrice = function(chip) {
@@ -225,6 +259,25 @@
 
 				this.save = function() {
 					console.log(scope.newUser);
+
+					$rootScope.loading.load();
+					if (scope.newUser.user_id) {
+						providerUser.edit(scope.newUser).then(function(success) {
+							
+							$rootScope.loading.unload();
+						}, function(error) {
+							$rootScope.loading.unload();
+							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+						});
+					} else {
+						providerUser.save(scope.newUser).then(function(success) {
+							
+							$rootScope.loading.unload();
+						}, function(error) {
+							$rootScope.loading.unload();
+							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+						});
+					}
 				};
 			};
 			 
@@ -232,7 +285,7 @@
 
 			$rootScope.customDialog().showTemplate('Configurações', './partials/modalNewUser.html', controller, options)
 				.then(function(success) {
-
+					getUsers();
 				}, function(error) {
 
 				});

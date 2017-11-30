@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-06-06 14:07:56
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-29 14:03:24
+ * @Last Modified time: 2017-11-30 15:47:24
 */
 
 (function() {
@@ -37,7 +37,7 @@
 
 			function UserCompany(userCompany) {
 				this.user_company      = null;
-				this.user_company_main = null;
+				this.user_company_main = 'N';
 				this.user_id           = null;
 				this.company_id        = null;
 				this.user_company_date = null;

@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-07-25 17:17:10
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-30 11:00:46
+ * @Last Modified time: 2017-11-30 14:24:53
  */
 
 (function() {
@@ -27,7 +27,9 @@
 				return {
 					getById: getById,
 					getAll: getAll,
-					setNewPass: setNewPass
+					setNewPass: setNewPass,
+					edit: edit,
+					save: save
 				};
 
 				// ******************************
@@ -63,6 +65,18 @@
 						user_pass: data && data.user_pass,
 						user_new_pass: data && data.user_new_pass
 					}).$promise;
+				}
+
+				function edit(data) {
+					return provider.save({
+						action: 'edit'
+					}, data).$promise;
+				}
+
+				function save(data) {
+					return provider.save({
+						action: 'insert'
+					}, data).$promise;
 				}
 
 			}];
