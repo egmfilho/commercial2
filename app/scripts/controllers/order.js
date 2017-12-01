@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-01 12:49:35
+ * @Last Modified time: 2017-12-01 17:38:38
 */
 
 (function() {
@@ -493,12 +493,15 @@
 					person_address: null,
 					person_credit: null,
 					person_credit_limit: null,
+					person_attribute: null,
 					queryable: null
 				},
 				order_company: null,
 				order_mail_sent: null,
 				order_seller: null,
 				order_user: null,
+				order_date: null, 
+				order_update: null,
 				queryable: null,
 				order_items: self.budget.order_items.map(function(i) {
 					i.price = null;
@@ -580,6 +583,7 @@
 					getCompany: true,
 					getUser: true,
 					getCustomer: true,
+					getCustomerAttributes: true,
 					getCreditLimit: true,
 					getSeller: true,
 					getItems: true,
@@ -988,7 +992,7 @@
 					$rootScope.loading.load();
 					$rootScope.writeLog('Save function fired');
 					if (self.budget.order_code && self.budget.order_id) {
-						$rootScope.writeLog('Sending EDIT action [CODE: ' + self.budget.budget_code, ' ID: ' + self.budget.order_id + ']');
+						$rootScope.writeLog('Sending EDIT action [CODE: ' + self.budget.order_code + ' ID: ' + self.budget.order_id + ']');
 						/* Edita o orcamento */
 						providerOrder.edit(filtered).then(function(success) {
 							$rootScope.loading.unload();
@@ -999,13 +1003,13 @@
 								/* Modal de confirmacao */
 								afterSave('Orçamento editado!');
 							} catch(e) {
-								$rootScope.writeLog('Error');
+								$rootScope.writeLog('Order sent. Success but error trying to log response');
 								$rootScope.customDialog().showMessage('Erro', 'Erro ao processar os dados no servidor.');
 								$rootScope.writeLog(success.toString());
 							}
 						}, function(error) {
 							$rootScope.loading.unload();
-							$rootScope.writeLog('Error');
+							$rootScope.writeLog('Order may sent but Error');
 
 							var errorMessage = '', errorLog = '';
 							
@@ -1035,13 +1039,13 @@
 								/* Modal de confirmacao */
 								afterSave('Orçamento editado!');
 							} catch(e) {
-								$rootScope.writeLog('Error');
+								$rootScope.writeLog('Order sent. Success but error trying to log response');
 								$rootScope.customDialog().showMessage('Erro', 'Erro ao processar os dados no servidor.');
 								$rootScope.writeLog(success.toString());
 							}
 						}, function(error) {
 							$rootScope.loading.unload();
-							$rootScope.writeLog('Error');
+							$rootScope.writeLog('Order may sent but Error');
 
 							var errorMessage = '', errorLog = '';
 							
@@ -1277,7 +1281,6 @@
 			self.budget.order_address_delivery_code = null;
 			self.internal.tempCustomer = new Person(person);
 			self.removeCredit();
-			console.log(person, self.budget.order_client);
 		}
 
 		function setOrderAudit(audit) {
@@ -3031,12 +3034,13 @@
 						providerBank.getById(id, { getAgencies: true }).then(function(success) {
 							scope.queryBank = '';
 							scope.tempBank = new Bank(success.data);
-							scope.payment.order_payment_agency_id = null;
 
-							if (payment.order_payment_agency_id) {
+							if (scope.payment.order_payment_agency_id) {
 								scope.tempAgency = scope.tempBank.bank_agencies.find(function(a) {
 									return a.bank_agency_id == payment.order_payment_agency_id;
 								});
+							} else {
+								scope.payment.order_payment_agency_id = null;
 							}
 
 							$rootScope.loading.unload();

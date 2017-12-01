@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 16:01:34
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-01 08:57:50
+ * @Last Modified time: 2017-12-01 17:57:49
  */
 
 .customer-credit-modal {
@@ -195,20 +195,29 @@
 			}
 		}
 
+		.person-image-container {
+			box-sizing: border-box;
+			width: 184px;
+			min-height: 170px;
+			height: 170px;
+			padding: 2px;
+			margin-right: 15px;
+		}
+
 		.person-image{			
-			width: 100px;
-			height: 56px;
+			box-sizing: border-box;
+			height: 100% !important;
 			background-color: #ddd;
 			text-align: center;
 			padding: 20px 6px;
-			margin-top: 4px;
 			background-size: cover;
 			background-position: center center;
 			box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
 
 			i{
-				font-size: 48px;
+				font-size: 60px;
 				color: gray;
+				line-height: 130px;
 			}
 		}
 
