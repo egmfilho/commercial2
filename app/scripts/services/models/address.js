@@ -146,7 +146,10 @@
 			function toString() {
 				var string = '';
 				
-				string += this.person_address_type + ' ';
+				if( !this.person_address_public_place || !this.person_address_number || !this.district.district_name || !this.city.city_name || !this.city.uf_id )
+					return '--';
+
+				string += ( this.person_address_type || 'Rua' ) + ' ';
 				string += this.person_address_public_place + ' ';
 				string += this.person_address_number + ' - ';
 				string += this.district.district_name + ', '; 

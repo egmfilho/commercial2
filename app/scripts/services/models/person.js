@@ -9,7 +9,7 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('Person', ['Globals', 'Address', 'PersonCredit', 'PersonCreditLimit', function(Globals, Address, PersonCredit, PersonCreditLimit) {
+		.factory('Person', ['Globals', 'Address', 'PersonCredit', 'PersonCreditLimit', 'PersonAttribute', function(Globals, Address, PersonCredit, PersonCreditLimit,PersonAttribute) {
 
 			function Person(person) {
 				this.person_id            = null;
@@ -22,6 +22,7 @@
 				this.person_active        = null;
 				this.person_address       = new Array();
 				this.person_credit        = new Array();
+				this.person_attribute     = new Array();
 				this.person_credit_limit  = new PersonCreditLimit();
 				this.exibition_name       = null;
 				this.queryable            = '';
@@ -31,6 +32,7 @@
 						person_address: person.person_address ? person.person_address.map(function(a) { return new Address(a); }) : new Array(),
 						person_credit: person.person_credit ? person.person_credit.map(function(a) { return new PersonCredit(a); }) : new Array(),
 						person_credit_limit: person.person_credit_limit ? new PersonCreditLimit(person.person_credit_limit) : new PersonCreditLimit(),
+						person_attribute: person.person_attribute ? person.person_attribute.map(function(a){ return new PersonAttribute(a); }) : new Array(),
 						exibition_name: person.person_code + ' ' + person.person_name,
 						queryable: person.person_code + ' - ' + person.person_name + ' ' + person.person_shortname
 					});
