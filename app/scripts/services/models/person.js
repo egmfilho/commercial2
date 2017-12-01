@@ -24,6 +24,7 @@
 				this.person_credit        = new Array();
 				this.person_attribute     = new Array();
 				this.person_credit_limit  = new PersonCreditLimit();
+				this.person_image         = null;
 				this.exibition_name       = null;
 				this.queryable            = '';
 

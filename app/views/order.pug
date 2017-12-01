@@ -435,63 +435,72 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 							p Nenhuma característica cadastrada.
 						span(flex)
 
-					div(layout='row' layout-wrap)
-						md-input-container(flex='25')
-							label Código ( F2 para localizar )
-							input(name='customer-code'
-									ng-value='order.budget.order_client.person_code' 
-									blur-to='order.budget.order_client.person_code'
-									keys-shortcuts prevent-default 
-									shift-enter='null' f2='order.showModalCustomer()'
-									enter='order.getCustomerByCode($event.target.value)')
-						md-autocomplete(flex='75'
-										keys-shortcuts 
-										prevent-default 
-										f2='order.showModalCustomer()'
-										md-delay='300'
-										md-input-name='autocompleteCustomer'
-										md-no-cache='true'
-										md-autoselect='true'
-										md-escape-options='none'
-										md-selected-item='order.internal.tempCustomer'
-										md-search-text='customerQuery'
-										md-selected-item-change='item.person_code && order.getCustomerByCode(item.person_code)'
-										md-items='item in order.getCustomerByName(customerQuery)'
-										md-item-text='item.person_name'
-										md-min-length='3'
-										md-require-match='true'
-										md-floating-label='Nome ( F2 para localizar )'
-										ng-blur='order.internal.blurCustomer()')
-							md-item-template
-								div(md-highlight-text='customerQuery' style='line-height: 2') {{item.person_name}}
-								div(style='font-size: 11px;line-height: 1')
-									| Código: 
-									| {{item.person_code}}
-						
-						md-input-container.md-icon-float(flex='25')
-							label
-								span
-									i.fa.fa-lock &nbsp;
-									span Tipo
-							input(ng-value='order.budget.order_client.person_id && order.budget.order_client.getType()' readonly)
-						
-						md-input-container(flex='25')
-							label 
-								i.fa.fa-lock &nbsp;
-								| CPF
-							input(ng-value='order.budget.order_client.person_cpf' readonly)
+					div(layout='row')
 
-						md-input-container(flex='25')
-							label 
-								i.fa.fa-lock &nbsp;
-								| CNPJ
-							input(ng-value='order.budget.order_client.person_cnpj' readonly)
+						div(flex='15' layout='column')
+							div(layout='row' layout-wrap)
+								.person-image(ng-style='{"background-image": "url(\'" + order.budget.order_client.person_image + "\')"}')
+									md-tooltip(md-direction='top' ng-if='!order.budget.order_client.person_image') {{order.budget.order_client.person_name}}
+									i.fa.fa-user(ng-if='!order.budget.order_client.person_image')
 
-						md-input-container(flex='25')
-							label 
-								i.fa.fa-lock &nbsp;
-								| Inscrição Estadual
-							input(ng-value='order.budget.order_client.getMainAddress().person_address_ie' readonly)
+						div(flex='85' layout='column')
+							div(layout='row' layout-wrap)
+								md-input-container(flex='25')
+									label Código ( F2 para localizar )
+									input(name='customer-code'
+											ng-value='order.budget.order_client.person_code' 
+											blur-to='order.budget.order_client.person_code'
+											keys-shortcuts prevent-default 
+											shift-enter='null' f2='order.showModalCustomer()'
+											enter='order.getCustomerByCode($event.target.value)')
+								md-autocomplete(flex='75'
+												keys-shortcuts 
+												prevent-default 
+												f2='order.showModalCustomer()'
+												md-delay='300'
+												md-input-name='autocompleteCustomer'
+												md-no-cache='true'
+												md-autoselect='true'
+												md-escape-options='none'
+												md-selected-item='order.internal.tempCustomer'
+												md-search-text='customerQuery'
+												md-selected-item-change='item.person_code && order.getCustomerByCode(item.person_code)'
+												md-items='item in order.getCustomerByName(customerQuery)'
+												md-item-text='item.person_name'
+												md-min-length='3'
+												md-require-match='true'
+												md-floating-label='Nome ( F2 para localizar )'
+												ng-blur='order.internal.blurCustomer()')
+									md-item-template
+										div(md-highlight-text='customerQuery' style='line-height: 2') {{item.person_name}}
+										div(style='font-size: 11px;line-height: 1')
+											| Código: 
+											| {{item.person_code}}
+								
+								md-input-container.md-icon-float(flex='25')
+									label
+										span
+											i.fa.fa-lock &nbsp;
+											span Tipo
+									input(ng-value='order.budget.order_client.person_id && order.budget.order_client.getType()' readonly)
+								
+								md-input-container(flex='25')
+									label 
+										i.fa.fa-lock &nbsp;
+										| CPF
+									input(ng-value='order.budget.order_client.person_cpf' readonly)
+
+								md-input-container(flex='25')
+									label 
+										i.fa.fa-lock &nbsp;
+										| CNPJ
+									input(ng-value='order.budget.order_client.person_cnpj' readonly)
+
+								md-input-container(flex='25')
+									label 
+										i.fa.fa-lock &nbsp;
+										| Inscrição Estadual
+									input(ng-value='order.budget.order_client.getMainAddress().person_address_ie' readonly)
 
 
 					div(layout='column' style='margin-top: 30px')
