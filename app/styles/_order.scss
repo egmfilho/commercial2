@@ -195,6 +195,23 @@
 			}
 		}
 
+		.person-image{			
+			width: 100px;
+			height: 56px;
+			background-color: #ddd;
+			text-align: center;
+			padding: 20px 6px;
+			margin-top: 4px;
+			background-size: cover;
+			background-position: center center;
+			box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+
+			i{
+				font-size: 48px;
+				color: gray;
+			}
+		}
+
 		.delivery-address {
 			z-index: 0;
 			
