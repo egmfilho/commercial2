@@ -582,6 +582,7 @@
 					getCompany: true,
 					getUser: true,
 					getCustomer: true,
+					getCustomerAttributes: true,
 					getCreditLimit: true,
 					getSeller: true,
 					getItems: true,
