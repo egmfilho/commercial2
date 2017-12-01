@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-28 17:06:57
+ * @Last Modified time: 2017-12-01 08:57:03
 */
 
 (function() {
@@ -2391,6 +2391,11 @@
 		 * Encapsula a funcao de exportar dentro do modal de vendedor.
 		 */
 		function exportDAV(skip) {
+			if (self.budget.creditPayment) {
+				$rootScope.customDialog().showMessage('Aviso', 'Não é possível exportar um DAV com crédito!');
+				return;
+			}
+
 			if (skip)
 				return _exportDAV();
 			else
