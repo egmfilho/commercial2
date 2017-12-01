@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-01 08:57:03
+ * @Last Modified time: 2017-12-01 11:20:17
 */
 
 (function() {
@@ -819,7 +819,7 @@
 				_preventClosing = false;
 				closeWindow();
 			} else {
-				$rootScope.customDialog().showConfirm('Aviso', 'Todas as alterações não salvas serão perdidas. Deseja continuar?')
+				$rootScope.customDialog().showConfirm('Aviso', 'Todas as alterações não salvas serão perdidas. Deseja continuar?', { zIndex: 2001 })
 					.then(function(success) {
 						_preventClosing = false;
 						closeWindow();
