@@ -1,13 +1,17 @@
 .body(name='modal-person-body' flex='100' layout='column' layout-fill)
 	
 	div(layout="row")
-		md-input-container(flex="55")
+		md-input-container(flex="35")
 			label Nome
 			input#focus(ng-model="ctrl.filter.name" keys-shortcuts enter="ctrl.search()")
 
 		md-input-container(flex="20")
 			label CNPJ/CPF
 			input(ng-model="ctrl.filter.doc" keys-shortcuts enter="ctrl.search()")
+
+		md-input-container(flex="20")
+			label CONTATO
+			input(ng-model="ctrl.filter.contact" keys-shortcuts enter="ctrl.search()")
 
 		md-input-container()
 			md-switch(ng-model='ctrl.filter.active' style="margin:0;")

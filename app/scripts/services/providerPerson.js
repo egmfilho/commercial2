@@ -90,6 +90,7 @@
 						person_doc: filter && filter.doc,
 						person_name: filter && filter.name,
 						person_active: filter && filter.active,
+						person_contact: filter && filter.contact,
 						person_category: filter && filter.category,
 						get_person_address: options && options.getAddress,
 						get_person_address_city: options && options.getAddress,
