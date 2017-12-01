@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-05-29 17:06:00
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-30 13:13:23
+ * @Last Modified time: 2017-12-01 10:24:40
 */
 
 (function() {
@@ -52,6 +52,11 @@
 					if (seller)
 						this.user_seller = new Person(seller);
 					this.user_seller_id = this.user_seller.person_id;
+				},
+
+				removeSeller: function() {
+					this.user_seller_id = null;
+					this.user_seller = new Person();
 				},
 
 				setProfile: function(profile) {

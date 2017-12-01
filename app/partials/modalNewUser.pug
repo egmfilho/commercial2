@@ -31,6 +31,7 @@
 				md-selected-item='ctrl.tempSeller'
 				md-selected-item-change='ctrl.newUser.setSeller(ctrl.tempSeller)'
 				md-search-text='searchSeller'
+				md-search-text-change='ctrl.removeSeller(searchSeller)'
 				md-items='seller in ctrl.querySeller(searchSeller)'
 				md-item-text='seller.exibition_name'
 				md-min-length='0'

@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-07-25 16:51:12
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-30 17:27:16
+ * @Last Modified time: 2017-12-01 10:24:35
 */
 
 (function() {
@@ -255,6 +255,11 @@
 					return scope.sellers.filter(function(p) {
 						return p.queryable.toLowerCase().indexOf(query.toLowerCase()) >= 0;
 					});
+				};
+
+				this.removeSeller = function(query) {;
+					if (query.length == 0) 
+						scope.newUser.removeSeller();
 				};
 
 				this.save = function() {
