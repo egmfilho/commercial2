@@ -3306,8 +3306,7 @@
 			var category = Globals.get('person-categories').customer,
 				options = {
 					module: 'Cliente',
-					limit: 200,
-					getAddress: true
+					limit: 200
 				};
 
 			jQuery('input[name="customer-code"]').blur();

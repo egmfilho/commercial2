@@ -56,6 +56,7 @@
 							name: '',
 							doc: '',
 							contact: '',
+							address: 0,
 							active: false
 						};
 						
@@ -83,8 +84,14 @@
 								return;
 							}							
 							$rootScope.loading.load();
-							providerPerson.getByFilter(vm.filter, vm.options).then(function(success) {
-								vm.result = success.data.map(function(p) { return new Person(p); });
+							providerPerson.getByFilter(vm.filter, Object.assign({},vm.options,{
+								getAddress: vm.filter.address
+							})).then(function(success) {
+								vm.result = success.data.map(function(p) {
+									var person = new Person(p);
+									person.person_address_main_string = person.person_address.length ? person.person_address[0].toString() : '--';
+									return person;
+								});
 								$rootScope.loading.unload();
 								endSearch();
 								if( !vm.result.length ){

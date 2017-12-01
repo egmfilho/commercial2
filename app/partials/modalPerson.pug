@@ -14,6 +14,10 @@
 			input(ng-model="ctrl.filter.contact" keys-shortcuts enter="ctrl.search()")
 
 		md-input-container()
+			md-switch(ng-false-value="0" ng-true-value="1" ng-model='ctrl.filter.address' style="margin:0;")
+				| Exibir Endereço
+
+		md-input-container()
 			md-switch(ng-model='ctrl.filter.active' style="margin:0;")
 				| Somente Ativos
 		
@@ -37,6 +41,9 @@
 						th.sortable(ng-click="ctrl.sortBy('person_doc')")
 							| CNPJ/CPF &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'person_doc'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-show="ctrl.filter.address" ng-click="ctrl.sortBy('person_address_main_string')")
+							| ENDEREÇO &nbsp;
+							i.fa(ng-if="ctrl.grid.propertyName === 'person_address_main_string'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 		.container-table(flex)
 			table.person-table.table(name='clementino')
 				tbody
@@ -45,6 +52,7 @@
 						td {{::p.person_name}}
 						td {{::p.person_type}}
 						td {{::p.person_doc}}
+						td(ng-if="ctrl.filter.address") {{::p.person_address_main_string}}
 
 	div(layout='column')
 		.bar
