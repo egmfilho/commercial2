@@ -49,7 +49,8 @@
 						get_person_address_district: options && options.getAddress,
 						get_person_address_contact: options && options.getContact,
 						get_person_credit: options && options.getCredit,
-						get_person_credit_limit: options && options.getLimit
+						get_person_credit_limit: options && options.getLimit,
+						get_person_attribute: options && options.getAttributes
 					}).$promise;
 				}
 
@@ -64,7 +65,8 @@
 						get_person_address_district: options && options.getAddress,
 						get_person_address_contact: options && options.getContact,
 						get_person_credit: options && options.getCredit,
-						get_person_credit_limit: options && options.getLimit
+						get_person_credit_limit: options && options.getLimit,
+						get_person_attribute: options && options.getAttributes
 					}).$promise;
 				}
 

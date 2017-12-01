@@ -1276,6 +1276,7 @@
 			self.budget.order_address_delivery_code = null;
 			self.internal.tempCustomer = new Person(person);
 			self.removeCredit();
+			console.log(person, self.budget.order_client);
 		}
 
 		function setOrderAudit(audit) {
@@ -1405,7 +1406,7 @@
 			if (code == self.budget.order_client.person_code || !parseInt(code))
 				return;
 
-			var options = { getAddress: true, getContact: true, getCredit: true, getLimit: true };
+			var options = { getAddress: true, getContact: true, getCredit: true, getLimit: true, getAttributes: true };
 			
 			$rootScope.loading.load();
 			getPersonByCode(code, Globals.get('person-categories').customer, options).then(function(success) {

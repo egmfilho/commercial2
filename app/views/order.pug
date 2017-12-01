@@ -425,6 +425,16 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									md-tooltip(md-direction='bottom') Limpar
 				
 				md-card-content
+					
+					.person-attributes(layout='row' ng-if='order.budget.order_client.person_id')
+						span(flex)
+						.attribute(ng-repeat='attribute in order.budget.order_client.person_attribute' ng-style='{"background-image": "url({{attribute.person_attribute_image}})"}')
+							i.fa.fa-info(ng-if='!attribute.person_attribute_image')
+							md-tooltip(md-direction='bottom') {{attribute.person_attribute_name}}
+						.no-attributes(ng-if='!order.budget.order_client.person_attribute.length')
+							p Nenhuma característica cadastrada.
+						span(flex)
+
 					div(layout='row' layout-wrap)
 						md-input-container(flex='25')
 							label Código ( F2 para localizar )
