@@ -74,13 +74,12 @@
 						| {{b.bank_id}} - {{b.bank_name}}
 
 		md-autocomplete(
-				ng-init='tempAgency = ctrl.getBankAgency(ctrl.payment.order_payment_agency_id)[0]'
 				flex='50'
 				ng-disabled='!ctrl.isCheck() || !ctrl.payment.order_payment_bank_id'
-				md-selected-item='tempAgency'
-				md-selected-item-change='ctrl.payment.order_payment_agency_id = tempAgency.bank_agency_id'
+				md-selected-item='ctrl.tempAgency'
+				md-selected-item-change='ctrl.payment.order_payment_agency_id = ctrl.tempAgency.bank_agency_id'
 				md-search-text='ctrl.payment.order_payment_new_agency_code'
-				md-search-text-change='ctrl.payment.order_payment_new_agency_code = ctrl.payment.order_payment_new_agency_code.substring(0, 10)'
+				md-search-text-change='ctrl.searchTextChange()'
 				md-items='agency in ctrl.getBankAgency(ctrl.payment.order_payment_new_agency_code)'
 				md-item-text='agency.queryable'
 				md-min-length='0'
@@ -94,7 +93,7 @@
 	div(layout='row')
 		md-input-container(flex)
 			label Número do cheque
-			input.text-right(ng-model='ctrl.payment.order_payment_check_number' ng-change='ctrl.payment.order_payment_check_number = ctrl.payment.order_payment_check_number.substring(0, 10)' ng-disabled='!ctrl.isCheck()')
+			input.text-right(ng-model='ctrl.payment.order_payment_check_number' number-only ng-change='ctrl.payment.order_payment_check_number = ctrl.payment.order_payment_check_number.substring(0, 10)' ng-disabled='!ctrl.isCheck()')
 	
 .footer.bordered(layout='row' layout-align='end center')
 	md-button.md-primary.md-raised(name='positive' ng-click='ctrl._close(ctrl.payment)' ng-disabled='!ctrl.payment.modality_id')

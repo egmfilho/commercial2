@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-01 11:20:17
+ * @Last Modified time: 2017-12-01 12:49:35
 */
 
 (function() {
@@ -3030,6 +3030,13 @@
 							scope.queryBank = '';
 							scope.tempBank = new Bank(success.data);
 							scope.payment.order_payment_agency_id = null;
+
+							if (payment.order_payment_agency_id) {
+								scope.tempAgency = scope.tempBank.bank_agencies.find(function(a) {
+									return a.bank_agency_id == payment.order_payment_agency_id;
+								});
+							}
+
 							$rootScope.loading.unload();
 						}, function(error) {
 							constants.debug && console.log(error);
@@ -3038,11 +3045,18 @@
 					};
 
 					this.getBankAgency = function(query) {
-						console.log('ja raiou ou a liberdade no horizonte do o Brasil');
+						if (!query) 
+							return this.tempBank.bank_agencies;
+
 						return this.tempBank.bank_agencies.filter(function(a) { 
 							return a.queryable.indexOf(query) >= 0;
 						});
-					}
+					};
+
+					this.searchTextChange = function() {
+						scope.payment.order_payment_new_agency_code = scope.payment.order_payment_new_agency_code.replace(new RegExp('[^0-9]', 'g'), '');
+						scope.payment.order_payment_new_agency_code = scope.payment.order_payment_new_agency_code.substring(0, 10);
+					};
 
 					/* Starters */
 					if (this.payment.order_payment_bank_id)
