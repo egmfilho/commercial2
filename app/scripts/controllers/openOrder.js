@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-23 17:13:32
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-06 09:04:47
+ * @Last Modified time: 2017-12-01 11:27:03
  */
 
 (function() {
@@ -315,8 +315,12 @@
 					return;
 				}
 
-				if ( ( $rootScope.openOrderFilters.seller && code == $rootScope.openOrderFilters.seller.person_code ) || !parseInt(code))
+				if (!parseInt(code)) return;
+
+				if ($rootScope.openOrderFilters.seller && code == $rootScope.openOrderFilters.seller.person_code ) {
+					self.getOrders();
 					return;
+				}
 
 				$rootScope.loading.load(null, null, { zIndex: 1 });
 				self.getPersonByCode(code, Globals.get('person-categories').seller).then(function(success) {

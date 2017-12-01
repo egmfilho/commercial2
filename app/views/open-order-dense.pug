@@ -38,6 +38,8 @@
 
 						md-autocomplete(flex
 										ng-model-options='{ debounce: 250 }'
+										keys-shortcuts
+										enter='openOrder.getOrders()'
 										md-delay='250'
 										md-input-name='autocompleteSeller'
 										md-no-cache='false'
