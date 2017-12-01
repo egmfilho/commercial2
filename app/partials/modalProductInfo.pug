@@ -1,0 +1,65 @@
+.irineu(layout='row' layout-align='start center' layout-fill)
+	i.fa.fa-info
+	span Informações do Produto
+	span {{ctrl.result.caralho}}
+
+//- .body(layout='column' layout-fill)
+	
+	div(flex layout='column')
+		.product-table-header-container
+			table.product-table.table
+				thead
+					tr
+						th &nbsp;
+						th.sortable(ng-click="ctrl.sortBy('company_code')")
+							| EMPRESA &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'company_code'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-click="ctrl.sortBy('product_code')")
+							| CÓDIGO. &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'product_code'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-click="ctrl.sortBy('product_name')")
+							| NOME &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'product_name'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")						
+						th.sortable(ng-click="ctrl.sortBy('product_stock')")
+							| ESTOQUE &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'product_stock'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-click="ctrl.sortBy('quantity_purchased')")
+							| QT. COMPRADA &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'quantity_purchased'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+		.container-table(flex)
+			table.product-table.table(name='clementino')
+				tbody
+					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-dblclick='ctrl.select(p)' ng-class="{'inactive':p.product_active=='N', 'sold-out': p.stock.product_stock <= 0}" keys-shortcuts enter='ctrl.select(p)')
+						td 
+							md-checkbox(ng-checked='!!ctrl.isSelected(p)' ng-click='ctrl.addProduct(p)' ng-disabled='p.product_active == "N"')
+						td {{::p.company_code}}
+						td {{::p.product_code}}
+						td {{::p.product_name}}
+						td {{::p.product_stock}}
+						td {{::p.quantity_purchased}}) 
+
+	div(layout='column')
+		.bar
+			md-toolbar
+				.md-toolbar-tools(layout='row')
+					div(flex='35')
+						i.fa.fa-2x.fa-cubes &nbsp;
+						| {{ctrl.result.length > 0 ? ctrl.result.length : 'Nenhum' }} Produto{{ctrl.result.length > 1 ? 's' : '' }} Localizado{{ctrl.result.length > 1 ? 's' : '' }}
+						
+					.text-center(flex)
+						md-button(ng-click='ctrl.showSelection()')
+							| {{ctrl.getSelectionLength() > 0 ? ctrl.getSelectionLength() : 'Nenhum'}} {{ctrl.getSelectionLength() > 1 ? 'selecionados' : 'selecionado'}}
+
+					.text-right(flex='35')
+						.legend.inactive
+							i.fa.fa-stop
+							| Inativo
+
+						.legend.sold-out
+							i.fa.fa-stop
+							| Sem estoque
+
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-raised(ng-click='ctrl._cancel()')
+		| &nbsp; Fechar &nbsp;

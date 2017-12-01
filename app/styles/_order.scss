@@ -230,6 +230,17 @@
 			}
 		}
 	}
+
+	section[name='products'] {
+
+		.add-button, .info-button{
+			width: 32px;
+			height: 32px !important;
+			padding: 0;
+			margin-left: 4px;
+		}
+
+	}
 }
 
 .container-table {
