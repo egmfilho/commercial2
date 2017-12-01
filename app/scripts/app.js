@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 10:21:29
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-06 17:56:07
+ * @Last Modified time: 2017-12-01 17:38:37
  */
 
 'use strict';
@@ -423,6 +423,7 @@ angular.module('commercial2', [
 
 		/* Envia um log para o electron garvar no arquivo de log */
 		$rootScope.writeLog = function(log) {
+			constants.debug && console.log(log);
 			if (constants.isElectron && log) {
 				require('electron').ipcRenderer.send('writeLog', { log: log });
 			}

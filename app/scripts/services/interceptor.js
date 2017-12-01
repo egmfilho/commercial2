@@ -1,8 +1,8 @@
 /*
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-05-29 11:04:49
-* @Last Modified by:   egmfilho
-* @Last Modified time: 2017-08-07 11:12:26
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-12-01 17:29:15
 */
 
 (function() {
@@ -43,6 +43,7 @@
 			req.headers['System-Version'] = constants.version;
 			req.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 			req.data = $httpParamSerializerJQLike(req.data);
+			
 			return req;
 		}
 
