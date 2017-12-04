@@ -44,7 +44,7 @@
 			}
 
 			Person.prototype = {
-				isActive: this.person_active == 'Y',
+				isActive: function(){ return this.person_active == 'Y'; },
 				getType: getType,
 				getMainAddress: getMainAddress
 			};
