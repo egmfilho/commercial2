@@ -40,6 +40,11 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 								md-icon(md-font-icon='fa fa-upload')
 								| Exportar DAV
 
+						md-menu-item
+							md-button(ng-click='order.showLockModal()' ng-disabled='!order.isUnlockable()')
+								md-icon(md-font-icon='fa fa-unlock-alt')
+								| Recuperar
+
 						md-menu-divider
 						md-menu-item
 							md-button(ng-click='order.print()' ng-disabled='!order.canPrint()')
@@ -140,6 +145,11 @@ md-toolbar.md-menu-toolbar.order-toolbar.md-whiteframe-2dp
 						| Salvar orçamento &nbsp;
 						span.md-alt-text ({{ 'M-S' | keyboardShortcut }})
 					md-icon(md-font-icon='fa fa-floppy-o' style='color: steelblue')
+
+				md-button.toolbar-btn(ng-click='order.showLockModal()' ng-disabled='!order.isUnlockable()')
+					md-tooltip(md-direction='bottom') 
+						| Recuperar &nbsp;
+					md-icon(md-font-icon='fa fa-unlock-alt' style='color: orange')
 
 				md-button.toolbar-btn.pull-right(ng-click='close()')
 					md-tooltip(md-direction='bottom') Fechar

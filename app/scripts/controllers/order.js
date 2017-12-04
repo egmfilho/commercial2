@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-04 10:24:13
+ * @Last Modified time: 2017-12-04 14:00:26
 */
 
 (function() {
@@ -288,7 +288,9 @@
 
 		function newOrder() {
 			OpenedOrderManager.remove(self.budget.order_code);
-			$location.path() == '/order/new' ? $route.reload() : $location.path('/order/new');
+
+			var company = self.budget.order_company_id || $routeParams.param;
+			$location.path().indexOf('/order/new/') >= 0 ? $route.reload() : $location.path('/order/new/' + company);
 		}
 
 		// ******************************
@@ -366,6 +368,8 @@
 		self.removeDiscounts       = removeDiscounts;
 		self.goToSection           = goToSection;
 		self.showModalOrderSeller  = showModalOrderSeller;
+		self.isUnlockable          = isUnlockable;
+		self.tryToUnlock           = tryToUnlock;
 		self.showLockModal         = showLockModal;
 
 		function validateBudgetToSave(callback) {
@@ -608,7 +612,8 @@
 					self.budget = new Order(success.data);
 					OpenedOrderManager.add(self.budget.order_code);
 
-					self.showLockModal();
+					// self.showLockModal();
+					self.tryToUnlock();
 					checkCreditAvailability(self.budget.order_company_id);
 
 					/* Configura a barra de titulo interna do Commercial */
@@ -3695,10 +3700,11 @@
 				});
 		}
 
-		/*
-		 * Exibe o modal de desbloqueio de edicao.
-		 */
-		function showLockModal() {
+		function isUnlockable() {
+			return self.budget.order_status_id == Globals.get('order-status-values').exported;
+		}
+
+		function tryToUnlock() {
 			if (self.budget.order_status_id == Globals.get('order-status-values').billed || self.budget.status.editable == 'N') {
 				self.internal.flags.printable = true;
 				self.internal.flags.showInfo = true;
@@ -3709,11 +3715,23 @@
 				return;
 			}
 
+			// Desbloqueia o pedido se nao estiver aberto ou faturado
 			if (self.budget.order_status_id == Globals.get('order-status-values').open) {
 				$scope.isDisabled = false;
 				self.internal.flags.showInfo = true;
 				return;
 			}
+
+			self.internal.flags.printable = true;
+					self.internal.flags.showInfo = true;
+			$rootScope.customDialog().showMessage('Aviso', 'Orçamento exportado, edição bloqueada.<br><br>Recupere-o para editar.');
+		}
+
+		/*
+		 * Exibe o modal de desbloqueio de edicao.
+		 */
+		function showLockModal() {
+			if (!isUnlockable()) return;
 
 			var options = {
 				zIndex: 1,
