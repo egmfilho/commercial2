@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-04 10:16:14
+ * @Last Modified time: 2017-12-04 10:24:13
 */
 
 (function() {
@@ -664,11 +664,11 @@
 					getTerm: true
 				}, code = $routeParams.param;
 
-				console.log(code);
-
 				$rootScope.loading.load();
 				providerOrder.getByCode(code, options).then(function(success) {
 					var temp = new Order(success.data);
+
+					// remoção das propriedades
 					delete temp.order_id;
 					delete temp.order_erp_id;
 					delete temp.order_user_id;
@@ -688,6 +688,7 @@
 					delete temp.status;
 					temp.order_audit_discounts = [];
 
+					// remoção dos descontos
 					temp.order_items = temp.order_items.map(function(i) {
 						i.order_item_al_discount = 0;
 						i.order_item_vl_discount = 0;
@@ -695,12 +696,15 @@
 						return i;
 					});
 
+					// recalcula os valores
 					temp.updateValues();
 
+					// remove o crédito
 					if (success.data.order_credit === 'Y') {
 						temp.order_payments.shift();
 					}
 
+					// recupera o prazo
 					if (temp.order_term_id) {
 						$rootScope.loading.load();
 						providerTerm.getById(temp.order_term_id, { getModality: true }).then(function(success) {
@@ -714,6 +718,7 @@
 						});
 					}
 
+					// limpa os pagamentos
 					temp.order_payments = temp.order_payments.map(function(p) {
 						p.order_payment_id = null;
 						p.order_id = null;
@@ -722,8 +727,16 @@
 						return p;
 					});
 
+					// carrega o clone
 					self.budget = new Order(temp);
+
+					// coloca a origem do clone
+					self.budget.order_source = code;
+					
+					// verifica se a empresa pode usar créditos
 					checkCreditAvailability(self.budget.order_company_id);
+
+					// recalcula os pagamentos
 					self.recalcPayments();
 
 					if (constants.isElectron)

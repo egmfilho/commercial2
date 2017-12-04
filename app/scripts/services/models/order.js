@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-14 16:59:11
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 14:05:35
+ * @Last Modified time: 2017-12-04 10:19:27
  */
 
 (function() {
@@ -93,6 +93,7 @@
 			this.order_value_icms            = 0;
 			this.order_value_st              = 0;
 			this.order_addition              = 0;
+			this.order_source                = null;
 			this.status                      = new OrderStatus(),
 			this.queryable                   = '',
 			this.order_audit_discounts       = new Array();
