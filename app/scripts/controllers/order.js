@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-04 14:00:26
+ * @Last Modified time: 2017-12-04 14:05:40
 */
 
 (function() {
@@ -1598,7 +1598,6 @@
 		 * @param {int} amount - A quantidade de itens.
 		 */
 		function setItemAmount(amount) {
-			console.log(self.internal.tempItem.order_item_amount, amount);
 			self.internal.tempItem.setAmount(amount);
 			self.internal.tempItemVlDiscount = self.internal.tempItem.order_item_vl_discount;
 		}
