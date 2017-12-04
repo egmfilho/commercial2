@@ -350,6 +350,7 @@
 		self.showModalCustomer     = showModalCustomer;
 		self.showModalCustomerInfo = showModalCustomerInfo;
 		self.showModalProduct      = showModalProduct;
+		self.showModalProductInfo  = showModalProductInfo;
 		self.showModalNotes        = showModalNotes;
 		self.showModalDiscount     = showModalDiscount;
 		self.removeDiscounts       = removeDiscounts;
@@ -3414,6 +3415,56 @@
 				});
 		}
 
+		/*
+		 * Exibe o modal de informacao do produto.
+		 */
+		function showModalProductInfo( product_id ) {
+						
+			var options = {
+				hasBackdrop: true,
+				escapeToClose: false,
+				clickOutsideToClose: false,
+				focusOnOpen: false,
+				zIndex: 1,
+				width: 800
+			},
+
+			controller = function() {
+				
+				this._showCloseButton = true;
+
+				var vm = this;
+				
+				this.result = [];
+
+				this.grid = {
+					propertyName: 'company_code',
+					reverse: false
+				}
+
+				this.sortBy = function(propertyName) {
+					vm.grid.reverse = (vm.grid.propertyName === propertyName) ? !vm.grid.reverse : false;
+					vm.grid.propertyName = propertyName;
+				}
+
+				$rootScope.loading.load();
+
+				providerProduct.getInfoStock({
+					product_id: product_id
+				}).then(function(success){ 
+					$rootScope.loading.unload();
+					vm.result = success.data;
+				}, function error(error){
+					$rootScope.loading.unload();
+					$rootScope.customDialog().showMessage('Erro',error.status.description);
+				});
+			};
+
+			self.internal.flags.isToolbarLocked = true;
+			return $rootScope.customDialog().showTemplate('Produto', './partials/modalProductInfo.html', controller, options);			
+			
+		}
+
 		/**
 		 * Exibe a tela de observacoes do orcamento.
 		 */
@@ -3425,7 +3476,7 @@
 				this.readonly = $scope.isDisabled;
 			};
 
-			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalNotes.html', controller, { width: 500 })
+			$rootScope.customDialog().showTemplate('Observações', './partials/modalNotes.html', controller, { width: 500 })
 				.then(function(success) {
 					self.budget.order_note = success.order_note;
 					self.budget.order_note_doc = success.order_note_doc;
@@ -3528,7 +3579,7 @@
 			self.scrollTo('section[name="'+section+'"]');
 			self.focusOn('input[name="'+focus+'"]');
 		}
-
+		
 		/*
 		 * Exibe o modal de informacao do vendedor.
 		 */

@@ -27,7 +27,8 @@
 				return {
 					getByCode: getByCode,
 					getByName: getByName,
-					getByFilter: getByFilter
+					getByFilter: getByFilter,
+					getInfoStock: getInfoStock
 				};
 
 				// ******************************
@@ -74,6 +75,22 @@
 						get_product_unit: options && options.getUnit,
 						get_product_price: options && options.getPrice,
 						get_product_stock: options && options.getStock
+					}).$promise;
+				}
+
+				function getInfoStock(data) {
+					return provider.query({
+						action: 'getInfoStock'
+					}, {
+						product_id: data.product_id
+						/*product_name: filter && filter.name,
+						product_active: filter && filter.active,
+						company_id: companyId,
+						price_id: userPriceId,
+						limit: options && options.limit,
+						get_product_unit: options && options.getUnit,
+						get_product_price: options && options.getPrice,
+						get_product_stock: options && options.getStock*/
 					}).$promise;
 				}
 

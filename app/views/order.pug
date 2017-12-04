@@ -344,9 +344,13 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 								b.text-light Total:&nbsp;
 								| {{order.internal.tempItem.getValueTotal() | currency:"R$ "}}
 
-							md-button.md-raised.md-primary.md-icon-button.button-green(name='btn-add-item' ng-click='order.addItem()' style='margin:0')
+							md-button.md-raised.md-primary.md-icon-button.button-green.add-button(name='btn-add-item' ng-click='order.addItem()' style='margin:0')
 								i.fa.fa-plus
 								md-tooltip(md-direction='bottom') Adicionar produto
+
+							md-button.md-raised.md-primary.md-icon-button.info-button(name='btn-info-item' ng-disabled='!order.internal.tempItem.product.product_id' ng-click='order.showModalProductInfo(order.internal.tempItem.product.product_id)' style='margin-left:4px')
+								i.fa.fa-info
+								md-tooltip(md-direction='bottom') Informações
 
 					pre(ng-if='debug')
 						| {{order.internal.tempItem | json}}
@@ -364,6 +368,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 										th DESC R$
 										th VALOR TOTAL
 										th &nbsp;
+										th &nbsp;
 						.container-table
 							table.table.products-table
 								tbody
@@ -380,6 +385,9 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 										td {{i.order_item_al_discount | currency:''}}%
 										td {{i.order_item_vl_discount | currency:'R$ '}}
 										td {{i.order_item_value_total | currency:'R$ '}}
+										td
+											md-button.md-icon-button(tabindex='-1' ng-click='order.showModalProductInfo(i.product.product_id)')
+												md-icon.text-primary(md-font-set='material-icons' md-menu-align-target) info
 										td
 											md-button.md-icon-button(tabindex='-1' ng-click='order.removeItem(i)')
 												md-icon.text-primary(md-font-set='material-icons' md-menu-align-target) delete_forever
