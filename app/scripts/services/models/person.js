@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-05-29 10:32:39
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-04 09:08:06
+ * @Last Modified time: 2017-12-04 10:29:58
 */
 
 (function() {
@@ -30,7 +30,6 @@
 
 				if (person) {
 					var _root = Globals.api.get().root;
-					console.log(_root + Math.random());
 
 					Object.assign(this, person, { 
 						person_address: person.person_address ? person.person_address.map(function(a) { return new Address(a); }) : new Array(),
