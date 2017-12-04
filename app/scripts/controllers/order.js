@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-01 17:38:38
+ * @Last Modified time: 2017-12-04 09:05:14
 */
 
 (function() {
@@ -1276,7 +1276,7 @@
 		 * @param {object} person - O cliente a ser adicionado.
 		 */	
 		function setCustomer(person) {
-			self.budget.setCustomer(new Person(person));
+			self.budget.setCustomer(person);
 			self.budget.order_address_delivery_code = null;
 			self.internal.tempCustomer = new Person(person);
 			self.removeCredit();

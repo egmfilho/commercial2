@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-05-29 10:32:39
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-30 11:59:15
+ * @Last Modified time: 2017-12-04 09:08:06
 */
 
 (function() {
@@ -29,11 +29,15 @@
 				this.queryable            = '';
 
 				if (person) {
+					var _root = Globals.api.get().root;
+					console.log(_root + Math.random());
+
 					Object.assign(this, person, { 
 						person_address: person.person_address ? person.person_address.map(function(a) { return new Address(a); }) : new Array(),
 						person_credit: person.person_credit ? person.person_credit.map(function(a) { return new PersonCredit(a); }) : new Array(),
 						person_credit_limit: person.person_credit_limit ? new PersonCreditLimit(person.person_credit_limit) : new PersonCreditLimit(),
 						person_attribute: person.person_attribute ? person.person_attribute.map(function(a){ return new PersonAttribute(a); }) : new Array(),
+						person_image: person.person_image && person.person_image.indexOf(_root) < 0 ? _root + person.person_image : person.person_image,
 						exibition_name: person.person_code + ' ' + person.person_name,
 						queryable: person.person_code + ' - ' + person.person_name + ' ' + person.person_shortname
 					});

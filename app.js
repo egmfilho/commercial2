@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-06 09:08:17
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-27 09:18:37
+ * @Last Modified time: 2017-12-04 09:15:42
 */
 
 const { app, autoUpdater, ipcMain, BrowserWindow, dialog } = require('electron');
@@ -24,7 +24,12 @@ if (handleSquirrelEvent()) {
 
 let api = null;
 try {
-	api = require(path.join(path.dirname(app.getPath('exe')), './api')).map((a, i) => { a.id = i; return a; });
+	api = require(path.join(path.dirname(app.getPath('exe')), './api')).map((a, i) => { 
+		a.id = i;
+		if (a.address.indexOf(a.root) == -1) 
+			a.address = a.root + a.address;
+		return a; 
+	});
 } catch(e) {
 	api = [];
 }
