@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-23 17:10:42
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-04 15:26:48
+ * @Last Modified time: 2017-12-04 17:16:17
  */
 
 .open-order-container-nav {
@@ -152,20 +152,6 @@
 
 md-menu-content.open-order-menu-content {
 	min-height: 338px;
-
-	md-menu-item {
-		min-height: 40px;
-		height: 40px;
-
-		.md-button {
-			color: #666 !important;
-			font-size: 14px;
-		}
-
-		md-icon.material-icons {
-			font-size: 22px;
-		}
-	}
 }
 
 /***************************************************/

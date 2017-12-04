@@ -23,8 +23,9 @@
 				this.user_mail                     = null;
 				this.user_max_discount             = 0;
 				this.user_max_credit_authorization = 0;
-				this.user_unlock_device            = null;
-				this.user_session_expires          = null;
+				this.user_mobile_access            = 'N'
+				this.user_unlock_device            = 'N';
+				this.user_session_expires          = 'Y';
 				this.user_login                    = null;
 				this.user_update                   = null;
 				this.user_date                     = null;

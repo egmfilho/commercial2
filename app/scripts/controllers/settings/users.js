@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-07-25 16:51:12
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-01 10:24:35
+ * @Last Modified time: 2017-12-04 17:27:50
 */
 
 (function() {
@@ -262,13 +262,83 @@
 						scope.newUser.removeSeller();
 				};
 
-				this.save = function() {
-					console.log(scope.newUser);
+				function validate() {
+					if (!scope.newUser.user_name) {
+						$rootScope.customDialog().showMessage('Aviso', 'Informe o nome!');
+						return false;
+					}
+
+					if (!scope.newUser.user_mail) {
+						$rootScope.customDialog().showMessage('Aviso', 'Informe o email!');
+						return false;
+					}
+
+					if (!scope.newUser.user_user) {
+						$rootScope.customDialog().showMessage('Aviso', 'Informe o nome de usuário!');
+						return false;
+					}
+
+					// Verifica se está inserindo ou editando para validar a senha
+					if (!scope.newUser.user_id) {
+						if (!scope.newUser.user_pass) {
+							$rootScope.customDialog().showMessage('Aviso', 'Informe a senha!');
+							return false;
+						}
+					}
+
+					if (scope.newUser.user_pass || scope.newUser.user_pass_confirmation) {
+						if (scope.newUser.user_pass != scope.newUser.user_pass_confirmation) {
+							$rootScope.customDialog().showMessage('Aviso', 'As senhas não conferem!');
+							return false;
+						}
+					}
+
+					if (!scope.newUser.user_seller_id) {
+						$rootScope.customDialog().showMessage('Aviso', 'Informe o representante!');
+						return false;
+					}
+
+					if (!scope.newUser.user_seller_id) {
+						$rootScope.customDialog().showMessage('Aviso', 'Informe o representante!');
+						return false;
+					}
+
+					if (!scope.newUser.user_profile_id) {
+						$rootScope.customDialog().showMessage('Aviso', 'Selecione o perfil do usuário!');
+						return false;
+					}
+
+					if (!scope.newUser.user_company.length) {
+						$rootScope.customDialog().showMessage('Aviso', 'Selecione pelo menos 1 empresa');
+						return false;
+					}
+
+					if (!scope.mainCompanyId) {
+						$rootScope.customDialog().showMessage('Aviso', 'Selecione a empresa principal');
+						return false;
+					}
+
+					if (!scope.newUser.user_price.length) {
+						$rootScope.customDialog().showMessage('Aviso', 'Selecione pelo menos 1 tabela de preços!');
+						return false;
+					}
+
+					return true;
+				}
+
+				this.save = function(action) {
+					if (!validate()) return;
 
 					$rootScope.loading.load();
 					if (scope.newUser.user_id) {
 						providerUser.edit(scope.newUser).then(function(success) {
-							
+							getUsers();
+							$rootScope.customDialog().showMessage('Sucesso', 'Usuário editado!')
+								.then(function(success) {
+									scope._close();
+								}, function(error) {
+									scope._close();
+								});
 							$rootScope.loading.unload();
 						}, function(error) {
 							$rootScope.loading.unload();
@@ -276,7 +346,13 @@
 						});
 					} else {
 						providerUser.save(scope.newUser).then(function(success) {
-							
+							getUsers();
+							$rootScope.customDialog().showMessage('Sucesso', 'Usuário editado!')
+								.then(function(success) {
+									scope._close();
+								}, function(error) {
+									scope._close();
+								});
 							$rootScope.loading.unload();
 						}, function(error) {
 							$rootScope.loading.unload();

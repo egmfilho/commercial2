@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 16:09:13
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-04 12:19:34
+ * @Last Modified time: 2017-12-04 17:16:33
  */
 
 
@@ -124,6 +124,22 @@ md-input-container {
 			border: none;
 			padding-top: 6px;
 			color: $main-color;
+		}
+	}
+}
+
+md-menu-content {
+	md-menu-item {
+		min-height: 40px;
+		height: 40px;
+
+		.md-button {
+			color: #666 !important;
+			font-size: 14px;
+		}
+
+		md-icon.material-icons {
+			font-size: 22px;
 		}
 	}
 }

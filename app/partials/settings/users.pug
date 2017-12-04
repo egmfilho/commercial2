@@ -108,16 +108,11 @@
 											md-menu
 												md-button.md-icon-button(ng-click='$mdMenu.open($event)')
 													md-icon(md-menu-origin md-font-icon='fa fa-ellipsis-v')
-												md-menu-content.open-order-menu-content(width='4')
+												md-menu-content(width='4')
 													md-menu-item
-														md-button(ng-click='open(o)')
-															md-icon(md-font-icon='fa fa-folder-open-o')
-															| ABRIR
-
-													md-menu-item
-														md-button(ng-click='clone(o)')
-															md-icon(md-font-icon='fa fa-files-o')
-															| DUPLICAR
+														md-button(ng-click='users.newUserModal(u)')
+															md-icon(md-font-icon='fa fa-pencil')
+															| EDITAR
 
 						.users-table-footer(layout='row')
 							span(flex)
