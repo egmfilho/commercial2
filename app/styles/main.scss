@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 16:09:13
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-04 09:34:04
+ * @Last Modified time: 2017-12-04 12:19:34
  */
 
 
@@ -36,11 +36,6 @@ $border-color: darken(#d7d7d7, 30%);
 
 $order-color: #f99f57;
 $dav-color: #2196f3;
-
-@page {
-	// size: 8cm 40cm;
-	margin: 0;
-}
 
 body {
 	min-width: $min-width !important;
