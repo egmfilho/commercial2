@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-23 17:13:32
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-01 11:27:03
+ * @Last Modified time: 2017-12-04 15:48:59
  */
 
 (function() {
@@ -395,6 +395,26 @@
 
 				return sum;
 			};
+
+			self.sync = function() {
+				var options = {
+					company_id: $rootScope.openOrderFilters.companyId,
+					start_date: $rootScope.openOrderFilters.calendars.start.value,
+					end_date: $rootScope.openOrderFilters.calendars.end.value,
+					order_seller_id: $rootScope.openOrderFilters.seller && $rootScope.openOrderFilters.seller.person_id,
+					getCustomer: true,
+					getSeller: true
+				};
+
+				$rootScope.loading.load();
+				providerOrder.sync(options).then(function(success) {
+					self.getOrders();
+					$rootScope.loading.unload();
+				}, function(error) {
+					$rootScope.loading.unload();
+					$rootScope.customDialog().showMessage('Erro', error.status.description);
+				});
+			}
 
 		}
 

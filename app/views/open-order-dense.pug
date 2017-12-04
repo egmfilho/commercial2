@@ -4,9 +4,7 @@
 			.logo-container(flex='15')
 				.logo
 
-			span(flex)
-
-			div(flex='60' layout='column')
+			div(flex='55' layout='column')
 				.clown(layout='row' layout-fill)
 					md-input-container.md-select(flex)
 						label Empresa
@@ -65,24 +63,26 @@
 							md-button.md-icon-button.md-primary(style='margin-top: 12px' ng-click='openOrderFilters.calendars.end.isCalendarOpen = true')
 								md-icon(md-font-icon='fa fa-calendar')
 
-			span(flex)
-
-			.end-menu(flex='15' layout='column' layout-fill)
-				span(flex)
-
-				div(layout='row' layout-align='center center')
-					md-button.md-raised.filter(ng-click='openOrder.getOrders()' md-colors='{ background: "commercialBlue" }')
-						i.material-icons(style='font-size: 16px; vertical-align: text-top') refresh&nbsp;
-						| Atualizar
-
-				span(flex)
-
-				div(layout='row' layout-align='center center')
+			.end-menu(layout='row' layout-align='center end' layout-wrap)
+				div(flex='50' layout='row' layout-align='center center')
 					md-button.md-raised(ng-click='newOrder()' md-colors='{ background: "commercialGreen" }')
 						i.material-icons(style='font-size: 16px; vertical-align: text-top') note_add&nbsp;
 						| Novo
 
-				span(flex)
+				div(flex='50' layout='row' layout-align='center center')
+					md-button.md-raised.filter(ng-click='openOrder.getOrders()' md-colors='{ background: "commercialBlue" }')
+						i.material-icons(style='font-size: 16px; vertical-align: text-top') refresh&nbsp;
+						| Atualizar
+				
+				div(flex='50' layout='row' layout-align='center center')
+					md-button.md-raised.filter(ng-click='openOrder.sync()' md-colors='{ background: "commercialOrange" }')
+						i.fa.fa-cloud-download &nbsp;
+						| Sincronizar
+
+				div(flex='50' layout='row' layout-align='center center')
+					md-button.md-raised.filter(ng-click='' md-colors='{ background: "commercialRed" }' disabled)
+						i.material-icons(style='font-size: 16px; vertical-align: text-top') find_replace&nbsp;
+						| Filtrar
 
 		.order-table-header-container
 			table.table.order-table

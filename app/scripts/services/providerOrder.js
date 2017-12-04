@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-22 13:23:08
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-01 17:46:13
+ * @Last Modified time: 2017-12-04 15:52:11
  */
 
 (function() {
@@ -28,6 +28,7 @@
 					getById: getById,
 					getByCode: getByCode,
 					getAll: getAll,
+					sync: sync,
 					save: save,
 					edit: edit,
 					unlock: unlock,
@@ -127,6 +128,17 @@
 						get_order_address_delivery: options && options.getDeliveryAddress,
 						get_product_price: options && options.getProductPrice,
 						get_product_stock: options && options.getProductStock
+					}).$promise;
+				}
+
+				function sync(options) {
+					return provider.query({
+						action: 'synchronize'
+					}, {
+						order_company_id: options && options.company_id,
+						start_date: options && options.start_date,
+						end_date: options && options.end_date,
+						order_seller_id: options && options.order_seller_id
 					}).$promise;
 				}
 
