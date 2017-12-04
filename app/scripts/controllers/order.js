@@ -1439,10 +1439,22 @@
 			getPersonByCode(code, Globals.get('person-categories').customer, options).then(function(success) {
 				var customer = new Person(success.data);
 				
-				if (customer.isActive) {
-					$rootScope.customDialog().showMessage('Erro', 'Cliente inativo!');
-					self.internal.tempCustomer = null;
-					console.log('cliente inativo');
+				if (!customer.isActive()) {
+
+					$rootScope.customDialog().showConfirm('Aviso', 'Cliente inativo. Deseja ativá-lo?').then(function(){
+						$rootScope.loading.load();
+						providerPerson.activate(customer.person_id, Globals.get('person-categories').customer).then(function(success) {
+							$rootScope.loading.unload();
+							setCustomer(customer);
+							if (self.budget.order_client.person_address.length) {
+								self.budget.setDeliveryAddress(self.budget.order_client.person_address[0]);
+							}
+						}, function(error) {
+							self.internal.tempCustomer = null;
+							$rootScope.loading.unload();
+							$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+						});
+					});					
 				} else {
 					setCustomer(customer);
 					if (self.budget.order_client.person_address.length) {
