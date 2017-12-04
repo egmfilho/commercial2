@@ -112,8 +112,18 @@
 									Mousetrap.unbind('up');
 									Mousetrap.unbind('down');
 								}
-
 								vm._close(p);
+							} else {
+								$rootScope.customDialog().showConfirm('Aviso', 'Cliente inativo. Deseja ativá-lo?').then(function(){
+									$rootScope.loading.load();
+									providerPerson.activate(p.person_id, vm.filter.category).then(function(success) {
+										$rootScope.loading.unload();
+										vm._close(p);
+									}, function(error) {
+										$rootScope.loading.unload();
+										$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+									});
+								});
 							}
 						}
 					};

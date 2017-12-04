@@ -69,7 +69,7 @@
 										scope.close(p);
 									}, function(error) {
 										$rootScope.loading.unload();
-										$rootScope.customDialog().showMessage('Erro', error.data.satatus.description);
+										$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 									});
 								});
 							}
