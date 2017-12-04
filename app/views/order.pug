@@ -300,13 +300,16 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 									| {{p.price_code}} {{p.price_name}} ({{p.price_value | currency:'R$ '}})
 					
 					div(layout='row')
-						div(layout='col' flex='25')
-							md-input-container(flex='50')
-								label 
-									| Estoque
-								input(name='stock' ng-value='order.internal.tempItem.product.stock.product_stock + " " + ( order.internal.tempItem.product.unit.unit_initials ? order.internal.tempItem.product.unit.unit_initials : "" )' disabled='true')
+						md-input-container(flex='25')
+							label 
+								| Estoque ( F6 para informações )
+							input(name='stock' ng-value='order.internal.tempItem.product.stock.product_stock + " " + ( order.internal.tempItem.product.unit.unit_initials ? order.internal.tempItem.product.unit.unit_initials : "" )' disabled='true')
+							md-button.md-primary.md-icon-button.info-button(name='btn-info-item' ng-disabled='!order.internal.tempItem.product.product_id' ng-click='order.showModalProductInfo(order.internal.tempItem.product.product_id)' style='margin-left:4px')
+								md-icon(md-font-set='material-icons') info
+								md-tooltip(md-direction='bottom') Informações
 
-							md-input-container(flex='50')
+						div(layout='row' flex='50')
+							md-input-container(flex='33')
 								label 
 									| Quantidade
 								input(name='amount' ng-model='order.internal.tempItem.order_item_amount'
@@ -317,25 +320,25 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 										replace-text='{ ".": "", ",": "{{order.internal.tempItem.product.unit.unit_format == "I" ? \'\' : \',\'}}" }'
 										ng-disabled='!order.internal.tempItem.product.product_code')
 						
-						md-input-container(flex='25')
-							label 
-								| Desconto %
-							input(name='al-discount' ng-model='order.internal.tempItemAlDiscount' 
-									ng-blur='order.internal.tempItemAlDiscount = order.internal.tempItem.order_item_al_discount.toString()'
-									currency trim max-fraction-size='4' number-only separator=',.' 
-									replace-text='{ ".": "," }'
-									ng-disabled='!order.internal.tempItem.product.product_code'
-									keys-shortcuts enter='order.setItemAlDiscount(order.internal.tempItemAlDiscount)')
-						
-						md-input-container(flex='25')
-							label 
-								| Desconto R$
-							input(name='vl-discount' ng-model='order.internal.tempItemVlDiscount' 
-									ng-blur='order.internal.tempItemVlDiscount = order.internal.tempItem.order_item_vl_discount'
-									currency number-only separator=',.'
-									replace-text='{ ".": "," }'
-									ng-disabled='!order.internal.tempItem.product.product_code'
-									keys-shortcuts enter='order.setItemVlDiscount(order.internal.tempItemVlDiscount)')
+							md-input-container(flex='33')
+								label 
+									| Desconto %
+								input(name='al-discount' ng-model='order.internal.tempItemAlDiscount' 
+										ng-blur='order.internal.tempItemAlDiscount = order.internal.tempItem.order_item_al_discount.toString()'
+										currency trim max-fraction-size='4' number-only separator=',.' 
+										replace-text='{ ".": "," }'
+										ng-disabled='!order.internal.tempItem.product.product_code'
+										keys-shortcuts enter='order.setItemAlDiscount(order.internal.tempItemAlDiscount)')
+							
+							md-input-container(flex='33')
+								label 
+									| Desconto R$
+								input(name='vl-discount' ng-model='order.internal.tempItemVlDiscount' 
+										ng-blur='order.internal.tempItemVlDiscount = order.internal.tempItem.order_item_vl_discount'
+										currency number-only separator=',.'
+										replace-text='{ ".": "," }'
+										ng-disabled='!order.internal.tempItem.product.product_code'
+										keys-shortcuts enter='order.setItemVlDiscount(order.internal.tempItemVlDiscount)')
 						
 						.well(flex='25' layout='row' layout-align='center center' style='margin-left: 5px;')
 							//- md-button.md-icon-button.md-raised.md-primary(name='btn-add-item' ng-click='order.addItem()')
@@ -347,10 +350,6 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 							md-button.md-raised.md-primary.md-icon-button.button-green.add-button(name='btn-add-item' ng-click='order.addItem()' style='margin:0')
 								i.fa.fa-plus
 								md-tooltip(md-direction='bottom') Adicionar produto
-
-							md-button.md-raised.md-primary.md-icon-button.info-button(name='btn-info-item' ng-disabled='!order.internal.tempItem.product.product_id' ng-click='order.showModalProductInfo(order.internal.tempItem.product.product_id)' style='margin-left:4px')
-								i.fa.fa-info
-								md-tooltip(md-direction='bottom') Informações
 
 					pre(ng-if='debug')
 						| {{order.internal.tempItem | json}}

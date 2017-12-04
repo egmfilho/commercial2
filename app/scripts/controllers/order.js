@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-04 09:05:14
+ * @Last Modified time: 2017-12-04 10:16:14
 */
 
 (function() {
@@ -236,6 +236,15 @@
 
 				return false;
 			});
+
+			/* Ir para pagamento */
+			Mousetrap.bind(['f6'], function() {
+				if (self.internal.tempItem.product_id) {
+					self.showModalProductInfo(self.internal.tempItem.product_id);
+				}
+
+				return false;
+			});
 		}
 
 		/**
@@ -254,6 +263,7 @@
 			Mousetrap.unbind(['command+2', 'ctrl+2']);
 			Mousetrap.unbind(['command+3', 'ctrl+3']);
 			// Mousetrap.unbind(['command+4', 'ctrl+4']);
+			Mousetrap.unbind(['f6']);
 		}
 
 		/* Cria os atalhos do teclado */
