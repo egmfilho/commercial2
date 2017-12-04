@@ -3419,55 +3419,49 @@
 		 * Exibe o modal de informacao do produto.
 		 */
 		function showModalProductInfo( product_id ) {
-			
-			$rootScope.loading.load();
+						
+			var options = {
+				hasBackdrop: true,
+				escapeToClose: false,
+				clickOutsideToClose: false,
+				focusOnOpen: false,
+				zIndex: 1,
+				width: 800
+			},
 
-
-			providerProduct.getInfoStock({
-				product_id: product_id
-			}).then(function(success) {
-
-				$rootScope.loading.unload();
+			controller = function() {
 				
-				var options = {
-					hasBackdrop: true,
-					escapeToClose: false,
-					clickOutsideToClose: false,
-					focusOnOpen: false,
-					zIndex: 1,
-					width: 500
-				},
+				this._showCloseButton = true;
 
-				controller = function(scope) {
-					
-					var vm = this;
-					
-					this.result = success;
-					this.caralho = 'caralho';
+				var vm = this;
+				
+				this.result = [];
 
-					this.grid = {
-						propertyName: 'company_code',
-						reverse: true
-					}
+				this.grid = {
+					propertyName: 'company_code',
+					reverse: false
+				}
 
-					this.sortBy = function(propertyName) {
-						vm.grid.reverse = (vm.grid.propertyName === propertyName) ? !vm.grid.reverse : false;
-						vm.grid.propertyName = propertyName;
-					}
-				};
+				this.sortBy = function(propertyName) {
+					vm.grid.reverse = (vm.grid.propertyName === propertyName) ? !vm.grid.reverse : false;
+					vm.grid.propertyName = propertyName;
+				}
 
-				controller.$inject = [ '$scope' ];
+				$rootScope.loading.load();
 
-				//self.internal.flags.isToolbarLocked = true;
-				$rootScope.customDialog().showTemplate('Produto', './partials/modalProductInfo.html', controller, options)
-					.then(function(success) {
-						//self.internal.flags.isToolbarLocked = false;
-					}, function(error) {
-						//self.internal.flags.isToolbarLocked = false;
-					});
+				providerProduct.getInfoStock({
+					product_id: product_id
+				}).then(function(success){ 
+					$rootScope.loading.unload();
+					vm.result = success.data;
+				}, function error(error){
+					$rootScope.loading.unload();
+					$rootScope.customDialog().showMessage('Erro',error.status.description);
+				});
+			};
 
-					
-			});
+			self.internal.flags.isToolbarLocked = true;
+			return $rootScope.customDialog().showTemplate('Produto', './partials/modalProductInfo.html', controller, options);			
 			
 		}
 

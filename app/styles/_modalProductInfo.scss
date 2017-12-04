@@ -1,0 +1,110 @@
+/*
+ * @Author: alessandro
+ * @Date: 2017-10-20 17:07:30 
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2017-10-24 15:51:38
+ */
+
+.product-info-table-header-container{
+	padding-top: 14px;
+	padding-right: 10px;
+	border: 1px solid $border-color;
+	border-bottom: none;
+}
+
+.product-info-table {
+	
+	tbody{
+		tr{
+			&.sold-out td {
+				color: red !important;
+			}
+
+			&.inactive td {
+				color: #ccc !important;
+			}
+		}
+	}
+
+	tr {
+		th{
+			padding: 0 5px 10px;
+		}
+
+		td{
+			padding: 10px 5px;
+
+		}
+
+		th, td {
+
+			&:nth-child(1){
+				width: 82px;
+				text-align: center;
+			}
+			
+			&:nth-child(2){
+				width: 76px;
+				text-align: center;
+			}
+
+			&:nth-child(3){
+				width: auto;
+			}
+
+			&:nth-child(4){
+				width: 86px;
+				text-align: center;
+			}
+
+			&:nth-child(5){
+				width: 116px;
+				text-align: center;
+			}
+		}
+	}
+}
+
+.items-selection-header-container {
+	padding-top: 14px;
+	padding-right: 10px;
+	border: 1px solid $border-color;
+	border-bottom: none;
+}
+
+.bar {
+	z-index: 0;
+
+	.md-toolbar-tools {
+		background-color: white;
+		color: $main-color;
+		font-size: .7em;
+		border: 1px solid $border-color;
+		border-top: none;
+
+		.legend{
+			display: inline-block;
+
+			&.sold-out {
+				color: red !important;
+
+				.fa.fa-stop {
+					color: red !important;
+				}
+			}
+
+			&.inactive {
+				margin-right: 30px;
+				color: $main-color !important;
+
+				.fa.fa-stop {
+					color: #ccc !important;
+				}
+			}
+
+			i{
+				margin-right: 4px;
+			}
+		}
+	}
+}

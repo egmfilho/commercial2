@@ -1,25 +1,23 @@
 .irineu(layout='row' layout-align='start center' layout-fill)
 	i.fa.fa-info
 	span Informações do Produto
-	span {{ctrl.result.caralho}}
 
-//- .body(layout='column' layout-fill)
+.body(layout='column' layout-fill)
 	
 	div(flex layout='column')
-		.product-table-header-container
-			table.product-table.table
+		.product-info-table-header-container
+			table.product-info-table.table
 				thead
 					tr
-						th &nbsp;
 						th.sortable(ng-click="ctrl.sortBy('company_code')")
 							| EMPRESA &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'company_code'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						th.sortable(ng-click="ctrl.sortBy('product_code')")
-							| CÓDIGO. &nbsp;
+							| CÓDIGO &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'product_code'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						th.sortable(ng-click="ctrl.sortBy('product_name')")
 							| NOME &nbsp;
-							i.fa(ng-show="ctrl.grid.propertyName === 'product_name'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")						
+							i.fa(ng-show="ctrl.grid.propertyName === 'product_name'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						th.sortable(ng-click="ctrl.sortBy('product_stock')")
 							| ESTOQUE &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'product_stock'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
@@ -27,30 +25,20 @@
 							| QT. COMPRADA &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'quantity_purchased'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 		.container-table(flex)
-			table.product-table.table(name='clementino')
+			table.product-info-table.table(name='clementino')
 				tbody
-					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-dblclick='ctrl.select(p)' ng-class="{'inactive':p.product_active=='N', 'sold-out': p.stock.product_stock <= 0}" keys-shortcuts enter='ctrl.select(p)')
-						td 
-							md-checkbox(ng-checked='!!ctrl.isSelected(p)' ng-click='ctrl.addProduct(p)' ng-disabled='p.product_active == "N"')
+					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-class="{'inactive':p.product_active=='N', 'sold-out': p.product_stock <= 0}")
 						td {{::p.company_code}}
 						td {{::p.product_code}}
 						td {{::p.product_name}}
-						td {{::p.product_stock}}
-						td {{::p.quantity_purchased}}) 
+						td {{::p.unit.unit_format == "I" ? (p.product_stock | number:'0') : p.product_stock}} ({{p.unit_initials}})
+						td {{::p.unit_format == "I" ? (p.quantity_purchased | number:'0') : p.quantity_purchased}} ({{p.unit_initials}})
 
 	div(layout='column')
 		.bar
 			md-toolbar
 				.md-toolbar-tools(layout='row')
-					div(flex='35')
-						i.fa.fa-2x.fa-cubes &nbsp;
-						| {{ctrl.result.length > 0 ? ctrl.result.length : 'Nenhum' }} Produto{{ctrl.result.length > 1 ? 's' : '' }} Localizado{{ctrl.result.length > 1 ? 's' : '' }}
-						
-					.text-center(flex)
-						md-button(ng-click='ctrl.showSelection()')
-							| {{ctrl.getSelectionLength() > 0 ? ctrl.getSelectionLength() : 'Nenhum'}} {{ctrl.getSelectionLength() > 1 ? 'selecionados' : 'selecionado'}}
-
-					.text-right(flex='35')
+					.text-right(flex='100')
 						.legend.inactive
 							i.fa.fa-stop
 							| Inativo
