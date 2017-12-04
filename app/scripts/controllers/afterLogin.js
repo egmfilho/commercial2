@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-19 08:59:02
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-06 16:24:49
+ * @Last Modified time: 2017-12-04 11:48:01
  */
 
 (function() {
@@ -58,7 +58,15 @@
 
 				// Globals.set('api', success.data.data.api);
 				Globals.set('contact-types', success.data.data.person_address_contact_type);
-				Globals.set('logo', success.data.data.logo);
+				Globals.set('logo', (function() {
+					var temp = {};
+					angular.forEach(success.data.data.company, function(value, key) {
+						temp[key] = {
+							company_logo: value.logo.company_logo
+						};
+					});
+					return temp;
+				})());
 				Globals.set('print-message', success.data.data.order);
 				Globals.set('default-price-table', success.data.data.price.default_price);
 				Globals.set('debit-day-limit', success.data.data.credit_limit.debit_day_limit);
