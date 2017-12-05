@@ -100,7 +100,14 @@
 			self.newAddress.action = 'edit';
 			self.labelButton = 'Atualizar';
 			self.newAddress.merge(args);
-			self.newAddress.person_address_contact = Object.assign([],_contacts,self.newAddress.person_address_contact);
+			
+			// junta o array dos contatos vazio com os contatos do cadastro
+			self.newAddress.person_address_contact = _contacts.map(function(c) {
+				return self.newAddress.person_address_contact.find(function(x) { 
+					return x.person_address_contact_type_id == c.person_address_contact_type_id 
+				}) || c;
+			});
+			
 			self.queryDistrict = args.district.district_name;
 			searchDistrict();
 			self.queryCity = args.city.city_name;
