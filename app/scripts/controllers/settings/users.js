@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-07-25 16:51:12
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-04 17:27:50
+ * @Last Modified time: 2017-12-05 08:34:41
 */
 
 (function() {
@@ -347,7 +347,7 @@
 					} else {
 						providerUser.save(scope.newUser).then(function(success) {
 							getUsers();
-							$rootScope.customDialog().showMessage('Sucesso', 'Usuário editado!')
+							$rootScope.customDialog().showMessage('Sucesso', 'Usuário cadastrado!')
 								.then(function(success) {
 									scope._close();
 								}, function(error) {

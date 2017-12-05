@@ -2,13 +2,23 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-01 08:46:58
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 17:11:00
+ * @Last Modified time: 2017-12-05 10:36:18
  */
 
 .general {
-	.content {
-		.form {
-			
+	.form {
+		&#services {
+			input {
+				min-width: 40px;
+				width: 40px;
+				max-width: 40px;
+			}
+
+			small {
+				margin-left: 15px;
+				font-size: 12px;
+			}
 		}
 	}
+
 }

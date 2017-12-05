@@ -27,7 +27,7 @@
 							dt 
 								| Ativar empresa
 							dd
-								md-switch.text-primary(style='margin: 16px 0 0 0' ng-model='companies.internal.isActive')
+								md-switch.text-primary(style='margin: 16px 0 0 0' ng-true-value='\'Y\'' ng-false-value='\'N\'' ng-model='companies.internal.isActive')
 
 							dt
 
@@ -91,7 +91,7 @@
 							dt 
 								| Autenticação SMTP
 							dd
-								md-switch.text-primary(style='margin: 16px 0 0 0' ng-model='companies.internal.mail.smtp')
+								md-switch.text-primary(style='margin: 16px 0 0 0' ng-true-value='\'Y\'' ng-false-value='\'N\'' ng-model='companies.internal.mail.smtp')
 
 							dt 
 								| Email
@@ -181,17 +181,17 @@
 							dt 
 								| Usar crédito
 							dd
-								md-switch.text-primary(style='margin: 16px 0 0 0' ng-model='companies.internal.usesCredit')
+								md-switch.text-primary(style='margin: 16px 0 0 0' ng-true-value='\'Y\'' ng-false-value='\'N\'' ng-model='companies.internal.usesCredit')
 
 							dt 
 								| ICMS
 							dd
-								md-switch.text-primary(style='margin: 16px 0 0 0' ng-model='companies.internal.hasICMS')
+								md-switch.text-primary(style='margin: 16px 0 0 0' ng-true-value='\'Y\'' ng-false-value='\'N\'' ng-model='companies.internal.hasICMS')
 
 							dt 
 								| Subistituição tributária
 							dd
-								md-switch.text-primary(style='margin: 16px 0 0 0' ng-model='companies.internal.hasST')
+								md-switch.text-primary(style='margin: 16px 0 0 0' ng-true-value='\'Y\'' ng-false-value='\'N\'' ng-model='companies.internal.hasST')
 
 							dt 
 								| UF

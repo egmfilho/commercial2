@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-06-01 15:57:25
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-06 17:56:41
+ * @Last Modified time: 2017-12-04 17:54:14
 */
 
 (function() {
@@ -67,6 +67,11 @@
 				};
 
 				this.settings = function() {
+					if (!scope.currentUser || !scope.currentUser.user_profile_id || scope.currentUser.user_profile_id != 1001) {
+						$rootScope.customDialog().showMessage('Aviso', 'Usuário não autorizado!');
+						return;
+					}
+
 					if (constants.isElectron) {
 						ElectronWindow.createWindow('#/settings');
 						if (mdPanelRef) mdPanelRef.close();

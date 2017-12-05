@@ -16,12 +16,12 @@
 					dt 
 						| Pagamentos autorizados
 					dd
-						input(type='text' ng-model='')
+						input(type='text' ng-model='financial.internal.payment.authorized')
 
 					dt
 
 					dd
-						md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+						md-button.md-raised.md-primary(ng-click='financial.postPayment()' style='margin-left: 0')
 							i.fa.fa-floppy-o &nbsp;
 							| Salvar
 
@@ -37,27 +37,27 @@
 					dt 
 						| Natureza de lançamento
 					dd
-						input(type='text' ng-model='')
+						input(type='text' ng-model='financial.internal.credit.entryId')
 
 					dt 
 						| Modalidade
 					dd
-						input(type='text' ng-model='')
+						input(type='text' ng-model='financial.internal.credit.modalityId')
 
 					dt 
 						| Tipo de baixa parcial
 					dd
-						input(type='text' ng-model='')
+						input(type='text' ng-model='financial.internal.credit.partialDrop')
 
 					dt 
 						| Tipo de baixa total
 					dd
-						input(type='text' ng-model='')
+						input(type='text' ng-model='financial.internal.credit.totalDrop')
 
 					dt
 
 					dd
-						md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+						md-button.md-raised.md-primary(ng-click='financial.postCredit()' style='margin-left: 0')
 							i.fa.fa-floppy-o &nbsp;
 							| Salvar
 
@@ -73,17 +73,17 @@
 					dt 
 						| Modalidades autorizadas
 					dd
-						input(type='text' ng-model='')
+						input(type='text' ng-model='financial.internal.creditLimit.authorized')
 
 					dt 
 						| Máx. de dias em débito
 					dd
-						input(type='text' ng-model='')
+						input(type='text' ng-model='financial.internal.creditLimit.debitLimit')
 
 					dt
 
 					dd
-						md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+						md-button.md-raised.md-primary(ng-click='financial.postCreditLimit()' style='margin-left: 0')
 							i.fa.fa-floppy-o &nbsp;
 							| Salvar
 
@@ -99,11 +99,11 @@
 					dt 
 						| Bancos permitidos
 					dd
-						input(type='text' ng-model='')
+						input(type='text' ng-model='financial.internal.bank.authorized')
 
 					dt
 
 					dd
-						md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+						md-button.md-raised.md-primary(ng-click='financial.postBank()' style='margin-left: 0')
 							i.fa.fa-floppy-o &nbsp;
 							| Salvar
