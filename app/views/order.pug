@@ -446,7 +446,8 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 					.offset-top-5(layout='row')
 						.person-image-container(layout='column' layout-fill)
 							.person-image(ng-style='{"background-image": "url(\'" + order.budget.order_client.person_image + "\')"}' md-whiteframe='2')
-								md-tooltip(md-direction='bottom' ng-if='!order.budget.order_client.person_image') {{order.budget.order_client.person_name}}
+								md-tooltip(md-direction='bottom' ng-if='order.budget.order_client.person_image') 
+									| {{order.budget.order_client.person_name || 'Cliente'}}
 								div(ng-if='!order.budget.order_client.person_image')
 									i.fa.fa-user
 									small (sem foto)
