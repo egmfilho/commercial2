@@ -3561,7 +3561,7 @@
 						scope._close({
 							al_discount: scope.al_discount, 
 							vl_discount: scope.vl_discount
-						});
+						});						
 					} else {
 						authorizationDialog('Orçamento', { title: 'Autorização de desconto geral' }, 'order', 'user_discount').then(function(success) {
 							if (success.user_max_discount >= scope.al_discount) {
@@ -3583,25 +3583,29 @@
 
 			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalDiscount.html', controller, { width: 240, zIndex: 1, escapeToClose: true })
 				.then(function(success) {
+					
 					var total = self.budget.order_value_total;
 
 					angular.forEach( self.budget.order_items, function(item, index){
 						item.setAlDiscount(success.al_discount);
 					});
-
-					self.budget.order_audit_discounts.push({
-						title: 'Desconto geral',
-						al_discount: success.al_discount,
-						vl_discount: success.vl_discount,
-						user_id: authorizedBy.user_id,
-						user_name: authorizedBy.user_name,
-						person_name: self.budget.order_client && self.budget.order_client.person_name,
-						person_code: self.budget.order_client && self.budget.order_client.person_code,
-						date: moment().tz('America/Sao_Paulo').toDate()
-					});
 					
+					if( authorizedBy != null ){
+						self.budget.order_audit_discounts.push({
+							title: 'Desconto geral',
+							al_discount: success.al_discount,
+							vl_discount: success.vl_discount,
+							user_id: authorizedBy.user_id,
+							user_name: authorizedBy.user_name,
+							person_name: self.budget.order_client && self.budget.order_client.person_name,
+							person_code: self.budget.order_client && self.budget.order_client.person_code,
+							date: moment().tz('America/Sao_Paulo').toDate()
+						});
+					}
+
 					self.budget.updateValues();
 					self.recalcPayments();
+
 				}, function(error) { });
 		}
 
