@@ -176,7 +176,7 @@
 			function merge(address) {
 				Object.assign(this, address, { 
 					city: new City(address.city), 
-					district: new District(address.district),
+					district: new District(address.district)
 				});
 			}
 

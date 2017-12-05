@@ -33,6 +33,7 @@
 						this.customer         = new Person(customer);
 						setTimeout(function() { $scope.$broadcast('modalCustomerAddress', vm.customer); }, 500);
 						this.deliveryAddress  = deliveryAddress ? new Address(deliveryAddress) : new Address();
+						this.labelTab         = 'Novo endereço';
 
 						this.selectAddress = function(address) {
 							this.deliveryAddress = new Address(address);
@@ -60,14 +61,25 @@
 
 						$scope.$on('newAddress', function(event, args) {
 							var newAddress = new Address(args);
-
-							vm.customer.person_address.push(newAddress);
-							
-							if (args.person_address_delivery == 'Y')
-								vm.selectAddress(newAddress);
-
-							vm.selectedTabIndex = 0;
+							vm.customer.person_address.push(newAddress);							
+							if (args.person_address_delivery == 'Y') vm.selectAddress(newAddress);
+							vm.selectedTabIndex = 1;
+							vm.labelTab = 'Novo endereço';
+							$scope.$broadcast('newAddress');
 						});
+
+						this.editAddress = function(a){
+							vm.labelTab = 'Editar endereço';
+							$scope.$broadcast('editAddress', a);
+							vm.selectedTabIndex = 1;
+						};
+
+						this.showNewAddress = function(){
+							$scope.$broadcast('clearAddress');
+							vm.selectedTabIndex = 1;
+							vm.labelTab = 'Novo endereço';
+						}
+
 					};
 
 					controller.$inject = [ '$scope' ];

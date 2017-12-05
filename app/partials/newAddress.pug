@@ -128,11 +128,11 @@ div(layout='column' ng-controller='NewAddressCtrl as address')
 			textarea.offset-top-15(flex style='max-height: 250px' ng-model='address.newAddress.person_address_note')
 
 	div(layout='row' layout-fill layout-align='end center')
-		md-button.md-raised.text-primary(ng-click='address.clear()')
+		md-button.md-raised.text-primary(ng-click='address.clear()' ng-if='address.labelButton == "Cadastrar"')
 			| Limpar
-
+			
 		md-button.md-raised.md-primary(ng-click='address.submit()')
-			| Cadastrar
+			| {{address.labelButton}}
 
 	div(flex='100' layout='row')
 		pre(ng-if='debug')

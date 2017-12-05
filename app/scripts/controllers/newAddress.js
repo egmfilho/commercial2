@@ -56,6 +56,8 @@
 		self.icmsChanged         = icmsChanged;
 		self.focusOn             = focusOn;
 
+		self.labelButton         = 'Cadastrar';
+
 		$scope.$on('modalCustomerAddress', function() {
 			constants.debug && console.log('new address controller loaded!');
 
@@ -80,12 +82,38 @@
 		$scope.$on('customerAdded', function(event, args) {
 			_personId = args.person_id;
 			self.newAddress.person_id = _personId;
+			self.newAddress.action = 'add';
+			self.labelButton = 'Cadastrar';
 			clear();
 		});
 
 		$scope.$on('modalCustomerAddress', function(event, args) {
 			_personId = args.person_id;
 			self.newAddress.person_id = _personId;
+			self.newAddress.action = 'add';
+			self.labelButton = 'Cadastrar';
+			clear();
+		});
+
+		$scope.$on('editAddress', function(event, args) {
+			clear();
+			self.newAddress.action = 'edit';
+			self.labelButton = 'Atualizar';
+			self.newAddress.merge(args);
+			self.newAddress.person_address_contact = Object.assign([],_contacts,self.newAddress.person_address_contact);
+			self.queryDistrict = args.district.district_name;
+			searchDistrict();
+			self.queryCity = args.city.city_name;
+			searchCity();
+		});
+
+		$scope.$on('newAddress', function(event, args) {
+			clear();
+			self.newAddress.action = 'edit';
+			self.labelButton = 'Atualizar';
+		});
+
+		$scope.$on('clearAddress', function(event, args) {
 			clear();
 		});
 
@@ -125,6 +153,7 @@
 		function clear() {
 			self.newAddress           = new Address();
 			self.newAddress.person_id = _personId;
+			self.newAddress.action    = '';
 
 			/* Carrega os tipos de contatos */
 			self.newAddress.person_address_contact = JSON.parse(JSON.stringify(_contacts));
@@ -172,13 +201,14 @@
 			}
 
 			$rootScope.loading.load();
+			console.log(self.newAddress.action,self.newAddress.person_address_contact);
 			self.newAddress.person_address_contact = self.newAddress.person_address_contact.filter(function(c) {
 				return !!c.person_address_contact_value;
 			});
 			providerAddress.save(self.newAddress).then(function(success) {
 				self.newAddress.person_address_code = success.data.address_code;
 				constants.debug && console.log('$emit: newAddress', self.newAddress);
-				$scope.$emit('newAddress', self.newAddress);
+				if( self.newAddress.action == 'add' ) $scope.$emit('newAddress', self.newAddress);
 				clear();
 				$rootScope.loading.unload();
 			}, function(error) {

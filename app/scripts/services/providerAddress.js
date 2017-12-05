@@ -46,7 +46,7 @@
 
 				function save(address) {
 					return provider.save({
-						action: 'insert'
+						action: address.action == 'add' ? 'insert' : 'edit'
 					}, address).$promise;
 				}
 

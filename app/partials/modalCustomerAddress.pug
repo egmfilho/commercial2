@@ -48,6 +48,11 @@
 									span(flex)
 									div(flex='30' layout='row' layout-align='end end')
 										md-button.md-icon-button.md-raised.md-primary(
+												style='margin: 0 10px 0 0'
+												ng-click='ctrl.editAddress(a)')
+											md-icon(md-font-icon='fa fa-pencil')
+
+										md-button.md-icon-button.md-raised.md-primary(
 												style='margin: 0'
 												ng-click='ctrl.selectAddress(a)' 
 												ng-disabled='a.person_address_code == ctrl.deliveryAddress.person_address_code')
@@ -59,7 +64,7 @@
 							md-card-content(layout='column' layout-align='center center' layout-fill)
 								div
 									md-button.md-icon-button.md-raised.md-primary(
-											ng-click='ctrl.selectedTabIndex = 1')
+											ng-click='ctrl.showNewAddress()')
 										md-icon(md-font-icon='fa fa-plus')
 								div.offset-top-15
 									p.text-light.text-center Novo Endereço
@@ -77,7 +82,7 @@
 								md-button.md-raised.md-primary(ng-click='ctrl._close(ctrl.deliveryAddress)' style='margin-right: 0')
 									| &nbsp; Ok &nbsp;
 
-		md-tab(label='Novo endereço' ng-disabled='ctrl.globals("default-customer").code == ctrl.customer.person_code')
+		md-tab(label='{{ctrl.labelTab}}' ng-disabled='ctrl.globals("default-customer").code == ctrl.customer.person_code')
 			md-content(layout='column' layout-align='center center' style='min-height: 100%; height: auto;')
 				form(layout='row' name='newAddressForm')
 					md-card.new-address-card(flex)
