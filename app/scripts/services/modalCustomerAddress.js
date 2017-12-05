@@ -59,13 +59,24 @@
 							$rootScope.customDialog().showMessage('Observações', note || 'Nenhuma informação disponível.');
 						};
 
-						$scope.$on('newAddress', function(event, args) {
+						$scope.$on('newAddressRetorno', function(event, args) {
 							var newAddress = new Address(args);
 							vm.customer.person_address.push(newAddress);							
-							if (args.person_address_delivery == 'Y') vm.selectAddress(newAddress);
-							vm.selectedTabIndex = 1;
+							if (newAddress.person_address_delivery == 'Y') vm.selectAddress(newAddress);
+							vm.selectedTabIndex = 0;
 							vm.labelTab = 'Novo endereço';
-							$scope.$broadcast('newAddress');
+						});
+
+						$scope.$on('editAddressRetorno', function(event, args) {
+							console.log('pesquei aqui', args);
+							var newAddress = new Address(args);
+							vm.customer.person_address = vm.customer.person_address.map(function(x) {
+								return x.person_address_code == newAddress.person_address_code ? newAddress : x;
+							});
+
+							if (args.person_address_delivery == 'Y') vm.selectAddress(newAddress);
+							vm.selectedTabIndex = 0;
+							vm.labelTab = 'Novo endereço';
 						});
 
 						this.editAddress = function(a){

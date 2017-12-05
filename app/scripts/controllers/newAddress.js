@@ -105,7 +105,7 @@
 			self.newAddress.person_address_contact = _contacts.map(function(c) {
 				return self.newAddress.person_address_contact.find(function(x) { 
 					return x.person_address_contact_type_id == c.person_address_contact_type_id 
-				}) || c;
+				}) || new Contact(c);
 			});
 			
 			self.queryDistrict = args.district.district_name;
@@ -116,8 +116,8 @@
 
 		$scope.$on('newAddress', function(event, args) {
 			clear();
-			self.newAddress.action = 'edit';
-			self.labelButton = 'Atualizar';
+			self.newAddress.action = 'add';
+			self.labelButton = 'Cadastrar';
 		});
 
 		$scope.$on('clearAddress', function(event, args) {
@@ -208,14 +208,14 @@
 			}
 
 			$rootScope.loading.load();
-			console.log(self.newAddress.action,self.newAddress.person_address_contact);
 			self.newAddress.person_address_contact = self.newAddress.person_address_contact.filter(function(c) {
 				return !!c.person_address_contact_value;
 			});
 			providerAddress.save(self.newAddress).then(function(success) {
 				self.newAddress.person_address_code = success.data.address_code;
 				constants.debug && console.log('$emit: newAddress', self.newAddress);
-				if( self.newAddress.action == 'add' ) $scope.$emit('newAddress', self.newAddress);
+				//if( self.newAddress.action == 'add' )
+				$scope.$emit(self.newAddress.action == 'add' ? 'newAddressRetorno' : 'editAddressRetorno', self.newAddress);
 				clear();
 				$rootScope.loading.unload();
 			}, function(error) {
