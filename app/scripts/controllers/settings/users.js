@@ -106,7 +106,7 @@
 				width: 800,
 				focusOnOpen: false,
 			};
-
+			console.log(userToEdit);
 			var controller = function(ProviderPerson, Person, CompanyERP, Price) {
 				this._showCloseButton = true;
 				
@@ -118,7 +118,7 @@
 				this.companies = [ ];
 				this.prices = [ ];
 				this.newUser = new User();
-
+				
 				function getUserToEdit() {
 					if (userToEdit) {
 						return providerUser.getById(userToEdit.user_id);
@@ -319,7 +319,7 @@
 					}
 
 					if (!scope.newUser.user_price.length) {
-						$rootScope.customDialog().showMessage('Aviso', 'Selecione pelo menos 1 tabela de preços!');
+						$rootScope.customDialog().showMessage('Aviso', 'Selecione pelo menos 1 tabela de preço!');
 						return false;
 					}
 
