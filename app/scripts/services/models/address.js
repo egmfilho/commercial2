@@ -154,7 +154,8 @@
 				string += this.person_address_number + ' - ';
 				string += this.district.district_name + ', '; 
 				string += this.city.city_name + ' - ';
-				string += this.city.uf_id;
+				string += this.city.uf_id + ' - ';
+				string += ( this.person_address_cep || '' );
 
 				return string.toString();
 			}
