@@ -3498,10 +3498,16 @@
 					$rootScope.customDialog().showMessage('Erro',error.status.description);
 				});
 			};
-
-			self.internal.flags.isToolbarLocked = true;
-			return $rootScope.customDialog().showTemplate('Produto', './partials/modalProductInfo.html', controller, options);			
 			
+			self.internal.flags.isToolbarLocked = true;
+			$rootScope.customDialog().showTemplate('Produto', './partials/modalProductInfo.html', controller, options)		
+			.then(function(success) {
+				self.internal.flags.isToolbarLocked = false;
+			}, function(error) { 
+				self.internal.flags.isToolbarLocked = false;
+			});
+
+			return;
 		}
 
 		/**
