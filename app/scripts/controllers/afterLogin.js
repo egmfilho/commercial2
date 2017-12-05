@@ -51,6 +51,7 @@
 				method: 'GET',
 				url: Globals.api.get().address + 'config.php?action=getList'
 			}).then(function(success) {
+
 				Globals.set('person-categories', { 
 					seller: success.data.data.person_category.seller_category,
 					customer: success.data.data.person_category.client_category
@@ -78,9 +79,10 @@
 				});
 
 				var st = {};
-				angular.forEach(success.data.data.st, function(value, key) {
-					st[key] = value.has_st == 'Y';
+				angular.forEach(success.data.data.company, function(value, key) {
+					st[key] = value.taxation.has_st == 'Y';
 				});
+
 				Globals.set('st', st);
 				
 				deferred.resolve();
