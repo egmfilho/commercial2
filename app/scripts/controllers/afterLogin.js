@@ -6,7 +6,7 @@
  */
 
 (function() {
-
+	
 	'use strict';
 
 	angular.module('commercial2.controllers')
@@ -37,9 +37,13 @@
 					}, 1000);
 				}, function(error) {
 					$rootScope.loading.unload();
+					$rootScope.customDialog().showMessage('Erro', 'Erro ao receber as configurações.')
+						.then(function() { $location.path('/logout') }, function() { $location.path('/logout') });
 				});
 			}, function(error) { 
 				$rootScope.loading.unload();
+				$rootScope.customDialog().showMessage('Erro', 'Erro ao receber as configurações.')
+				.then(function() { $location.path('/logout') }, function() { $location.path('/logout') });
 			});
 		});
 
@@ -51,37 +55,45 @@
 				method: 'GET',
 				url: Globals.api.get().address + 'config.php?action=getList'
 			}).then(function(success) {
-				Globals.set('person-categories', { 
-					seller: success.data.data.person_category.seller_category,
-					customer: success.data.data.person_category.client_category
-				});
-
-				// Globals.set('api', success.data.data.api);
-				Globals.set('contact-types', success.data.data.person_address_contact_type);
-				Globals.set('logo', (function() {
-					var temp = {};
-					angular.forEach(success.data.data.company, function(value, key) {
-						temp[key] = {
-							company_logo: value.logo.company_logo
-						};
+				try {
+					Globals.set('person-categories', { 
+						seller: success.data.data.person_category.seller_category,
+						customer: success.data.data.person_category.client_category
 					});
-					return temp;
-				})());
-				Globals.set('print-message', success.data.data.order);
-				Globals.set('default-price-table', success.data.data.price.default_price);
-				Globals.set('debit-day-limit', success.data.data.credit_limit.debit_day_limit);
-				Globals.set('credit-limit', success.data.data.credit_limit.authorized_modality_id);
-				Globals.set('mail-contact-id', success.data.data.contact_mail.contact_mail_type_id);
-				Globals.set('default-customer', {
-					name: success.data.data.default_customer.default_customer_name,
-					code: success.data.data.default_customer.default_customer_code
-				});
-
-				var st = {};
-				angular.forEach(success.data.data.st, function(value, key) {
-					st[key] = value.has_st == 'Y';
-				});
-				Globals.set('st', st);
+	
+					// Globals.set('api', success.data.data.api);
+					Globals.set('contact-types', success.data.data.person_address_contact_type);
+	
+					Globals.set('logo', (function() {
+						var temp = {};
+						angular.forEach(success.data.data.company, function(value, key) {
+							temp[key] = {
+								company_logo: value.logo.company_logo
+							};
+						});
+						return temp;
+					})());
+	
+					Globals.set('print-message', success.data.data.order);
+					Globals.set('default-price-table', success.data.data.price.default_price);
+					Globals.set('debit-day-limit', success.data.data.credit_limit.debit_day_limit);
+					Globals.set('credit-limit', success.data.data.credit_limit.authorized_modality_id);
+					Globals.set('mail-contact-id', success.data.data.contact_mail.contact_mail_type_id);
+					Globals.set('default-customer', {
+						name: success.data.data.default_customer.default_customer_name,
+						code: success.data.data.default_customer.default_customer_code
+					});
+	
+					var st = {};
+					angular.forEach(success.data.data.st, function(value, key) {
+						st[key] = value.has_st == 'Y';
+					});
+					Globals.set('st', st);
+				} catch(e) {
+					$rootScope.writelog('After login > Error!!!');
+					$rootScope.writeLog(JSON.stringify(e));
+					deferred.reject();
+				}
 				
 				deferred.resolve();
 			}, function(error) {
