@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 10:21:29
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-01 17:38:37
+ * @Last Modified time: 2017-12-05 08:24:42
  */
 
 'use strict';
@@ -310,7 +310,15 @@ angular.module('commercial2', [
 				module: 'settings',
 				templateUrl: 'views/settings.html',
 				controller: 'SettingsCtrl',
-				controllerAs: 'settings'
+				controllerAs: 'settings',
+				resolve: {
+					redirect: ['$location', 'Globals', function($location, Globals) {
+						if (Globals.get('user').user_profile_id != 1001) {
+							console.log(Globals.get('user'));
+							$location.path('/login');
+						}
+					}]
+				}
 			})
 			.otherwise({
 				redirectTo: '/login'
