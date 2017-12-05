@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-01 10:13:16
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-27 11:15:23
+ * @Last Modified time: 2017-12-05 11:46:41
 */
 
 (function() {
@@ -51,12 +51,65 @@
 			});
 		});
 
-		this.postApi = function() {
+		function post(data) {
+			$rootScope.writeLog('Editing config');
+			$rootScope.loading.load();
+			$http({
+				method: 'POST',
+				url: Globals.api.get().address + 'config.php?action=edit',
+				data: {
+					data: data
+				}
+			}).then(function(success) {
+				$rootScope.writeLog('New config values sent');
+				$rootScope.writeLog(JSON.stringify(data));
+				$rootScope.loading.unload();
+				$rootScope.customDialog().showMessage('Sucesso', 'Dados atualizados!');
+			}, function(error) {
+				$rootScope.writeLog('Error while trying to edit config values!');
+				$rootScope.writeLog(JSON.stringify(error));
+				$rootScope.loading.unload();
+				$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+			});
+		};
 
+		this.postApi = function() {
+			post([
+				{
+					config_category: 'api',
+					config_name: 'api_name',
+					config_value: self.internal.api.name
+				},
+				{
+					config_category: 'api',
+					config_name: 'api_token',
+					config_value: self.internal.api.token
+				},
+				{
+					config_category: 'api',
+					config_name: 'api_url',
+					config_value: self.internal.api.url
+				}
+			]);
 		};
 
 		this.testApi = function() {
-
+			$rootScope.loading.load();
+			$http({
+				method: 'POST',
+				url: Globals.api.get().address + 'config.php?action=testApi',
+				data: {
+					api_url: self.internal.api.url,
+					api_token: self.internal.api.token
+				}
+			}).then(function(success) {
+				$rootScope.loading.unload();
+				$rootScope.customDialog().showMessage('Sucesso', 'API válida!');
+			}, function(error) {
+				console.log(error);
+				$rootScope.loading.unload();
+				$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+			});
 		};
 
 	}

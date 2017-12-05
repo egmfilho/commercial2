@@ -87,7 +87,7 @@
 					dt
 
 					dd
-						md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+						md-button.md-raised.md-primary(ng-click='general.postOrder()' style='margin-left: 0')
 							i.fa.fa-floppy-o &nbsp;
 							| Salvar
 
@@ -113,7 +113,7 @@
 					dt
 
 					dd
-						md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+						md-button.md-raised.md-primary(ng-click='general.postCategory()' style='margin-left: 0')
 							i.fa.fa-floppy-o &nbsp;
 							| Salvar
 
@@ -134,7 +134,7 @@
 					dt
 
 					dd
-						md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+						md-button.md-raised.md-primary(ng-click='general.postPrice()' style='margin-left: 0')
 							i.fa.fa-floppy-o &nbsp;
 							| Salvar
 
@@ -165,7 +165,7 @@
 					dt
 
 					dd
-						md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+						md-button.md-raised.md-primary(ng-click='general.postProductTypes()' style='margin-left: 0')
 							i.fa.fa-floppy-o &nbsp;
 							| Salvar
 
@@ -186,6 +186,46 @@
 					dt
 
 					dd
-						md-button.md-raised.md-primary(ng-click='' style='margin-left: 0')
+						md-button.md-raised.md-primary(ng-click='general.postEmail()' style='margin-left: 0')
+							i.fa.fa-floppy-o &nbsp;
+							| Salvar
+
+	.form-container
+		.form#services
+			md-subheader
+				i.fa.fa-wrench
+				| Serviços
+
+			div(layout='column')
+					
+				dl
+					dt 
+						| Pedidos por SincExport.
+					dd
+						input(type='text' ng-model='general.internal.services.syncQuantityExported' number-only)
+						small (Quantidade de pedidos por sincronização de pedidos exportados)
+
+					dt 
+						| Intervalo do SincExport.
+					dd
+						input(type='text' ng-model='general.internal.services.syncTimeExported' number-only)
+						small (Intervalo de sincronização de pedidos exportados em MINUTOS)
+
+					dt 
+						| Pedidos por SincFat.
+					dd
+						input(type='text' ng-model='general.internal.services.syncQuantityBilled' number-only)
+						small (Quantidade de pedidos por sincronização de pedidos faturados)
+
+					dt 
+						| Intervalo do SincFat.
+					dd
+						input(type='text' ng-model='general.internal.services.syncTimeBilled' number-only)
+						small (Intervalo de sincronização de pedidos faturados em MINUTOS)
+
+					dt
+
+					dd
+						md-button.md-raised.md-primary(ng-click='general.postServices()' style='margin-left: 0')
 							i.fa.fa-floppy-o &nbsp;
 							| Salvar
