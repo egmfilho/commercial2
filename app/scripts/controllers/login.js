@@ -51,11 +51,11 @@
 											positiveButton: {
 												label: 'Atualizar',
 												action: function() { 
-													
+													if (constants.isElectron)
+														require('electron').ipcRenderer.send('callUpdater');
 												}
 											}
 										});
-										// $rootScope.toast('Atualização disponível', 'Deseja atualizar agora ou tentar depois?', 10000);
 										break;
 
 									default: 
@@ -64,6 +64,14 @@
 								}
 							}
 							$location.path('loading');
+							break;
+
+						case 403:
+							$rootScope.customDialog().showConfirm('Atualização obrigatória', 'Existe uma nova versão do Commercial, deseja abrir o atualizador?')
+								.then(function(success) {
+									if (constants.isElectron)
+										require('electron').ipcRenderer.send('callUpdater');
+								});
 							break;
 
 						case -1:
