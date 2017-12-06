@@ -2,7 +2,7 @@
  * @Author: egmfilho &lt;egmfilho@live.com&gt; 
  * @Date: 2017-12-06 12:03:01 
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-06 13:24:19
+ * @Last Modified time: 2017-12-06 16:14:38
  */
 
 (function() {
@@ -19,6 +19,10 @@
 			}
 
 			function turnOn() {
+				if (!_cam) return;
+
+				turnOff();
+
 				if (!_isEnabled) {
 					_cam.attach('#camera');
 					_isEnabled = true;
@@ -26,6 +30,8 @@
 			}
 
 			function turnOff() {
+				if (!_cam) return;
+
 				if (_isEnabled) {
 					_cam.reset();
 					_isEnabled = false;
@@ -45,9 +51,12 @@
 
 					this._showCloseButton = true;
 
+					this.camEnabled = function() { return _isEnabled };
 					this.result = null;
 					
 					this.capture = function() {
+						if (!_cam) return;
+
 						_cam.snap(function(dataUri) {
 							scope.result = dataUri;
 							turnOff();
@@ -57,7 +66,24 @@
 					this.retake = function() {
 						scope.result = null;
 						$timeout(function() { turnOn() }, 200);
-					}
+					};
+
+					this.upload = function() {
+						jQuery('#open-dialog').click();
+					};
+
+					this.watchFile = function(data) {
+						console.log(data);
+			
+						if (data.data.type.indexOf('image/') < 0) {
+							$rootScope.customDialog().showMessage('Erro', 'Por favor selecione um arquivo de imagem.');
+							return;
+						}
+			
+						$timeout(function() {
+							scope.result = data.result;
+						});
+					};
 
 					this.confirm = function() {
 						if (scope.result)
@@ -69,6 +95,19 @@
 
 				$rootScope.customDialog().showTemplate('Captura', './partials/webCamera.html', controller, {
 					onOpenComplete: function() {
+						if (!_cam) return;
+						
+						_cam.set({
+							width: 320,
+							height: 240,
+							dest_width: 640,
+							dest_height: 480,
+							image_format: 'jpeg',
+							jpeg_quality: 90,
+							force_flash: false,
+							flip_horiz: true,
+							fps: 45
+						});
 						turnOn();
 					}
 				}).then(function(success) {
@@ -81,9 +120,14 @@
 
 				return deferred.promise;
 			}
+
+			function forcedTurnOff() {
+				turnOff();
+			}
 			
 			return {
-				open: open
+				open: open,
+				forcedTurnOff: forcedTurnOff
 			}
 
 		}]);

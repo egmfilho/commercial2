@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-06 13:53:22
+ * @Last Modified time: 2017-12-06 16:27:54
 */
 
 (function() {
@@ -374,6 +374,7 @@
 		self.tryToUnlock           = tryToUnlock;
 		self.showLockModal         = showLockModal;
 		self.openCapture           = openCapture;
+		self.removeAvatar          = removeAvatar;
 
 		function validateBudgetToSave(callback) {
 			/*if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
@@ -3831,6 +3832,8 @@
 
 		function openCapture() {
 			WebCamera.open().then(function(success) {
+				WebCamera.forcedTurnOff();
+				
 				$rootScope.loading.load();
 				providerPerson.saveAvatar(self.budget.order_client_id, success)
 					.then(function(success) {
@@ -3838,9 +3841,27 @@
 						$rootScope.loading.unload();
 					}, function(error) {
 						$rootScope.loading.unload();
-						$rootScope.customDialog().showMessage('Error', error.status.description);
+						$rootScope.customDialog().showMessage('Error', error.data.status.description);
 					})
+			}, function(error) { 
+				WebCamera.forcedTurnOff();
 			});
+		}
+
+		function removeAvatar() {
+			$rootScope.customDialog().showConfirm('Aviso', 'Deseja remover a foto do cliente?')
+				.then(function(success) {
+					$rootScope.loading.load();
+					providerPerson.removeAvatar(self.budget.order_client_id)
+						.then(function(success) {
+							self.budget.order_client.person_image = null;
+							$rootScope.loading.unload();
+							$rootScope.customDialog.showMessage('Sucesso', 'Foto removida!');
+						}, function(error) {
+							$rootScope.loading.unload();
+							$rootScope.customDialog().showMessage('Error', error.data.status.description);
+						});
+				});
 		}
 	}
 })();

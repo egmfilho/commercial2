@@ -14,6 +14,9 @@ img.silhouette(src='./images/person_silhouette.png')
 
 img(ng-src='{{ctrl.result}}' style='width: 320px; height: 240px; background: #000' ng-if='ctrl.result')
 
-button(ng-click='ctrl.capture()' ng-if='!ctrl.result') Capturar
-button(ng-click='ctrl.retake()' ng-if='ctrl.result') Tirar outra
-button(ng-click='ctrl.confirm()' ng-disabled='!ctrl.result') Confirmar
+md-button.md-primary(ng-click='ctrl.capture()' ng-if='!ctrl.result' ng-disabled='!ctrl.camEnabled()') Capturar
+md-button.md-primary(ng-click='ctrl.retake()' ng-if='ctrl.result') Tirar outra
+md-button.md-primary(ng-click='ctrl.upload()' ng-if='!ctrl.result') Fazer upload
+md-button.md-primary(ng-click='ctrl.confirm()' ng-disabled='!ctrl.result') Confirmar
+
+input#open-dialog(type='file' style='visibility: hidden; position: absolute' file-read='ctrl.watchFile')

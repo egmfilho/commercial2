@@ -24,15 +24,16 @@
 				});
 
 				return {
-					getById:     getById,
-					getByCode:   getByCode,
-					getByName:   getByName,
-					getByFilter: getByFilter,
-					getByType:   getByType,
-					save:        save,
-					saveAvatar:  saveAvatar,
-					check:       check,
-					activate:    activate
+					getById:      getById,
+					getByCode:    getByCode,
+					getByName:    getByName,
+					getByFilter:  getByFilter,
+					getByType:    getByType,
+					save:         save,
+					saveAvatar:   saveAvatar,
+					removeAvatar: removeAvatar,
+					check:        check,
+					activate:     activate
 				};
 
 				// ******************************
@@ -132,6 +133,14 @@
 					}, {
 						person_id: personId,
 						data: data
+					}).$promise;
+				}
+
+				function removeAvatar(personId) {
+					return provider.save({
+						action: 'removeAvatar'
+					}, {
+						person_id: personId
 					}).$promise;
 				}
 

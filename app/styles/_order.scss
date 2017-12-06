@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 16:01:34
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-06 14:08:41
+ * @Last Modified time: 2017-12-06 16:37:57
  */
 
 .customer-credit-modal {
@@ -217,6 +217,10 @@
 				.edit {
 					bottom: 0;
 				}
+
+				.remove {
+					top: 5px;
+				}
 			}
 
 			.edit {
@@ -231,6 +235,23 @@
 				font-size: 12px;
 				bottom: -30px;
 				transition: all .25s;
+			}
+
+			.remove {
+				position: absolute;
+				top: -35px;
+				right: 5px;
+				color: white;
+				font-size: 18px;
+				transition: all .25s;
+				text-shadow: 0 0 5px #000;
+				cursor: pointer;
+			}
+
+			.edit, .remove {
+				i.fa {
+					cursor: pointer !important;
+				}
 			}
 		}
 

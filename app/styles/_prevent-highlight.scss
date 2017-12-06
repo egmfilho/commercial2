@@ -2,10 +2,10 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 16:13:24
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 17:08:16
+ * @Last Modified time: 2017-12-06 16:31:23
  */
 
-:not(input):not(textarea) {
+:not(input):not(textarea):not(.fa) {
 	&, &::after, &::before {
 		-webkit-user-select: none;
 		user-select: none;
