@@ -66,10 +66,11 @@
 
 						$scope.$on('newAddressRetorno', function(event, args) {
 							var newAddress = new Address(args);
-							vm.customer.person_address.push(newAddress);							
+							vm.customer.person_address.push(newAddress);
 							if (newAddress.person_address_delivery == 'Y') vm.selectAddress(newAddress);
 							vm.selectedTabIndex = 0;
 							vm.labelTab = 'Novo endereço';
+							$scope.$broadcast('clearAddress');
 						});
 
 						$scope.$on('editAddressRetorno', function(event, args) {
@@ -82,6 +83,7 @@
 							if (args.person_address_delivery == 'Y') vm.selectAddress(newAddress);
 							vm.selectedTabIndex = 0;
 							vm.labelTab = 'Novo endereço';
+							$scope.$broadcast('clearAddress');
 						});
 
 						this.editAddress = function(a){

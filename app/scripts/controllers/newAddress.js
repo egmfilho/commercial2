@@ -33,7 +33,7 @@
 
 	function NewAddressCtrl($rootScope, $scope, $http, $timeout, providerAddress, Address, ModalCep, providerCep, Cep, providerDistrict, District, providerCity, City, Contact, Globals, constants) {
 
-		var self = this, _personId = null, _contacts = [];
+		var self = this, _personId = null, _contacts = [], _action = 'add';
 
 		self.types               = Globals.get('public-place-types');
 		
@@ -83,7 +83,7 @@
 		$scope.$on('customerAdded', function(event, args) {
 			_personId = args.person_id;
 			self.newAddress.person_id = _personId;
-			self.newAddress.action = 'add';
+			_action = 'add';
 			self.labelButton = 'Cadastrar';
 			clear();
 		});
@@ -91,14 +91,14 @@
 		$scope.$on('modalCustomerAddress', function(event, args) {
 			_personId = args.person_id;
 			self.newAddress.person_id = _personId;
-			self.newAddress.action = 'add';
+			_action = 'add';
 			self.labelButton = 'Cadastrar';
 			clear();
 		});
 
 		$scope.$on('editAddress', function(event, args) {
 			clear();
-			self.newAddress.action = 'edit';
+			_action = 'edit';
 			self.labelButton = 'Atualizar';
 			self.newAddress.merge(args);
 			
@@ -117,7 +117,7 @@
 
 		$scope.$on('newAddress', function(event, args) {
 			clear();
-			self.newAddress.action = 'add';
+			_action = 'add';
 			self.labelButton = 'Cadastrar';
 		});
 
@@ -161,7 +161,7 @@
 		function clear() {
 			self.newAddress           = new Address();
 			self.newAddress.person_id = _personId;
-			self.newAddress.action    = '';
+			_action    = 'add';
 
 			/* Carrega os tipos de contatos */
 			self.newAddress.person_address_contact = JSON.parse(JSON.stringify(_contacts));
@@ -215,9 +215,7 @@
 			providerAddress.save(self.newAddress).then(function(success) {
 				self.newAddress.person_address_code = success.data.address_code;
 				constants.debug && console.log('$emit: newAddress', self.newAddress);
-				//if( self.newAddress.action == 'add' )
-				$scope.$emit(self.newAddress.action == 'add' ? 'newAddressRetorno' : 'editAddressRetorno', self.newAddress);
-				clear();
+				$scope.$emit(_action == 'add' ? 'newAddressRetorno' : 'editAddressRetorno', self.newAddress);
 				$rootScope.loading.unload();
 			}, function(error) {
 				constants.debug && console.log(error);
