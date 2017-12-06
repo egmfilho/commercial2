@@ -445,7 +445,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 
 					.offset-top-5(layout='row')
 						.person-image-container(layout='column' layout-fill)
-							.remove(ng-click='order.removeAvatar()' ng-if='order.budget.order_client_id')
+							.remove(ng-click='order.removeAvatar()' ng-if='order.budget.order_client_id && order.budget.order_client.person_image')
 								i.fa.fa-trash-o
 							.edit(ng-click='order.openCapture()' ng-if='order.budget.order_client_id')
 								i.fa.fa-camera &nbsp;
