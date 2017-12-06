@@ -180,6 +180,11 @@
 									md-icon(md-font-icon='fa fa-file-pdf-o')
 									| SALVAR PDF
 
+							md-menu-item
+								md-button(ng-click='openOrder.simpleSync(o.order_id)' ng-disabled='o.order_status_id == openOrder.orderStatusValues["open"]')
+									md-icon(md-font-icon='fa fa-cloud-download')
+									| Sincronizar
+
 							md-menu-divider
 
 							md-menu-item

@@ -416,6 +416,21 @@
 				});
 			}
 
+			self.simpleSync = function( order_id ) {
+				var options = {
+					order_id: order_id
+				};
+
+				$rootScope.loading.load();
+				providerOrder.simpleSync(options).then(function(success) {
+					self.getOrders();
+					$rootScope.loading.unload();
+				}, function(error) {
+					$rootScope.loading.unload();
+					$rootScope.customDialog().showMessage('Erro', error.status.description);
+				});
+			}
+
 		}
 
 })();
