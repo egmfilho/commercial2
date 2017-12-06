@@ -48,6 +48,7 @@
 
 		self.clear 	             = clear;
 		self.submit              = submit;
+		self.cancel              = cancel;
 		self.updateSearch        = updateSearch;
 		self.searchCity          = searchCity;
 		self.searchDistrict      = searchDistrict;
@@ -223,6 +224,11 @@
 				$rootScope.loading.unload();
 				$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 			});
+		}
+
+		function cancel() {
+			clear();
+			$scope.$emit('cancelAddress');
 		}
 
 		function updateSearch(e) {

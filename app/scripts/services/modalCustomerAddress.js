@@ -59,6 +59,11 @@
 							$rootScope.customDialog().showMessage('Observações', note || 'Nenhuma informação disponível.');
 						};
 
+						$scope.$on('cancelAddress', function(event, args) {
+							vm.selectedTabIndex = 0;
+							vm.labelTab = 'Novo endereço';
+						});
+
 						$scope.$on('newAddressRetorno', function(event, args) {
 							var newAddress = new Address(args);
 							vm.customer.person_address.push(newAddress);							
