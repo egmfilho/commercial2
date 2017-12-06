@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-29 10:46:07
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 14:02:19
+ * @Last Modified time: 2017-12-06 13:34:07
  */
 
 (function() {
@@ -30,6 +30,7 @@
 					getByFilter: getByFilter,
 					getByType:   getByType,
 					save:        save,
+					saveAvatar:  saveAvatar,
 					check:       check,
 					activate:    activate
 				};
@@ -123,6 +124,15 @@
 					return provider.save({
 						action: 'insert'
 					}, person).$promise;
+				}
+
+				function saveAvatar(personId, data) {
+					return provider.save({
+						action: 'avatar'
+					}, {
+						person_id: personId,
+						data: data
+					}).$promise;
 				}
 
 				function check(cpf, cnpj, category) {

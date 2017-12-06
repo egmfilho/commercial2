@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-05-31 09:00:47
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-06 12:19:18
+ * @Last Modified time: 2017-12-06 12:36:48
 */
 
 (function() {
@@ -178,6 +178,9 @@
 				locals: locals,
 				controller: controller,
 				controllerAs: 'ctrl',
+				onOpenComplete: function() {
+					options.onOpenComplete && options.onOpenComplete();
+				},
 				onRemoving: function(element, removePromise) {
 					_deferred.reject();
 				}

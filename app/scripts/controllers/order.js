@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-04 14:05:40
+ * @Last Modified time: 2017-12-06 13:53:22
 */
 
 (function() {
@@ -53,6 +53,7 @@
 		'ModalCustomerAddress',
 		'ElectronWindow',
 		'ElectronOS',
+		'WebCamera',
 		'GUID',
 		'OpenedOrderManager'
 	];
@@ -99,6 +100,7 @@
 		ModalCustomerAddress,
 		ElectronWindow,
 		ElectronOS, 
+		WebCamera,
 		GUID,
 		OpenedOrderManager) {
 
@@ -371,6 +373,7 @@
 		self.isUnlockable          = isUnlockable;
 		self.tryToUnlock           = tryToUnlock;
 		self.showLockModal         = showLockModal;
+		self.openCapture           = openCapture;
 
 		function validateBudgetToSave(callback) {
 			/*if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
@@ -3824,6 +3827,20 @@
 					self.internal.flags.printable = true;
 					self.internal.flags.showInfo = true;
 				}); 
+		}
+
+		function openCapture() {
+			WebCamera.open().then(function(success) {
+				$rootScope.loading.load();
+				providerPerson.saveAvatar(self.budget.order_client_id, success)
+					.then(function(success) {
+						self.budget.order_client.setImage(success.data.person_image);
+						$rootScope.loading.unload();
+					}, function(error) {
+						$rootScope.loading.unload();
+						$rootScope.customDialog().showMessage('Error', error.status.description);
+					})
+			});
 		}
 	}
 })();

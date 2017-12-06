@@ -46,7 +46,8 @@
 			Person.prototype = {
 				isActive: function(){ return this.person_active == 'Y'; },
 				getType: getType,
-				getMainAddress: getMainAddress
+				getMainAddress: getMainAddress,
+				setImage: setImage
 			};
 
 			return Person;
@@ -73,6 +74,15 @@
 				return this.person_address.find(function(a) {
 					return a.person_address_main != 'N';
 				});
+			}
+
+			/**
+			 * Configura a url da imagem do cliente
+			 * @param {string} url - A url da imagem
+			 */
+			function setImage(url) {
+				var _root = Globals.api.get().root;
+				this.person_image = url.indexOf(_root) < 0 ? _root + url : url;
 			}
 
 		}]);

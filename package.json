@@ -34,7 +34,8 @@
     "merge-stream": "^1.0.1"
   },
   "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
     "mousetrap": "^1.6.1",
-    "electron-squirrel-startup": "^1.0.0"
+    "webcamjs": "^1.0.23"
   }
 }

@@ -1,0 +1,19 @@
+style.
+	.silhouette {
+		height: 240px;
+		margin-top: 32px;
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		opacity: .7;
+	}
+
+#camera(style='width: 320px; height: 240px; background: #000' ng-if='!ctrl.result')
+img.silhouette(src='./images/person_silhouette.png')
+
+img(ng-src='{{ctrl.result}}' style='width: 320px; height: 240px; background: #000' ng-if='ctrl.result')
+
+button(ng-click='ctrl.capture()' ng-if='!ctrl.result') Capturar
+button(ng-click='ctrl.retake()' ng-if='ctrl.result') Tirar outra
+button(ng-click='ctrl.confirm()' ng-disabled='!ctrl.result') Confirmar
