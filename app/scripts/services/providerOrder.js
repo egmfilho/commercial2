@@ -29,7 +29,7 @@
 					getByCode: getByCode,
 					getAll: getAll,
 					sync: sync,
-					simpleSync: simpleSync,
+					singleSync: singleSync,
 					save: save,
 					edit: edit,
 					unlock: unlock,
@@ -143,9 +143,9 @@
 					}).$promise;
 				}
 
-				function simpleSync(options) {
+				function singleSync(options) {
 					return provider.query({
-						action: 'simpleSynchronize'
+						action: 'singleSynchronize'
 					}, {
 						order_id: options && options.order_id
 					}).$promise;
