@@ -55,6 +55,7 @@
 				method: 'GET',
 				url: Globals.api.get().address + 'config.php?action=getList'
 			}).then(function(success) {
+
 				try {
 					Globals.set('person-categories', { 
 						seller: success.data.data.person_category.seller_category,
