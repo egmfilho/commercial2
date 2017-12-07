@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-06 16:27:54
+ * @Last Modified time: 2017-12-07 13:31:45
 */
 
 (function() {
@@ -2699,7 +2699,23 @@
 
 			$rootScope.customDialog().showTemplate('Orçamento', './partials/modalTerm.html', controller, options)
 				.then(function(success) {
-					self.addModality(success);
+					// checa se existe uma modalidade de entrada
+					if (success.hasOwnProperty('initial')) {
+						self.addModality(success.initial, { 
+							concatenate: false,
+							forceInstallments: 1,
+							installmentAl: self.internal.term.tempTerm.term_al_initial 
+						}).then(function(x) {
+							self.addModality(success, { 
+								forceInstallments: self.internal.term.tempTerm.term_installment - 1,
+								concatenate: true 
+							});
+						});
+						
+					} else {
+						self.addModality(success);
+					}
+
 					self.budget.order_term_id = self.internal.term.tempTerm.term_id;
 					self.internal.term.queryTerm = '';
 				}, function(error) { 
@@ -2715,7 +2731,9 @@
 		/**
 		 * Adiciona uma forma a partir do resultado da busca de prazo.
 		 */
-		function addModality(modality) {
+		function addModality(modality, options) {
+			var deferred = $q.defer();
+
 			var term = self.internal.term.tempTerm,
 				message = '';
 
@@ -2751,13 +2769,22 @@
 						}));
 				} else {
 					/* armazena o valor total dos pagamentos, incluindo o credito, para colocar a diferença na ultima parcela */
-					var total = self.budget.creditPayment ? self.budget.creditPayment.order_payment_value_total : 0;
+					var total = 0;
 
-					for (i = 0; i < term.term_installment; i++) {
+					/* iinicializa o total de acordo com a forma de inserção. */
+					if (options && options.concatenate)
+						total += self.budget.order_value_total - self.budget.getChange();
+					else
+						total += self.budget.creditPayment ? self.budget.creditPayment.order_payment_value_total : 0;
+
+					var	installments = options && options.forceInstallments ? options.forceInstallments : term.term_installment,
+						installmentValue = options && options.installmentAl ? (self.budget.getChange() * (options.installmentAl/100)) : self.budget.getChange() / installments;
+
+					for (i = 0; i < installments; i++) {
 						payments.push(new OrderPayment({
 							order_id: self.budget.order_id,
-							order_payment_value: parseFloat((self.budget.getChange() / term.term_installment).toFixed(2)),
-							order_payment_value_total: parseFloat((self.budget.getChange() / term.term_installment).toFixed(2)),
+							order_payment_value: parseFloat((installmentValue).toFixed(2)),
+							order_payment_value_total: parseFloat((installmentValue).toFixed(2)),
 							/* Checa se a modalidade é do tipo entrada e se é a primeira das parcelas para saber qual data inicial pegar. */
 							order_payment_deadline: dateCalc(i, modality.modality_term_type == 'E' && i == 0 ? term.term_deposit_delay : term.term_delay, term.term_interval),
 							order_payment_installment: 1,
@@ -2770,35 +2797,48 @@
 						total += payments[i].order_payment_value;
 					}
 
-					payments[payments.length - 1].order_payment_value += self.budget.order_value_total - total;
-					payments[payments.length - 1].order_payment_value_total += self.budget.order_value_total - total;
+					if (!(options && options.installmentAl)) {
+						payments[payments.length - 1].order_payment_value += self.budget.order_value_total - total;
+						payments[payments.length - 1].order_payment_value_total += self.budget.order_value_total - total;
+					}
+					
 				}
 
 				self.budget.order_payments = self.budget.order_payments.concat(payments);
 				self.budget.term_id = term.term_id;
 			}
 
-
 			if (self.budget.order_payments.length) {
-				message = 'Ao adicionar um prazo, todos os pagamentos já informados serão removidos. ';
-				message += 'Deseja Continuar?';
-				$rootScope.customDialog().showConfirm('Aviso', message).then(function(success) {
-					self.budget.order_payments = new Array();
+				if (options && options.concatenate) {
 					self.internal.term.backup = new Term(self.internal.term.tempTerm);
-
-					// Recoloca o credito novamente nos pagamentos
-					if (self.budget.creditPayment) {
-						self.budget.order_payments.unshift(self.budget.creditPayment);
-					}
-
 					add();
-				}, function(error) {
-					self.internal.term.restoreBackup();
-				});
+					deferred.resolve();
+				} else {
+					message = 'Ao adicionar um prazo, todos os pagamentos já informados serão removidos. ';
+					message += 'Deseja Continuar?';
+					$rootScope.customDialog().showConfirm('Aviso', message).then(function(success) {
+						self.budget.order_payments = new Array();
+						self.internal.term.backup = new Term(self.internal.term.tempTerm);
+	
+						// Recoloca o credito novamente nos pagamentos
+						if (self.budget.creditPayment) {
+							self.budget.order_payments.unshift(self.budget.creditPayment);
+						}
+	
+						add();
+						deferred.resolve();
+					}, function(error) {
+						self.internal.term.restoreBackup();
+						deferred.reject();
+					});
+				}
 			} else {
 				self.internal.term.backup = new Term(self.internal.term.tempTerm);
 				add();
+				deferred.resolve();
 			}
+
+			return deferred.promise;
 		}
 
 		/**
