@@ -10,6 +10,10 @@
 
 	> md-toolbar {
 		position: relative;
+		z-index: 5;
+	}
+
+	.md-sidenav-backdrop {
 		z-index: 3;
 	}
 
@@ -17,7 +21,12 @@
 		width: 250px;
 		max-width: 250px;
 		background-color: #232324;
-		z-index: 2;
+		z-index: 4;
+		margin-top: 60px;
+		
+		&.md-locked-open {
+			margin-top: 0;
+		}
 
 		md-content {
 			background-color: transparent;
