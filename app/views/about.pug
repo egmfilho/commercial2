@@ -1,5 +1,1 @@
-h1.text-center Tela de 'About'
-
-button(ng-click='about.camera()') Camera
-
-img(ng-src='{{about.img}}' style='width: 320px; height: 240px; Background: #000')
+div(ng-bind-html='about.printTemplate | trusted')

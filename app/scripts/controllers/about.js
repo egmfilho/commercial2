@@ -2,21 +2,27 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-24 17:37:37
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-06 12:51:19
+ * @Last Modified time: 2017-12-07 16:07:41
  */
 'use strict';
 
 angular.module('commercial2.controllers')
-	.controller('AboutCtrl', ['WebCamera', function(WebCamera) {
+	.controller('AboutCtrl', ['$http', 'Globals', function($http, Globals) {
 		
 		var self = this;
 
-		this.img = null;
+		this.printTemplate = 'oi';
 
-		this.camera = function() {
-			WebCamera.start().then(function(success) {
-				self.img = success;
-			});
-		};
+		$http({
+			method: 'POST',
+			url: Globals.api.get().address + 'order.php?action=getPrint',
+			data: {
+				order_code: '060807'
+			}
+		}).then(function(success) {
+			self.printTemplate = success.data;
+		}, function(error) {
+			console.log(error);
+		});
 
 	}]);
