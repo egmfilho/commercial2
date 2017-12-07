@@ -11,9 +11,9 @@
 	angular.module('commercial2.controllers')
 		.controller('SettingsCtrl', SettingsCtrl);
 
-	SettingsCtrl.$inject = [ '$rootScope', '$scope', '$mdSidenav' ];
+	SettingsCtrl.$inject = [ '$rootScope', '$scope', '$location', '$mdSidenav', 'Constants' ];
 
-	function SettingsCtrl($rootScope, $scope, $mdSidenav) {
+	function SettingsCtrl($rootScope, $scope, $location, $mdSidenav, constants) {
 
 		var self = this;
 
@@ -29,6 +29,13 @@
 
 		self.toggleSidenav = function() {
 			$mdSidenav('left').toggle();
+		};
+
+		self.close = function() {
+			if (constants.isElectron)
+				require('electron').remote.getCurrentWindow().close();
+			else 
+				$location.path('/open-order');
 		};
 
 	}
