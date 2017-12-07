@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-23 17:13:32
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-04 15:48:59
+ * @Last Modified time: 2017-12-07 18:03:24
  */
 
 (function() {
@@ -430,6 +430,25 @@
 					$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 				});
 			}
+
+			self.showFilters = function() {
+				var options = {
+					width: 400
+				};
+
+				var controller = function() {
+					this._showCloseButton = true;
+
+					this.companies = self.companies;
+
+					this.companyId = $rootScope.openOrderFilters.companyId;
+					this.seller = new Person($rootScope.openOrderFilters.seller);
+					this.calendars = $rootScope.openOrderFilters.calendars;
+					this.customer = new Person();
+				};
+
+				$rootScope.customDialog().showTemplate('Commercial', './partials/modalOrderFilters.html', controller, options);
+			};
 
 		}
 

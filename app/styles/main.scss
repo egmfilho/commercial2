@@ -578,6 +578,12 @@ md-select md-select-value span {
 	border-top-color: rgba(0, 0, 0, .8) !important;
 }
 
+.modal-order-filters {
+	.md-datepicker-input-container {
+		width: 100%;
+	}
+}
+
 @import "scrollbar";
 @import "prevent-highlight";
 @import "mainMenu";

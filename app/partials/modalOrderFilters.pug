@@ -1,0 +1,96 @@
+.irineu(layout='row' layout-align='start center' layout-fill)
+	i.material-icons find_replace&nbsp;
+	span Filtrar pedidos
+
+.body.modal-order-filters(layout='column' layout-fill)
+	//- Empresa
+	//- Vendedor
+	//- Cliente
+	//- Data
+	//- Produto
+	//- Valor?
+
+	md-input-container.md-select(flex)
+		label Empresa
+		md-select(name='type' ng-model='ctrl.companyId')
+			md-option(ng-value='c.company_id' ng-repeat='c in ctrl.companies') 
+				| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
+
+	div(layout='row')
+		md-input-container.datepicker(flex)
+			label Início
+			md-datepicker(style='width: 100%' ng-model='ctrl.calendars.start.value' md-hide-icons='calendar' md-is-open='openOrderFilters.calendars.start.isCalendarOpen' ng-change='openOrderFilters.calendars.start.update()' md-max-date='openOrderFilters.calendars.start.maxDate')
+
+		md-input-container.datepicker(flex)
+			label Fim
+			md-datepicker(style='width: 100%' ng-model='ctrl.calendars.end.value' md-hide-icons='calendar' md-is-open='openOrderFilters.calendars.end.isCalendarOpen' md-min-date='openOrderFilters.calendars.end.minDate' md-max-date='openOrderFilters.calendars.end.maxDate' ng-change='openOrderFilters.calendars.end.update()')
+
+	div(layout='row' layout-fill)
+		md-input-container(flex='20')
+			label Código
+			input(name='seller-code'
+					ng-value='ctrl.seller.person_code' 
+					blur-to='ctrl.seller.person_code'
+					keys-shortcuts
+					enter='openOrder.getSellerByCode($event.target.value)')
+
+		.autocomplete(flex layout="row")
+			button(ng-show='ctrl.seller.person_id' ng-click='ctrl.seller=null')
+				i.fa.fa-times-circle
+
+			md-autocomplete(flex
+							ng-model-options='{ debounce: 250 }'
+							md-delay='250'
+							md-input-name='autocompleteSeller'
+							md-no-cache='false'
+							md-autoselect='true'
+							md-selected-item='ctrl.seller'
+							md-search-text='sellerQuery'
+							md-items='item in openOrder.getSellerByName(sellerQuery)'
+							md-item-text='item.person_name'
+							md-min-length='3'
+							md-floating-label='Vendedor')
+				md-item-template
+					div(md-highlight-text='sellerQuery' style='line-height: 2') {{item.person_name}}
+					div(style='font-size: 11px;line-height: 1')
+						| Código: 
+						| {{item.person_code}}
+
+	div(layout='row' layout-fill)
+		md-input-container(flex='20')
+			label Código
+			input(name='seller-code'
+					ng-value='ctrl.customer.person_code' 
+					blur-to='ctrl.customer.person_code'
+					keys-shortcuts
+					enter='ctrl.getSellerByCode($event.target.value)')
+
+		.autocomplete(flex layout="row")
+			button(ng-show='ctrl.customer.person_id' ng-click='ctrl.customer=null')
+				i.fa.fa-times-circle
+
+			md-autocomplete(flex
+							ng-model-options='{ debounce: 250 }'
+							md-delay='250'
+							md-input-name='autocompleteCustomer'
+							md-no-cache='false'
+							md-autoselect='true'
+							md-selected-item='ctrl.customer'
+							md-search-text='customerQuery'
+							md-items='item in openOrder.getCustomerByName(customerQuery)'
+							md-item-text='item.person_name'
+							md-min-length='3'
+							md-floating-label='Cliente')
+				md-item-template
+					div(md-highlight-text='CustomerQuery' style='line-height: 2') {{item.person_name}}
+					div(style='font-size: 11px;line-height: 1')
+						| Código: 
+						| {{item.person_code}}
+
+
+.footer.bordered(layout='row' layout-align='end center')
+	md-button.md-raised.md-primary(ng-click='ctrl._close({ order_note: ctrl.order_note, order_note_doc: ctrl.order_note_doc })')
+		| &nbsp; Filtrar &nbsp;
+		
+	md-button.md-raised(ng-click='ctrl._close({ order_note: ctrl.order_note, order_note_doc: ctrl.order_note_doc })')
+		| &nbsp; Cancelar &nbsp;
