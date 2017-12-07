@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-08 09:24:23
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-01 13:04:48
+ * @Last Modified time: 2017-12-07 10:23:04
  */
 
 (function() {
@@ -73,7 +73,7 @@
 					}));
 				});
 
-				clear();
+				clear('add');
 			}, function(error) {
 				constants.debug && console.log(error);
 				$rootScope.customDialog().showMessage('Erro', error.data.data.status.description);
@@ -83,22 +83,19 @@
 		$scope.$on('customerAdded', function(event, args) {
 			_personId = args.person_id;
 			self.newAddress.person_id = _personId;
-			_action = 'add';
 			self.labelButton = 'Cadastrar';
-			clear();
+			clear('add');
 		});
 
 		$scope.$on('modalCustomerAddress', function(event, args) {
 			_personId = args.person_id;
 			self.newAddress.person_id = _personId;
-			_action = 'add';
 			self.labelButton = 'Cadastrar';
-			clear();
+			clear('add');
 		});
 
 		$scope.$on('editAddress', function(event, args) {
-			clear();
-			_action = 'edit';
+			clear('edit');
 			self.labelButton = 'Atualizar';
 			self.newAddress.merge(args);
 			
@@ -116,13 +113,12 @@
 		});
 
 		$scope.$on('newAddress', function(event, args) {
-			clear();
-			_action = 'add';
+			clear('add');
 			self.labelButton = 'Cadastrar';
 		});
 
 		$scope.$on('clearAddress', function(event, args) {
-			clear();
+			clear('add');
 		});
 
 		function setCepFromSource(source) {
@@ -158,18 +154,21 @@
 			}, function(error) { });
 		}
 
-		function clear() {
+		function clear(action) {
 			self.newAddress           = new Address();
 			self.newAddress.person_id = _personId;
-			_action    = 'add';
+			_action    = action;
 
 			/* Carrega os tipos de contatos */
 			self.newAddress.person_address_contact = JSON.parse(JSON.stringify(_contacts));
 
 			self.queryDistrict = null;
 			self.queryCity = null;
-			self.searchDistrict();
-			self.searchCity();
+
+			if (action == 'add') {
+				self.searchDistrict();
+				self.searchCity();
+			}
 		}
 
 		function submit() {
@@ -225,7 +224,7 @@
 		}
 
 		function cancel() {
-			clear();
+			clear('add');
 			$scope.$emit('cancelAddress');
 		}
 
