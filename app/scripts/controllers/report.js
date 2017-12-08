@@ -2,7 +2,7 @@
  * @Author: egmfilho &lt;egmfilho@live.com&gt; 
  * @Date: 2017-12-08 16:10:38 
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-08 17:36:43
+ * @Last Modified time: 2017-12-08 17:56:54
  */
 
 'use strict';
@@ -12,6 +12,7 @@ angular.module('commercial2.controllers')
 		
 		var self = this, dateRange = 31;
 
+		self.companies = Globals.get('user').user_company;
 		self.orders = [ ];
 		
 		$scope.info = {
