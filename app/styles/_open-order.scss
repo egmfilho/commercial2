@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-23 17:10:42
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-07 13:55:41
+ * @Last Modified time: 2017-12-08 14:20:08
  */
 
 .open-order-container-nav {
@@ -26,6 +26,26 @@
 				background-repeat: no-repeat;
 				width: 100%;
 				height: 100%;
+			}
+		}
+
+		.info {
+			color: $main-color;
+			font-size: 12px;
+			background-color: #ddd;
+			border: 1px solid $border-color;
+			margin: 10px;
+			padding: 6px;
+
+			p {
+				margin: 0;
+				margin-top: 5px;
+				white-space: nowrap; 
+				text-overflow: ellipsis;
+
+				&:first-child {
+					margin-top: 0;
+				}
 			}
 		}
 

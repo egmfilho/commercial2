@@ -80,9 +80,43 @@
 						| Sincronizar
 
 				div(flex='50' layout='row' layout-align='center center')
-					md-button.md-raised.filter(ng-click='openOrder.showFilters()' md-colors='{ background: "commercialRed" }')
+					md-button.md-raised.filter(ng-click='' md-colors='{ background: "commercialRed" }')
+						i.fa.fa-line-chart &nbsp;
+						| Relatório
+
+			//- div(flex layout='column')
+				div(layout='row')
+					md-input-container.md-select(flex='60')
+						label Empresa
+						md-select(name='type' ng-model='openOrderFilters.companyId' ng-change='openOrder.getOrders()')
+							md-option(ng-value='c.company_id' ng-repeat='c in openOrder.companies') 
+								| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
+
+					.info(flex)
+						p Vendedor: {{openOrderFilters.seller.person_code}} {{openOrderFilters.seller.person_name}}
+						p De {{openOrderFilters.calendars.start.value | date:'dd/MM/yyyy'}} até {{openOrderFilters.calendars.end.value | date:'dd/MM/yyyy'}}
+
+				div(layout='row')
+					md-button.md-raised(flex ng-click='newOrder()' md-colors='{ background: "commercialGreen" }')
+						i.material-icons(style='font-size: 16px; vertical-align: text-top') note_add&nbsp;
+						| Novo
+
+					md-button.md-raised.filter(flex ng-click='openOrder.getOrders()' md-colors='{ background: "commercialBlue" }')
+						i.material-icons(style='font-size: 16px; vertical-align: text-top') refresh&nbsp;
+						| Atualizar
+				
+					md-button.md-raised.filter(flex ng-click='openOrder.sync()' md-colors='{ background: "commercialOrange" }')
+						i.fa.fa-cloud-download &nbsp;
+						| Sincronizar
+
+					md-button.md-raised.filter(flex ng-click='openOrder.showFilters()' md-colors='{ background: "commercialRed" }')
 						i.material-icons(style='font-size: 16px; vertical-align: text-top') find_replace&nbsp;
 						| Filtrar
+
+					md-button.md-raised.filter(flex ng-click='openOrder.showFilters()' md-colors='{ background: "indigo" }')
+						i.material-icons(style='font-size: 16px; vertical-align: text-top') close&nbsp;
+						| Limpar filtros
+
 
 		.order-table-header-container
 			table.table.order-table
