@@ -1,0 +1,91 @@
+.report(layout='column' layout-fill)
+	md-toolbar
+		.md-toolbar-tools(layout='row' layout-wrap)
+			md-input-container.md-select(flex='50')
+				label Empresa
+				md-select(name='type' ng-model='report.filters.companyId' ng-change='report.getOrders()')
+					md-option(ng-value='c.company_id' ng-repeat='c in report.companies') 
+						| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
+
+			md-input-container(flex='10')
+				label Código
+				input(name='seller-code'
+						ng-value='report.filters.seller.person_code' 
+						blur-to='report.filters.seller.person_code'
+						keys-shortcuts
+						enter='report.getSellerByCode($event.target.value)')
+
+			.autocomplete(flex='40' layout="row")
+				button(ng-show='report.filters.seller.person_id' ng-click='report.filters.seller=null')
+					i.fa.fa-times-circle
+
+				md-autocomplete(flex
+								ng-model-options='{ debounce: 250 }'
+								keys-shortcuts
+								enter='report.getOrders()'
+								md-delay='250'
+								md-input-name='autocompleteSeller'
+								md-no-cache='false'
+								md-autoselect='true'
+								md-selected-item='report.filters.seller'
+								md-search-text='sellerQuery'
+								md-items='item in report.getSellerByName(sellerQuery)'
+								md-item-text='item.person_name'
+								md-min-length='3'
+								md-floating-label='Vendedor')
+					md-item-template
+						div(md-highlight-text='sellerQuery' style='line-height: 2') {{item.person_name}}
+						div(style='font-size: 11px;line-height: 1')
+							| Código: 
+							| {{item.person_code}}
+
+			md-input-container.datepicker(flex='10')
+				label Início
+				md-datepicker(ng-model='report.filters.calendars.start.value' md-hide-icons='calendar' md-is-open='report.filters.calendars.start.isCalendarOpen' ng-change='report.filters.calendars.start.update()' md-max-date='report.filters.calendars.start.maxDate')
+
+			md-input-container.datepicker(flex='10')
+				label Fim
+				md-datepicker(ng-model='report.filters.calendars.end.value' md-hide-icons='calendar' md-is-open='report.filters.calendars.end.isCalendarOpen' md-min-date='report.filters.calendars.end.minDate' md-max-date='report.filters.calendars.end.maxDate' ng-change='report.filters.calendars.end.update()')
+
+	.table-header-container
+		table.table.order-table
+			thead
+				tr
+					th.sortable &nbsp;
+					
+					th.sortable(ng-click="report.sortBy('order_code')")
+						| CÓDIGO
+						i.fa(ng-show="report.filters.grid.propertyName === 'order_code'" ng-class="!report.filters.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+					
+					th.sortable(ng-click="report.sortBy('order_code_erp')")
+						| ERP
+						i.fa(ng-show="report.filters.grid.propertyName === 'order_code_erp'" ng-class="!report.filters.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+					
+					th.sortable(ng-click="report.sortBy('order_customer_name')")
+						| CLIENTE
+						i.fa(ng-show="report.filters.grid.propertyName === 'order_customer_name'" ng-class="!report.filters.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+					
+					th.sortable(ng-click="report.sortBy('order_seller_name')")
+						| VENDEDOR
+						i.fa(ng-show="report.filters.grid.propertyName === 'order_seller_name'" ng-class="!report.filters.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+					
+					th.sortable(ng-click="report.sortBy('order_value_total_plus_st')")
+						| TOTAL
+						i.fa(ng-show="report.filters.grid.propertyName === 'order_value_total_plus_st'" ng-class="!report.filters.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+					
+					th.sortable(ng-click="report.sortBy('order_date')")
+						| DATA
+						i.fa(ng-show="report.filters.grid.propertyName === 'order_date'" ng-class="!report.filters.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+
+	div(flex)
+		md-virtual-repeat-container#virtual-repeat-container
+			.repeated-item(layout='row' layout-align='start center' md-virtual-repeat='o in (filteredList = (report.orders | orderBy:report.filters.grid.propertyName:report.filters.grid.reverse))')
+				span &nbsp;
+					i.material-icons(ng-style='{ "color": o.cloudColor}' ng-class='{ "cloud-open": o.isOpen, "cloud-exported": o.isExported, "cloud-billed": o.isBilled }') &nbsp;
+				span {{o.order_code}}
+				span {{o.order_code_erp}}
+				span {{o.order_customer_name}}
+				span {{o.order_seller_name}}
+				span {{o.order_value_total_plus_st_formatted}}
+				span {{o.order_date_formatted}}
+

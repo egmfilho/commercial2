@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 10:21:29
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-06 12:55:02
+ * @Last Modified time: 2017-12-08 16:09:47
  */
 
 'use strict';
@@ -305,6 +305,12 @@ angular.module('commercial2', [
 				templateUrl: 'views/about.html',
 				controller: 'AboutCtrl',
 				controllerAs: 'about'
+			})
+			.when('/report', {
+				module: 'report',
+				templateUrl: 'views/report.html',
+				controller: 'ReportCtrl',
+				controllerAs: 'report'
 			})
 			.when('/settings', {
 				module: 'settings',
