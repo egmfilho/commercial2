@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-22 13:23:08
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-04 15:52:11
+ * @Last Modified time: 2017-12-08 12:39:31
  */
 
 (function() {
@@ -111,6 +111,10 @@
 						start_date: options && options.start_date,
 						end_date: options && options.end_date,
 						order_seller_id: options && options.order_seller_id,
+						order_client_id: options && options.order_client_id,
+						product_id: options && options.product_id,
+						order_min_value: options && options.order_min_value,
+						order_max_value: options && options.order_max_value,
 						get_order_company: options && options.getCompany,
 						get_company_address: options && options.getCompanyAddress,
 						get_order_user: options && options.getUser,

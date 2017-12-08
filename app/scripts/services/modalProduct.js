@@ -2,7 +2,7 @@
  * @Author: alessandro
  * @Date: 2017-10-20 17:12:56 
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-25 16:22:53
+ * @Last Modified time: 2017-12-08 11:17:35
  */
 
 (function() {
@@ -10,7 +10,7 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('ModalProduct', [ '$rootScope', '$timeout', 'Globals', 'Constants', function($rootScope, $timeout, Globals, constants) {
+		.factory('ModalProduct', [ '$rootScope', '$timeout', 'Price', 'Globals', 'Constants', function($rootScope, $timeout, Price, Globals, constants) {
 
 			return {
 				show: function( title, companyId, userPrice, options ) {
@@ -23,6 +23,10 @@
 
 					controller = function(providerProduct, Product, OrderItem) {
 						var vm = this, selection = new Array();
+
+						this.multiSelection = true;
+						if (options && options.hasOwnProperty('multiSelection'))
+							this.multiSelection = options.multiSelection;
 
 						this.hoverIndex = -1;
 
@@ -56,7 +60,7 @@
 						};
 						
 						this.companyId = companyId;
-						this.userPrice = userPrice;
+						this.userPrice = new Price(userPrice);
 						this.options = options;
 
 						this.grid = {
@@ -221,6 +225,10 @@
 						innerDialog: true,
 						focusOnOpen: false
 					};
+
+					if (options) {
+						modalOptions = Object.assign({ }, modalOptions, options);
+					}
 
 					return $rootScope.customDialog().showTemplate(title, './partials/modalProduct.html', controller, modalOptions);
 				}

@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-23 17:13:32
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-07 18:03:24
+ * @Last Modified time: 2017-12-08 12:56:07
  */
 
 (function() {
@@ -31,6 +31,10 @@
 				if (Globals.get('user')['user_seller'].person_id)
 					$rootScope.openOrderFilters.seller = new Person(Globals.get('user')['user_seller']);
 				$rootScope.openOrderFilters.companyId = Globals.get('user').user_company[0].company_id;
+				$rootScope.openOrderFilters.customer = new Person();
+				$rootScope.openOrderFilters.products = [];
+				$rootScope.openOrderFilters.minValue = 0;
+				$rootScope.openOrderFilters.maxValue = null;
 				
 				$rootScope.openOrderFilters.calendars = {};
 				$rootScope.openOrderFilters.calendars.start = {
@@ -216,6 +220,10 @@
 						start_date: $rootScope.openOrderFilters.calendars.start.value,
 						end_date: $rootScope.openOrderFilters.calendars.end.value,
 						order_seller_id: $rootScope.openOrderFilters.seller && $rootScope.openOrderFilters.seller.person_id,
+						order_client_id: $rootScope.openOrderFilters.customer && $rootScope.openOrderFilters.customer.person_id,
+						product_id: $rootScope.openOrderFilters.products.map(function(p) { return p.product_id }),
+						order_min_value: $rootScope.openOrderFilters.minValue,
+						order_max_value: $rootScope.openOrderFilters.maxValue,
 						getCustomer: true,
 						getSeller: true
 					};
@@ -305,6 +313,12 @@
 				return deferred.promise;
 			}
 
+			self.getPersonByCode = function(code, category, options) {
+				if (!code) return;
+
+				return providerPerson.getByCode(code, category, options);
+			};
+
 			self.getSellerByName = function(name) {
 				return getPersonByName(name, Globals.get('person-categories').seller);
 			};
@@ -333,12 +347,6 @@
 					if (error.status == 404)
 						self.showNotFound();
 				});
-			};
-
-			self.getPersonByCode = function(code, category, options) {
-				if (!code) return;
-
-				return providerPerson.getByCode(code, category, options);
 			};
 
 			self.print = function(code, isCupon, isPDF) {
@@ -433,10 +441,13 @@
 
 			self.showFilters = function() {
 				var options = {
-					width: 400
+					width: 600,
+					hasBackdrop: true,
+					zIndex: 4
 				};
 
-				var controller = function() {
+				var controller = function(ModalProduct) {
+					var scope = this;
 					this._showCloseButton = true;
 
 					this.companies = self.companies;
@@ -444,10 +455,115 @@
 					this.companyId = $rootScope.openOrderFilters.companyId;
 					this.seller = new Person($rootScope.openOrderFilters.seller);
 					this.calendars = $rootScope.openOrderFilters.calendars;
-					this.customer = new Person();
+					this.customer = new Person($rootScope.openOrderFilters.customer);
+					this.products = $rootScope.openOrderFilters.products;
+					this.minValue = $rootScope.openOrderFilters.minValue;
+					this.maxValue = $rootScope.openOrderFilters.maxValue;
+
+					this.getSellerByName = self.getSellerByName;
+
+					this.getSellerByCode = function(code) {
+						if (!code) {
+							self.focusOn('input[name="autocompleteSellerModal"]');
+							return;
+						}
+		
+						if (!parseInt(code)) return;
+		
+						$rootScope.loading.load(null, null, { zIndex: 1 });
+						self.getPersonByCode(code, Globals.get('person-categories').customer).then(function(success) {
+							scope.seller = new Person(success.data);
+							$rootScope.loading.unload();
+						}, function(error){
+							constants.debug && console.log(error);
+							$rootScope.loading.unload();
+		
+							if (error.status == 404)
+								self.showNotFound();
+						});
+					};
+
+					this.getCustomerByName = function(name) {
+						return getPersonByName(name, Globals.get('person-categories').customer);
+					};
+		
+					this.getCustomerByCode = function(code) {
+						if (!code) {
+							self.focusOn('input[name="autocompleteCustomerModal"]');
+							return;
+						}
+		
+						if (!parseInt(code)) return;
+		
+						$rootScope.loading.load(null, null, { zIndex: 1 });
+						self.getPersonByCode(code, Globals.get('person-categories').customer).then(function(success) {
+							scope.customer = new Person(success.data);
+							$rootScope.loading.unload();
+						}, function(error){
+							constants.debug && console.log(error);
+							$rootScope.loading.unload();
+		
+							if (error.status == 404)
+								self.showNotFound();
+						});
+					};
+
+					this.showModalProducts = function() {
+						var options = {
+							getUnit: 1,
+							getPrice: 1,
+							getStock: 1,
+							limit: 200,
+							width: 800,
+							innerDialog: false,
+							zIndex: 5,
+							multiSelection: false
+						};
+
+						ModalProduct.show('Localizar Produto', scope.companyId, null, options)
+							.then(function(success) {
+								var products = success.reduce(function(array, item) {
+									var index = scope.products.findIndex(function(p) {
+										return p.product_id === item.product.product_id;
+									});
+									// adiciona apenas se nao existir no array
+									if (index == -1)
+										array.push(item.product);
+										
+									return array;
+								}, [ ]);
+								console.log(products);
+								$timeout(function() { scope.products = scope.products.concat(products) });
+							});
+					};
+
+					this.close = function() {
+						scope._close({
+							companyId: scope.companyId,
+							seller: scope.seller,
+							calendars: scope.calendars,
+							customer: scope.customer,
+							products: scope.products,
+							minValue: scope.minValue,
+							maxValue: scope.maxValue
+						});
+					};
 				};
 
-				$rootScope.customDialog().showTemplate('Commercial', './partials/modalOrderFilters.html', controller, options);
+				controller.$inject = [ 'ModalProduct' ];
+
+				$rootScope.customDialog().showTemplate('Commercial', './partials/modalOrderFilters.html', controller, options)
+					.then(function(success) {
+						$rootScope.openOrderFilters.companyId = success.companyId;
+						$rootScope.openOrderFilters.seller = new Person(success.seller);
+						$rootScope.openOrderFilters.calendars = success.calendars;
+						$rootScope.openOrderFilters.customer = new Person(success.customer);
+						$rootScope.openOrderFilters.products = success.products;
+						$rootScope.openOrderFilters.minValue = success.minValue;
+						$rootScope.openOrderFilters.maxValue = success.maxValue;
+
+						self.getOrders();						
+					});
 			};
 
 		}

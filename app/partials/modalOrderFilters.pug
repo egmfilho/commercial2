@@ -3,13 +3,6 @@
 	span Filtrar pedidos
 
 .body.modal-order-filters(layout='column' layout-fill)
-	//- Empresa
-	//- Vendedor
-	//- Cliente
-	//- Data
-	//- Produto
-	//- Valor?
-
 	md-input-container.md-select(flex)
 		label Empresa
 		md-select(name='type' ng-model='ctrl.companyId')
@@ -32,7 +25,7 @@
 					ng-value='ctrl.seller.person_code' 
 					blur-to='ctrl.seller.person_code'
 					keys-shortcuts
-					enter='openOrder.getSellerByCode($event.target.value)')
+					enter='ctrl.getSellerByCode($event.target.value)')
 
 		.autocomplete(flex layout="row")
 			button(ng-show='ctrl.seller.person_id' ng-click='ctrl.seller=null')
@@ -41,12 +34,12 @@
 			md-autocomplete(flex
 							ng-model-options='{ debounce: 250 }'
 							md-delay='250'
-							md-input-name='autocompleteSeller'
+							md-input-name='autocompleteSellerModal'
 							md-no-cache='false'
 							md-autoselect='true'
 							md-selected-item='ctrl.seller'
 							md-search-text='sellerQuery'
-							md-items='item in openOrder.getSellerByName(sellerQuery)'
+							md-items='item in ctrl.getSellerByName(sellerQuery)'
 							md-item-text='item.person_name'
 							md-min-length='3'
 							md-floating-label='Vendedor')
@@ -63,7 +56,7 @@
 					ng-value='ctrl.customer.person_code' 
 					blur-to='ctrl.customer.person_code'
 					keys-shortcuts
-					enter='ctrl.getSellerByCode($event.target.value)')
+					enter='ctrl.getCustomerByCode($event.target.value)')
 
 		.autocomplete(flex layout="row")
 			button(ng-show='ctrl.customer.person_id' ng-click='ctrl.customer=null')
@@ -72,12 +65,12 @@
 			md-autocomplete(flex
 							ng-model-options='{ debounce: 250 }'
 							md-delay='250'
-							md-input-name='autocompleteCustomer'
+							md-input-name='autocompleteCustomerModal'
 							md-no-cache='false'
 							md-autoselect='true'
 							md-selected-item='ctrl.customer'
 							md-search-text='customerQuery'
-							md-items='item in openOrder.getCustomerByName(customerQuery)'
+							md-items='item in ctrl.getCustomerByName(customerQuery)'
 							md-item-text='item.person_name'
 							md-min-length='3'
 							md-floating-label='Cliente')
@@ -87,10 +80,26 @@
 						| Código: 
 						| {{item.person_code}}
 
+	div(layout='row')
+		md-button.md-raised(ng-click='ctrl.showModalProducts()') Produto
+
+	div(layout='row')
+		md-chips(flex ng-model='ctrl.products' readonly='true' md-removable='true')
+			md-chip-template 
+				| {{$chip.product_code}} {{$chip.product_name}}
+
+	div(layout='row' layout-fill)
+		md-input-container(flex)
+			label Valor mínimo
+			input(ng-model='ctrl.minValue')
+
+		md-input-container(flex)
+			label Valor máximo
+			input(ng-model='ctrl.maxValue')
 
 .footer.bordered(layout='row' layout-align='end center')
-	md-button.md-raised.md-primary(ng-click='ctrl._close({ order_note: ctrl.order_note, order_note_doc: ctrl.order_note_doc })')
+	md-button.md-raised.md-primary(ng-click='ctrl.close()')
 		| &nbsp; Filtrar &nbsp;
 		
-	md-button.md-raised(ng-click='ctrl._close({ order_note: ctrl.order_note, order_note_doc: ctrl.order_note_doc })')
+	md-button.md-raised(ng-click='ctrl._cancel()')
 		| &nbsp; Cancelar &nbsp;
