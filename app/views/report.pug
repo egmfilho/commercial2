@@ -38,6 +38,39 @@
 						div(style='font-size: 11px;line-height: 1')
 							| Código: 
 							| {{item.person_code}}
+			
+			md-input-container(flex='10')
+				label Código
+				input(name='customer-code'
+						ng-value='report.filters.customer.person_code' 
+						blur-to='report.filters.customer.person_code'
+						keys-shortcuts
+						enter='report.getCustomerByCode($event.target.value)')
+
+			.autocomplete(flex='40' layout="row")
+				button(ng-show='report.filters.customer.person_id' ng-click='report.filters.customer=null')
+					i.fa.fa-times-circle
+
+				md-autocomplete(flex
+								ng-model-options='{ debounce: 250 }'
+								keys-shortcuts
+								enter='report.getOrders()'
+								md-delay='250'
+								md-input-name='autocompleteCustomer'
+								md-no-cache='false'
+								md-autoselect='true'
+								md-selected-item='report.filters.customer'
+								md-search-text='customerQuery'
+								md-items='item in report.getCustomerByName(customerQuery)'
+								md-item-text='item.person_name'
+								md-min-length='3'
+								md-floating-label='Cliente')
+					md-item-template
+						div(md-highlight-text='customerQuery' style='line-height: 2') {{item.person_name}}
+						div(style='font-size: 11px;line-height: 1')
+							| Código: 
+							| {{item.person_code}}
+
 
 			md-input-container.datepicker(flex='10')
 				label Início
@@ -89,3 +122,60 @@
 				span {{o.order_value_total_plus_st_formatted}}
 				span {{o.order_date_formatted}}
 
+	md-toolbar.info(layout='column')
+		.md-toolbar-tools(flex layout='row' layout-fill)
+			.filters(flex='30' layout='row' layout-align='start')
+				.status-filter(ng-click='report.filters.toggleStatus("open", report.orderStatusValues["open"], 1)' ng-class='{ "active": report.filters.children.indexOf(1) >= 0 }')
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": report.orderExportTypeColors["open"] }') cloud_queue
+					md-tooltip(md-direction='top') 
+						| Salvo
+
+				.status-filter(ng-click='report.filters.toggleStatus("order", report.orderStatusValues["exported"], 2)' ng-class='{ "active": report.filters.children.indexOf(2) >= 0 }')
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": report.orderExportTypeColors["order"] }') cloud
+					md-tooltip(md-direction='top') 
+						| Pedido exportado
+
+				.status-filter(ng-click='report.filters.toggleStatus("order", report.orderStatusValues["billed"], 3)' ng-class='{ "active": report.filters.children.indexOf(3) >= 0 }')
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": report.orderExportTypeColors["order"] }') cloud_done
+					md-tooltip(md-direction='top')
+						| Pedido faturado
+
+				.status-filter(ng-click='report.filters.toggleStatus("dav", report.orderStatusValues["exported"], 4)' ng-class='{ "active": report.filters.children.indexOf(4) >= 0 }')
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": report.orderExportTypeColors["dav"] }') cloud
+					md-tooltip(md-direction='top') 
+						| Dav exportado
+
+				.status-filter(ng-click='report.filters.toggleStatus("dav", report.orderStatusValues["billed"], 5)' ng-class='{ "active": report.filters.children.indexOf(5) >= 0 }')
+					md-icon(
+						md-font-set='material-icons' 
+						ng-style='{ "color": report.orderExportTypeColors["dav"] }') cloud_done
+					md-tooltip(md-direction='top') 
+						| Dav faturado
+
+			div(flex layout='row' layout-align='center center')
+				span.summary
+					div
+						md-tooltip(md-direction='top') 
+							| Orçamentos
+						i.fa.fa-cubes
+						| {{ filteredList ? filteredList.length : 0 }} &nbsp;
+					div
+						md-tooltip(md-direction='top') 
+							| Valor total
+						i.fa.fa-money
+						| {{ report.getSum(filteredList) | currency:'R$ '}} &nbsp;
+					div
+						md-tooltip(md-direction='top') 
+							| Ticket médio
+						i.fa.fa-bar-chart
+						| {{ filteredList.length ? (report.getSum(filteredList) / filteredList.length) : 0 | currency:'R$ ' }}
+
+			div(flex='30' layout='row' layout-align='end center')

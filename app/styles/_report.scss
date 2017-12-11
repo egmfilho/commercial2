@@ -1,4 +1,8 @@
 .report {
+	md-toolbar {
+		min-height: 55px;
+	}
+	
 	.md-toolbar-tools {
 		overflow: hidden;
 		background-color: white;
@@ -6,6 +10,7 @@
 		max-height: 120px;
 		box-shadow: 0 0 4px rgba(#000, .3);
 		position: relative;
+		transition: height .5s;
 
 		label {
 			font-size: 16px;
@@ -182,6 +187,78 @@
 
 			td {
 				color: $main-color;
+			}
+		}
+	}
+
+	md-toolbar.info {
+		background-color: white;
+		color: $main-color;
+		min-height: 50px;
+		max-height: 50px;
+		box-shadow: 0 0 4px rgba(#000, .3);
+		
+		.md-toolbar-tools {
+
+			.status-filter {
+				padding: 4px;
+				cursor: pointer !important;
+				min-width: 40px;
+				text-align: center;
+				border-radius: 4px;
+				transition: box-shadow .5s;
+				border: 1px solid transparent;
+				margin: 0 5px;
+
+				&.active {
+					box-shadow: 0 0 5px rgba(#000, .7);
+					border: 1px solid $main-color-lighter;
+				}
+
+				&:hover {
+					background-color: #ccc;
+					border: 1px solid $main-color-lighter;
+				}
+
+				md-icon {
+					font-size: 20px;
+					line-height: 20px;
+					cursor: pointer !important;					
+				}
+
+				.md-subhead {
+					font-size: 14px;
+					cursor: pointer !important;
+				}
+			}
+
+			.summary {
+				font-size: 16px;
+
+				div {
+					display: inline-block;
+					margin: 0 5px;
+					border-radius: 3px;
+					padding: 4px;
+
+					&:hover {
+						background-color: #ccc;
+					}
+
+					.fa {
+						margin-right: 5px;
+						color: #939393;
+					}
+				}
+			}
+
+			.search-button {
+				margin-left: 0;
+				padding-left: 0;
+
+				.material-icons {
+					font-size: 30px;
+				}
 			}
 		}
 	}
