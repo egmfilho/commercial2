@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-05 17:56:31
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-06 16:18:28
+ * @Last Modified time: 2017-12-11 11:29:51
  */
 
 (function() {
@@ -12,11 +12,14 @@
 	angular.module('commercial2.controllers')
 		.controller('PrintOrderCtrl', PrintOrder);
 
-	PrintOrder.$inject = [ '$rootScope', '$scope', '$timeout', '$location', '$routeParams', 'ProviderOrder', 'Order', 'Globals', 'Constants', 'ElectronPrinter' ];
+	PrintOrder.$inject = [ '$rootScope', '$scope', '$timeout', '$location', '$routeParams', '$http', 'ProviderOrder', 'Order', 'Globals', 'Constants', 'ElectronPrinter' ];
 
-	function PrintOrder($rootScope, $scope, $timeout, $location, $routeParams, provider, Order, Globals, constants, ElectronPrinter) {
+	function PrintOrder($rootScope, $scope, $timeout, $location, $routeParams, $http, provider, Order, Globals, constants, ElectronPrinter) {
 
 		var self = this;
+
+		self.template = null;
+
 		self.order = new Order();
 		self.logo = null;
 		self.isPdf = $location.path().indexOf('print') && $routeParams.type && $routeParams.type == 'pdf';
@@ -28,7 +31,21 @@
 
 		$scope.$on('$viewContentLoaded', function() {
 			if ($routeParams.code) {
-				getOrder($routeParams.code);
+				$rootScope.loading.load();
+				$http({
+					method: 'POST',
+					url: Globals.api.get().address + 'order.php?action=getPrint',
+					data: {
+						order_code: $routeParams.code
+					}
+				}).then(function(success) {
+					self.template = success.data;
+					$rootScope.loading.unload();
+				}, function(error) {
+					console.log(error);
+					getOrder($routeParams.code);
+					$rootScope.loading.unload();
+				});
 			}
 		});
 

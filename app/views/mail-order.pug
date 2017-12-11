@@ -65,4 +65,5 @@
 					md-icon(md-icon-set='material-icons' style='font-size: 24px') zoom_in
 
 			.print-container
-				div(ng-include='"./views/print-order.html"')
+				div(ng-bind-html='ctrl.template | trusted')
+				//- div(ng-include='"./views/print-order.html"' ng-if='!ctrl.template')

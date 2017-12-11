@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-07-27 12:24:55
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-29 11:50:35
+ * @Last Modified time: 2017-12-11 11:39:20
 */
 
 (function() {
@@ -17,6 +17,7 @@
 	function MailOrder($rootScope, $scope, $q, $timeout, $routeParams, $http, provider, Order, Globals, constants, ElectronPrinter) {
 
 		var self = this;
+		self.template = null;
 		self.order = new Order();
 		self.logo = null;
 		
@@ -71,12 +72,30 @@
 			jQuery('.chico-bento .preview .print-container .print-order').addClass('zoom-50');
 		};
 
+		function getTempalte(code) {
+			return $http({
+				method: 'POST',
+				url: Globals.api.get().address + 'order.php?action=getPrint',
+				data: {
+					order_code: code
+				}
+			});
+		}
+
 		$scope.$on('$viewContentLoaded', function() {
 			if ($routeParams.code) {
-				getOrder($routeParams.code)
-					.then(function(success) {
-						self.form.message = 'Segue em anexo o orçamento de código ' + self.order.order_code + ' em formato PDF.';
+				$rootScope.loading.load();
+				$q.all([
+					getTempalte($routeParams.code),
+					getOrder($routeParams.code)
+				]).then(function(success) {
+					if (success[0]) {
+						self.template = success[0].data;
+					}
 
+					if (success[1]) {
+						self.form.message = 'Segue em anexo o orçamento de código ' + self.order.order_code + ' em formato PDF.';
+						
 						var parsedMails = self.order.order_client.person_contact.map(function(c) {
 								return {
 									name: c.person_address_contact_name,
@@ -127,7 +146,14 @@
 
 							});
 						});
-					});
+					}
+					$rootScope.loading.unload();
+				}, function(error) {
+					$rootScope.loading.unload();
+					if (error.length == 2 && error[1]) {
+						$rootScope.customDialog().showMessage('Erro', 'Erro ao receber os dados do pedido!');
+					}
+				});
 			}
 		});
 
