@@ -2,104 +2,117 @@
 	i.material-icons find_replace&nbsp;
 	span Filtrar pedidos
 
-.body.modal-order-filters(layout='column' layout-fill)
-	md-input-container.md-select(flex)
-		label Empresa
-		md-select(name='type' ng-model='ctrl.companyId')
-			md-option(ng-value='c.company_id' ng-repeat='c in ctrl.companies') 
-				| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
+.modal-order-filters
+	.body(layout='column' layout-fill)
+		md-input-container.md-select(flex)
+			label Empresa
+			md-select(name='type' ng-model='ctrl.companyId')
+				md-option(ng-value='c.company_id' ng-repeat='c in ctrl.companies') 
+					| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
 
-	div(layout='row')
-		md-input-container.datepicker(flex)
-			label Início
-			md-datepicker(style='width: 100%' ng-model='ctrl.calendars.start.value' md-hide-icons='calendar' md-is-open='openOrderFilters.calendars.start.isCalendarOpen' ng-change='openOrderFilters.calendars.start.update()' md-max-date='openOrderFilters.calendars.start.maxDate')
+		div(layout='row')
+			md-input-container.datepicker(flex='25')
+				label Início
+				md-datepicker(style='width: 100%' ng-model='ctrl.calendars.start.value' md-hide-icons='calendar' md-is-open='openOrderFilters.calendars.start.isCalendarOpen' ng-change='openOrderFilters.calendars.start.update()' md-max-date='openOrderFilters.calendars.start.maxDate')
 
-		md-input-container.datepicker(flex)
-			label Fim
-			md-datepicker(style='width: 100%' ng-model='ctrl.calendars.end.value' md-hide-icons='calendar' md-is-open='openOrderFilters.calendars.end.isCalendarOpen' md-min-date='openOrderFilters.calendars.end.minDate' md-max-date='openOrderFilters.calendars.end.maxDate' ng-change='openOrderFilters.calendars.end.update()')
+			md-input-container.datepicker(flex='25')
+				label Fim
+				md-datepicker(style='width: 100%' ng-model='ctrl.calendars.end.value' md-hide-icons='calendar' md-is-open='openOrderFilters.calendars.end.isCalendarOpen' md-min-date='openOrderFilters.calendars.end.minDate' md-max-date='openOrderFilters.calendars.end.maxDate' ng-change='openOrderFilters.calendars.end.update()')
 
-	div(layout='row' layout-fill)
-		md-input-container(flex='20')
-			label Código
-			input(name='seller-code'
-					ng-value='ctrl.seller.person_code' 
-					blur-to='ctrl.seller.person_code'
-					keys-shortcuts
-					enter='ctrl.getSellerByCode($event.target.value)')
+			md-input-container(flex='25')
+				label Valor mínimo
+				input(ng-model='ctrl.minValue')
 
-		.autocomplete(flex layout="row")
-			button(ng-show='ctrl.seller.person_id' ng-click='ctrl.seller=null')
-				i.fa.fa-times-circle
+			md-input-container(flex='25')
+				label Valor máximo
+				input(ng-model='ctrl.maxValue')
 
-			md-autocomplete(flex
-							ng-model-options='{ debounce: 250 }'
-							md-delay='250'
-							md-input-name='autocompleteSellerModal'
-							md-no-cache='false'
-							md-autoselect='true'
-							md-selected-item='ctrl.seller'
-							md-search-text='sellerQuery'
-							md-items='item in ctrl.getSellerByName(sellerQuery)'
-							md-item-text='item.person_name'
-							md-min-length='3'
-							md-floating-label='Vendedor')
-				md-item-template
-					div(md-highlight-text='sellerQuery' style='line-height: 2') {{item.person_name}}
-					div(style='font-size: 11px;line-height: 1')
-						| Código: 
-						| {{item.person_code}}
+		div(layout='row' layout-fill)
+			md-input-container(flex='20')
+				label Código
+				input(name='seller-code'
+						ng-value='ctrl.seller.person_code' 
+						blur-to='ctrl.seller.person_code'
+						keys-shortcuts
+						enter='ctrl.getSellerByCode($event.target.value)')
 
-	div(layout='row' layout-fill)
-		md-input-container(flex='20')
-			label Código
-			input(name='seller-code'
-					ng-value='ctrl.customer.person_code' 
-					blur-to='ctrl.customer.person_code'
-					keys-shortcuts
-					enter='ctrl.getCustomerByCode($event.target.value)')
+			.autocomplete(flex layout="row")
+				button(ng-show='ctrl.seller.person_id' ng-click='ctrl.seller=null')
+					i.fa.fa-times-circle
 
-		.autocomplete(flex layout="row")
-			button(ng-show='ctrl.customer.person_id' ng-click='ctrl.customer=null')
-				i.fa.fa-times-circle
+				md-autocomplete(flex
+								ng-model-options='{ debounce: 250 }'
+								md-delay='250'
+								md-input-name='autocompleteSellerModal'
+								md-no-cache='false'
+								md-autoselect='true'
+								md-selected-item='ctrl.seller'
+								md-search-text='sellerQuery'
+								md-items='item in ctrl.getSellerByName(sellerQuery)'
+								md-item-text='item.person_name'
+								md-min-length='3'
+								md-floating-label='Vendedor')
+					md-item-template
+						div(md-highlight-text='sellerQuery' style='line-height: 2') {{item.person_name}}
+						div(style='font-size: 11px;line-height: 1')
+							| Código: 
+							| {{item.person_code}}
 
-			md-autocomplete(flex
-							ng-model-options='{ debounce: 250 }'
-							md-delay='250'
-							md-input-name='autocompleteCustomerModal'
-							md-no-cache='false'
-							md-autoselect='true'
-							md-selected-item='ctrl.customer'
-							md-search-text='customerQuery'
-							md-items='item in ctrl.getCustomerByName(customerQuery)'
-							md-item-text='item.person_name'
-							md-min-length='3'
-							md-floating-label='Cliente')
-				md-item-template
-					div(md-highlight-text='CustomerQuery' style='line-height: 2') {{item.person_name}}
-					div(style='font-size: 11px;line-height: 1')
-						| Código: 
-						| {{item.person_code}}
+		div(layout='row' layout-fill)
+			md-input-container(flex='20')
+				label Código
+				input(name='seller-code'
+						ng-value='ctrl.customer.person_code' 
+						blur-to='ctrl.customer.person_code'
+						keys-shortcuts
+						enter='ctrl.getCustomerByCode($event.target.value)')
 
-	div(layout='row')
-		md-button.md-raised(ng-click='ctrl.showModalProducts()') Produto
+			.autocomplete(flex layout="row")
+				button(ng-show='ctrl.customer.person_id' ng-click='ctrl.customer=null')
+					i.fa.fa-times-circle
 
-	div(layout='row')
-		md-chips(flex ng-model='ctrl.products' readonly='true' md-removable='true')
-			md-chip-template 
-				| {{$chip.product_code}} {{$chip.product_name}}
+				md-autocomplete(flex
+								ng-model-options='{ debounce: 250 }'
+								md-delay='250'
+								md-input-name='autocompleteCustomerModal'
+								md-no-cache='false'
+								md-autoselect='true'
+								md-selected-item='ctrl.customer'
+								md-search-text='customerQuery'
+								md-items='item in ctrl.getCustomerByName(customerQuery)'
+								md-item-text='item.person_name'
+								md-min-length='3'
+								md-floating-label='Cliente')
+					md-item-template
+						div(md-highlight-text='CustomerQuery' style='line-height: 2') {{item.person_name}}
+						div(style='font-size: 11px;line-height: 1')
+							| Código: 
+							| {{item.person_code}}
 
-	div(layout='row' layout-fill)
-		md-input-container(flex)
-			label Valor mínimo
-			input(ng-model='ctrl.minValue')
+		div(layout='column')
+			div(layout='row')
+				h3(flex) Produtos
+				md-button.md-primary(ng-click='ctrl.showModalProducts()') 
+					i.fa.fa-plus &nbsp;
+					| Adicionar
 
-		md-input-container(flex)
-			label Valor máximo
-			input(ng-model='ctrl.maxValue')
+			.well.transparent(layout='row')
+				md-chips(flex ng-model='ctrl.products' readonly='true' md-removable='true')
+					md-chip-template 
+						| {{$chip.product_code}} {{$chip.product_name}}
 
-.footer.bordered(layout='row' layout-align='end center')
-	md-button.md-raised.md-primary(ng-click='ctrl.close()')
-		| &nbsp; Filtrar &nbsp;
-		
-	md-button.md-raised(ng-click='ctrl._cancel()')
-		| &nbsp; Cancelar &nbsp;
+	.footer.bordered(layout='row' layout-align='end center')
+		md-button.md-raised.md-primary(ng-click='ctrl.close()')
+			| &nbsp;
+			i.fa.fa-check
+			| &nbsp; Filtrar &nbsp;
+
+		md-button.md-raised(ng-click='ctrl._cancel({ reset: true })' md-colors='{ background: "commercialGreen" }')
+			| &nbsp;
+			i.fa.fa-refresh
+			| &nbsp; Resetar &nbsp;
+			
+		md-button.md-raised(ng-click='ctrl._cancel()')
+			| &nbsp;
+			i.fa.fa-remove
+			| &nbsp; Cancelar &nbsp;

@@ -412,6 +412,10 @@ table.contacts-table {
 	&.well-sm {
 		padding: 1px;
 	}
+
+	&.transparent {
+		background-color: transparent;
+	}
 }
 
 .md-calendar-scroll-mask {

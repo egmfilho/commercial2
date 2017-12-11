@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-23 17:10:42
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-08 14:20:08
+ * @Last Modified time: 2017-12-11 09:59:08
  */
 
 .open-order-container-nav {
@@ -440,6 +440,37 @@ md-menu-content.open-order-menu-content {
 					font-size: 30px;
 				}
 			}
+		}
+	}
+}
+
+.modal-order-filters {
+	.footer {
+		.md-button {
+			min-width: 120px !important;
+		}
+	}
+	
+	.autocomplete {
+		position: relative;
+
+		button{
+			border: none;
+			background-color: transparent;
+			position: absolute;
+			right: 6px;
+			top: 16px;
+			margin: 0;
+			padding: 0;
+			z-index: 4;
+		}
+	}
+
+	.well {
+		min-height: 60px;
+
+		.md-chips {
+			box-shadow: none;
 		}
 	}
 }

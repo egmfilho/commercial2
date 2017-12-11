@@ -8,7 +8,7 @@
 				.clown(layout='row' layout-fill)
 					md-input-container.md-select(flex)
 						label Empresa
-						md-select(name='type' ng-model='openOrderFilters.companyId' ng-change='openOrder.getOrders()')
+						md-select(name='type' ng-model='openOrderFilters.companyId' ng-change='openOrder.removeExtraFilters();openOrder.getOrders()')
 							md-option(ng-value='c.company_id' ng-repeat='c in openOrder.companies') 
 								| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
 
@@ -80,9 +80,14 @@
 						| Sincronizar
 
 				div(flex='50' layout='row' layout-align='center center')
-					md-button.md-raised.filter(ng-click='' md-colors='{ background: "commercialRed" }')
-						i.fa.fa-line-chart &nbsp;
-						| Relatório
+					md-button.md-raised.filter(ng-click='openOrder.showFilters()' md-colors='{ background: "commercialRed" }')
+						i.material-icons(style='font-size: 16px; vertical-align: text-top') find_replace&nbsp;
+						| Filtrar
+
+				//- div(flex='50' layout='row' layout-align='center center')
+				//- 	md-button.md-raised.filter(ng-click='' md-colors='{ background: "commercialRed" }')
+				//- 		i.fa.fa-line-chart &nbsp;
+				//- 		| Relatório
 
 			//- div(flex layout='column')
 				div(layout='row')
@@ -231,8 +236,8 @@
 	.search-container(layout='row' ng-class='{ "opened": isSearchOpened }')
 		span(flex)
 		.search
-			//- input(type='text' placeholder='Pesquisar' ng-model='tempFilter' keys-shortcuts escape='setSearchOpen(false)' enter='openOrderFilters.filters.query = tempFilter')
-			input(type='text' placeholder='Pesquisar' ng-model='openOrderFilters.filters.query' keys-shortcuts escape='setSearchOpen(false)')
+			//- input(type='text' placeholder='Localizar' ng-model='tempFilter' keys-shortcuts escape='setSearchOpen(false)' enter='openOrderFilters.filters.query = tempFilter')
+			input(type='text' placeholder='Localizar na listagem' ng-model='openOrderFilters.filters.query' keys-shortcuts escape='setSearchOpen(false)')
 			a(ng-click='setSearchOpen(false)')
 				i.fa.fa-remove
 
@@ -295,5 +300,5 @@
 			div(flex='30' layout='row' layout-align='end center')
 				md-button.md-icon-button.search-button(ng-click='setSearchOpen(true)')
 					md-tooltip(md-direction='left') 
-						| Pesquisar ({{ 'M-F' | keyboardShortcut }})
+						| Localizar ({{ 'M-F' | keyboardShortcut }})
 					md-icon.text-primary(md-font-set='material-icons') search

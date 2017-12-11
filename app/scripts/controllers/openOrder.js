@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-23 17:13:32
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-08 12:56:07
+ * @Last Modified time: 2017-12-11 10:20:16
  */
 
 (function() {
@@ -31,7 +31,7 @@
 				if (Globals.get('user')['user_seller'].person_id)
 					$rootScope.openOrderFilters.seller = new Person(Globals.get('user')['user_seller']);
 				$rootScope.openOrderFilters.companyId = Globals.get('user').user_company[0].company_id;
-				$rootScope.openOrderFilters.customer = new Person();
+				$rootScope.openOrderFilters.customer = null;
 				$rootScope.openOrderFilters.products = [];
 				$rootScope.openOrderFilters.minValue = 0;
 				$rootScope.openOrderFilters.maxValue = null;
@@ -439,6 +439,15 @@
 				});
 			}
 
+			self.removeExtraFilters = function() {
+				$rootScope.openOrderFilters.customer = null;
+				$rootScope.openOrderFilters.products = [ ];
+				$rootScope.openOrderFilters.minValue = 0;
+				$rootScope.openOrderFilters.maxValue = null;
+				
+				$rootScope.customDialog().showMessage('Aviso', 'Alguns filtros foram removidos!');
+			};
+
 			self.showFilters = function() {
 				var options = {
 					width: 600,
@@ -455,7 +464,7 @@
 					this.companyId = $rootScope.openOrderFilters.companyId;
 					this.seller = new Person($rootScope.openOrderFilters.seller);
 					this.calendars = $rootScope.openOrderFilters.calendars;
-					this.customer = new Person($rootScope.openOrderFilters.customer);
+					this.customer = $rootScope.openOrderFilters.customer ? new Person($rootScope.openOrderFilters.customer) : null;
 					this.products = $rootScope.openOrderFilters.products;
 					this.minValue = $rootScope.openOrderFilters.minValue;
 					this.maxValue = $rootScope.openOrderFilters.maxValue;
@@ -562,7 +571,21 @@
 						$rootScope.openOrderFilters.minValue = success.minValue;
 						$rootScope.openOrderFilters.maxValue = success.maxValue;
 
-						self.getOrders();						
+						self.getOrders();
+					}, function(error) {
+						if (error && error.reset) {
+							if (Globals.get('user')['user_seller'].person_id)
+								$rootScope.openOrderFilters.seller = new Person(Globals.get('user')['user_seller']);
+							else 
+								$rootScope.openOrderFilters.seller = null;
+
+							$rootScope.openOrderFilters.companyId = Globals.get('user').user_company[0].company_id;
+							$rootScope.openOrderFilters.calendars.start.value = moment().tz('America/Sao_Paulo').set({ hour: 12, minute: 0, second: 0, millisecond: 0 }).toDate();
+							$rootScope.openOrderFilters.calendars.end.value = moment().tz('America/Sao_Paulo').set({ hour: 12, minute: 0, second: 0, millisecond: 0 }).toDate();
+							self.removeExtraFilters();
+
+							self.getOrders();
+						}
 					});
 			};
 
