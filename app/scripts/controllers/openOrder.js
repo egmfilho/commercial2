@@ -213,6 +213,8 @@
 			};
 
 			self.getOrders = function (index, quantity){
+				var deferred = $q.defer();
+
 				self.orders = [];
 
 				var options = {
@@ -290,6 +292,7 @@
 					});
 
 					$rootScope.loading.unload();
+					deferred.resolve();
 
 				}, function(error) {
 					constants.debug && console.log(error);
@@ -300,7 +303,11 @@
 					} else {
 						$rootScope.customDialog().showMessage('Erro', error.data.status.description);
 					}
+
+					deferred.reject();
 				});
+
+				return deferred.promise;
 			};
 
 			function getPersonByName(name, category) {
@@ -420,10 +427,14 @@
 					getSeller: true
 				};
 
-				$rootScope.loading.load();
+				$rootScope.loading.load(null, null, { zIndex: 1 });
 				providerOrder.sync(options).then(function(success) {
-					self.getOrders();
-					$rootScope.loading.unload();
+					self.getOrders()
+						.then(function(success) { 
+							$rootScope.loading.unload();
+						}, function(error) {
+							$rootScope.loading.unload();
+						});
 				}, function(error) {
 					$rootScope.loading.unload();
 					$rootScope.customDialog().showMessage('Erro', error.data.status.description);
@@ -435,10 +446,14 @@
 					order_id: order_id
 				};
 
-				$rootScope.loading.load();
+				$rootScope.loading.load(null, null, { zIndex: 1 });
 				providerOrder.singleSync(options).then(function(success) {
-					self.getOrders();
-					$rootScope.loading.unload();
+					self.getOrders()
+						.then(function(success) { 
+							$rootScope.loading.unload();
+						}, function(error) {
+							$rootScope.loading.unload();
+						});
 				}, function(error) {
 					$rootScope.loading.unload();
 					$rootScope.customDialog().showMessage('Erro', error.data.status.description);
@@ -498,7 +513,7 @@
 		
 						if (!parseInt(code)) return;
 		
-						$rootScope.loading.load(null, null, { zIndex: 1 });
+						$rootScope.loading.load();
 						self.getPersonByCode(code, Globals.get('person-categories').customer).then(function(success) {
 							scope.seller = new Person(success.data);
 							$rootScope.loading.unload();
@@ -523,7 +538,7 @@
 		
 						if (!parseInt(code)) return;
 		
-						$rootScope.loading.load(null, null, { zIndex: 1 });
+						$rootScope.loading.load();
 						self.getPersonByCode(code, Globals.get('person-categories').customer).then(function(success) {
 							scope.customer = new Person(success.data);
 							$rootScope.loading.unload();
