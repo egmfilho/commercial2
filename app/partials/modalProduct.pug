@@ -36,7 +36,7 @@
 		.container-table(flex)
 			table.product-table.table(name='clementino')
 				tbody
-					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse' layout='row' ng-dblclick='ctrl.select(p)' ng-class="{'inactive':p.product_active=='N', 'sold-out': p.stock.product_stock <= 0}" keys-shortcuts enter='ctrl.select(p)')
+					tr(ng-repeat='p in ctrl.result | orderBy:ctrl.grid.propertyName:ctrl.grid.reverse track by $index' layout='row' ng-dblclick='ctrl.select(p)' ng-click='ctrl.hoverIndex = $index' ng-class="{'inactive':p.product_active=='N', 'sold-out': p.stock.product_stock <= 0}" keys-shortcuts enter='ctrl.select(p)')
 						td(ng-show='ctrl.multiSelection') 
 							md-checkbox(ng-checked='!!ctrl.isSelected(p)' ng-click='ctrl.addProduct(p)' ng-disabled='p.product_active == "N"')
 						td {{::p.product_code}}

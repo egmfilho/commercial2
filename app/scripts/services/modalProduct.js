@@ -2,7 +2,7 @@
  * @Author: alessandro
  * @Date: 2017-10-20 17:12:56 
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-08 11:17:35
+ * @Last Modified time: 2017-12-11 12:32:29
  */
 
 (function() {
@@ -186,7 +186,11 @@
 								Mousetrap.unbind('down');
 							}
 
-							vm._close(selection.filter(function(i) { return i.order_item_amount > 0 }));
+							if (selection.length) {
+								vm._close(selection.filter(function(i) { return i.order_item_amount > 0 }));
+							} else {
+								vm.hoverIndex >= 0 ? vm.select(vm.result[vm.hoverIndex]) : vm._close();
+							}
 						};
 
 						this.showSelection = function() {
