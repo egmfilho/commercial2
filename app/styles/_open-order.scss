@@ -445,6 +445,10 @@ md-menu-content.open-order-menu-content {
 }
 
 .modal-order-filters {
+	md-autocomplete md-autocomplete-wrap md-progress-linear.md-inline {
+		bottom: 5px;
+	}
+
 	.footer {
 		.md-button {
 			min-width: 120px !important;
