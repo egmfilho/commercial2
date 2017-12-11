@@ -30,15 +30,17 @@
 		margin-bottom: 10px;
 
 		.logo {
-			height: 80px;
+			height: 100px;
+			max-height: 100px;
 			padding: 0;
 			margin-right: 16px;
 			// background-size: contain;
 			// background-position: center;
 			// background-repeat: no-repeat;
 			img {
-				width: 100%;
+				width: auto;
 				height: auto;
+				max-height: 100%;
 			}
 		}
 
