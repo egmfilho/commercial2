@@ -16,6 +16,14 @@
 
 			if (constants.isElectron) {
 				_cam = require('webcamjs');
+
+				if (_cam) {
+					_cam.on('error', function(error) {
+						$rootScope.customDialog().showMessage('Erro', 'Houve um problema com a câmera');
+						$rootScope.writeLog('Webcam error');
+						$rootScope.writeLog(JSON.stringify(error));
+					});
+				}
 			}
 
 			function turnOn() {
