@@ -1,7 +1,7 @@
 div(ng-bind-html='ctrl.template | trusted' ng-if='ctrl.template')
 
 md-content.print-order.zoom-50(layout-fill ng-if='ctrl.order.order_code && !ctrl.template')
-	md-button.md-fab.floating(ng-click='ctrl.print()')
+	md-button.md-fab.floating(name='print-button' ng-click='ctrl.print()')
 		md-icon(md-font-icon='fa fa-file-pdf-o' ng-if='ctrl.isPdf')
 		md-icon(md-font-icon='fa fa-print' ng-if='!ctrl.isPdf')
 

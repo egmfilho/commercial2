@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-07-27 12:32:24
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-10-20 17:04:33
+ * @Last Modified time: 2017-12-11 14:08:22
  */
 
 .mail-window {
@@ -11,6 +11,10 @@
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
+
+	button[name='print-button'] {
+		display: none;
+	}
 
 	.form, .preview {
 		box-shadow: none;
