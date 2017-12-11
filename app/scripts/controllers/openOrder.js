@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-23 17:13:32
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-11 10:20:16
+ * @Last Modified time: 2017-12-11 13:08:33
  */
 
 (function() {
@@ -294,6 +294,12 @@
 				}, function(error) {
 					constants.debug && console.log(error);
 					$rootScope.loading.unload();
+
+					if (error.status == 404) {
+						$rootScope.customDialog().showMessage('Erro', 'Nenhum resultado, por favor verifique os filtros!');
+					} else {
+						$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+					}
 				});
 			};
 
@@ -462,8 +468,16 @@
 					this.companies = self.companies;
 
 					this.companyId = $rootScope.openOrderFilters.companyId;
-					this.seller = new Person($rootScope.openOrderFilters.seller);
-					this.calendars = $rootScope.openOrderFilters.calendars;
+					this.seller = $rootScope.openOrderFilters.seller ? new Person($rootScope.openOrderFilters.seller) : null;
+					this.calendars = { };
+					this.calendars.start = Object.assign({}, $rootScope.openOrderFilters.calendars.start, {
+						update: function(){
+							scope.calendars.end.value = moment(scope.calendars.start.value).toDate();
+							scope.calendars.end.minDate = moment(scope.calendars.start.value).toDate();
+							scope.calendars.end.maxDate = moment(scope.calendars.start.value).add(dateRange,'days').toDate();
+						}
+					});
+					this.calendars.end = Object.assign({}, $rootScope.openOrderFilters.calendars.end);
 					this.customer = $rootScope.openOrderFilters.customer ? new Person($rootScope.openOrderFilters.customer) : null;
 					this.products = $rootScope.openOrderFilters.products;
 					this.minValue = $rootScope.openOrderFilters.minValue;
@@ -564,9 +578,12 @@
 				$rootScope.customDialog().showTemplate('Commercial', './partials/modalOrderFilters.html', controller, options)
 					.then(function(success) {
 						$rootScope.openOrderFilters.companyId = success.companyId;
-						$rootScope.openOrderFilters.seller = new Person(success.seller);
-						$rootScope.openOrderFilters.calendars = success.calendars;
-						$rootScope.openOrderFilters.customer = new Person(success.customer);
+						$rootScope.openOrderFilters.seller = success.seller ? new Person(success.seller) : null;
+						$rootScope.openOrderFilters.calendars.start = Object.assign({ }, success.calendars.start, {
+							update: $rootScope.openOrderFilters.calendars.start.update
+						});
+						$rootScope.openOrderFilters.calendars.end = Object.assign({ }, success.calendars.end);
+						$rootScope.openOrderFilters.customer = success.customer ? new Person(success.customer) : null;
 						$rootScope.openOrderFilters.products = success.products;
 						$rootScope.openOrderFilters.minValue = success.minValue;
 						$rootScope.openOrderFilters.maxValue = success.maxValue;

@@ -13,11 +13,11 @@
 		div(layout='row')
 			md-input-container.datepicker(flex='25')
 				label Início
-				md-datepicker(style='width: 100%' ng-model='ctrl.calendars.start.value' md-hide-icons='calendar' md-is-open='openOrderFilters.calendars.start.isCalendarOpen' ng-change='openOrderFilters.calendars.start.update()' md-max-date='openOrderFilters.calendars.start.maxDate')
+				md-datepicker(style='width: 100%' ng-model='ctrl.calendars.start.value' md-hide-icons='calendar' md-is-open='ctrl.calendars.start.isCalendarOpen' ng-change='ctrl.calendars.start.update()' md-max-date='ctrl.calendars.start.maxDate')
 
 			md-input-container.datepicker(flex='25')
 				label Fim
-				md-datepicker(style='width: 100%' ng-model='ctrl.calendars.end.value' md-hide-icons='calendar' md-is-open='openOrderFilters.calendars.end.isCalendarOpen' md-min-date='openOrderFilters.calendars.end.minDate' md-max-date='openOrderFilters.calendars.end.maxDate' ng-change='openOrderFilters.calendars.end.update()')
+				md-datepicker(style='width: 100%' ng-model='ctrl.calendars.end.value' md-hide-icons='calendar' md-is-open='ctrl.calendars.end.isCalendarOpen' md-min-date='ctrl.calendars.end.minDate' md-max-date='ctrl.calendars.end.maxDate' ng-change='ctrl.calendars.end.update()')
 
 			md-input-container(flex='25')
 				label Valor mínimo
