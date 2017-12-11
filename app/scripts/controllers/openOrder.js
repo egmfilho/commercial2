@@ -445,13 +445,18 @@
 				});
 			}
 
-			self.removeExtraFilters = function() {
-				$rootScope.openOrderFilters.customer = null;
-				$rootScope.openOrderFilters.products = [ ];
-				$rootScope.openOrderFilters.minValue = 0;
-				$rootScope.openOrderFilters.maxValue = null;
-				
-				$rootScope.customDialog().showMessage('Aviso', 'Alguns filtros foram removidos!');
+			self.removeExtraFilters = function(showAlert) {
+				if ($rootScope.openOrderFilters.customer || $rootScope.openOrderFilters.products.length || 
+					$rootScope.openOrderFilters.minValue != 0 || !!$rootScope.openOrderFilters.maxValue) {
+						
+					$rootScope.openOrderFilters.customer = null;
+					$rootScope.openOrderFilters.products = [ ];
+					$rootScope.openOrderFilters.minValue = 0;
+					$rootScope.openOrderFilters.maxValue = null;
+					
+					if (showAlert)
+						$rootScope.customDialog().showMessage('Aviso', 'Alguns filtros foram removidos!');
+				}
 			};
 
 			self.showFilters = function() {

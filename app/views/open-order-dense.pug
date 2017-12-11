@@ -8,7 +8,7 @@
 				.clown(layout='row' layout-fill)
 					md-input-container.md-select(flex)
 						label Empresa
-						md-select(name='type' ng-model='openOrderFilters.companyId' ng-change='openOrder.removeExtraFilters();openOrder.getOrders()')
+						md-select(name='type' ng-model='openOrderFilters.companyId' ng-change='openOrder.removeExtraFilters(true);openOrder.getOrders()')
 							md-option(ng-value='c.company_id' ng-repeat='c in openOrder.companies') 
 								| {{c.company_erp.company_code}} - {{c.company_erp.company_name}}
 
