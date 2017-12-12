@@ -74,8 +74,9 @@
 
 .bar {
 	z-index: 0;
-
+	
 	.md-toolbar-tools {
+		min-height: 50px;
 		background-color: white;
 		color: $main-color;
 		font-size: .7em;
