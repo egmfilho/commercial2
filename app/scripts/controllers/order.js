@@ -670,7 +670,8 @@
 					getItems: true,
 					getProductStock: true,
 					getPayments: true,
-					getTerm: true
+					getTerm: true,
+					getProductPrice: true
 				}, code = $routeParams.param;
 
 				$rootScope.loading.load();
@@ -697,11 +698,18 @@
 					delete temp.status;
 					temp.order_audit_discounts = [];
 
-					// remoção dos descontos
+					// remoção dos descontos e tabela de preços restrita
+					var showPriceAlert = false;
 					temp.order_items = temp.order_items.map(function(i) {
+						if (!i.product.product_prices.find(function(p) { return p.price_id == i.price_id })) {
+							i.setPrice(i.product.getDefaultPriceTable());
+							showPriceAlert = true;
+						}
+						
 						i.order_item_al_discount = 0;
 						i.order_item_vl_discount = 0;
 						i.updateValues();
+
 						return i;
 					});
 
@@ -765,6 +773,10 @@
 					}));
 
 					$rootScope.loading.unload();
+
+					/* mostra aviso caso tenham sido trocadas tabelas de preço */
+					if (showPriceAlert) 
+						$rootScope.customDialog().showMessage('Atenção', 'Valores recalculados! Tabelas de preços restritas foram substituídas pela tabela padrão.');
 				}, function(error) {
 					console.error(error);
 					$rootScope.loading.unload();
