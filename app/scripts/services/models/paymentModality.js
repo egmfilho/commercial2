@@ -45,20 +45,21 @@
 		.factory('PaymentModality', ['ModalityConfig', 'ModalityItem', function(ModalityConfig, ModalityItem) {
 
 			function PaymentModality(modality) {
-				this.modality_id          = null;
-				this.modality_code        = null;
-				this.modality_description = null;
-				this.modality_active      = null;
-				this.modality_type        = null;
-				this.payment_nature_id    = null;
-				this.modality_config      = new ModalityConfig();
-				this.modality_item        = [ new ModalityItem({
+				this.modality_id                   = null;
+				this.modality_code                 = null;
+				this.modality_description          = null;
+				this.modality_description_combined = null;
+				this.modality_active               = null;
+				this.modality_type                 = null;
+				this.payment_nature_id             = null;
+				this.modality_config               = new ModalityConfig();
+				this.modality_item                 = [ new ModalityItem({
 					modality_item_installment: 1,
 					modality_item_delay: 0,
 					modality_item_interval: 0,
 					modality_item_al_card: 0
 				})];
-				this.queryable            = '';
+				this.queryable                     = '';
 
 				if (modality) {
 					Object.assign(this, modality, {
