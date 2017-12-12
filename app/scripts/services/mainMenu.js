@@ -47,12 +47,12 @@
 
 				this.newOrder = function() {
 					if (constants.isElectron) {
-						ElectronWindow.createWindow('#/order/new');
+						ElectronWindow.createWindow('#/order/new/' + $rootScope.openOrderFilters.companyId);
 						if (mdPanelRef) mdPanelRef.close();
 					}
 					else {
 						if (mdPanelRef) mdPanelRef.close();
-						$location.path('/order/new').search('company', companyId);
+						$location.path('/order/new/' + $rootScope.openOrderFilters.companyId);
 					}
 				};
 
