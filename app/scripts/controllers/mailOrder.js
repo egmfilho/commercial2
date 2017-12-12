@@ -85,74 +85,70 @@
 		$scope.$on('$viewContentLoaded', function() {
 			if ($routeParams.code) {
 				$rootScope.loading.load();
-				$q.all([
-					getTempalte($routeParams.code),
-					getOrder($routeParams.code)
-				]).then(function(success) {
-					if (success[0]) {
-						self.template = success[0].data;
-					}
+				getTempalte($routeParams.code)
+					.then(function(success) {
+						self.template = success.data;
+						$rootScope.loading.unload();
+					});
+				
+				$rootScope.loading.load();
+				getOrder($routeParams.code).then(function(success) {
+					self.form.message = 'Segue em anexo o orçamento de código ' + self.order.order_code + ' em formato PDF.';
+					
+					var parsedMails = self.order.order_client.person_contact.map(function(c) {
+							return {
+								name: c.person_address_contact_name,
+								mail: c.person_address_contact_value
+							}
+						}),
+						mainContact = self.order.order_client.person_contact.filter(function(c) {
+							return c.person_address_contact_main == 'Y';
+						})[0];
 
-					if (success[1]) {
-						self.form.message = 'Segue em anexo o orçamento de código ' + self.order.order_code + ' em formato PDF.';
-						
-						var parsedMails = self.order.order_client.person_contact.map(function(c) {
-								return {
-									name: c.person_address_contact_name,
-									mail: c.person_address_contact_value
-								}
-							}),
-							mainContact = self.order.order_client.person_contact.filter(function(c) {
-								return c.person_address_contact_main == 'Y';
-							})[0];
-
-						if (mainContact) {
-							self.form.to.push({
-								name: mainContact.person_address_contact_name,
-								mail: mainContact.person_address_contact_value
-							});
-						}
-
-						self.mailArray = self.mailArray.concat(parsedMails);
-
-						$timeout(function() {
-							jQuery('.chico-bento .preview .print-container').on('DOMMouseScroll mousewheel', function(e) { 
-								
-								var $this = $(this),
-									scrollTop = this.scrollTop,
-									scrollHeight = this.scrollHeight,
-									height = $this.height(),
-									delta = (e.type == 'DOMMouseScroll' ?
-										e.originalEvent.detail * -40 :
-										e.originalEvent.wheelDelta),
-									up = delta > 0;
-
-								var prevent = function() {
-									e.stopPropagation();
-									e.preventDefault();
-									e.returnValue = false;
-									return false;
-								}
-								
-								if (!up && -delta > scrollHeight - height - scrollTop) {
-									// Scrolling down, but this will take us past the bottom.
-									$this.scrollTop(scrollHeight);
-									return prevent();
-								} else if (up && delta > scrollTop) {
-									// Scrolling up, but this will take us past the top.
-									$this.scrollTop(0);
-									return prevent();
-								}
-
-							});
+					if (mainContact) {
+						self.form.to.push({
+							name: mainContact.person_address_contact_name,
+							mail: mainContact.person_address_contact_value
 						});
 					}
+
+					self.mailArray = self.mailArray.concat(parsedMails);
+
+					$timeout(function() {
+						jQuery('.chico-bento .preview .print-container').on('DOMMouseScroll mousewheel', function(e) { 
+							
+							var $this = $(this),
+								scrollTop = this.scrollTop,
+								scrollHeight = this.scrollHeight,
+								height = $this.height(),
+								delta = (e.type == 'DOMMouseScroll' ?
+									e.originalEvent.detail * -40 :
+									e.originalEvent.wheelDelta),
+								up = delta > 0;
+
+							var prevent = function() {
+								e.stopPropagation();
+								e.preventDefault();
+								e.returnValue = false;
+								return false;
+							}
+							
+							if (!up && -delta > scrollHeight - height - scrollTop) {
+								// Scrolling down, but this will take us past the bottom.
+								$this.scrollTop(scrollHeight);
+								return prevent();
+							} else if (up && delta > scrollTop) {
+								// Scrolling up, but this will take us past the top.
+								$this.scrollTop(0);
+								return prevent();
+							}
+
+						});
+					});
 					$rootScope.loading.unload();
 				}, function(error) {
 					$rootScope.loading.unload();
-					if (error.length == 2 && error[1]) {
-						$rootScope.customDialog().showMessage('Erro', 'Erro ao receber os dados do pedido!');
-					}
+					$rootScope.customDialog().showMessage('Erro', 'Erro ao receber os dados do pedido!');
 				});
 			}
 		});
@@ -179,7 +175,7 @@
 				self.logo = Globals.get("logo")[self.order.order_company_id].company_logo;
 				constants.debug && console.log(self.order);
 				$rootScope.loading.unload();
-				deferred.resolve();
+				deferred.resolve(true);
 			}, function(error) {
 				constants.debug && console.log('error');
 				$rootScope.loading.unload();
