@@ -240,31 +240,61 @@
 			]);
 		};
 
-		this.postEmail = function() {
+		function validateEmail() {
 			if (!self.internal.mail.sender) {
 				$rootScope.customDialog().showMessage('Erro', 'Informe o nome do remetente do email!');
-				return;
+				return false;
 			}
 
 			if (!self.internal.mail.host) {
 				$rootScope.customDialog().showMessage('Erro', 'Informe o host do email!');
-				return;
+				return false;
 			}  
 
 			if (!self.internal.mail.port) {
 				$rootScope.customDialog().showMessage('Erro', 'Informe a porta do host de email!');
-				return;
+				return false;
 			} 
 
 			if (!self.internal.mail.address) {
 				$rootScope.customDialog().showMessage('Erro', 'Informe o endereço do email!');
-				return;
+				return false;
 			}
 			
 			if (!self.internal.mail.password) {
 				$rootScope.customDialog().showMessage('Erro', 'Informe a senha do email!');
-				return;
+				return false;
 			}
+
+			return true;
+		}
+
+		this.testEmail = function() {
+			if (!validateEmail()) return;
+
+			$rootScope.loading.load();
+			$http({
+				method: 'POST',
+				url: Globals.api.get().address + 'config.php?action=testEmail',
+				data: {
+					mail_host: self.internal.mail.host,
+					mail_mail: self.internal.mail.address,
+					mail_password: self.internal.mail.password,
+					mail_port: self.internal.mail.port,
+					mail_sender: self.internal.mail.sender,
+					mail_smtp: self.internal.mail.smtp
+				}
+			}).then(function(success) {
+				$rootScope.customDialog().showMessage('Sucesso', 'Configurações validadas com sucesso!');
+				$rootScope.loading.unload();
+			}, function(error) {
+				$rootScope.loading.unload();
+				$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+			});
+		};
+
+		this.postEmail = function() {
+			if (!validateEmail()) return;
 
 			post([
 				{
