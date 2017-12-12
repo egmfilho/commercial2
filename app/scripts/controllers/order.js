@@ -2738,7 +2738,7 @@
 				message = '';
 
 			function add() {
-				var i,
+				var i = modality.hasOwnProperty('initial') ? 1 : 0,
 					dateCalc,
 					payments = [ ];
 
@@ -2753,15 +2753,23 @@
 					return date;
 				};
 
+				var	installments = options && options.forceInstallments ? options.forceInstallments : term.term_installment;
+
 				/* Trata primeiro para quando for cartao de credito */
 				if (modality.modality_type == Globals.get('modalities')['credit-card'].type) {
+					/* valor das parcelas */
+					var installmentValue = options && options.installmentAl ? (self.budget.getChange() * (options.installmentAl/100)) : self.budget.getChange();
+
 					payments.push(new OrderPayment({
 							order_id: self.budget.order_id,
-							order_payment_value: self.budget.getChange(),
-							order_payment_value_total: self.budget.getChange(),
+							order_payment_value: parseFloat((installmentValue).toFixed(2)),
+							order_payment_value_total: parseFloat((installmentValue).toFixed(2)),
+							
 							/* Checa se a modalidade é do tipo entrada e se é a primeira das parcelas para saber qual data inicial pegar. */
 							order_payment_deadline: dateCalc(0, modality.modality_term_type == 'E' && i == 0 ? term.term_deposit_delay : term.term_delay, term.term_interval),
-							order_payment_installment: term.term_installment,
+							
+							order_payment_installment: options && options.forceInstallments ? options.forceInstallments : term.term_installment,
+							
 							/* Checa se a modalidade é do tipo entrada e marca como inicial */
 							order_payment_initial: modality.modality_term_type == 'E' ? 'Y' : 'N',
 							modality_id: modality.modality_id,
@@ -2771,14 +2779,14 @@
 					/* armazena o valor total dos pagamentos, incluindo o credito, para colocar a diferença na ultima parcela */
 					var total = 0;
 
-					/* iinicializa o total de acordo com a forma de inserção. */
+					/* inicializa o total de acordo com a forma de inserção. */
 					if (options && options.concatenate)
 						total += self.budget.order_value_total - self.budget.getChange();
 					else
 						total += self.budget.creditPayment ? self.budget.creditPayment.order_payment_value_total : 0;
 
-					var	installments = options && options.forceInstallments ? options.forceInstallments : term.term_installment,
-						installmentValue = options && options.installmentAl ? (self.budget.getChange() * (options.installmentAl/100)) : self.budget.getChange() / installments;
+					/* valor das parcelas */
+					var installmentValue = options && options.installmentAl ? (self.budget.getChange() * (options.installmentAl/100)) : self.budget.getChange() / installments;
 
 					for (i = 0; i < installments; i++) {
 						payments.push(new OrderPayment({
