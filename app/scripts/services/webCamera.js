@@ -31,10 +31,10 @@
 
 				turnOff();
 
-				if (!_isEnabled) {
+				// if (!_isEnabled) {
 					_cam.attach('#camera');
 					_isEnabled = true;
-				}
+				// }
 			}
 
 			function turnOff() {
