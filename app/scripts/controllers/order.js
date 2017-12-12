@@ -3007,12 +3007,11 @@
 		/**
 		 * Remove todos os pagamentos do orcamento
 		 */
-		function removeAllPayments(skip) {
-			self.clearTerm();
-			
+		function removeAllPayments(skip) {		
 			var msg = 'Deseja remover todos os pagamentos?';
 
 			function clear() {
+				self.clearTerm();
 				self.removeCredit();
 				self.budget.order_payments = new Array();
 				self.budget.creditPayment = null;
