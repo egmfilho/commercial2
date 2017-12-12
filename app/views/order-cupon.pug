@@ -3,7 +3,9 @@ style.
 		margin: 0;
 	}
 
-md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code' layout='row')
+.order-cupon.zoom-50(ng-bind-html='ctrl.template | trusted' ng-if='ctrl.template')
+
+md-content.order-cupon.zoom-50(ng-if='ctrl.order.order_code && !ctrl.template' layout='row')
 
 	md-button.md-fab.floating(ng-click='ctrl.print()')
 		md-icon(md-font-icon='fa fa-envelope-o' ng-if='ctrl.isPdf')

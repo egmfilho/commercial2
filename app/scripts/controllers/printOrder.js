@@ -31,10 +31,21 @@
 
 		$scope.$on('$viewContentLoaded', function() {
 			if ($routeParams.code) {
+				console.log($location.path());
+				var action;
+
+				if ($location.path().indexOf('print') >= 0) {
+					action = 'getPrint';
+				} else if ($location.path().indexOf('cupon') >= 0) {
+					action ='getPrintCupon';
+				} else if ($location.path().indexOf('ticket') >= 0) {
+					action = 'getPrintTicket';
+				}
+
 				$rootScope.loading.load();
 				$http({
 					method: 'POST',
-					url: Globals.api.get().address + 'order.php?action=getPrint',
+					url: Globals.api.get().address + 'order.php?action=' + action,
 					data: {
 						order_code: $routeParams.code
 					}
