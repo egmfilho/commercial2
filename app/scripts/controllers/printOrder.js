@@ -31,7 +31,6 @@
 
 		$scope.$on('$viewContentLoaded', function() {
 			if ($routeParams.code) {
-				console.log($location.path());
 				var action;
 
 				if ($location.path().indexOf('print') >= 0) {
@@ -53,7 +52,6 @@
 					self.template = success.data;
 					$rootScope.loading.unload();
 				}, function(error) {
-					console.log(error);
 					getOrder($routeParams.code);
 					$rootScope.loading.unload();
 				});

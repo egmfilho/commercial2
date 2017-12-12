@@ -86,8 +86,8 @@
 					});
 	
 					var st = {};
-					angular.forEach(success.data.data.st, function(value, key) {
-						st[key] = value.has_st == 'Y';
+					angular.forEach(success.data.data.company, function(value, key) {
+						st[key] = value.taxation.has_st == 'Y';
 					});
 					Globals.set('st', st);
 				} catch(e) {
