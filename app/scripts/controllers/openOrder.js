@@ -17,8 +17,7 @@
 		function OpenOrderCtrl($rootScope, $scope, $routeParams, $location, $q, $timeout, $filter, providerOrder, Order, providerPerson, Person, WebWorker, Globals, constants, ElectronWindow, OpenedOrderManager) {
 
 			var self = this,
-				Mousetrap = null,
-				dateRange = 31;
+				Mousetrap = null;
 
 			if (!$rootScope.openOrderFilters) {
 				$rootScope.openOrderFilters = { };
@@ -42,9 +41,14 @@
 					value: moment().tz('America/Sao_Paulo').set({ hour: 12, minute: 0, second: 0, millisecond: 0 }).toDate(),
 					maxDate: moment().tz('America/Sao_Paulo').set({ hour: 12, minute: 0, second: 0, millisecond: 0 }).toDate(),
 					update: function(){
-						$rootScope.openOrderFilters.calendars.end.value = moment($rootScope.openOrderFilters.calendars.start.value).toDate();
-						$rootScope.openOrderFilters.calendars.end.minDate = moment($rootScope.openOrderFilters.calendars.start.value).toDate();
-						$rootScope.openOrderFilters.calendars.end.maxDate = moment($rootScope.openOrderFilters.calendars.start.value).add(dateRange,'days').toDate();
+						var maxDate = moment($rootScope.openOrderFilters.calendars.start.value).add(1,'months').subtract(1,'days').toDate(),
+							endDate = moment($rootScope.openOrderFilters.calendars.end.value);
+
+						if (endDate.isAfter(maxDate) || endDate.isBefore($rootScope.openOrderFilters.calendars.start.value)) {
+							$rootScope.openOrderFilters.calendars.end.value = maxDate;
+							$rootScope.openOrderFilters.calendars.end.minDate = moment($rootScope.openOrderFilters.calendars.start.value).toDate();
+							$rootScope.openOrderFilters.calendars.end.maxDate = maxDate;
+						}
 					}
 				};
 	
@@ -52,7 +56,7 @@
 					isCalendarOpen: false,
 					value: moment().tz('America/Sao_Paulo').set({ hour: 12, minute: 0, second: 0, millisecond: 0 }).toDate(),
 					minDate: moment($rootScope.openOrderFilters.calendars.start.value).toDate(),
-					maxDate: moment($rootScope.openOrderFilters.calendars.start.value).add(dateRange,'days').toDate()
+					maxDate: moment($rootScope.openOrderFilters.calendars.start.value).add(1,'months').subtract(1,'days').toDate()
 				};
 
 				$rootScope.openOrderFilters.filters = {
@@ -492,9 +496,14 @@
 					this.calendars = { };
 					this.calendars.start = Object.assign({}, $rootScope.openOrderFilters.calendars.start, {
 						update: function(){
-							scope.calendars.end.value = moment(scope.calendars.start.value).toDate();
-							scope.calendars.end.minDate = moment(scope.calendars.start.value).toDate();
-							scope.calendars.end.maxDate = moment(scope.calendars.start.value).add(dateRange,'days').toDate();
+							var maxDate = moment(scope.calendars.start.value).add(1,'months').subtract(1,'days').toDate(),
+								endDate = moment(scope.calendars.end.value);
+
+							if (endDate.isAfter(maxDate) || endDate.isBefore(scope.calendars.start.value)) {
+								scope.calendars.end.value = maxDate;
+								scope.calendars.end.minDate = moment(scope.calendars.start.value).toDate();
+								scope.calendars.end.maxDate = maxDate;
+							}
 						}
 					});
 					this.calendars.end = Object.assign({}, $rootScope.openOrderFilters.calendars.end);
