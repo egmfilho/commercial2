@@ -17,13 +17,12 @@
 		input(name='user_new_pass_confirm' type='password' ng-model='ctrl.data.user_new_pass_confirm' ng-model-options='{ debounce: 250 }' keys-shortcuts enter='ctrl.update(ctrl.data)')
 
 .footer(layout='row' layout-align='center center')
-	md-button.md-raised(ng-click='ctrl._cancel()')
-		| &nbsp;
-		i.fa.fa-remove &nbsp; 
-		| Cancelar &nbsp;
-
 	md-button.md-raised(ng-click='ctrl.update(ctrl.data)' md-colors='{background: "commercialGreen"}')
 		| &nbsp;
 		i.fa.fa-check &nbsp;
 		| Atualizar &nbsp;
-	
+
+	md-button.md-raised(ng-click='ctrl._cancel()')
+		| &nbsp;
+		i.fa.fa-remove &nbsp; 
+		| Cancelar &nbsp;

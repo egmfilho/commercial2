@@ -24,13 +24,12 @@
 
 
 .footer(layout='row' layout-align='end center')
-	md-button.md-raised(ng-click='ctrl._cancel()')
-		| &nbsp; 
-		i.fa.fa-remove &nbsp; 
-		| Cancelar &nbsp;
-
 	md-button.md-raised(ng-click='ctrl.authorize(ctrl.user, ctrl.pass)' md-colors='{background: "commercialGreen"}')
 		| &nbsp;
 		i.fa.fa-check &nbsp;
 		| Autorizar &nbsp;
-	
+
+	md-button.md-raised(ng-click='ctrl._cancel()')
+		| &nbsp; 
+		i.fa.fa-remove &nbsp; 
+		| Cancelar &nbsp;
