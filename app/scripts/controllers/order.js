@@ -1149,7 +1149,7 @@
 				},
 				orderStatusValues: Globals.get('order-status-values'),
 				orderStatusLabels: Globals.get('order-status-labels'),
-				orderStatusColor: Globals.get("order-status-colors"),
+				orderStatusColor: Globals.get("order-export-type-colors"),
 				flags: {
 					isToolbarLocked: false,
 					printable: false,
