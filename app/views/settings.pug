@@ -9,42 +9,42 @@
 		md-sidenav.md-sidenav-left(md-component-id='left' md-is-locked-open='$mdMedia("gt-md")' md-whiteframe='4')
 			md-content(layout='column' layout-fill)
 				md-list.md-dense(flex)
-					md-list-item.md-1-line(ng-click='settings.currentView = "users"' ng-class='{ "active": settings.currentView == "users" }')
+					md-list-item.md-1-line(ng-click='settings.currentView = "users"; settings.toggleSidenav()' ng-class='{ "active": settings.currentView == "users" }')
 						md-icon(md-font-icon='fa fa-user-circle-o')
 						.md-list-item-text
 							h3 Usuários
 
-					md-list-item.md-1-line(ng-click='settings.currentView = "connections"' ng-class='{ "active": settings.currentView == "connections" }')
+					md-list-item.md-1-line(ng-click='settings.currentView = "connections"; settings.toggleSidenav()' ng-class='{ "active": settings.currentView == "connections" }')
 						md-icon(md-font-icon='fa fa-globe')
 						.md-list-item-text
 							h3 Conexões
 
-					md-list-item.md-1-line(ng-click='settings.currentView = "general"' ng-class='{ "active": settings.currentView == "general" }')
+					md-list-item.md-1-line(ng-click='settings.currentView = "general"; settings.toggleSidenav()' ng-class='{ "active": settings.currentView == "general" }')
 						md-icon(md-font-icon='fa fa-cogs')
 						.md-list-item-text
 							h3 Variáveis gerais
 
-					md-list-item.md-1-line(ng-click='settings.currentView = "financial"' ng-class='{ "active": settings.currentView == "financial" }')
+					md-list-item.md-1-line(ng-click='settings.currentView = "financial"; settings.toggleSidenav()' ng-class='{ "active": settings.currentView == "financial" }')
 						md-icon(md-font-icon='fa fa-credit-card')
 						.md-list-item-text
 							h3 Financeiro
 
-					//- md-list-item.md-1-line(ng-click='settings.currentView = "products"' ng-class='{ "active": settings.currentView == "products" }')
+					//- md-list-item.md-1-line(ng-click='settings.currentView = "products"; settings.toggleSidenav()' ng-class='{ "active": settings.currentView == "products" }')
 					//- 	md-icon(md-font-icon='fa fa-tags')
 					//- 	.md-list-item-text
 					//- 		h3 Produtos
 
-					md-list-item.md-1-line(ng-click='settings.currentView = "companies"' ng-class='{ "active": settings.currentView == "companies" }')
+					md-list-item.md-1-line(ng-click='settings.currentView = "companies"; settings.toggleSidenav()' ng-class='{ "active": settings.currentView == "companies" }')
 						md-icon(md-font-icon='fa fa-building-o')
 						.md-list-item-text
 							h3 Empresas
 
-					//- md-list-item.md-1-line(ng-click='settings.currentView = "people"' ng-class='{ "active": settings.currentView == "people" }')
+					//- md-list-item.md-1-line(ng-click='settings.currentView = "people"; settings.toggleSidenav()' ng-class='{ "active": settings.currentView == "people" }')
 					//- 	md-icon(md-font-icon='fa fa-users')
 					//- 	.md-list-item-text
 					//- 		h3 Pessoas
 
-					md-list-item.md-1-line(ng-click='settings.currentView = "about"' ng-class='{ "active": settings.currentView == "about" }')
+					md-list-item.md-1-line(ng-click='settings.currentView = "about"; settings.toggleSidenav()' ng-class='{ "active": settings.currentView == "about" }')
 						md-icon(md-font-icon='fa fa-question-circle-o')
 						.md-list-item-text
 							h3 Sobre
