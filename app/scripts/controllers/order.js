@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-13 08:16:33
+ * @Last Modified time: 2017-12-13 08:46:51
 */
 
 (function() {
@@ -458,14 +458,14 @@
 							person_name: self.budget.order_client.person_name,
 							person_code: self.budget.order_client.person_code
 						});
-						// $scope.save();
+						callback && callback();
+					} else {
+						$rootScope.customDialog().showMessage('Erro', 'Não autorizado!');
 						callback && callback();
 					}
 				}, function(error){
-					$rootScope.customDialog().showMessage('Erro', 'Não autorizado!')
-						.then(function(success) {
-							callback && callback();
-						}, function(error) { });
+					$rootScope.customDialog().showMessage('Erro', error.data.status.description);
+					callback && callback();
 				});
 				return false;
 			}
