@@ -124,7 +124,7 @@ ipcMain.on('redeem', (event, arg) => {
 
 ipcMain.on('writeLog', (event, arg) => {
 	if (arg.log) {
-		writeLog(arg.log);
+		writeLog(arg.log, arg.options);
 	}
 });
 
@@ -202,14 +202,20 @@ ipcMain.on('callUpdater', (event, arg) => {
 	}
 });
 
-function writeLog(log) {
+function writeLog(log, options) {
 	if (!log) return;
+
+	var writeFile = true;
+	if (options && options.screenOnly) 
+		writeFile = false;
 
 	console.log(log);
 
-	fs.appendFile(logFilename, '[' + getDateString('-', ' ', ':') + '] ' + log + '\n', err => {
-		if (err) console.log(err);
-	});
+	if (writeFile) {
+		fs.appendFile(logFilename, '[' + getDateString('-', ' ', ':') + '] ' + log + '\n', err => {
+			if (err) console.log(err);
+		});
+	}
 }
 
 function order66(guid, callback) {

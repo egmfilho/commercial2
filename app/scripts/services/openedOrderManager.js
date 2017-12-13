@@ -10,7 +10,7 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('OpenedOrderManager', ['Globals', 'Constants', function(Globals, constants) {
+		.factory('OpenedOrderManager', ['$rootScope', 'Globals', 'Constants', function($rootScope, Globals, constants) {
 
 			var _key = 'opened-orders';
 
@@ -25,6 +25,8 @@
 
 					constants.debug && console.log('Orcamento aberto: ' + code);
 					constants.debug && console.log('Total: ' + array.length);
+
+					$rootScope.writeLog('############### Orcamento aberto: ' + code + ' ###############', { screenOnly: true });
 				}
 			}
 
@@ -38,6 +40,8 @@
 
 					constants.debug && console.log('Orcamento fechado: ' + code);
 					constants.debug && console.log('Total: ' + array.length);
+
+					$rootScope.writeLog('############### Orcamento fechado: ' + code + ' ###############', { screenOnly: true });
 				}
 			}
 

@@ -436,10 +436,10 @@ angular.module('commercial2', [
 		};
 
 		/* Envia um log para o electron garvar no arquivo de log */
-		$rootScope.writeLog = function(log) {
+		$rootScope.writeLog = function(log, options) {
 			constants.debug && console.log(log);
 			if (constants.isElectron && log) {
-				require('electron').ipcRenderer.send('writeLog', { log: log });
+				require('electron').ipcRenderer.send('writeLog', { log: log, options: options });
 			}
 		};
 		

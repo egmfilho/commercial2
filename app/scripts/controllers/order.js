@@ -970,6 +970,7 @@
 									case 'print': {
 										self.print().then(function() {
 											if (constants.isElectron) {
+												OpenedOrderManager.remove(self.budget.order_code);
 												_ipcRenderer.send('killme', {
 													winId: _remote.getCurrentWindow().id,
 													ttl: 1000
@@ -982,6 +983,7 @@
 									case 'cupon': {
 										self.print('cupon').then(function() {
 											if (constants.isElectron) {
+												OpenedOrderManager.remove(self.budget.order_code);
 												_ipcRenderer.send('killme', {
 													winId: _remote.getCurrentWindow().id,
 													ttl: 1000
@@ -994,6 +996,7 @@
 									case 'mail': {
 										self.mail().then(function(win) {
 											if (constants.isElectron) {
+												OpenedOrderManager.remove(self.budget.order_code);
 												_ipcRenderer.send('killme', {
 													winId: _remote.getCurrentWindow().id,
 													ttl: 1000
@@ -2226,6 +2229,7 @@
 						case 'print': {
 							self.print().then(function() {
 								if (constants.isElectron) {
+									OpenedOrderManager.remove(self.budget.order_code);
 									_ipcRenderer.send('killme', {
 										winId: _remote.getCurrentWindow().id,
 										ttl: 1000
@@ -2238,6 +2242,7 @@
 						case 'cupon': {
 							self.print('cupon').then(function() {
 								if (constants.isElectron) {
+									OpenedOrderManager.remove(self.budget.order_code);
 									_ipcRenderer.send('killme', {
 										winId: _remote.getCurrentWindow().id,
 										ttl: 1000
@@ -2250,6 +2255,7 @@
 						case 'ticket': {
 							self.print('ticket').then(function() {
 								if (constants.isElectron) {
+									OpenedOrderManager.remove(self.budget.order_code);
 									_ipcRenderer.send('killme', {
 										winId: _remote.getCurrentWindow().id,
 										ttl: 1000
@@ -2262,6 +2268,7 @@
 						case 'mail': {
 							self.mail().then(function(win) {
 								if (constants.isElectron) {
+									OpenedOrderManager.remove(self.budget.order_code);
 									_ipcRenderer.send('killme', {
 										winId: _remote.getCurrentWindow().id,
 										ttl: 1000
