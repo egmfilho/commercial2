@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-23 17:13:32
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-11 13:08:33
+ * @Last Modified time: 2017-12-13 10:46:33
  */
 
 (function() {
@@ -46,9 +46,10 @@
 
 						if (endDate.isAfter(maxDate) || endDate.isBefore($rootScope.openOrderFilters.calendars.start.value)) {
 							$rootScope.openOrderFilters.calendars.end.value = maxDate;
-							$rootScope.openOrderFilters.calendars.end.minDate = moment($rootScope.openOrderFilters.calendars.start.value).toDate();
-							$rootScope.openOrderFilters.calendars.end.maxDate = maxDate;
 						}
+
+						$rootScope.openOrderFilters.calendars.end.minDate = moment($rootScope.openOrderFilters.calendars.start.value).toDate();
+						$rootScope.openOrderFilters.calendars.end.maxDate = maxDate;
 					}
 				};
 	
@@ -501,9 +502,10 @@
 
 							if (endDate.isAfter(maxDate) || endDate.isBefore(scope.calendars.start.value)) {
 								scope.calendars.end.value = maxDate;
-								scope.calendars.end.minDate = moment(scope.calendars.start.value).toDate();
-								scope.calendars.end.maxDate = maxDate;
 							}
+							
+							scope.calendars.end.minDate = moment(scope.calendars.start.value).toDate();
+							scope.calendars.end.maxDate = maxDate;
 						}
 					});
 					this.calendars.end = Object.assign({}, $rootScope.openOrderFilters.calendars.end);
