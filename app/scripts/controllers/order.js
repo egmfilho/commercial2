@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-13 08:52:31
+ * @Last Modified time: 2017-12-13 11:46:28
 */
 
 (function() {
@@ -1809,6 +1809,7 @@
 			options = {
 				hasBackdrop: true,
 				clickOutsideToClose: false,
+				focusOnOpen: false,
 				escapeToClose: false,
 				addClass: 'authorization-dialog',
 				zIndex: 1

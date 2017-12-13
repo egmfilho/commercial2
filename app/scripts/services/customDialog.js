@@ -172,7 +172,7 @@
 				zIndex: 80,
 				clickOutsideToClose: true,
 				escapeToClose: true,
-				// focusOnOpen: true,
+				focusOnOpen: true,
 				trapFocus: true,
 				templateUrl: './partials/customDialogTemplate.html',
 				locals: locals,
