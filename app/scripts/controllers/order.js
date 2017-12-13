@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-13 11:46:28
+ * @Last Modified time: 2017-12-13 11:54:19
 */
 
 (function() {
@@ -377,6 +377,7 @@
 		self.showLockModal         = showLockModal;
 		self.openCapture           = openCapture;
 		self.removeAvatar          = removeAvatar;
+		self.about                 = about;
 
 		function validateBudgetToSave(callback) {
 			/*if (self.budget.order_status_id != Globals.get('order-status-values')['open']) {
@@ -3932,6 +3933,10 @@
 							$rootScope.customDialog().showMessage('Error', error.data.status.description);
 						});
 				});
+		}
+
+		function about() {
+			$rootScope.customDialog().showMessage('Commercial', 'Commercial - Gestor de vendas<br>Versão: ' + constants.version + '<br><br>Desenvolvido por Futura Agência.')
 		}
 	}
 })();
