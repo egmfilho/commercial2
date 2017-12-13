@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-29 14:03:46
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-17 12:19:20
+ * @Last Modified time: 2017-12-13 08:48:23
  */
 
 (function() {
@@ -67,7 +67,7 @@
 							break;
 
 						case 403:
-							$rootScope.customDialog().showConfirm('Atualização obrigatória', 'Existe uma nova versão do Commercial, deseja abrir o atualizador?')
+							$rootScope.customDialog().showConfirm('Atualização obrigatória', 'Existe uma nova versão do Commercial, deseja abrir o atualizador agora?')
 								.then(function(success) {
 									if (constants.isElectron)
 										require('electron').ipcRenderer.send('callUpdater');
