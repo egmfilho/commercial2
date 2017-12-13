@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-13 08:46:51
+ * @Last Modified time: 2017-12-13 08:52:31
 */
 
 (function() {
@@ -55,7 +55,8 @@
 		'ElectronOS',
 		'WebCamera',
 		'GUID',
-		'OpenedOrderManager'
+		'OpenedOrderManager',
+		'CustomDialogManager'
 	];
 
 	function OrderCtrl(
@@ -102,7 +103,8 @@
 		ElectronOS, 
 		WebCamera,
 		GUID,
-		OpenedOrderManager) {
+		OpenedOrderManager,
+		CustomDialogManager) {
 
 		var self = this, 
 			_remote, 
@@ -868,6 +870,7 @@
 				_preventClosing = false;
 				closeWindow();
 			} else {
+				CustomDialogManager.closeAll();
 				$rootScope.customDialog().showConfirm('Aviso', 'Todas as alterações não salvas serão perdidas. Deseja continuar?', { zIndex: 2001 })
 					.then(function(success) {
 						_preventClosing = false;
