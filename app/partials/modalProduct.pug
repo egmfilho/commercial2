@@ -30,6 +30,9 @@
 						th.sortable(ng-click="ctrl.sortBy('product_prices[0].price_value')")
 							| PREÇO &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'product_prices[0].price_value'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-click="ctrl.sortBy('unit.unit_initials')")
+							| UNIDADE &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'unit.unit_initials'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						th.sortable(ng-click="ctrl.sortBy('stock.product_stock')")
 							| ESTOQUE &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'stock.product_stock'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
@@ -43,7 +46,8 @@
 						td {{p.product_classification}}
 						td {{p.product_name}}
 						td {{p.product_prices[0].price_value | currency: 'R$ '}}
-						td {{p.unit && p.unit.unit_format == "I" ? (p.stock.product_stock | number:'0') : p.stock.product_stock}} ({{p.unit.unit_initials}}) 
+						td {{p.unit.unit_initials}}
+						td {{p.unit && p.unit.unit_format == "I" ? (p.stock.product_stock | number:'0') : p.stock.product_stock}} 
 
 	div(layout='column')
 		.bar
