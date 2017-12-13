@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-07 13:31:45
+ * @Last Modified time: 2017-12-13 08:16:33
 */
 
 (function() {
@@ -1149,7 +1149,7 @@
 				},
 				orderStatusValues: Globals.get('order-status-values'),
 				orderStatusLabels: Globals.get('order-status-labels'),
-				orderStatusColor: Globals.get("order-export-type-colors"),
+				orderStatusColor: Globals.get("order-status-colors"),
 				flags: {
 					isToolbarLocked: false,
 					printable: false,

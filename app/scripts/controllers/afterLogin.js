@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-19 08:59:02
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-04 13:48:22
+ * @Last Modified time: 2017-12-13 08:21:37
  */
 
 (function() {
@@ -149,8 +149,8 @@
 
 			Globals.set('order-status-colors', {
 				'1001': '#4caf50',
-				'1002': '#2196f3',
-				'1003': '#f99f57'
+				'1002': '#f99f57',
+				'1003': '#2196f3'
 			});
 
 			Globals.set('order-export-type-colors', {

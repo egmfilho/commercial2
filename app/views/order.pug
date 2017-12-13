@@ -389,7 +389,7 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 										td 
 											md-tooltip(md-direction='left')
 												| {{i.price.price_code}} {{i.price.price_name}}
-												| {{i.price.price_date | date:'dd/MM/yyyy' }}
+												| {{i.price.price_date ? i.price.price_date : i.product.product_prices[0].price_date  | date:'dd/MM/yyyy' }}
 											| {{i.order_item_value_unitary | currency:'R$ '}}
 										td {{i.order_item_al_discount | currency:''}}%
 										td {{i.order_item_vl_discount | currency:'R$ '}}
@@ -749,5 +749,5 @@ footer(ng-if='currentPath !== "/login" && currentPath !== "/logout" && currentPa
 			| &nbsp;|&nbsp;
 			| Empresa: {{order.budget.order_company_id ? (order.budget.order_company.company_code + ' - ' + order.budget.order_company.company_name) : 'Não informado.'}}
 			span(flex)
-			i.material-icons.cloud-open(style='line-height: 1px;font-size: 20px' ng-style='{ "color": order.internal.orderStatusColor[order.budget.order_export_type] }' ng-class='{ "cloud-open": order.budget.order_status_id == order.internal.orderStatusValues.open, "cloud-exported": order.budget.order_status_id == order.internal.orderStatusValues.exported, "cloud-billed": order.budget.order_status_id == order.internal.orderStatusValues.billed }')
+			i.material-icons.cloud-open(style='line-height: 1px;font-size: 20px' ng-style='{ "color": order.internal.orderStatusColor[order.budget.order_status_id] }' ng-class='{ "cloud-open": order.budget.order_status_id == order.internal.orderStatusValues.open, "cloud-exported": order.budget.order_status_id == order.internal.orderStatusValues.exported, "cloud-billed": order.budget.order_status_id == order.internal.orderStatusValues.billed }')
 			| &nbsp;{{order.internal.orderStatusLabels[order.budget.order_status_id] || 'Novo'}}&nbsp;
