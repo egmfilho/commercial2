@@ -161,7 +161,9 @@
 				if (!this.order_item_value_unitary) {
 					return 0;
 				} else {
-					var antiBug = 0.005; // bug: console.log( (24.115).toFixed(2) ) // nao arredonda
+					// bug: console.log( (24.115).toFixed(2) ) // nao arredonda 
+					// bug2: console.log(90.05 * 0.3 + 0.005) aumentar o antibug para jogar o erro pra depois da segunda casa decimal
+					var antiBug = 0.0055;
 					//var product_value = parseFloat( parseInt( ( this.order_item_value_unitary + antiBug) * 100 ) / 100 );
 					var total = parseFloat( parseInt( (( this.order_item_amount * this.order_item_value_unitary ) + antiBug ) * 100 ) / 100 );
 					return total;					

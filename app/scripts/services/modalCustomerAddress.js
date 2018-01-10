@@ -84,6 +84,12 @@
 							vm.selectedTabIndex = 0;
 							vm.labelTab = 'Novo endereço';
 							$scope.$broadcast('clearAddress');
+							
+							if (args.person_address_main == 'Y') {
+								$rootScope.$broadcast('customerMainAddressEdited', {
+									address: newAddress
+								});
+							}
 						});
 
 						this.editAddress = function(a){

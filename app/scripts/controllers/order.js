@@ -884,6 +884,16 @@
 			self.showModalOrderSeller(save);
 		};
 
+		/**
+		 * Atualiza a inscricao estadual caso a mesma seja alterada
+		 * no endereco principal do cliente
+		 */
+		$scope.$on('customerMainAddressEdited', function(event, args) {
+			var mainAddress = self.budget.order_client.getMainAddress();
+			var index = self.budget.order_client.person_address.indexOf(mainAddress);
+			self.budget.order_client.person_address[index] = args.address;
+		});
+
 		function soldOutWarning() {
 			var message = '';
 

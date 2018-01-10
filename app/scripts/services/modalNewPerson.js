@@ -102,7 +102,7 @@
 							return;
 						}
 
-						if (scope.customer.person_address[0].icms_type == 1 && !scope.customer.person_address[0].person_address_ie) {
+						if (scope.customer.person_address[0].person_address_icms_type == 1 && !scope.customer.person_address[0].person_address_ie) {
 							$rootScope.customDialog().showMessage('Erro', 'Informe a inscrição estadual!');
 							return;
 						}

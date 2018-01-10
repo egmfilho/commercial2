@@ -10,7 +10,7 @@ style.
 	}
 
 #camera(style='width: 320px; height: 240px; background: #000' ng-if='!ctrl.result')
-img.silhouette(src='./images/person_silhouette.png')
+img.silhouette(src='./images/person_silhouette.png' ng-if='!ctrl.result')
 
 img(ng-src='{{ctrl.result}}' style='width: 320px; height: 240px; background: #000' ng-if='ctrl.result')
 

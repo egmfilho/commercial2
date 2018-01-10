@@ -293,15 +293,10 @@
 						}
 					}
 
-					if (!scope.newUser.user_seller_id) {
-						$rootScope.customDialog().showMessage('Aviso', 'Informe o representante!');
-						return false;
-					}
-
-					if (!scope.newUser.user_seller_id) {
-						$rootScope.customDialog().showMessage('Aviso', 'Informe o representante!');
-						return false;
-					}
+					// if (!scope.newUser.user_seller_id) {
+					// 	$rootScope.customDialog().showMessage('Aviso', 'Informe o representante!');
+					// 	return false;
+					// }
 
 					if (!scope.newUser.user_profile_id) {
 						$rootScope.customDialog().showMessage('Aviso', 'Selecione o perfil do usuário!');
