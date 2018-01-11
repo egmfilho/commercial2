@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-15 11:17:54
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-06 13:48:16
+ * @Last Modified time: 2018-01-11 12:28:56
  */
 
 (function() {
@@ -10,7 +10,7 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('ModalNewPerson', ['$rootScope', '$http', '$timeout', 'Constants', 'Globals', 'ModalPersonCheck', 'DocumentValidator', function($rootScope, $http, $timeout, constants, Globals, ModalPersonCheck, DocumentValidator) {
+		.factory('ModalNewPerson', ['$rootScope', '$http', '$timeout', 'Constants', 'Globals', 'ModalPersonCheck', 'DocumentValidator', 'Receita', function($rootScope, $http, $timeout, constants, Globals, ModalPersonCheck, DocumentValidator, Receita) {
 
 
 			function show() {
@@ -179,6 +179,16 @@
 							constants.debug && console.log(error);
 						});
 					};
+
+					this.searchCNPJ = function(cnpj) {
+						$rootScope.loading.load();
+						Receita.search(cnpj).then(function(success) {
+							console.log(success);
+							$rootScope.loading.unload();
+						}, function(error) {
+							$rootScope.loading.unload();
+						});
+					}
 
 					// Inicializador
 					(function() {

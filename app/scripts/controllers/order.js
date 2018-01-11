@@ -1,8 +1,8 @@
 /*
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
- * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-13 11:54:19
+ * @Last Modified by:   egmfilho
+ * @Last Modified time: 2017-12-19 08:57:43
 */
 
 (function() {
@@ -610,6 +610,7 @@
 					getItems: true,
 					getPayments: true,
 					getTerm: true,
+					getDeliveryAddress: true,
 					getProductPrice: true,
 					getProductStock: true
 				};
@@ -674,6 +675,7 @@
 					getProductStock: true,
 					getPayments: true,
 					getTerm: true,
+					getDeliveryAddress: true,
 					getProductPrice: true
 				}, code = $routeParams.param;
 

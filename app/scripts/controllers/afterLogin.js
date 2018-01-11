@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-19 08:59:02
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-13 08:21:37
+ * @Last Modified time: 2018-01-11 12:48:32
  */
 
 (function() {
@@ -132,7 +132,7 @@
 			Globals.set('default-icms-type', { code: 2, value: 'ISENTO' });
 			Globals.set('elective-icms-type', { code: 9 });
 
-			Globals.set('public-place-types', [ 'AV', 'EST', 'PC', 'R', 'RUA', 'ROD' ]);
+			Globals.set('public-place-types', [ 'AV', 'EST', 'PC', 'R', 'RUA', 'ROD', 'TV' ]);
 
 			Globals.set('obsFlag', '\n\nObs. de Entrega: ');
 
