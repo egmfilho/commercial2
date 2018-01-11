@@ -210,6 +210,10 @@
 				}
 			};
 
+			self.focusOn = function(selector) {
+				jQuery(selector).focus();
+			};
+
 			self.companies = Globals.get('user').user_company;
 
 			self.sortBy = function(propertyName) {
@@ -358,6 +362,7 @@
 				self.getPersonByCode(code, Globals.get('person-categories').seller).then(function(success) {
 					$rootScope.openOrderFilters.seller = new Person(success.data);
 					$rootScope.loading.unload();
+					$timeout(function() { self.focusOn('input[name="seller-code"]') }, 200);
 				}, function(error){
 					constants.debug && console.log(error);
 					$rootScope.loading.unload();

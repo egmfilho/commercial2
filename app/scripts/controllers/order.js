@@ -886,6 +886,16 @@
 			self.showModalOrderSeller(save);
 		};
 
+		/**
+		 * Atualiza a inscricao estadual caso a mesma seja alterada
+		 * no endereco principal do cliente
+		 */
+		$scope.$on('customerMainAddressEdited', function(event, args) {
+			var mainAddress = self.budget.order_client.getMainAddress();
+			var index = self.budget.order_client.person_address.indexOf(mainAddress);
+			self.budget.order_client.person_address[index] = args.address;
+		});
+
 		function soldOutWarning() {
 			var message = '';
 
@@ -1883,6 +1893,11 @@
 			// data.template += '</div>';
 
 			data.template += '<div layout="row" class="well">';
+			if( self.budget.order_client.person_image != null ) {
+				data.template += '<div layout="row" layout-align="end center">';
+				data.template += '<div class="avatar-authorization" style="background-image: url({{ctrl.customer.image}})"></div>';
+				data.template += '</div>';
+			}
 			data.template += 	'<div flex layout="row" layout-align="start center">';
 			data.template += 		'{{ctrl.customer.code}} - {{ctrl.customer.name}}';
 			data.template += 	'</div>';
@@ -1913,9 +1928,11 @@
 					this.grid.reverse = (this.grid.propertyName === propertyName) ? !this.grid.reverse : false;
 					this.grid.propertyName = propertyName;
 				},
+				root: Globals.api.get().root,
 				customer: {
 					code: self.budget.order_client.person_code,
-					name: self.budget.order_client.person_name
+					name: self.budget.order_client.person_name,
+					image: self.budget.order_client.person_image
 				},
 				// receivables: self.budget.order_client.person_credit_limit.receivables,
 				// debit_day_limit: Globals.get('debit-day-limit'),

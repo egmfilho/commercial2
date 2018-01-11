@@ -18,6 +18,9 @@
 						th.sortable(ng-click="ctrl.sortBy('product_name')")
 							| NOME &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'product_name'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
+						th.sortable(ng-click="ctrl.sortBy('unit_initials')")
+							| UNIDADE &nbsp;
+							i.fa(ng-show="ctrl.grid.propertyName === 'unit_initials'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
 						th.sortable(ng-click="ctrl.sortBy('product_stock')")
 							| ESTOQUE &nbsp;
 							i.fa(ng-show="ctrl.grid.propertyName === 'product_stock'" ng-class="!ctrl.grid.reverse ? 'fa-sort-amount-asc' : 'fa-sort-amount-desc'")
@@ -31,8 +34,9 @@
 						td {{::p.company_code}}
 						td {{::p.product_code}}
 						td {{::p.product_name}}
-						td {{::p.unit.unit_format == "I" ? (p.product_stock | number:'0') : p.product_stock}} ({{p.unit_initials}})
-						td {{::p.unit_format == "I" ? (p.quantity_purchased | number:'0') : p.quantity_purchased}} ({{p.unit_initials}})
+						td {{::p.unit_initials}}
+						td {{::p.unit.unit_format == "I" ? (p.product_stock | number:'0') : p.product_stock}}
+						td {{::p.unit_format == "I" ? (p.quantity_purchased | number:'0') : p.quantity_purchased}}
 
 	div(layout='column')
 		.bar

@@ -202,7 +202,7 @@
 				return;
 			}
 
-			if (!self.newAddress.person_address_ie && self.newAddress.icms_type != Globals.get('elective-icms-type').code) {
+			if (!self.newAddress.person_address_ie && self.newAddress.person_address_icms_type != Globals.get('elective-icms-type').code) {
 				$rootScope.customDialog().showMessage('Aviso', 'Informe a inscrição estadual!');
 				return;
 			}
@@ -211,6 +211,14 @@
 			self.newAddress.person_address_contact = self.newAddress.person_address_contact.filter(function(c) {
 				return !!c.person_address_contact_value;
 			});
+
+			/**
+			 * Retaguarda espera a propriedade icms_type em vez da person_address_icms_type.
+			 * Depois de corrigir na retaguarda (alterdata.api/public/person_address.php linha 35)
+			 * remover a linha abaixo;
+			 */
+			self.newAddress.icms_type = self.newAddress.person_address_icms_type;
+
 			providerAddress.save(self.newAddress).then(function(success) {
 				self.newAddress.person_address_code = success.data.address_code;
 				constants.debug && console.log('$emit: newAddress', self.newAddress);
@@ -272,7 +280,7 @@
 		}
 
 		function icmsChanged() {
-			if (self.newAddress.icms_type == 2) {
+			if (self.newAddress.person_address_icms_type == 2) {
 				self.newAddress.person_address_ie = 'ISENTO';
 			} else {
 				if (self.newAddress.person_address_ie == 'ISENTO')

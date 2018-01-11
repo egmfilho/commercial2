@@ -114,15 +114,16 @@
 				this.person_address_number       = null;
 				this.person_address_note         = null;
 				this.person_address_reference    = null;
+				this.person_address_icms_type    = Globals.get('default-icms-type').code;
 				this.tel                         = null;
 				this.cel                         = null;
-				this.icms_type                   = Globals.get('default-icms-type').code;
 				this.city                        = new City();
 				this.district                    = new District();
 				this.person_address_contact      = new Array();
 
 				if (address) {
 					Object.assign(this, address, { 
+						person_address_icms_type: parseInt(address.person_address_icms_type) || Globals.get('default-icms-type').code,
 						city: new City(address.city), 
 						district: new District(address.district) 
 					});

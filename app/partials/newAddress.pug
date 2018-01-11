@@ -80,7 +80,7 @@ div(layout='column' ng-controller='NewAddressCtrl as address')
 		md-input-container.md-icon-float(flex='20')
 			label
 				span Contribuição de ICMS
-			md-select(name='category' ng-model='address.newAddress.icms_type'
+			md-select(name='category' ng-model='address.newAddress.person_address_icms_type'
 					ng-change='address.icmsChanged()')
 				md-option(value='1') Contribuinte ICMS
 				md-option(value='2') Contribuinte Isento
@@ -88,10 +88,10 @@ div(layout='column' ng-controller='NewAddressCtrl as address')
 
 		md-input-container(flex='20')
 			label 
-				i.fa.fa-lock(ng-if='address.newAddress.icms_type == 2') &nbsp;
+				i.fa.fa-lock(ng-if='address.newAddress.person_address_icms_type == 2') &nbsp;
 				| Inscrição Estadual
 			input(ng-model='address.newAddress.person_address_ie' 
-					ng-disabled='address.newAddress.icms_type == 2')
+					ng-disabled='address.newAddress.person_address_icms_type == 2')
 
 	//- div(layout='row' layout-wrap layout-fill)
 		.offset-top-15(flex='50' layout='row' layout-wrap style='padding-right: 8px')

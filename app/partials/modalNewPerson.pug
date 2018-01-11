@@ -133,17 +133,17 @@ div(flex layout='column')
 			md-input-container.md-icon-float(flex='20')
 				label
 					span Contribuição de ICMS
-				md-select(name='category' ng-model='ctrl.customer.person_address[0].icms_type')
+				md-select(name='category' ng-model='ctrl.customer.person_address[0].person_address_icms_type')
 					md-option(value='1' ng-click='ctrl.customer.person_address[0].person_address_ie = \'\'') Contribuinte ICMS
 					md-option(value='2' ng-click='ctrl.customer.person_address[0].person_address_ie = \'ISENTO\'') Contribuinte Isento
 					md-option(value='9' ng-click='ctrl.customer.person_address[0].person_address_ie = \'\'') Não contribuinte
 
 			md-input-container(flex='20')
 				label 
-					i.fa.fa-lock(ng-if='ctrl.customer.person_address[0].icms_type == 2') &nbsp;
+					i.fa.fa-lock(ng-if='ctrl.customer.person_address[0].person_address_icms_type == 2') &nbsp;
 					| Inscrição Estadual
 				input(ng-model='ctrl.customer.person_address[0].person_address_ie' 
-						ng-disabled='ctrl.customer.person_address[0].icms_type == 2')
+						ng-disabled='ctrl.customer.person_address[0].person_address_icms_type == 2')
 
 		//- Contatos & Observacoes
 		.offset-top-30(flex layout='row' layout-wrap)
