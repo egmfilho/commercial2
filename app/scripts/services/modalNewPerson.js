@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-15 11:17:54
  * @Last Modified by: egmfilho
- * @Last Modified time: 2018-01-11 12:28:56
+ * @Last Modified time: 2018-01-11 14:24:39
  */
 
 (function() {
@@ -10,11 +10,11 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('ModalNewPerson', ['$rootScope', '$http', '$timeout', 'Constants', 'Globals', 'ModalPersonCheck', 'DocumentValidator', 'Receita', function($rootScope, $http, $timeout, constants, Globals, ModalPersonCheck, DocumentValidator, Receita) {
+		.factory('ModalNewPerson', ['$rootScope', '$http', '$timeout', 'Constants', 'Globals', 'ModalPersonCheck', 'DocumentValidator', function($rootScope, $http, $timeout, constants, Globals, ModalPersonCheck, DocumentValidator) {
 
 
 			function show() {
-				var controller = function(providerPerson, Person, Address, Contact, providerCep, Cep, ModalCep, providerDistrict, District, providerCity, City) {
+				var controller = function(providerPerson, Person, Address, Contact, providerCep, Cep, ModalCep, providerDistrict, District, providerCity, City, Receita) {
 					var scope = this;
 
 					this._showCloseButton = true;
@@ -181,14 +181,29 @@
 					};
 
 					this.searchCNPJ = function(cnpj) {
-						$rootScope.loading.load();
+						// $rootScope.loading.load();
 						Receita.search(cnpj).then(function(success) {
 							console.log(success);
-							$rootScope.loading.unload();
+							scope.customer.person_name = success.data.nome;
+							scope.customer.person_address[0].person_address_number = success.data.numero;
+							scope.customer.person_address[0].person_address_note = success.data.complemento;
+
+							providerCep.getByCode(success.data.cep.replace(/[.]/g, '')).then(function(success) {
+								setCepFromSource(new Cep(success.data).toAddress());
+							}, function(error) {
+								scope.customer.person_address[0].person_address_cep = success.data.cep.replace(/[.]/g, '');
+								scope.customer.person_address[0].person_address_public_place = success.data.logradouro;
+								scope.queryDistrict = success.data.bairro;
+								scope.searchDistrict();
+								scope.queryCity = success.data.municipio;
+								scope.searchCity();
+							});
+
+							// $rootScope.loading.unload();
 						}, function(error) {
-							$rootScope.loading.unload();
+							// $rootScope.loading.unload();
 						});
-					}
+					};
 
 					// Inicializador
 					(function() {
@@ -215,7 +230,7 @@
 					})();
 				};
 
-				controller.$inject = [ 'ProviderPerson', 'Person', 'Address', 'Contact', 'ProviderCep', 'Cep', 'ModalCep', 'ProviderDistrict', 'District', 'ProviderCity', 'City' ];
+				controller.$inject = [ 'ProviderPerson', 'Person', 'Address', 'Contact', 'ProviderCep', 'Cep', 'ModalCep', 'ProviderDistrict', 'District', 'ProviderCity', 'City', 'Receita' ];
 
 				return $rootScope.customDialog().showTemplate('Novo cliente', './partials/modalNewPerson.html', controller, {
 					hasBackdrop: false,

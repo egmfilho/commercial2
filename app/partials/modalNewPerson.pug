@@ -46,7 +46,7 @@ div(flex layout='column')
 					  ui-mask='99.999.999/9999-99'
 					  model-view-value='true'
 					  ng-disabled='ctrl.customer.person_type != "J"')
-				button
+				button(ng-click='ctrl.searchCNPJ(ctrl.customer.person_cnpj)')
 					i.fa.fa-search
 				div(ng-messages='newCostumerForm.cnpj.$error')
 					div(ng-message='pattern') CNPJ inválido!
