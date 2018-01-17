@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-15 11:17:54
  * @Last Modified by: egmfilho
- * @Last Modified time: 2018-01-17 11:10:20
+ * @Last Modified time: 2018-01-17 17:29:27
  */
 
 (function() {
@@ -208,8 +208,12 @@
 							Receita.search(cnpj).then(function(success) {
 								console.log(success);
 								vm.data = success.data;
-
 								$rootScope.loading.unload();
+
+								if (success.data.status == 'ERROR') {
+									vm._cancel();
+									$rootScope.customDialog().showMessage('Erro', success.data.message);
+								}
 							}, function(error) {
 								$rootScope.loading.unload();
 							});
@@ -238,9 +242,12 @@
 								});
 								scope.customer.person_address[0].person_address_contact[mailIndex].person_address_contact_value = data.email;
 
-								providerCep.getByCode(data.cep.replace(/[.]/g, '')).then(function(success) {
-									setCepFromSource(new Cep(success.data).toAddress());
-								}, function(error) {
+								// CHECA SE O CEP JA ESTÁ CADASTRADO NO SISTEMA E PUXA OS DADOS
+								// SENAO USA OS DADOS QUE VIERAM DA RECEITA.
+								// OBS.: EXISTEM CEPS CADASTRADOS ERRADOS NO BANCO DE DADOS LOCAL
+								// providerCep.getByCode(data.cep.replace(/[.]/g, '')).then(function(success) {
+									// setCepFromSource(new Cep(success.data).toAddress());
+								// }, function(error) {
 									scope.customer.person_address[0].person_address_cep = data.cep.replace(/[.]/g, '');
 									scope.customer.person_address[0].person_address_public_place = data.logradouro;
 									scope.queryDistrict = data.bairro;
@@ -251,7 +258,7 @@
 									scope.searchCity().then(function(cities){
 										scope.customer.person_address[0].setCity(cities[0]);
 									});
-								});
+								// });
 							});
 					};
 
