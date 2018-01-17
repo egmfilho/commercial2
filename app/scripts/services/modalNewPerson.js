@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-15 11:17:54
  * @Last Modified by: egmfilho
- * @Last Modified time: 2018-01-17 17:29:27
+ * @Last Modified time: 2018-01-17 17:41:36
  */
 
 (function() {
@@ -194,6 +194,11 @@
 
 					this.searchCNPJ = function(cnpj) {
 						if (!cnpj) return;
+
+						if (!DocumentValidator(cnpj)) {
+							$rootScope.customDialog().showMessage('Erro', 'CNPJ inválido!');
+							return;
+						}
 						
 						var controller = function() {
 							var vm = this;
