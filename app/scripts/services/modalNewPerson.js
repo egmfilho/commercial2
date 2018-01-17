@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-15 11:17:54
  * @Last Modified by: egmfilho
- * @Last Modified time: 2018-01-11 14:24:39
+ * @Last Modified time: 2018-01-17 11:10:20
  */
 
 (function() {
@@ -10,7 +10,7 @@
 	'use strict';
 
 	angular.module('commercial2.services')
-		.factory('ModalNewPerson', ['$rootScope', '$http', '$timeout', 'Constants', 'Globals', 'ModalPersonCheck', 'DocumentValidator', function($rootScope, $http, $timeout, constants, Globals, ModalPersonCheck, DocumentValidator) {
+		.factory('ModalNewPerson', ['$rootScope', '$http', '$q', '$timeout', 'Constants', 'Globals', 'ModalPersonCheck', 'DocumentValidator', function($rootScope, $http, $q, $timeout, constants, Globals, ModalPersonCheck, DocumentValidator) {
 
 
 			function show() {
@@ -151,6 +151,8 @@
 					};
 
 					this.searchDistrict = function(options) {
+						var deferred = $q.defer();
+
 						if (options && options.clearModel)
 							this.customer.person_address[0].setDistrict(new District());
 
@@ -160,12 +162,18 @@
 
 						providerDistrict.getByName(scope.queryDistrict, options).then(function(success) {
 							scope.queryDistrictResult = success.data.map(function(d) { return new District(d) });
+							deferred.resolve(scope.queryDistrictResult);
 						}, function(error) {
 							constants.debug && console.log(error);
+							deferred.reject(error);
 						});
+
+						return deferred.promise;
 					};
 
 					this.searchCity = function(options) {
+						var deferred = $q.defer();
+
 						if (options && options.clearModel)
 							this.customer.person_address[0].setCity(new City());
 
@@ -175,34 +183,76 @@
 
 						providerCity.getByName(scope.queryCity, options).then(function(success) {
 							scope.queryCityResult = success.data.map(function(c) { return new City(c) });
+							deferred.resolve(scope.queryCityResult);
 						}, function(error) {
 							constants.debug && console.log(error);
+							deferred.reject(error);
 						});
+
+						return deferred.promise;
 					};
 
 					this.searchCNPJ = function(cnpj) {
-						// $rootScope.loading.load();
-						Receita.search(cnpj).then(function(success) {
-							console.log(success);
-							scope.customer.person_name = success.data.nome;
-							scope.customer.person_address[0].person_address_number = success.data.numero;
-							scope.customer.person_address[0].person_address_note = success.data.complemento;
+						if (!cnpj) return;
+						
+						var controller = function() {
+							var vm = this;
 
-							providerCep.getByCode(success.data.cep.replace(/[.]/g, '')).then(function(success) {
-								setCepFromSource(new Cep(success.data).toAddress());
+							this._showCloseButton = true;
+							this.data = { };
+							this.confirm = function() {
+								vm._close(vm.data);
+							};
+
+							$rootScope.loading.load();
+							Receita.search(cnpj).then(function(success) {
+								console.log(success);
+								vm.data = success.data;
+
+								$rootScope.loading.unload();
 							}, function(error) {
-								scope.customer.person_address[0].person_address_cep = success.data.cep.replace(/[.]/g, '');
-								scope.customer.person_address[0].person_address_public_place = success.data.logradouro;
-								scope.queryDistrict = success.data.bairro;
-								scope.searchDistrict();
-								scope.queryCity = success.data.municipio;
-								scope.searchCity();
+								$rootScope.loading.unload();
 							});
+						};
 
-							// $rootScope.loading.unload();
-						}, function(error) {
-							// $rootScope.loading.unload();
-						});
+						var options = {
+							width: 600,
+							hasBackdrop: true
+						};
+
+						$rootScope.customDialog().showTemplate('Commercial', './partials/modalReceita.html', controller, options)
+							.then(function(data) {
+								scope.customer.person_name = data.nome;
+								scope.customer.person_address[0].person_address_number = data.numero;
+								scope.customer.person_address[0].person_address_note = data.complemento;
+								
+								// PEGANDO INDEX PELO LABEL POIS NAO ESTA MAIS VINDO O ID NO GET DO CONFIG.PHP
+								var telIndex = scope.customer.person_address[0].person_address_contact.findIndex(function(c){
+									return c.person_address_contact_label == 'Telefone';
+								});
+								scope.customer.person_address[0].person_address_contact[telIndex].person_address_contact_value = data.telefone;
+
+								// PEGANDO INDEX PELO LABEL POIS NAO ESTA MAIS VINDO O ID NO GET DO CONFIG.PHP
+								var mailIndex = scope.customer.person_address[0].person_address_contact.findIndex(function(c){
+									return c.person_address_contact_label == 'Email';
+								});
+								scope.customer.person_address[0].person_address_contact[mailIndex].person_address_contact_value = data.email;
+
+								providerCep.getByCode(data.cep.replace(/[.]/g, '')).then(function(success) {
+									setCepFromSource(new Cep(success.data).toAddress());
+								}, function(error) {
+									scope.customer.person_address[0].person_address_cep = data.cep.replace(/[.]/g, '');
+									scope.customer.person_address[0].person_address_public_place = data.logradouro;
+									scope.queryDistrict = data.bairro;
+									scope.searchDistrict().then(function(districts) {
+										scope.customer.person_address[0].setDistrict(districts[0]);
+									});
+									scope.queryCity = data.municipio;
+									scope.searchCity().then(function(cities){
+										scope.customer.person_address[0].setCity(cities[0]);
+									});
+								});
+							});
 					};
 
 					// Inicializador

@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-06-05 17:56:31
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-11 11:29:51
+ * @Last Modified time: 2018-01-12 11:15:09
  */
 
 (function() {
@@ -46,8 +46,10 @@
 					method: 'POST',
 					url: Globals.api.get().address + 'order.php?action=' + action,
 					data: {
-						order_code: $routeParams.code
-					}
+							order_code: $routeParams.code
+						}
+					// method: 'GET',
+					// url: 'file:///Users/egmfilho/Desktop/order_cupon.html'
 				}).then(function(success) {
 					self.template = success.data;
 					$rootScope.loading.unload();

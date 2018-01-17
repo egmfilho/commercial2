@@ -1,0 +1,84 @@
+.irineu(layout='row' layout-align='start center' layout-fill style='margin-bottom: 0')
+	i.fa.fa-search
+	span(flex) Pesquisa de CNPJ
+
+.body(layout='column' layout-fill)
+
+	div(layout='row')
+		md-input-container(flex='30')
+			label 
+				| CNPJ
+			input(ng-value='ctrl.data.cnpj' disabled)
+
+	div(layout='row')
+		md-input-container(flex)
+			label 
+				| Nome
+			input(ng-value='ctrl.data.nome' disabled)
+
+		md-input-container(flex='40')
+			label 
+				| Nome curto
+			input(ng-value='ctrl.data.fantasia' disabled)
+
+	div(layout='row')
+		md-input-container(flex='20')
+			label 
+				| CEP
+			input(ng-value='ctrl.data.cep' disabled)
+
+		md-input-container(flex)
+			label 
+				| Logradouro
+			input(ng-value='ctrl.data.logradouro' disabled)
+
+	div(layout='row')
+		md-input-container(flex)
+			label 
+				| Complemento
+			input(ng-value='ctrl.data.complemento' disabled)
+
+	div(layout='row')
+		div(layout='column' flex)
+			div(layout='row')
+				md-input-container(flex='25')
+					label
+						| Número
+					input(ng-value='ctrl.data.numero' disabled)
+
+				md-input-container(flex)
+					label
+						| Bairro
+					input(ng-value='ctrl.data.bairro' disabled)
+			
+			div(layout='row')
+				md-input-container(flex)
+					label
+						| Cidade
+					input(ng-value='ctrl.data.municipio' disabled)
+
+				md-input-container(flex='25')
+					label
+						| UF
+					input(ng-value='ctrl.data.uf' disabled)
+
+			div(layout='row')
+				md-input-container(flex)
+					label
+						| Telefone
+					input(ng-value='ctrl.data.telefone' disabled)
+
+				md-input-container(flex)
+					label
+						| Email
+					input(ng-value='ctrl.data.email' disabled)
+		
+		div(layout='column' flex='30')
+			.receita-logo
+
+.footer(layout='row' layout-align='end center')
+	md-button.md-primary.md-raised(ng-click='ctrl.confirm()')
+		| Usar dados
+
+	md-button.md-raised(ng-click='ctrl._cancel()')
+		| Fechar
