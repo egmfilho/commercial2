@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-01 08:42:58
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-11-29 12:27:33
+ * @Last Modified time: 2018-01-19 09:35:24
  */
 
 .users {	
@@ -95,7 +95,52 @@
 		}
 	}
 
+	.search-container {
+		position: absolute;
+		bottom: 0;
+		right: 10px;
+		width: 100%;
+		z-index: 0;
+		transition: bottom .3s;
+		overflow-x: hidden; // para esconder a sombra q fica do lado direito (aparecia em cima do scroll)
+		padding-top: 2px;
+
+		&.opened {
+			bottom: 48px;
+		}
+
+		.search {
+			background-color: white;
+			padding: 5px;
+			border-top-left-radius: 4px;
+			box-shadow: 0 0 2px rgba(#000, .3);
+			
+			input {
+				width: 280px;
+				border: 1px solid $border-color;
+				padding: 4px;
+			}
+
+			a {
+				margin: 0 10px;
+				margin-left: 12px;
+				color: $main-color;
+			}
+		}
+	}
+
 	.users-table-footer, .profiles-table-footer {
 		border-top: 1px solid #ddd;	
+		background-color: white;
+		z-index: 1;
+
+		.search-button {
+			margin-left: 0;
+			padding-left: 0;
+
+			.material-icons {
+				font-size: 30px;
+			}
+		}
 	}
 }

@@ -93,7 +93,7 @@
 						.container-table(flex)
 							table.table.users-table
 								tbody
-									tr(ng-repeat='u in users.users | orderBy:users.filters.users.property:users.filters.users.reverse' ng-dblclick='users.newUserModal(u)')
+									tr(ng-repeat='u in users.users | filter:{query: users.query} | orderBy:users.filters.users.property:users.filters.users.reverse' ng-dblclick='users.newUserModal(u)')
 										td
 											| {{u.user_profile_name}}
 										td 
@@ -114,9 +114,14 @@
 															md-icon(md-font-icon='fa fa-pencil')
 															| EDITAR
 
-						.users-table-footer(layout='row')
+						.search-container(layout='row' ng-class='{ "opened": users.isSearchOpened }')
 							span(flex)
-
+							.search
+								input(type='text' placeholder='Localizar na listagem' ng-model='users.query' keys-shortcuts escape='users.setSearchOpen(false)')
+								a(ng-click='users.setSearchOpen(false)')
+									i.fa.fa-remove
+						
+						.users-table-footer(layout='row')
 							md-button.md-primary(ng-click='')
 								md-tooltip(md-direction='top') Atualiza a tabela de usuários.
 								i.fa.fa-refresh &nbsp;
@@ -126,4 +131,12 @@
 								md-tooltip(md-direction='top') Adiciona um novo usuário
 								i.fa.fa-plus-square-o &nbsp;
 								| Novo usuário
+
+							span(flex)
+
+							div(flex='30' layout='row' layout-align='end center')
+								md-button.md-icon-button.search-button(ng-click='users.setSearchOpen(true)')
+									md-tooltip(md-direction='left') 
+										| Localizar ({{ 'M-F' | keyboardShortcut }})
+									md-icon.text-primary(md-font-set='material-icons') search
 							

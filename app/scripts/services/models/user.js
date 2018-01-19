@@ -35,6 +35,7 @@
 				this.user_seller                   = new Person();
 				this.user_company                  = new Array();
 				this.user_price                    = new Array();
+				this.query                         = '';
 
 				if (user) {
 					Object.assign(this, user, {
@@ -42,7 +43,8 @@
 						user_date: user.user_date ? new Date(user.user_date) : null,
 						user_update: user.user_update ? new Date(user.user_update) : null,
 						user_company: user.user_company ? user.user_company.map(function(b) { return new UserCompany(b); }) : null,
-						user_price: user.user_price ? user.user_price.map(function(p) { return new UserPrice(p); }) : null
+						user_price: user.user_price ? user.user_price.map(function(p) { return new UserPrice(p); }) : null,
+						query: user.user_name + ' ' + user.user_user + ' ' + user.user_mail
 					});
 				}
 			}

@@ -2,7 +2,7 @@
 * @Author: egmfilho <egmfilho@live.com>
 * @Date:   2017-07-25 16:51:12
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-05 08:34:41
+ * @Last Modified time: 2018-01-19 09:49:55
 */
 
 (function() {
@@ -37,6 +37,34 @@
 					}
 					return classes;
 				}
+			}
+		};
+
+		if (constants.isElectron) {
+			Mousetrap = require('mousetrap');
+
+			/* Find */
+			Mousetrap.bind(['command+f', 'ctrl+f'], function() {
+				$timeout(function() { $scope.setSearchOpen(true); });
+				return false;
+			});
+		}
+
+		$scope.$on('$destroy', function() {
+			if (constants.isElectron) {
+				Mousetrap.unbind(['command+f', 'ctrl+f']);
+			}
+		});
+
+		this.query = '';
+		this.setSearchOpen = function(value) {
+			this.isSearchOpened = value;
+
+			if (value) {
+				jQuery('.search-container .search input').focus().select();
+			} else {
+				jQuery('.search-container .search input').blur();
+				this.query = '';
 			}
 		};
 
