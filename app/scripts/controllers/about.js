@@ -2,12 +2,12 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-24 17:37:37
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-07 16:07:41
+ * @Last Modified time: 2018-01-24 12:34:59
  */
 'use strict';
 
 angular.module('commercial2.controllers')
-	.controller('AboutCtrl', ['$http', 'Globals', function($http, Globals) {
+	.controller('AboutCtrl', ['$http', 'Globals', 'Alphabet', function($http, Globals, Alphabet) {
 		
 		var self = this;
 
@@ -24,5 +24,12 @@ angular.module('commercial2.controllers')
 		}, function(error) {
 			console.log(error);
 		});
+
+		this.chars = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ];
+		this.getColors = function(character) {
+			if (!character) return;
+			console.log('CHAR: ' + character);
+			return Alphabet[character.toLowerCase()];
+		};
 
 	}]);

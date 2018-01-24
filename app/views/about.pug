@@ -1,1 +1,6 @@
-div(ng-bind-html='about.printTemplate | trusted')
+//- div(ng-bind-html='about.printTemplate | trusted')
+
+div(style='width: 100%')
+	div(style='width: 32px; height: 32px; display: inline-block; text-align: center; background-color: {{about.getColors(x).background}}; color: {{about.getColors(x).color}}' 
+		ng-repeat='x in about.chars track by $index')
+		| {{x}}

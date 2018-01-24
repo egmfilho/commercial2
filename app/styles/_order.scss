@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-26 16:01:34
  * @Last Modified by: egmfilho
- * @Last Modified time: 2017-12-06 16:37:57
+ * @Last Modified time: 2018-01-24 13:36:32
  */
 
 .customer-credit-modal {
@@ -206,9 +206,10 @@
 				background-size: cover;
 				background-position: center center;
 
-				i{
-					font-size: 26px;
-					color: gray;
+				span {
+					font-size: 30px;
+					line-height: 26px;
+					font-weight: 400 !important;
 				}
 			}
 		}

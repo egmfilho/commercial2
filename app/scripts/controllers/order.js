@@ -1,8 +1,8 @@
 /*
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-05-25 17:59:28
- * @Last Modified by:   egmfilho
- * @Last Modified time: 2017-12-19 08:57:43
+ * @Last Modified by: egmfilho
+ * @Last Modified time: 2018-01-24 12:53:08
 */
 
 (function() {
@@ -56,7 +56,8 @@
 		'WebCamera',
 		'GUID',
 		'OpenedOrderManager',
-		'CustomDialogManager'
+		'CustomDialogManager',
+		'Alphabet'
 	];
 
 	function OrderCtrl(
@@ -104,7 +105,8 @@
 		WebCamera,
 		GUID,
 		OpenedOrderManager,
-		CustomDialogManager) {
+		CustomDialogManager,
+		Alphabet) {
 
 		var self = this, 
 			_remote, 
@@ -121,6 +123,16 @@
 		}, function(newVal, oldVal) {
 			self.internal.flags.isToolbarLocked = newVal;
 		});
+		$scope.Alphabet = function(txt) {
+			if (!txt) return;
+
+			var c = txt.substring(0, 1).toLowerCase();
+			return {
+				character: c.toUpperCase(),
+				color: Alphabet[c].color,
+				background: Alphabet[c].background
+			}
+		};
 
 		self.propagateSaveOrder = function(company_id) {
 			if (constants.isElectron && _ipcRenderer) {

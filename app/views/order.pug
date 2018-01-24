@@ -459,8 +459,8 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 					
 						div(layout='column')
 							.person-attributes(layout='row')
-								.attribute(ng-repeat='attribute in order.budget.order_client.person_attribute' ng-style='{"background-image": "url({{attribute.person_attribute_image}})"}' md-whiteframe='2')
-									i.fa.fa-info(ng-if='!attribute.person_attribute_image')
+								.attribute(ng-repeat='attribute in order.budget.order_client.person_attribute' ng-style='attribute.person_attribute_image && {"background-image": "url({{attribute.person_attribute_image}})"} || {"background-color": "{{Alphabet(attribute.person_attribute_name).background}}"}' md-whiteframe='2')
+									span(ng-if='!attribute.person_attribute_image' style='color: {{Alphabet(attribute.person_attribute_name).color}}') {{Alphabet(attribute.person_attribute_name).character}}
 									md-tooltip(md-direction='bottom') {{attribute.person_attribute_name}}
 								.no-attributes(ng-if='!order.budget.order_client.person_attribute.length')
 									p.text-light Nenhuma característica informada.
