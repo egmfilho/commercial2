@@ -419,8 +419,6 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 												md-icon.text-primary(md-font-set='material-icons' md-menu-align-target) delete_forever
 
 					.items-summary(layout='row')
-						span(flex)
-
 						//- div(layout='column' layout-align='center start')
 							span Desconto %
 							span {{order.budget.order_al_discount | number:2}}%
@@ -428,6 +426,12 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 						//- div(layout='column' layout-align='center start')
 							span Desconto R$
 							span {{order.budget.order_vl_discount | currency:'R$ '}}
+
+						div(layout='row' layout-align='center start')
+							span Total de itens: &nbsp;
+							span {{order.budget.order_items.length}}
+						
+						span(flex)
 
 						div(layout='row' layout-align='start center')
 							span Valor total: &nbsp;
