@@ -237,6 +237,23 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 					
 					div(flex='10')
 
+		//- Vendedor
+		section(name='seller')
+			md-card.info-card
+				md-card-content(layout='row' layout-align='start center')
+					div(flex='10')
+						i.material-icons info
+
+					.text-center(flex ng-if='order.budget.order_seller_id')
+						b Vendedor: 
+						| {{order.budget.order_seller.person_code}} - {{order.budget.order_seller.person_name}}
+
+					.text-center(flex ng-if='!order.budget.order_seller_id')
+						b Vendedor: 
+						| Não informado
+
+					div(flex='10')
+
 		//- Produtos					
 		section(name='products')
 			md-card
