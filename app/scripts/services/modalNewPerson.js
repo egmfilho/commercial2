@@ -2,7 +2,7 @@
  * @Author: egmfilho <egmfilho@live.com>
  * @Date:   2017-08-15 11:17:54
  * @Last Modified by: egmfilho
- * @Last Modified time: 2018-01-17 17:41:36
+ * @Last Modified time: 2018-01-30 10:20:52
  */
 
 (function() {
@@ -212,14 +212,25 @@
 							$rootScope.loading.load();
 							Receita.search(cnpj).then(function(success) {
 								console.log(success);
-								vm.data = success.data;
-								$rootScope.loading.unload();
+								
+								if (!success.data) {
+									vm._cancel();
+									$rootScope.customDialog().showMessage('Erro', 'Não foi possível encontrar a empresa.');
+									$rootScope.loading.unload();
+									return;
+								}
 
 								if (success.data.status == 'ERROR') {
 									vm._cancel();
 									$rootScope.customDialog().showMessage('Erro', success.data.message);
+									$rootScope.loading.unload();
+									return;
 								}
+
+								vm.data = success.data;
+								$rootScope.loading.unload();
 							}, function(error) {
+								$rootScope.customDialog().showMessage('Erro', 'A pesquisa retornou um erro. Tente novamente mais tarde.');
 								$rootScope.loading.unload();
 							});
 						};
