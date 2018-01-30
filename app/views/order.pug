@@ -250,9 +250,11 @@ md-content#order(flex layout-padding style='background-color: #a9a9a9')
 
 					.text-center(flex ng-if='!order.budget.order_seller_id')
 						b Vendedor: 
-						| Não informado
+						| Não informado&nbsp;
 
 					div(flex='10')
+						a(href='' ng-click='order.showModalOrderSeller()' ng-if='!order.isExported()')
+							i.fa.fa-pencil
 
 		//- Produtos					
 		section(name='products')
